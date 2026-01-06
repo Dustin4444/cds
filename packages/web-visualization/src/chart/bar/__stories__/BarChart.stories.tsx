@@ -311,8 +311,8 @@ const Candlesticks = () => {
       const text =
         index !== undefined
           ? `Open: ${formatPrice(parseFloat(stockData[index].open))}, Close: ${formatPrice(
-            parseFloat(stockData[index].close),
-          )}, Volume: ${formatVolume(stockData[index].volume)}`
+              parseFloat(stockData[index].close),
+            )}, Volume: ${formatVolume(stockData[index].volume)}`
           : formatPrice(parseFloat(stockData[stockData.length - 1].close));
 
       // Direct DOM manipulation - no React re-render
@@ -404,14 +404,15 @@ const HorizontalBars = () => {
 
   return (
     <BarChart
+      showXAxis
+      showYAxis
       height={400}
       inset={0}
       layout="vertical"
-      series={[{ id: 'seoul', label: 'Seoul rainfall', data: dataset.map(d => d.seoul) }]}
-      showXAxis
-      showYAxis
+      series={[{ id: 'seoul', label: 'Seoul rainfall', data: dataset.map((d) => d.seoul) }]}
       xAxis={{ label: 'rainfall (mm)' }}
       yAxis={{
+        position: 'left',
         data: dataset.map((d) => d.month),
         tickLabelFormatter: (val) => String(val),
       }}

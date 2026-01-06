@@ -42,7 +42,8 @@ const BeaconWithData = memo<{
     testID,
     beaconRef,
   }) => {
-    const { layout, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } = useCartesianChartContext();
+    const { layout, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
+      useCartesianChartContext();
 
     const series = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
     const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
@@ -74,7 +75,7 @@ const BeaconWithData = memo<{
         const yScale = getYScale(series?.yAxisId);
 
         if (xScale && yScale) {
-          const isHorizontal = layout === 'horizontal';
+          const categoryAxisIsX = layout === 'vertical';
           const gradientScale = gradient.axis === 'x' ? xScale : yScale;
           const stops = getGradientConfig(gradient, xScale, yScale);
 
@@ -83,11 +84,11 @@ const BeaconWithData = memo<{
             // Determine the correct data value to evaluate against based on gradient axis and layout
             let evalValue: number;
             if (gradientAxis === 'x') {
-              // X-axis gradient: In horizontal it's the index, in vertical it's the value.
-              evalValue = isHorizontal ? dataIndexValue : dataValue;
+              // X-axis gradient: In vertical it's the index, in horizontal it's the value.
+              evalValue = categoryAxisIsX ? dataIndexValue : dataValue;
             } else {
-              // Y-axis gradient: In horizontal it's the value, in vertical it's the index.
-              evalValue = isHorizontal ? dataValue : dataIndexValue;
+              // Y-axis gradient: In vertical it's the value, in horizontal it's the index.
+              evalValue = categoryAxisIsX ? dataValue : dataIndexValue;
             }
 
             const evaluatedColor = evaluateGradientAtValue(
@@ -103,19 +104,28 @@ const BeaconWithData = memo<{
       }
 
       return series?.color ?? 'var(--color-fgPrimary)';
-    }, [gradient, dataIndexValue, dataValue, series?.color, series?.yAxisId, getXScale, getYScale, layout]);
+    }, [
+      gradient,
+      dataIndexValue,
+      dataValue,
+      series?.color,
+      series?.yAxisId,
+      getXScale,
+      getYScale,
+      layout,
+    ]);
 
     if (dataValue === undefined) return null;
 
-    const isHorizontal = layout === 'horizontal';
+    const categoryAxisIsX = layout === 'vertical';
 
     return (
       <BeaconComponent
         ref={beaconRef}
         className={className}
         color={color}
-        dataX={isHorizontal ? dataIndexValue : dataValue}
-        dataY={isHorizontal ? dataValue : dataIndexValue}
+        dataX={categoryAxisIsX ? dataIndexValue : dataValue}
+        dataY={categoryAxisIsX ? dataValue : dataIndexValue}
         idlePulse={idlePulse}
         isIdle={isIdle}
         seriesId={seriesId}
@@ -181,7 +191,8 @@ export const ScrubberBeaconGroup = memo(
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
       const { scrubberPosition } = useScrubberContext();
-      const { layout, getXScale, getYScale, getXAxis, getYAxis, dataLength, series } = useCartesianChartContext();
+      const { layout, getXScale, getYScale, getXAxis, getYAxis, dataLength, series } =
+        useCartesianChartContext();
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -197,16 +208,20 @@ export const ScrubberBeaconGroup = memo(
       }, [series, seriesIds]);
 
       const { dataValue, dataIndex } = useMemo(() => {
-        const isHorizontal = layout === 'horizontal';
-        const indexScale = (isHorizontal ? getXScale() : getYScale()) as ChartScaleFunction;
-        const indexAxis = isHorizontal ? getXAxis() : getYAxis();
+        const categoryAxisIsX = layout === 'vertical';
+        const indexScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+        const indexAxis = categoryAxisIsX ? getXAxis() : getYAxis();
         if (!indexScale) return { dataValue: undefined, dataIndex: undefined };
 
         const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
 
         // Convert index to actual data value if axis has data
         let dataValue: number;
-        if (indexAxis?.data && Array.isArray(indexAxis.data) && indexAxis.data[dataIndex] !== undefined) {
+        if (
+          indexAxis?.data &&
+          Array.isArray(indexAxis.data) &&
+          indexAxis.data[dataIndex] !== undefined
+        ) {
           const val = indexAxis.data[dataIndex];
           dataValue = typeof val === 'string' ? dataIndex : val;
         } else {

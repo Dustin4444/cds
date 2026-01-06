@@ -62,6 +62,7 @@ function HorizontalBars() {
         showGrid: true,
       }}
       yAxis={{
+        position: 'left',
         data: dataset.map((d) => d.month),
         tickLabelFormatter: (val) => String(val),
       }}

@@ -7,11 +7,11 @@ import type { ChartScaleFunction } from './scale';
 
 /**
  * Chart layout for Cartesian charts.
- * - 'horizontal': X is data axis, Y is value axis.
- * - 'vertical': Y is data axis, X is value axis.
+ * Describes the direction bars/areas grow.
+ * - 'vertical': Bars grow vertically (up/down). X is category axis, Y is value axis.
+ * - 'horizontal': Bars grow horizontally (left/right). Y is category axis, X is value axis.
  */
 export type CartesianChartLayout = 'horizontal' | 'vertical';
-
 
 /**
  * Context value for Cartesian (X/Y) coordinate charts.
@@ -19,10 +19,10 @@ export type CartesianChartLayout = 'horizontal' | 'vertical';
  */
 export type CartesianChartContextValue = {
   /**
-   * Chart layout.
-   * @default 'horizontal'
-   * - 'horizontal': X is data axis, Y is value axis.
-   * - 'vertical': Y is data axis, X is value axis.
+   * Chart layout - describes the direction bars/areas grow.
+   * @default 'vertical'
+   * - 'vertical': Bars grow vertically (up/down). X is category axis, Y is value axis.
+   * - 'horizontal': Bars grow horizontally (left/right). Y is category axis, X is value axis.
    */
   layout: CartesianChartLayout;
   /**

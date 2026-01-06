@@ -80,7 +80,7 @@ export const getLinePath = ({
   xData,
   yData,
   connectNulls,
-  layout = 'horizontal',
+  layout = 'vertical',
 }: {
   data: (number | null | { x: number; y: number })[];
   curve?: ChartPathCurveType;
@@ -150,7 +150,7 @@ export const getAreaPath = ({
   xData,
   yData,
   connectNulls,
-  layout = 'horizontal',
+  layout = 'vertical',
 }: {
   data: (number | null)[] | Array<[number, number] | null>;
   xScale: ChartScaleFunction;
@@ -174,10 +174,10 @@ export const getAreaPath = ({
   }
 
   const curveFunction = getPathCurveFunction(curve, layout);
-  const isHorizontal = layout === 'horizontal';
+  const categoryAxisIsX = layout === 'vertical';
 
   // Determine baseline from the value scale
-  const valueScale = isHorizontal ? yScale : xScale;
+  const valueScale = categoryAxisIsX ? yScale : xScale;
   const domain = valueScale.domain();
   const min = Math.min(...domain);
 
@@ -213,8 +213,8 @@ export const getAreaPath = ({
 
     // Determine the position along the independent (index) axis
     let indexValue: number = index;
-    const indexScale = isHorizontal ? xScale : yScale;
-    const indexData = isHorizontal ? xData : yData;
+    const indexScale = categoryAxisIsX ? xScale : yScale;
+    const indexData = categoryAxisIsX ? xData : yData;
 
     if (!isCategoricalScale(indexScale) && indexData && indexData[index] !== undefined) {
       indexValue = indexData[index];
@@ -225,8 +225,8 @@ export const getAreaPath = ({
     const high = getPointOnScale(range[1], valueScale);
 
     return {
-      x: isHorizontal ? pos : 0,
-      y: !isHorizontal ? pos : 0,
+      x: categoryAxisIsX ? pos : 0,
+      y: !categoryAxisIsX ? pos : 0,
       low,
       high,
       isValid: true,
@@ -245,7 +245,7 @@ export const getAreaPath = ({
     isValid: boolean;
   }>();
 
-  if (isHorizontal) {
+  if (categoryAxisIsX) {
     areaGenerator
       .x((d) => d.x)
       .y0((d) => d.low ?? 0)
@@ -300,23 +300,23 @@ export const getBarPath = (
   radius: number,
   roundTop: boolean,
   roundBottom: boolean,
-  layout: CartesianChartLayout = 'horizontal',
+  layout: CartesianChartLayout = 'vertical',
 ): string => {
   const roundBothSides = roundTop && roundBottom;
-  const isHorizontal = layout === 'horizontal';
+  const barsGrowVertically = layout === 'vertical';
   const r = Math.min(radius, width / 2, roundBothSides ? height / 2 : height);
 
-  // In horizontal layout:
+  // In vertical layout (bars grow up/down):
   // - roundTop rounds the top face (min Y)
   // - roundBottom rounds the bottom face (max Y)
-  // In vertical layout:
+  // In horizontal layout (bars grow left/right):
   // - roundTop rounds the right face (max X)
   // - roundBottom rounds the left face (min X)
 
-  const rTL = isHorizontal ? (roundTop ? r : 0) : (roundBottom ? r : 0);
-  const rTR = isHorizontal ? (roundTop ? r : 0) : (roundTop ? r : 0);
-  const rBR = isHorizontal ? (roundBottom ? r : 0) : (roundTop ? r : 0);
-  const rBL = isHorizontal ? (roundBottom ? r : 0) : (roundBottom ? r : 0);
+  const rTL = barsGrowVertically ? (roundTop ? r : 0) : roundBottom ? r : 0;
+  const rTR = barsGrowVertically ? (roundTop ? r : 0) : roundTop ? r : 0;
+  const rBR = barsGrowVertically ? (roundBottom ? r : 0) : roundTop ? r : 0;
+  const rBL = barsGrowVertically ? (roundBottom ? r : 0) : roundBottom ? r : 0;
 
   // Build path with selective rounding
   let path = `M ${x + rTL} ${y}`;

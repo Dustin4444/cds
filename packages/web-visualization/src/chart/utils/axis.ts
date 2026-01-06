@@ -154,8 +154,8 @@ import { type CartesianChartLayout } from './context';
  * or "strict" (exact min/max). Range can be customized using function-based configuration.
  *
  * Range inversion is determined by axis role (category vs value) and layout:
- * - Horizontal layout: Y axis (value) is inverted for SVG coordinate system
- * - Vertical layout: Y axis (category) is inverted (first category at top)
+ * - Vertical layout: Y axis (value) is inverted for SVG coordinate system
+ * - Horizontal layout: Y axis (category) is inverted (first category at top)
  *
  * @param params - Scale parameters
  * @returns The D3 scale function
@@ -166,7 +166,7 @@ export const getCartesianAxisScale = ({
   type,
   range,
   dataDomain,
-  layout = 'horizontal',
+  layout = 'vertical',
 }: {
   config?: CartesianAxisConfig;
   type: 'x' | 'y';
@@ -179,8 +179,8 @@ export const getCartesianAxisScale = ({
   let adjustedRange = range;
 
   // Determine if this axis needs range inversion for SVG coordinate system.
-  // For horizontal layout: Y axis (value axis) needs inversion (higher values at top)
-  // For vertical layout: Y axis (category axis) needs inversion (first category at top)
+  // For vertical layout: Y axis (value axis) needs inversion (higher values at top)
+  // For horizontal layout: Y axis (category axis) needs inversion (first category at top)
   // X axis never needs inversion (left-to-right is natural for both layouts)
   const shouldInvertRange = type === 'y';
 
@@ -235,7 +235,7 @@ export const getCartesianAxisDomain = (
   axisParam: CartesianAxisConfigProps,
   series: Series[],
   axisType: 'x' | 'y',
-  layout: CartesianChartLayout = 'horizontal',
+  layout: CartesianChartLayout = 'vertical',
 ): AxisBounds => {
   let dataDomain: AxisBounds | null = null;
   if (axisParam.data && Array.isArray(axisParam.data) && axisParam.data.length > 0) {
@@ -259,11 +259,10 @@ export const getCartesianAxisDomain = (
   }
 
   // Calculate domain from series data
-  // In horizontal layout: X is category (index), Y is value (value)
-  // In vertical layout: Y is category (index), X is value (value)
+  // In vertical layout: X is category (index), Y is value (value)
+  // In horizontal layout: Y is category (index), X is value (value)
   const isCategoryAxis =
-    (layout === 'horizontal' && axisType === 'x') ||
-    (layout === 'vertical' && axisType === 'y');
+    (layout === 'vertical' && axisType === 'x') || (layout === 'horizontal' && axisType === 'y');
   const seriesDomain = isCategoryAxis ? getChartDomain(series) : getChartRange(series);
 
   // If data sets the domain, use that instead of the series domain

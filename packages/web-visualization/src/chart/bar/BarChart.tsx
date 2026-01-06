@@ -143,24 +143,24 @@ export const BarChart = memo(
       }, [series]);
 
       const xAxisConfig: Partial<CartesianAxisConfigProps> = {
-        scaleType: xScaleType ?? (chartProps.layout === 'vertical' ? 'linear' : 'band'),
+        scaleType: xScaleType ?? (chartProps.layout === 'horizontal' ? 'linear' : 'band'),
         data: xData,
         categoryPadding: xCategoryPadding,
         domain:
-          chartProps.layout === 'vertical' && !hasNegativeValues
+          chartProps.layout === 'horizontal' && !hasNegativeValues
             ? { min: 0, ...xDomain }
             : xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
       };
 
-      // Set default min domain to 0 for area chart, but only if there are no negative values
+      // Set default min domain to 0 for bar chart, but only if there are no negative values
       const yAxisConfig: Partial<CartesianAxisConfigProps> = {
-        scaleType: yScaleType ?? (chartProps.layout === 'vertical' ? 'band' : 'linear'),
+        scaleType: yScaleType ?? (chartProps.layout === 'horizontal' ? 'band' : 'linear'),
         data: yData,
         categoryPadding: yCategoryPadding,
         domain:
-          chartProps.layout !== 'vertical' && !hasNegativeValues
+          chartProps.layout !== 'horizontal' && !hasNegativeValues
             ? { min: 0, ...yDomain }
             : yDomain,
         domainLimit: yDomainLimit,
@@ -179,7 +179,8 @@ export const BarChart = memo(
           {showXAxis && (
             <XAxis
               requestedTickCount={
-                xAxisVisualProps.requestedTickCount ?? (chartProps.layout === 'vertical' ? 5 : undefined)
+                xAxisVisualProps.requestedTickCount ??
+                (chartProps.layout === 'horizontal' ? 5 : undefined)
               }
               {...xAxisVisualProps}
             />

@@ -1,10 +1,5 @@
 import type { ChartPathCurveType } from '../path';
-import {
-  getAreaPath,
-  getBarPath,
-  getLinePath,
-  getPathCurveFunction,
-} from '../path';
+import { getAreaPath, getBarPath, getLinePath, getPathCurveFunction } from '../path';
 import { getCategoricalScale, getNumericScale } from '../scale';
 
 describe('getPathCurveFunction', () => {
@@ -192,15 +187,15 @@ describe('getLinePath', () => {
     expect(result).toBe('M0,50Z');
   });
 
-  it('should generate vertical layout path correctly', () => {
+  it('should generate horizontal layout path correctly', () => {
     const result = getLinePath({
       data: [1, 2, 3],
       xScale,
       yScale,
       curve: 'linear',
-      layout: 'vertical',
+      layout: 'horizontal',
     });
-    // In vertical layout:
+    // In horizontal layout (bars grow horizontally):
     // x is value axis (xScale: 0->10 -> 0->100)
     // y is index axis (yScale: 0->10 -> 100->0)
     // Point 0: data[0]=1 -> value 1 -> x=xScale(1)=10, index 0 -> y=yScale(0)=100
@@ -347,14 +342,15 @@ describe('getAreaPath', () => {
     expect(result).toBe('M0,50L0,100Z');
   });
 
-  it('should generate vertical layout area path correctly', () => {
+  it('should generate horizontal layout area path correctly', () => {
     const result = getAreaPath({
       data: [1, 2],
       curve: 'linear',
       xScale,
       yScale,
-      layout: 'vertical',
+      layout: 'horizontal',
     });
+    // In horizontal layout (areas grow horizontally):
     // indexScale = yScale (0->10 -> 100->0)
     // valueScale = xScale (0->10 -> 0->100)
     // min = 0
@@ -421,8 +417,8 @@ describe('getBarPath', () => {
     expect(noRounding).not.toBe(bothRounding);
   });
 
-  it('should generate vertical layout bar path correctly', () => {
-    // In vertical layout:
+  it('should generate horizontal layout bar path correctly', () => {
+    // In horizontal layout (bars grow sideways):
     // roundTop rounds the right face (max X)
     // roundBottom rounds the left face (min X)
     const x = 10,
@@ -431,13 +427,15 @@ describe('getBarPath', () => {
       height = 30,
       radius = 5;
 
-    const rightRounded = getBarPath(x, y, width, height, radius, true, false, 'vertical');
-    const leftRounded = getBarPath(x, y, width, height, radius, false, true, 'vertical');
+    const rightRounded = getBarPath(x, y, width, height, radius, true, false, 'horizontal');
+    const leftRounded = getBarPath(x, y, width, height, radius, false, true, 'horizontal');
 
     // Right face rounded: max X (x+width) corners
     // Corners are: (x+width, y) and (x+width, y+height)
     expect(rightRounded).toContain(`A ${radius} ${radius} 0 0 1 ${x + width} ${y + radius}`);
-    expect(rightRounded).toContain(`A ${radius} ${radius} 0 0 1 ${x + width - radius} ${y + height}`);
+    expect(rightRounded).toContain(
+      `A ${radius} ${radius} 0 0 1 ${x + width - radius} ${y + height}`,
+    );
 
     // Left face rounded: min X (x) corners
     // Corners are: (x, y) and (x, y+height)

@@ -165,8 +165,8 @@ export type ScrubberBaseProps = SharedProps &
      * Can be a static string or a function that receives the current dataIndex.
      */
     label?:
-    | ReferenceLineBaseProps['label']
-    | ((dataIndex: number) => ReferenceLineBaseProps['label']);
+      | ReferenceLineBaseProps['label']
+      | ((dataIndex: number) => ReferenceLineBaseProps['label']);
     /**
      * Font style for the scrubber line label.
      */
@@ -253,8 +253,17 @@ export const Scrubber = memo(
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
-      const { layout, getXScale, getYScale, getXAxis, getYAxis, animate, series, drawingArea, dataLength } =
-        useCartesianChartContext();
+      const {
+        layout,
+        getXScale,
+        getYScale,
+        getXAxis,
+        getYAxis,
+        animate,
+        series,
+        drawingArea,
+        dataLength,
+      } = useCartesianChartContext();
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -271,16 +280,20 @@ export const Scrubber = memo(
       }, [series, seriesIds]);
 
       const { dataValue, dataIndex } = useMemo(() => {
-        const isHorizontal = layout === 'horizontal';
-        const indexScale = (isHorizontal ? getXScale() : getYScale()) as ChartScaleFunction;
-        const indexAxis = isHorizontal ? getXAxis() : getYAxis();
+        const categoryAxisIsX = layout === 'vertical';
+        const indexScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+        const indexAxis = categoryAxisIsX ? getXAxis() : getYAxis();
         if (!indexScale) return { dataValue: undefined, dataIndex: undefined };
 
         const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
 
         // Convert index to actual data value if axis has data
         let dataValue: number;
-        if (indexAxis?.data && Array.isArray(indexAxis.data) && indexAxis.data[dataIndex] !== undefined) {
+        if (
+          indexAxis?.data &&
+          Array.isArray(indexAxis.data) &&
+          indexAxis.data[dataIndex] !== undefined
+        ) {
           const val = indexAxis.data[dataIndex];
           dataValue = typeof val === 'string' ? dataIndex : val;
         } else {
@@ -319,8 +332,8 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
-      const isHorizontal = layout === 'horizontal';
-      const indexScale = isHorizontal ? getXScale() : getYScale();
+      const categoryAxisIsX = layout === 'vertical';
+      const indexScale = categoryAxisIsX ? getXScale() : getYScale();
       if (!indexScale) return null;
 
       const pixelPos =
@@ -336,32 +349,42 @@ export const Scrubber = memo(
           role="status"
           {...(animate
             ? {
-              animate: {
-                opacity: 1,
-                transition: {
-                  duration: accessoryFadeTransitionDuration,
-                  delay: accessoryFadeTransitionDelay,
+                animate: {
+                  opacity: 1,
+                  transition: {
+                    duration: accessoryFadeTransitionDuration,
+                    delay: accessoryFadeTransitionDelay,
+                  },
                 },
-              },
-              exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
-              initial: { opacity: 0 },
-            }
+                exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
+                initial: { opacity: 0 },
+              }
             : {})}
         >
           {!hideOverlay && scrubberPosition !== undefined && pixelPos !== undefined && (
             <rect
               className={classNames?.overlay}
               fill="var(--color-bg)"
-              height={isHorizontal ? drawingArea.height + overlayOffset * 2 : drawingArea.y + drawingArea.height - pixelPos + overlayOffset}
+              height={
+                categoryAxisIsX
+                  ? drawingArea.height + overlayOffset * 2
+                  : drawingArea.y + drawingArea.height - pixelPos + overlayOffset
+              }
               opacity={0.8}
               style={styles?.overlay}
-              width={isHorizontal ? drawingArea.x + drawingArea.width - pixelPos + overlayOffset : drawingArea.width + overlayOffset * 2}
-              x={isHorizontal ? pixelPos : drawingArea.x - overlayOffset}
-              y={isHorizontal ? drawingArea.y - overlayOffset : pixelPos}
+              width={
+                categoryAxisIsX
+                  ? drawingArea.x + drawingArea.width - pixelPos + overlayOffset
+                  : drawingArea.width + overlayOffset * 2
+              }
+              x={categoryAxisIsX ? pixelPos : drawingArea.x - overlayOffset}
+              y={categoryAxisIsX ? drawingArea.y - overlayOffset : pixelPos}
             />
           )}
-          {!hideLine && scrubberPosition !== undefined && dataValue !== undefined && (
-            isHorizontal ? (
+          {!hideLine &&
+            scrubberPosition !== undefined &&
+            dataValue !== undefined &&
+            (categoryAxisIsX ? (
               <ReferenceLine
                 LabelComponent={LabelComponent}
                 LineComponent={LineComponent}
@@ -387,8 +410,7 @@ export const Scrubber = memo(
                 stroke={lineStroke}
                 styles={{ label: styles?.line }}
               />
-            )
-          )}
+            ))}
           <ScrubberBeaconGroup
             ref={beaconGroupRef}
             BeaconComponent={BeaconComponent}

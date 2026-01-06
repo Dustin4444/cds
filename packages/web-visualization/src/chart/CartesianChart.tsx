@@ -17,8 +17,8 @@ import {
   defaultAxisId,
   defaultChartInset,
   getAxisConfig,
-  getCartesianAxisDomain,
   getAxisRange,
+  getCartesianAxisDomain,
   getCartesianAxisScale,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
@@ -44,10 +44,10 @@ export type CartesianChartBaseProps = BoxBaseProps &
      */
     series?: Array<Series>;
     /**
-     * Chart layout.
-     * - 'horizontal' (default): X is category axis, Y is value axis.
-     * - 'vertical': Y is category axis, X is value axis.
-     * @default 'horizontal'
+     * Chart layout - describes the direction bars/areas grow.
+     * - 'vertical' (default): Bars grow vertically. X is category axis, Y is value axis.
+     * - 'horizontal': Bars grow horizontally. Y is category axis, X is value axis.
+     * @default 'vertical'
      */
     layout?: CartesianChartLayout;
     /**
@@ -62,7 +62,9 @@ export type CartesianChartBaseProps = BoxBaseProps &
     /**
      * Configuration for y-axis(es). Can be a single config or array of configs.
      */
-    yAxis?: Partial<Omit<CartesianAxisConfigProps, 'data'>> | Partial<Omit<CartesianAxisConfigProps, 'data'>>[];
+    yAxis?:
+      | Partial<Omit<CartesianAxisConfigProps, 'data'>>
+      | Partial<Omit<CartesianAxisConfigProps, 'data'>>[];
     /**
      * Inset around the entire chart (outside the axes).
      */
@@ -113,7 +115,7 @@ export const CartesianChart = memo(
       {
         series,
         children,
-        layout = 'horizontal',
+        layout = 'vertical',
         animate = true,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
@@ -176,7 +178,7 @@ export const CartesianChart = memo(
           range,
           data: xAxisConfig.data,
           categoryPadding: xAxisConfig.categoryPadding,
-          domainLimit: xAxisConfig.domainLimit ?? (layout === 'vertical' ? 'nice' : 'strict'),
+          domainLimit: xAxisConfig.domainLimit ?? (layout === 'horizontal' ? 'nice' : 'strict'),
         };
 
         // Create the scale
@@ -228,7 +230,7 @@ export const CartesianChart = memo(
             range,
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
-            domainLimit: axisParam.domainLimit ?? (layout === 'vertical' ? 'strict' : 'nice'),
+            domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'strict' : 'nice'),
           };
 
           // Create the scale
@@ -284,8 +286,8 @@ export const CartesianChart = memo(
 
       const dataLength = useMemo(() => {
         // Find which axis is the category axis
-        const isHorizontal = layout === 'horizontal';
-        const categoryAxisConfig = isHorizontal ? xAxisConfig : (yAxisConfig[0] ?? xAxisConfig);
+        const categoryAxisIsX = layout === 'vertical';
+        const categoryAxisConfig = categoryAxisIsX ? xAxisConfig : (yAxisConfig[0] ?? xAxisConfig);
 
         // If category axis has categorical data, use that length
         if (categoryAxisConfig.data && categoryAxisConfig.data.length > 0) {

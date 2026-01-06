@@ -156,7 +156,8 @@ export const calculateLabelStackedPositions = (
       } else if (groupTotalNeeded <= availableSpace) {
         // Can't shift enough, but there's room - redistribute with proper spacing
         let currentY = Math.max(minPos, groupFirstLabel.finalY - maxShiftUp);
-        const gap = (availableSpace - group.length * labelThickness) / Math.max(1, group.length - 1);
+        const gap =
+          (availableSpace - group.length * labelThickness) / Math.max(1, group.length - 1);
         for (const label of group) {
           label.finalY = currentY;
           currentY += labelThickness + gap;

@@ -44,11 +44,11 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const initialClipPathData = useMemo(() => {
       if (!animate) return undefined;
-      const isHorizontal = layout === 'horizontal';
-      const initialX = isHorizontal ? x : (yOrigin ?? x);
-      const initialY = isHorizontal ? (yOrigin ?? y + height) : y;
-      const initialWidth = isHorizontal ? width : 1;
-      const initialHeight = isHorizontal ? 1 : height;
+      const barsGrowVertically = layout === 'vertical';
+      const initialX = barsGrowVertically ? x : (yOrigin ?? x);
+      const initialY = barsGrowVertically ? (yOrigin ?? y + height) : y;
+      const initialWidth = barsGrowVertically ? width : 1;
+      const initialHeight = barsGrowVertically ? 1 : height;
 
       return getBarPath(
         initialX,

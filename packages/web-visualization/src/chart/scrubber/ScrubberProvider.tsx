@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { isCategoricalScale, ScrubberContext, type ChartScaleFunction, type ScrubberContextValue } from '../utils';
+import {
+  isCategoricalScale,
+  ScrubberContext,
+  type ChartScaleFunction,
+  type ScrubberContextValue,
+} from '../utils';
 
 export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
@@ -34,9 +39,9 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
   const getDataIndexFromPosition = useCallback(
     (mousePosition: number): number => {
-      const isHorizontal = layout === 'horizontal';
-      const categoryScale = (isHorizontal ? getXScale() : getYScale()) as ChartScaleFunction;
-      const categoryAxis = isHorizontal ? getXAxis() : getYAxis();
+      const categoryAxisIsX = layout === 'vertical';
+      const categoryScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+      const categoryAxis = categoryAxisIsX ? getXAxis() : getYAxis();
 
       if (!categoryScale || !categoryAxis) return 0;
 
@@ -93,7 +98,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       if (!enableScrubbing || !series || series.length === 0) return;
 
       const rect = target.getBoundingClientRect();
-      const position = layout === 'vertical' ? clientY - rect.top : clientX - rect.left;
+      const position = layout === 'horizontal' ? clientY - rect.top : clientX - rect.left;
 
       const dataIndex = getDataIndexFromPosition(position);
 
@@ -102,7 +107,14 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         onScrubberPositionChange?.(dataIndex);
       }
     },
-    [enableScrubbing, series, layout, getDataIndexFromPosition, scrubberPosition, onScrubberPositionChange],
+    [
+      enableScrubbing,
+      series,
+      layout,
+      getDataIndexFromPosition,
+      scrubberPosition,
+      onScrubberPositionChange,
+    ],
   );
 
   const handleMouseMove = useCallback(
@@ -149,9 +161,9 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     (event: KeyboardEvent) => {
       if (!enableScrubbing) return;
 
-      const isHorizontal = layout === 'horizontal';
-      const categoryScale = (isHorizontal ? getXScale() : getYScale()) as ChartScaleFunction;
-      const categoryAxis = isHorizontal ? getXAxis() : getYAxis();
+      const categoryAxisIsX = layout === 'vertical';
+      const categoryScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+      const categoryAxis = categoryAxisIsX ? getXAxis() : getYAxis();
 
       if (!categoryScale || !categoryAxis) return;
 
@@ -195,11 +207,11 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       let newIndex: number | undefined;
 
       switch (event.key) {
-        case isHorizontal ? 'ArrowLeft' : 'ArrowUp':
+        case categoryAxisIsX ? 'ArrowLeft' : 'ArrowUp':
           event.preventDefault();
           newIndex = Math.max(minIndex, currentIndex - stepSize);
           break;
-        case isHorizontal ? 'ArrowRight' : 'ArrowDown':
+        case categoryAxisIsX ? 'ArrowRight' : 'ArrowDown':
           event.preventDefault();
           newIndex = Math.min(maxIndex, currentIndex + stepSize);
           break;
@@ -224,7 +236,16 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         onScrubberPositionChange?.(newIndex);
       }
     },
-    [enableScrubbing, layout, getXScale, getYScale, getXAxis, getYAxis, scrubberPosition, onScrubberPositionChange],
+    [
+      enableScrubbing,
+      layout,
+      getXScale,
+      getYScale,
+      getXAxis,
+      getYAxis,
+      scrubberPosition,
+      onScrubberPositionChange,
+    ],
   );
 
   const handleBlur = useCallback(() => {

@@ -42,7 +42,9 @@ function HorizontalLine() {
     <LineChart
       height={400}
       layout="vertical"
-      series={[{ id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' }]}
+      series={[
+        { id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' },
+      ]}
       showXAxis
       showYAxis
       xAxis={{ label: 'rainfall (mm)' }}

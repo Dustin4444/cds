@@ -51,7 +51,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
     const stackConfigs = useMemo(() => {
       if (!xScale || !yScale || !drawingArea || dataLength === 0) return [];
 
-      const indexScale = layout === 'horizontal' ? xScale : yScale;
+      const indexScale = layout === 'vertical' ? xScale : yScale;
 
       if (!isCategoricalScale(indexScale)) {
         return [];
@@ -61,7 +61,8 @@ export const BarStackGroup = memo<BarStackGroupProps>(
 
       // Calculate thickness for each stack within a category
       const gapSize = totalStacks > 1 ? (categoryWidth * barPadding) / (totalStacks - 1) : 0;
-      const stackThickness = categoryWidth / totalStacks - getBarSizeAdjustment(totalStacks, gapSize);
+      const stackThickness =
+        categoryWidth / totalStacks - getBarSizeAdjustment(totalStacks, gapSize);
 
       const configs: Array<{
         categoryIndex: number;
@@ -88,18 +89,21 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       return configs;
     }, [xScale, yScale, drawingArea, dataLength, stackIndex, totalStacks, barPadding]);
 
-    const indexScaleComputed = layout === 'horizontal' ? xScale : yScale;
-    const valueScaleComputed = layout === 'horizontal' ? yScale : xScale;
+    const indexScaleComputed = layout === 'vertical' ? xScale : yScale;
+    const valueScaleComputed = layout === 'vertical' ? yScale : xScale;
 
     if (indexScaleComputed && !isCategoricalScale(indexScaleComputed)) {
       throw new Error(
-        `BarStackGroup requires a band scale for ${layout === 'horizontal' ? 'x-axis' : 'y-axis'
-        }. See https://cds.coinbase.com/components/graphs/${layout === 'horizontal' ? 'XAxis' : 'YAxis'
+        `BarStackGroup requires a band scale for ${
+          layout === 'vertical' ? 'x-axis' : 'y-axis'
+        }. See https://cds.coinbase.com/components/graphs/${
+          layout === 'vertical' ? 'XAxis' : 'YAxis'
         }/#scale-type`,
       );
     }
 
-    if (!indexScaleComputed || !valueScaleComputed || !drawingArea || stackConfigs.length === 0) return null;
+    if (!indexScaleComputed || !valueScaleComputed || !drawingArea || stackConfigs.length === 0)
+      return null;
 
     return stackConfigs.map(({ categoryIndex, indexPos, thickness }) => (
       <BarStack

@@ -122,8 +122,8 @@ export type BarStackComponentProps = {
   roundBottom?: boolean;
   /**
    * The origin point for animations (baseline position).
-   * For horizontal layout, this is the y-origin.
-   * For vertical layout, this is the x-origin.
+   * For vertical layout (bars grow up), this is the y-origin.
+   * For horizontal layout (bars grow sideways), this is the x-origin.
    */
   yOrigin?: number;
 };
@@ -161,7 +161,7 @@ export const BarStack = memo<BarStackProps>(
     const stackMinSizePx = stackMinSize;
 
     const xAxis = getXAxis();
-    const isHorizontal = layout === 'horizontal';
+    const barsGrowVertically = layout === 'vertical';
 
     const baseline = useMemo(() => {
       const domain = valueScale.domain();
@@ -169,16 +169,16 @@ export const BarStack = memo<BarStackProps>(
       const baselineValue = domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
       const pos = valueScale(baselineValue) ?? 0;
 
-      // In horizontal layout, value scale is Y. In vertical, it's X.
-      const fallback = isHorizontal ? rect.y + rect.height : rect.x;
+      // In vertical layout (bars grow up), value scale is Y. In horizontal, it's X.
+      const fallback = barsGrowVertically ? rect.y + rect.height : rect.x;
       const baselinePos = valueScale(baselineValue) ?? fallback;
 
-      if (isHorizontal) {
+      if (barsGrowVertically) {
         return Math.max(rect.y, Math.min(baselinePos, rect.y + rect.height));
       } else {
         return Math.max(rect.x, Math.min(baselinePos, rect.x + rect.width));
       }
-    }, [rect, valueScale, isHorizontal]);
+    }, [rect, valueScale, barsGrowVertically]);
 
     const seriesGradients = useMemo(() => {
       return series.map((s) => {
@@ -186,10 +186,10 @@ export const BarStack = memo<BarStackProps>(
 
         const evalScale =
           s.gradient.axis === 'x'
-            ? isHorizontal
+            ? barsGrowVertically
               ? indexScale
               : valueScale
-            : isHorizontal
+            : barsGrowVertically
               ? valueScale
               : indexScale;
 
@@ -197,8 +197,8 @@ export const BarStack = memo<BarStackProps>(
         // For now let's assume getGradientConfig can handle these scales if we pass them correctly.
         const stops = getGradientConfig(
           s.gradient,
-          isHorizontal ? indexScale : valueScale,
-          isHorizontal ? valueScale : indexScale,
+          barsGrowVertically ? indexScale : valueScale,
+          barsGrowVertically ? valueScale : indexScale,
         );
         if (!stops) return null;
 
@@ -209,7 +209,7 @@ export const BarStack = memo<BarStackProps>(
           stops,
         };
       });
-    }, [series, indexScale, valueScale, isHorizontal]);
+    }, [series, indexScale, valueScale, barsGrowVertically]);
 
     // Calculate bars for this specific category
     const { bars, stackRect } = useMemo(() => {
@@ -261,21 +261,21 @@ export const BarStack = memo<BarStackProps>(
         const edgeBottom = valueScale(bottom) ?? baseline;
         const edgeTop = valueScale(top) ?? baseline;
 
-        // In horizontal layout:
+        // In vertical layout (bars grow up):
         // - edgeTop is min Y (top face)
         // - edgeBottom is max Y (bottom face)
-        // In vertical layout:
+        // In horizontal layout (bars grow sideways):
         // - edgeTop is max X (right face)
         // - edgeBottom is min X (left face)
         // However, edgeTop/edgeBottom here are values from the scale.
         // For positive bars: edgeTop = scale(value), edgeBottom = scale(0).
-        // For vertical: edgeTop > edgeBottom (X increases right).
-        // For horizontal: edgeTop < edgeBottom (Y increases down).
+        // For horizontal: edgeTop > edgeBottom (X increases right).
+        // For vertical: edgeTop < edgeBottom (Y increases down).
 
         const roundingEndA = roundBaseline || Math.abs(edgeTop - baseline) >= EPSILON;
         const roundingEndB = roundBaseline || Math.abs(edgeBottom - baseline) >= EPSILON;
 
-        // In vertical layout: roundTop is Right (edgeTop), roundBottom is Left (edgeBottom)
+        // In horizontal layout: roundTop is Right (edgeTop), roundBottom is Left (edgeBottom)
         // getBarPath already handles the mapping of roundTop/roundBottom to coordinates.
         const roundTop = roundingEndA;
         const roundBottom = roundingEndB;
@@ -311,11 +311,19 @@ export const BarStack = memo<BarStackProps>(
 
           let evalValue: number;
           if (axis === 'x') {
-            // X-axis gradient: In horizontal it's the index, in vertical it's the value.
-            evalValue = isHorizontal ? categoryIndex : (Array.isArray(originalValue) ? originalValue[1] : originalValue);
+            // X-axis gradient: In vertical it's the index, in horizontal it's the value.
+            evalValue = barsGrowVertically
+              ? categoryIndex
+              : Array.isArray(originalValue)
+                ? originalValue[1]
+                : originalValue;
           } else {
-            // Y-axis gradient: In horizontal it's the value, in vertical it's the index.
-            evalValue = isHorizontal ? (Array.isArray(originalValue) ? originalValue[1] : originalValue) : categoryIndex;
+            // Y-axis gradient: In vertical it's the value, in horizontal it's the index.
+            evalValue = barsGrowVertically
+              ? Array.isArray(originalValue)
+                ? originalValue[1]
+                : originalValue
+              : categoryIndex;
           }
 
           const evaluatedColor = evaluateGradientAtValue(
@@ -362,7 +370,7 @@ export const BarStack = memo<BarStackProps>(
 
           // In SVG, for Y axis positive values go up (decreasing Y)
           // For X axis positive values go right (increasing X)
-          const sortedBars = isHorizontal
+          const sortedBars = barsGrowVertically
             ? barsAboveBaseline.sort((a, b) => b.valuePos - a.valuePos) // Higher Y first
             : barsAboveBaseline.sort((a, b) => a.valuePos - b.valuePos); // Higher X last
 
@@ -371,12 +379,13 @@ export const BarStack = memo<BarStackProps>(
             const newLength = bar.length * (1 - lengthReduction);
             let newValuePos: number;
 
-            if (isHorizontal) {
+            if (barsGrowVertically) {
               newValuePos = currentEdge - newLength;
               currentEdge = newValuePos - (index < sortedBars.length - 1 ? stackGap : 0);
             } else {
               newValuePos = currentEdge;
-              currentEdge = newValuePos + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
+              currentEdge =
+                newValuePos + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
             }
 
             const barIndex = allBars.findIndex((b) => b.seriesId === bar.seriesId);
@@ -396,7 +405,7 @@ export const BarStack = memo<BarStackProps>(
           const totalDataLength = barsBelowBaseline.reduce((sum, bar) => sum + bar.length, 0);
           const lengthReduction = totalGapSpace / totalDataLength;
 
-          const sortedBars = isHorizontal
+          const sortedBars = barsGrowVertically
             ? barsBelowBaseline.sort((a, b) => a.valuePos - b.valuePos)
             : barsBelowBaseline.sort((a, b) => b.valuePos - a.valuePos);
 
@@ -405,9 +414,10 @@ export const BarStack = memo<BarStackProps>(
             const newLength = bar.length * (1 - lengthReduction);
             let newValuePos: number;
 
-            if (isHorizontal) {
+            if (barsGrowVertically) {
               newValuePos = currentEdge;
-              currentEdge = newValuePos + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
+              currentEdge =
+                newValuePos + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
             } else {
               newValuePos = currentEdge - newLength;
               currentEdge = newValuePos - (index < sortedBars.length - 1 ? stackGap : 0);
@@ -440,9 +450,9 @@ export const BarStack = memo<BarStackProps>(
       // Apply border radius logic
       const applyBorderRadiusLogic = (bars: typeof allBars) => {
         // Sort bars from "bottom" to "top" of the stack relative to coordinate system
-        // Horizontal (Y axis): Max Y (bottom) to Min Y (top)
-        // Vertical (X axis): Min X (left) to Max X (right)
-        const sortedBars = isHorizontal
+        // Vertical (Y axis): Max Y (bottom) to Min Y (top)
+        // Horizontal (X axis): Min X (left) to Max X (right)
+        const sortedBars = barsGrowVertically
           ? [...bars].sort((a, b) => b.valuePos - a.valuePos)
           : [...bars].sort((a, b) => a.valuePos - b.valuePos);
 
@@ -450,22 +460,26 @@ export const BarStack = memo<BarStackProps>(
           const barBefore = index > 0 ? sortedBars[index - 1] : null;
           const barAfter = index < sortedBars.length - 1 ? sortedBars[index + 1] : null;
 
-          // shouldRoundLower: the face with the smaller coordinate (Top in horizontal, Left in vertical)
+          // shouldRoundLower: the face with the smaller coordinate (Top in vertical, Left in horizontal)
           const shouldRoundLower =
-            (isHorizontal ? index === sortedBars.length - 1 : index === 0) ||
+            (barsGrowVertically ? index === sortedBars.length - 1 : index === 0) ||
             (a.shouldApplyGap && stackGap) ||
             (!a.shouldApplyGap && barAfter && barAfter.valuePos + barAfter.length !== a.valuePos);
 
-          // shouldRoundHigher: the face with the larger coordinate (Bottom in horizontal, Right in vertical)
+          // shouldRoundHigher: the face with the larger coordinate (Bottom in vertical, Right in horizontal)
           const shouldRoundHigher =
-            (isHorizontal ? index === 0 : index === sortedBars.length - 1) ||
+            (barsGrowVertically ? index === 0 : index === sortedBars.length - 1) ||
             (a.shouldApplyGap && stackGap) ||
             (!a.shouldApplyGap && barBefore && barBefore.valuePos !== a.valuePos + a.length);
 
           return {
             ...a,
-            roundTop: Boolean(a.roundTop && (isHorizontal ? shouldRoundLower : shouldRoundHigher)),
-            roundBottom: Boolean(a.roundBottom && (isHorizontal ? shouldRoundHigher : shouldRoundLower)),
+            roundTop: Boolean(
+              a.roundTop && (barsGrowVertically ? shouldRoundLower : shouldRoundHigher),
+            ),
+            roundBottom: Boolean(
+              a.roundBottom && (barsGrowVertically ? shouldRoundHigher : shouldRoundLower),
+            ),
           };
         });
       };
@@ -473,10 +487,18 @@ export const BarStack = memo<BarStackProps>(
 
       // Calculate the bounding rect for the entire stack
       const stackBounds = {
-        x: isHorizontal ? indexPos : minValuePos === Infinity ? baseline : minValuePos,
-        y: isHorizontal ? (minValuePos === Infinity ? baseline : minValuePos) : indexPos,
-        width: isHorizontal ? thickness : (maxValuePos === -Infinity ? 0 : maxValuePos - minValuePos),
-        height: isHorizontal ? (maxValuePos === -Infinity ? 0 : maxValuePos - minValuePos) : thickness,
+        x: barsGrowVertically ? indexPos : minValuePos === Infinity ? baseline : minValuePos,
+        y: barsGrowVertically ? (minValuePos === Infinity ? baseline : minValuePos) : indexPos,
+        width: barsGrowVertically
+          ? thickness
+          : maxValuePos === -Infinity
+            ? 0
+            : maxValuePos - minValuePos,
+        height: barsGrowVertically
+          ? maxValuePos === -Infinity
+            ? 0
+            : maxValuePos - minValuePos
+          : thickness,
       };
 
       return { bars: allBars, stackRect: stackBounds };
@@ -493,7 +515,7 @@ export const BarStack = memo<BarStackProps>(
       valueScale,
       seriesGradients,
       roundBaseline,
-      isHorizontal,
+      barsGrowVertically,
     ]);
 
     const xData =
@@ -507,36 +529,36 @@ export const BarStack = memo<BarStackProps>(
         key={`${bar.seriesId}-${categoryIndex}-${index}`}
         BarComponent={bar.BarComponent || defaultBarComponent}
         borderRadius={borderRadius}
-        dataX={isHorizontal ? dataX : bar.dataValue as any} // This is a bit loose, depends on Bar implementation
-        dataY={isHorizontal ? bar.dataValue as any : dataX}
+        dataX={barsGrowVertically ? dataX : (bar.dataValue as any)} // This is a bit loose, depends on Bar implementation
+        dataY={barsGrowVertically ? (bar.dataValue as any) : dataX}
         fill={bar.fill}
         fillOpacity={bar.fillOpacity ?? defaultFillOpacity}
-        height={isHorizontal ? bar.length : thickness}
+        height={barsGrowVertically ? bar.length : thickness}
         origin={baseline}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
         stroke={bar.stroke ?? defaultStroke}
         strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
         transition={transition}
-        width={isHorizontal ? thickness : bar.length}
-        x={isHorizontal ? indexPos : bar.valuePos}
-        y={isHorizontal ? bar.valuePos : indexPos}
+        width={barsGrowVertically ? thickness : bar.length}
+        x={barsGrowVertically ? indexPos : bar.valuePos}
+        y={barsGrowVertically ? bar.valuePos : indexPos}
       />
     ));
 
     // Check if the stack as a whole should be rounded based on the baseline
-    // edge: top in horizontal, left in vertical
-    // size: height in horizontal, width in vertical
-    const edge = isHorizontal ? stackRect.y : stackRect.x;
-    const size = isHorizontal ? stackRect.height : stackRect.width;
+    // edge: top in vertical, left in horizontal
+    // size: height in vertical, width in horizontal
+    const edge = barsGrowVertically ? stackRect.y : stackRect.x;
+    const size = barsGrowVertically ? stackRect.height : stackRect.width;
 
-    // stackRoundLower: face at smaller coordinate (Top in horizontal, Left in vertical)
-    // stackRoundHigher: face at larger coordinate (Bottom in horizontal, Right in vertical)
+    // stackRoundLower: face at smaller coordinate (Top in vertical, Left in horizontal)
+    // stackRoundHigher: face at larger coordinate (Bottom in vertical, Right in horizontal)
     const stackRoundLower = roundBaseline || Math.abs(edge - baseline) >= EPSILON;
     const stackRoundHigher = roundBaseline || Math.abs(edge + size - baseline) >= EPSILON;
 
-    const stackRoundTop = isHorizontal ? stackRoundLower : stackRoundHigher;
-    const stackRoundBottom = isHorizontal ? stackRoundHigher : stackRoundLower;
+    const stackRoundTop = barsGrowVertically ? stackRoundLower : stackRoundHigher;
+    const stackRoundBottom = barsGrowVertically ? stackRoundHigher : stackRoundLower;
 
     return (
       <BarStackComponent

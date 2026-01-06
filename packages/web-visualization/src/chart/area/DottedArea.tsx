@@ -94,7 +94,13 @@ export const DottedArea = memo<DottedAreaProps>(
             <circle cx={dotCenterPosition} cy={dotCenterPosition} fill="white" r={dotSize} />
           </pattern>
           <mask id={maskId}>
-            <Path animate={animate} clipOffset={2} d={d} fill={`url(#${patternId})`} transition={transition} />
+            <Path
+              animate={animate}
+              clipOffset={2}
+              d={d}
+              fill={`url(#${patternId})`}
+              transition={transition}
+            />
           </mask>
           {gradient && (
             <Gradient

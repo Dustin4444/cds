@@ -149,7 +149,9 @@ function HorizontalLine() {
     <LineChart
       height={400}
       layout="vertical"
-      series={[{ id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' }]}
+      series={[
+        { id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' },
+      ]}
       showXAxis
       showYAxis
       xAxis={{ label: 'rainfall (mm)' }}
@@ -386,16 +388,16 @@ function Points() {
         points={({ dataX, dataY, ...props }) =>
           keyMarketShiftIndices.includes(dataX)
             ? {
-              ...props,
-              strokeWidth: 2,
-              stroke: 'var(--color-bg)',
-              radius: 5,
-              onClick: () =>
-                alert(
-                  `You have clicked a key market shift at position ${dataX + 1} with value ${dataY}!`,
-                ),
-              accessibilityLabel: `Key market shift point at position ${dataX + 1}, value ${dataY}. Click to view details.`,
-            }
+                ...props,
+                strokeWidth: 2,
+                stroke: 'var(--color-bg)',
+                radius: 5,
+                onClick: () =>
+                  alert(
+                    `You have clicked a key market shift at position ${dataX + 1} with value ${dataY}!`,
+                  ),
+                accessibilityLabel: `Key market shift point at position ${dataX + 1}, value ${dataY}. Click to view details.`,
+              }
             : false
         }
         seriesId="prices"

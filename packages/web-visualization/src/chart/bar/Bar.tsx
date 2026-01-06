@@ -40,8 +40,8 @@ export type BarBaseProps = {
   roundBottom?: boolean;
   /**
    * Coordinate of the baseline/origin for animations.
-   * For horizontal layout, this is the Y coordinate.
-   * For vertical layout, this is the X coordinate.
+   * For vertical layout (bars grow up), this is the Y coordinate.
+   * For horizontal layout (bars grow sideways), this is the X coordinate.
    */
   origin?: number;
   /**
@@ -140,7 +140,7 @@ export const Bar = memo<BarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}
-        origin={origin ?? (layout === 'vertical' ? x : y + height)}
+        origin={origin ?? (layout === 'horizontal' ? x : y + height)}
         roundBottom={roundBottom}
         roundTop={roundTop}
         stroke={stroke}

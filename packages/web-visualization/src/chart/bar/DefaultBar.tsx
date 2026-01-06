@@ -42,7 +42,7 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
-      const isHorizontal = layout === 'horizontal';
+      const barsGrowVertically = layout === 'vertical';
       // Need a minimum size to allow for animation
       const minSize = 1;
 
@@ -51,9 +51,9 @@ export const DefaultBar = memo<DefaultBarProps>(
       let initialWidth = width;
       let initialHeight = height;
 
-      if (isHorizontal) {
+      if (barsGrowVertically) {
         // Vertical growth: width is constant, height grows from origin
-        initialY = origin ?? (y + height);
+        initialY = origin ?? y + height;
         initialHeight = minSize;
       } else {
         // Horizontal growth: height is constant, width grows from origin
@@ -61,7 +61,16 @@ export const DefaultBar = memo<DefaultBarProps>(
         initialWidth = minSize;
       }
 
-      return getBarPath(initialX, initialY, initialWidth, initialHeight, borderRadius, !!roundTop, !!roundBottom, layout);
+      return getBarPath(
+        initialX,
+        initialY,
+        initialWidth,
+        initialHeight,
+        borderRadius,
+        !!roundTop,
+        !!roundBottom,
+        layout,
+      );
     }, [animate, layout, x, y, origin, width, height, borderRadius, roundTop, roundBottom]);
 
     if (animate && initialPath) {

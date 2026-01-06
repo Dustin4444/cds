@@ -83,7 +83,7 @@ export const projectPoints = ({
   yScale,
   xData,
   yData,
-  layout = 'horizontal',
+  layout = 'vertical',
 }: {
   data: (number | null | { x: number; y: number })[];
   xData?: number[];
@@ -92,7 +92,7 @@ export const projectPoints = ({
   yScale: ChartScaleFunction;
   /**
    * Chart layout.
-   * @default 'horizontal'
+   * @default 'vertical'
    */
   layout?: CartesianChartLayout;
 }): Array<{ x: number; y: number } | null> => {
@@ -115,13 +115,13 @@ export const projectPoints = ({
     }
 
     // Determine values/scales based on role (index vs value) and layout
-    const isHorizontal = layout === 'horizontal';
+    const categoryAxisIsX = layout === 'vertical';
 
-    const indexScale = isHorizontal ? xScale : yScale;
-    const indexData = isHorizontal ? xData : yData;
+    const indexScale = categoryAxisIsX ? xScale : yScale;
+    const indexData = categoryAxisIsX ? xData : yData;
 
-    const valueScale = isHorizontal ? yScale : xScale;
-    const valueData = isHorizontal ? yData : xData;
+    const valueScale = categoryAxisIsX ? yScale : xScale;
+    const valueData = categoryAxisIsX ? yData : xData;
 
     // 1. Calculate the position along the index axis (categorical or numeric domain)
     let indexValue: number = index;
@@ -141,7 +141,7 @@ export const projectPoints = ({
     // (In case we ever need to project based on custom valueData, we can add logic here)
 
     // 3. Project to final coordinates based on layout
-    if (isHorizontal) {
+    if (categoryAxisIsX) {
       return projectPoint({
         x: indexValue,
         y: val,
