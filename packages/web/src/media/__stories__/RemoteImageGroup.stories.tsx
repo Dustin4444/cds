@@ -1,9 +1,8 @@
-import React from 'react';
 import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets';
 import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
 
 import { VStack } from '../../layout';
-import { Text, type TextBaseProps } from '../../typography/Text';
+import { Text } from '../../typography/Text';
 import { RemoteImage } from '../RemoteImage';
 import { RemoteImageGroup } from '../RemoteImageGroup';
 
@@ -22,6 +21,30 @@ const Circle = () => (
       <RemoteImage source={assets.hbar.imageUrl} />
       <RemoteImage source={assets.ltc.imageUrl} />
       <RemoteImage source={assets.uni.imageUrl} />
+    </RemoteImageGroup>
+    <RemoteImageGroup borderWidth={300} shape="circle" size={32}>
+      <RemoteImage source={assets.eth.imageUrl} />
+      <RemoteImage source={assets.btc.imageUrl} />
+      <RemoteImage source={assets.dai.imageUrl} />
+      <RemoteImage source={assets.hbar.imageUrl} />
+      <RemoteImage source={assets.ltc.imageUrl} />
+      <RemoteImage source={assets.uni.imageUrl} />
+    </RemoteImageGroup>
+    <RemoteImageGroup shape="square" size={32}>
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human2} />
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human2} />
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human1} />
+    </RemoteImageGroup>
+    <RemoteImageGroup borderWidth={300} shape="square" size={32}>
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human2} />
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human2} />
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human1} />
     </RemoteImageGroup>
   </>
 );
@@ -212,6 +235,39 @@ const HideExcessWhenExceedThreshold = () => (
   </>
 );
 
+const ShapeWithBorderWidth = () => (
+  <>
+    <Text font="body">Shape with border width</Text>
+    <RemoteImageGroup borderWidth={300} shape="circle" size={32}>
+      <RemoteImage source={assets.eth.imageUrl} />
+      <RemoteImage source={assets.btc.imageUrl} />
+      <RemoteImage source={assets.dai.imageUrl} />
+      <RemoteImage source={assets.hbar.imageUrl} />
+      <RemoteImage source={assets.ltc.imageUrl} />
+      <RemoteImage source={assets.uni.imageUrl} />
+    </RemoteImageGroup>
+    <RemoteImageGroup borderColor="bgPositive" borderWidth={300} shape="circle" size={32}>
+      <RemoteImage source={assets.eth.imageUrl} />
+      <RemoteImage source={assets.btc.imageUrl} />
+      <RemoteImage source={assets.dai.imageUrl} />
+      <RemoteImage source={assets.hbar.imageUrl} />
+      <RemoteImage source={assets.ltc.imageUrl} />
+      <RemoteImage source={assets.uni.imageUrl} />
+    </RemoteImageGroup>
+    <RemoteImageGroup borderWidth={300} shape="squircle" size={32}>
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human2} />
+      <RemoteImage source={squareAssets.human1} />
+    </RemoteImageGroup>
+    <RemoteImageGroup borderWidth={300} shape="circle" size="xxl">
+      <RemoteImage shape="squircle" source={squareAssets.human1} />
+      <RemoteImage source={assets.sushi.imageUrl} />
+      <RemoteImage shape="squircle" source={squareAssets.human2} />
+      <RemoteImage source={assets.ltc.imageUrl} />
+    </RemoteImageGroup>
+  </>
+);
+
 export const All = () => (
   <VStack gap={7}>
     <Circle />
@@ -227,5 +283,6 @@ export const All = () => (
     <SquircleMaxSetCustomMaxSize />
     <HideExcessWhenExceedThreshold />
     <MixAndMatchShapes />
+    <ShapeWithBorderWidth />
   </VStack>
 );

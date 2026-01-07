@@ -12,6 +12,8 @@ import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-ListCell';
+
 const overflowCss = css`
   overflow: auto;
   text-overflow: unset;
@@ -79,7 +81,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     spacingVariant?: 'normal' | 'compact' | 'condensed';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
-    /** React node to render description. Takes precedence over `description`. */
+    /**
+     * React node to render description. Takes precedence over `description`.
+     * When provided, `classNames.description` and `styles.description` are not applied.
+     */
     descriptionNode?: React.ReactNode;
     /**
      * When there is no description the title will take up two lines by default.
@@ -102,13 +107,21 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `titleNode`. */
     title?: React.ReactNode;
-    /** React node to render title. Takes precedence over `title`. */
+    /**
+     * React node to render title. Takes precedence over `title`.
+     * When provided, `classNames.title` and `styles.title` are not applied.
+     */
     titleNode?: React.ReactNode;
     /** Subtitle to display below the title and above the description. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `subtitleNode`. */
     subtitle?: React.ReactNode;
-    /** React node to render subtitle. Takes precedence over `subtitle`. */
+    /**
+     * React node to render subtitle. Takes precedence over `subtitle`.
+     * When provided, `classNames.subtitle` and `styles.subtitle` are not applied.
+     */
     subtitleNode?: React.ReactNode;
-    /** Class names for the components */
+    /**
+     * Class names for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+     */
     classNames?: {
       root?: string;
       media?: string;
@@ -117,13 +130,19 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       accessory?: string;
       contentContainer?: string;
       pressable?: string;
+      /** Applied to the VStack of title/subtitle/description. */
+      titleStack?: string;
+      /** Applied to the Box that Wrapped around `titleStack` (controls flex behavior). */
+      titleStackContainer?: string;
       mainContent?: string;
       helperText?: string;
       title?: string;
       subtitle?: string;
       description?: string;
     };
-    /** Styles for the components */
+    /**
+     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+     */
     styles?: {
       root?: React.CSSProperties;
       media?: React.CSSProperties;
@@ -132,6 +151,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       accessory?: React.CSSProperties;
       contentContainer?: React.CSSProperties;
       pressable?: React.CSSProperties;
+      /** Applied to the VStack of title/subtitle/description. */
+      titleStack?: React.CSSProperties;
+      /** Applied to the Box that Wrapped around `titleStack` (controls flex behavior). */
+      titleStackContainer?: React.CSSProperties;
       mainContent?: React.CSSProperties;
       helperText?: React.CSSProperties;
       title?: React.CSSProperties;
@@ -233,7 +256,18 @@ export const ListCell: ListCellComponent = memo(
           as={Component}
           borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
           bottomContent={helperText}
-          className={cx(className, classNames?.root)}
+          className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+          classNames={{
+            accessory: classNames?.accessory,
+            bottomContent: classNames?.helperText,
+            childrenContainer: classNames?.titleStackContainer,
+            contentContainer: classNames?.contentContainer,
+            end: classNames?.end,
+            intermediary: classNames?.intermediary,
+            media: classNames?.media,
+            pressable: classNames?.pressable,
+            topContent: classNames?.mainContent,
+          }}
           disabled={disabled}
           end={end}
           innerSpacing={
@@ -256,16 +290,18 @@ export const ListCell: ListCellComponent = memo(
             topContent: styles?.mainContent,
             bottomContent: styles?.helperText,
             contentContainer: styles?.contentContainer,
+            childrenContainer: styles?.titleStackContainer,
             pressable: styles?.pressable,
           }}
           {...props}
         >
-          <VStack>
+          <VStack className={classNames?.titleStack} style={styles?.titleStack}>
             {titleNode ? (
               titleNode
             ) : title ? (
               <Text
                 as="div"
+                className={classNames?.title}
                 display="block"
                 font="headline"
                 numberOfLines={
@@ -290,6 +326,7 @@ export const ListCell: ListCellComponent = memo(
             ) : subtitle ? (
               <Text
                 as="div"
+                className={classNames?.subtitle}
                 color="fgMuted"
                 display="block"
                 font="label1"

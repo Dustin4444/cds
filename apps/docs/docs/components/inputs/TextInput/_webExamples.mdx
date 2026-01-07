@@ -114,7 +114,9 @@ with a TypeAhead component.
 ```jsx live
 <VStack gap={3}>
   <VStack>
-    <TextHeadline as="p">Default sentiment</TextHeadline>
+    <Text as="p" font="headline">
+      Default sentiment
+    </Text>
     <TextInput
       label="Campaign title"
       placeholder="Title"
@@ -123,7 +125,9 @@ with a TypeAhead component.
   </VStack>
 
   <VStack>
-    <TextHeadline as="p">Positive sentiment</TextHeadline>
+    <Text as="p" font="headline">
+      Positive sentiment
+    </Text>
     <TextInput
       label="Address"
       helperText="Valid BTC address"
@@ -134,7 +138,9 @@ with a TypeAhead component.
   </VStack>
 
   <VStack>
-    <TextHeadline as="p">Negative Sentiment</TextHeadline>
+    <Text as="p" font="headline">
+      Negative Sentiment
+    </Text>
     <TextInput
       label="Address"
       helperText="Invalid BTC address"
@@ -247,7 +253,7 @@ When using the `inside` label variant, you should always include a `placeholder`
       label="Password"
       labelVariant="inside"
       type="password"
-      end={<InputIconButton name="visibleInactive" />}
+      end={<InputIconButton name="visible" />}
       placeholder="Enter your password"
     />
   </VStack>
@@ -404,6 +410,7 @@ Password Input - Use Icon Buttons at the end for actions like showing a password
 function PasswordInput() {
   const [isVisible, setIsVisible] = useState(false);
   const type = useMemo(() => (isVisible ? 'text' : 'password'), [isVisible]);
+  const iconName = useMemo(() => (isVisible ? 'visible' : 'invisible'), [isVisible]);
 
   return (
     <TextInput
@@ -411,8 +418,8 @@ function PasswordInput() {
       type={type}
       end={
         <InputIconButton
-          name={isVisible ? 'visibleActive' : 'visibleInactive'}
-          onClick={() => setIsVisible((isVisible) => !setIsVisible)}
+          name={iconName}
+          onClick={() => setIsVisible((isVisible) => !isVisible)}
           accessibilityLabel={isVisible ? 'Hide password' : 'Show password'}
         />
       }

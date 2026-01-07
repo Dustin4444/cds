@@ -178,6 +178,59 @@ function ExampleMultiGroups() {
 }
 ```
 
+### Multi-select with assets
+
+```tsx
+function ExampleMultiAssets() {
+  const assetImageMap: Record<string, string> = {
+    btc: assets.btc.imageUrl,
+    eth: assets.eth.imageUrl,
+    dai: assets.dai.imageUrl,
+    ltc: assets.ltc.imageUrl,
+    xrp: assets.xrp.imageUrl,
+  };
+  const exampleOptions = [
+    { value: 'btc', label: assets.btc.name },
+    { value: 'eth', label: assets.eth.name },
+    { value: 'dai', label: assets.dai.name },
+    { value: 'ltc', label: assets.ltc.name },
+    { value: 'xrp', label: assets.xrp.name },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['eth', 'btc'],
+  });
+
+  // Get startNode based on selected assets
+  const startNode = useMemo(() => {
+    if (value.length === 0) return null;
+
+    // Multiple assets selected - use RemoteImageGroup
+    return (
+      <RemoteImageGroup shape="circle" size={24}>
+        {value.map((assetValue) => {
+          const imageUrl = assetImageMap[assetValue];
+          if (!imageUrl) return null;
+          return <RemoteImage key={assetValue} source={imageUrl} />;
+        })}
+      </RemoteImageGroup>
+    );
+  }, [value]);
+
+  return (
+    <SelectChip
+      accessibilityLabel="Select multiple assets"
+      maxWidth={400}
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose assets"
+      startNode={startNode}
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
 ### Compact
 
 ```tsx
@@ -273,6 +326,91 @@ function ExampleDescriptions() {
       placeholder="Choose an option"
       value={value}
     />
+  );
+}
+```
+
+### With display value
+
+Use the `displayValue` prop to override the displayed value and avoid truncation, especially in multi-select scenarios where multiple option labels might be too long to display.
+
+```tsx
+function ExampleDisplayValue() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const displayValue =
+    Array.isArray(value) && value.length > 0
+      ? `${value.length} ${value.length === 1 ? 'option' : 'options'} selected`
+      : undefined;
+  return (
+    <SelectChip
+      accessibilityLabel="Select multiple values"
+      displayValue={displayValue}
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose options"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### With max width
+
+```tsx
+function ExampleMaxWidth() {
+  const exampleOptions = [
+    { value: '1', label: 'Very Long Option Name That Exceeds Default Width' },
+    { value: '2', label: 'Another Extremely Long Option Label' },
+    { value: '3', label: 'Short' },
+    { value: '4', label: 'Medium Length Option' },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+  return (
+    <VStack gap={2}>
+      <VStack gap={1}>
+        <Text>Default maxWidth (200px):</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          label="Select a value"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          value={value}
+        />
+      </VStack>
+      <VStack gap={1}>
+        <Text>Custom maxWidth (150px):</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          label="Select a value"
+          maxWidth={150}
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          value={value}
+        />
+      </VStack>
+      <VStack gap={1}>
+        <Text>No maxWidth constraint:</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          label="Select a value"
+          maxWidth="100%"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          value={value}
+        />
+      </VStack>
+    </VStack>
   );
 }
 ```

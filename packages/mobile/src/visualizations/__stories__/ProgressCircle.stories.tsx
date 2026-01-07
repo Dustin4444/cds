@@ -9,8 +9,7 @@ import { Icon } from '../../icons';
 import { Box, HStack, VStack } from '../../layout';
 import { RemoteImage } from '../../media';
 import { defaultTheme } from '../../themes/defaultTheme';
-import { TextTitle1 } from '../../typography';
-import { Text } from '../../typography/Text';
+import { Text } from '../../typography';
 import { theme } from '../../utils/testHelpers';
 import { DefaultProgressCircleContent } from '../DefaultProgressCircleContent';
 import { ProgressCircle } from '../ProgressCircle';
@@ -22,7 +21,11 @@ const CustomStyles = () => {
     <VStack gap={2}>
       <HStack gap={2}>
         <ProgressCircle
-          contentNode={<TextTitle1 color={disabled ? 'fgMuted' : 'fgPrimary'}>40%</TextTitle1>}
+          contentNode={
+            <Text color={disabled ? 'fgMuted' : 'fgPrimary'} font="title1">
+              40%
+            </Text>
+          }
           disabled={disabled}
           progress={0.4}
           size={100}
@@ -334,6 +337,13 @@ const ProgressBarScreen = () => {
               <ProgressCircle progress={calculateProgress(0)} size={100} weight="thin" />
               <ProgressCircle progress={calculateProgress(0.2)} size={100} weight="thin" />
             </HStack>
+          )}
+        </ProgressContainerWithButtons>
+      </Example>
+      <Example title="Disable Mount Animation">
+        <ProgressContainerWithButtons>
+          {({ calculateProgress }) => (
+            <ProgressCircle disableAnimateOnMount progress={calculateProgress(0.8)} size={100} />
           )}
         </ProgressContainerWithButtons>
       </Example>

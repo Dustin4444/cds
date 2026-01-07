@@ -27,6 +27,10 @@ export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
   children?: React.ReactNode | TrayRenderChildren;
+  /** ReactNode to render as the Tray header */
+  header?: React.ReactNode;
+  /** ReactNode to render as the Tray footer */
+  footer?: React.ReactNode;
   pin?: DrawerProps['pin'];
   /**
    * Optional callback that, if provided, will be triggered when the Tray is toggled open/ closed
@@ -60,6 +64,8 @@ export const Tray = memo(
   forwardRef<DrawerRefBaseProps, TrayProps>(function Tray(
     {
       children,
+      header,
+      footer,
       title,
       onVisibilityChange,
       verticalDrawerPercentageOfView = defaultVerticalDrawerPercentageOfView,
@@ -90,29 +96,43 @@ export const Tray = memo(
     );
 
     const renderChildren: TrayRenderChildren = useCallback(
-      ({ handleClose }) => (
-        <VStack paddingTop={title ? 0 : 2} style={contentStyle}>
-          {title && (
-            <Box justifyContent="center" onLayout={onTitleLayout} style={headerStyle}>
-              {typeof title === 'string' ? (
-                <Text
-                  font="title3"
-                  paddingBottom={2}
-                  paddingTop={3}
-                  paddingX={3}
-                  style={titleStyle}
-                >
-                  {title}
-                </Text>
-              ) : (
-                title
-              )}
+      ({ handleClose }) => {
+        const content = typeof children === 'function' ? children({ handleClose }) : children;
+
+        return (
+          <VStack
+            flexGrow={1}
+            flexShrink={1}
+            minHeight={0}
+            paddingTop={title ? 0 : 2}
+            style={contentStyle}
+          >
+            {title && (
+              <Box justifyContent="center" onLayout={onTitleLayout} style={headerStyle}>
+                {typeof title === 'string' ? (
+                  <Text
+                    font="title3"
+                    paddingBottom={2}
+                    paddingTop={3}
+                    paddingX={3}
+                    style={titleStyle}
+                  >
+                    {title}
+                  </Text>
+                ) : (
+                  title
+                )}
+              </Box>
+            )}
+            {header}
+            <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
+              {content}
             </Box>
-          )}
-          {typeof children === 'function' ? children({ handleClose }) : children}
-        </VStack>
-      ),
-      [children, onTitleLayout, contentStyle, title, headerStyle, titleStyle],
+            {footer}
+          </VStack>
+        );
+      },
+      [children, contentStyle, footer, header, headerStyle, onTitleLayout, title, titleStyle],
     );
 
     useEffect(() => {

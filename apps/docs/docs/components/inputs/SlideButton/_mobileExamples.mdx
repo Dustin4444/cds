@@ -66,6 +66,27 @@ function Example() {
 }
 ```
 
+### Compact SlideButton
+
+Use the `compact` prop to reduce the height, border-radius and padding of the button:
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      onSlideComplete={() => console.log('Completed')}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      compact
+    />
+  );
+}
+```
+
 ### Auto Complete on Threshold
 
 You can set the button to automatically complete when the slide reaches the threshold:
@@ -152,7 +173,7 @@ function Example() {
     >
       <HStack alignItems="center" height="100%" justifyContent="center" width="100%">
         <HStack height="100%" pin="right" alignItems="center" padding={2}>
-          <TextLabel1>➡️</TextLabel1>
+          <Text font="label1">➡️</Text>
         </HStack>
       </HStack>
     </Pressable>
@@ -170,7 +191,7 @@ function Example() {
       justifyContent="center"
       width="100%"
     >
-      <TextHeadline>Slide me</TextHeadline>
+      <Text font="headline">Slide me</Text>
     </HStack>
   );
 

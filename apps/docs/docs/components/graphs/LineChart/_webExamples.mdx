@@ -1091,11 +1091,11 @@ function DynamicChartSizing() {
         borderBottomLeftRadius={300}
         borderTopLeftRadius={300}
         flexGrow={1}
+        marginTop={-3}
+        marginStart={-3}
+        marginBottom={-3}
         style={{
           background: 'linear-gradient(0deg, #D07609 0%, #F7931A 100%)',
-          marginTop: 'calc(-1 * var(--space-3))',
-          marginLeft: 'calc(-1 * var(--space-3))',
-          marginBottom: 'calc(-1 * var(--space-3))',
         }}
       >
         {/* LineChart fills to take up available width and height */}
@@ -1256,14 +1256,15 @@ function AssetPriceWithDottedArea() {
           <SegmentedTab
             ref={ref}
             label={
-              <TextLabel1
+              <Text
+                font="label1"
                 style={{
                   transition: 'color 0.2s ease',
                   color: isActive ? assets.btc.color : undefined,
                 }}
               >
                 {label}
-              </TextLabel1>
+              </Text>
             }
             {...props}
           />
@@ -1515,45 +1516,50 @@ function MonotoneAssetPrice() {
     [scrubberPriceFormatter, prices, formatDate],
   );
 
-  const CustomScrubberBeacon = memo(({ dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps) => {
-    const { getSeries, getXScale, getYScale } = useCartesianChartContext();
-    const targetSeries = getSeries(seriesId);
-    const xScale = getXScale();
-    const yScale = getYScale(targetSeries?.yAxisId);
+  const CustomScrubberBeacon = memo(
+    forwardRef(({ dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps, ref) => {
+      const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+      const targetSeries = getSeries(seriesId);
+      const xScale = getXScale();
+      const yScale = getYScale(targetSeries?.yAxisId);
 
-    const pixelCoordinate = useMemo(() => {
-      if (!xScale || !yScale) return;
-      return projectPoint({ x: dataX, y: dataY, xScale, yScale });
-    }, [dataX, dataY, xScale, yScale]);
+      const pixelCoordinate = useMemo(() => {
+        if (!xScale || !yScale) return;
+        return projectPoint({ x: dataX, y: dataY, xScale, yScale });
+      }, [dataX, dataY, xScale, yScale]);
 
-    if (!pixelCoordinate) return;
+      // Provide a no-op pulse implementation for simple beacons
+      useImperativeHandle(ref, () => ({ pulse: () => {} }), []);
 
-    if (isIdle) {
+      if (!pixelCoordinate) return;
+
+      if (isIdle) {
+        return (
+          <m.circle
+            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            fill="var(--color-bg)"
+            r={5}
+            stroke="var(--color-fg)"
+            strokeWidth={3}
+            transition={defaultTransition}
+          />
+        );
+      }
+
       return (
-        <m.circle
-          animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+        <circle
           cx={pixelCoordinate.x}
           cy={pixelCoordinate.y}
           fill="var(--color-bg)"
           r={5}
           stroke="var(--color-fg)"
           strokeWidth={3}
-          transition={defaultTransition}
         />
       );
-    }
-
-    return (
-      <circle
-        cx={pixelCoordinate.x}
-        cy={pixelCoordinate.y}
-        fill="var(--color-bg)"
-        r={5}
-        stroke="var(--color-fg)"
-        strokeWidth={3}
-      />
-    );
-  });
+    }),
+  );
 
   return (
     <LineChart
@@ -1670,12 +1676,7 @@ function AssetPriceWidget() {
           </Text>
         </VStack>
       </HStack>
-      <div
-        style={{
-          marginLeft: 'calc(-1 * var(--space-2))',
-          marginRight: 'calc(-1 * var(--space-2))',
-        }}
-      >
+      <Box marginX={-2}>
         <LineChart
           showArea
           accessibilityLabel={chartAccessibilityLabel}
@@ -1696,7 +1697,7 @@ function AssetPriceWidget() {
             styles={{ beacon: { stroke: 'white' } }}
           />
         </LineChart>
-      </div>
+      </Box>
     </VStack>
   );
 }

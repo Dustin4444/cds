@@ -4,18 +4,20 @@ import type { ViewStyle } from 'react-native';
 import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
 import type {
   AvatarSize,
+  NegativeSpace,
   Shape,
   SharedAccessibilityProps,
   SharedProps,
 } from '@coinbase/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout/Box';
+import { Box, type BoxProps } from '../layout/Box';
 
 import type { RemoteImageProps } from './RemoteImage';
 
 export type RemoteImageGroupBaseProps = SharedProps &
-  SharedAccessibilityProps & {
+  SharedAccessibilityProps &
+  Pick<BoxProps, 'borderWidth' | 'borderColor'> & {
     /**
      * Indicates the number of remote image before it collapses
      * @default 4
@@ -43,13 +45,15 @@ export const RemoteImageGroup = ({
   max = 4,
   shape = 'circle',
   testID,
+  borderWidth,
+  borderColor = borderWidth ? 'bg' : undefined,
   ...props
 }: RemoteImageGroupProps) => {
   const { avatarSize, fontFamily, color } = useTheme();
 
   const shapeStyle = shapeStyles[shape];
   const sizeAsNumber = typeof size === 'number' ? size : avatarSize[size];
-  const overlapSpacing = sizeAsNumber <= 40 ? 8 : 16;
+  const overlapSpacing: NegativeSpace = sizeAsNumber <= 40 ? -1 : -2;
 
   const excess = Children.count(children) - max;
   const groupChildren = useMemo(() => {
@@ -83,23 +87,29 @@ export const RemoteImageGroup = ({
         if (!isValidElement(child)) {
           return null;
         }
+        const childShape: RemoteImageProps['shape'] = child.props.shape;
 
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
         const clonedChild = React.cloneElement<RemoteImageProps>(child as React.ReactElement, {
           testID: `${testID ? `${testID}-` : ''}image-${index}`,
           width: sizeAsNumber,
           height: sizeAsNumber,
-          ...(child.props.shape ? undefined : { shape }),
+          ...(childShape ? undefined : { shape }),
         });
 
         // zIndex is progressively lower so that each child is stacked below the previous one
         const zIndex = -index;
 
+        const childShapeStyle = borderWidth ? shapeStyles[childShape ?? shape] : undefined;
+
         return (
           <Box
             key={index}
-            left={index === 0 ? 'initial' : overlapSpacing * zIndex}
+            borderColor={borderColor}
+            borderWidth={borderWidth}
+            marginStart={index === 0 ? undefined : overlapSpacing}
             position="relative"
+            style={childShapeStyle}
             testID={`${testID ? `${testID}-` : ''}inner-box-${index}`}
             zIndex={zIndex}
           >
@@ -109,22 +119,28 @@ export const RemoteImageGroup = ({
       })}
       {excess > 0 && (
         <Box
-          alignItems="center"
           background="bgOverlay"
-          height={sizeAsNumber}
-          justifyContent="center"
-          left={groupChildren.length * overlapSpacing * -1}
+          borderColor={borderColor}
+          borderWidth={borderWidth}
+          marginStart={overlapSpacing}
+          overflow="hidden"
           position="relative"
           style={shapeStyle}
-          width={sizeAsNumber}
           zIndex={groupChildren.length * -1}
         >
-          <Text
-            style={[typographyStyles, styles.centerText]}
-            testID={`${testID ? `${testID}-` : ''}excess-text`}
+          <Box
+            alignItems="center"
+            height={sizeAsNumber}
+            justifyContent="center"
+            width={sizeAsNumber}
           >
-            +{excess}
-          </Text>
+            <Text
+              style={[typographyStyles, styles.centerText]}
+              testID={`${testID ? `${testID}-` : ''}excess-text`}
+            >
+              +{excess}
+            </Text>
+          </Box>
         </Box>
       )}
     </Box>

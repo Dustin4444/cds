@@ -31,8 +31,10 @@ const MotionBox = motion(Box);
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = {
-  children: React.ReactNode | TrayRenderChildren;
-  /** Optional footer content that will be fixed to the bottom of the tray */
+  children?: React.ReactNode | TrayRenderChildren;
+  /** ReactNode to render as the Drawer header */
+  header?: React.ReactNode;
+  /** ReactNode to render as the Drawer footer */
   footer?: React.ReactNode;
   /** HTML ID for the tray */
   id?: string;
@@ -135,6 +137,8 @@ export const Tray = memo(
   forwardRef<TrayRefProps, TrayProps>(function Tray(
     {
       children,
+      header,
+      footer,
       title,
       onVisibilityChange,
       verticalDrawerPercentageOfView = '85%',
@@ -145,7 +149,6 @@ export const Tray = memo(
       preventDismiss,
       id,
       role = 'dialog',
-      footer,
       accessibilityLabel = 'Tray',
       focusTabIndexElements,
       restoreFocusOnUnmount = true,
@@ -161,7 +164,6 @@ export const Tray = memo(
     const theme = useTheme();
     const [isOpen, setIsOpen] = useState(true);
     const trayRef = useRef<HTMLDivElement>(null);
-    const footerRef = useRef<HTMLDivElement>(null);
     const controls = useAnimation();
     const isSideTray = pin === 'right' || pin === 'left';
 
@@ -324,12 +326,7 @@ export const Tray = memo(
                       {typeof children === 'function' ? children({ handleClose }) : children}
                     </VStack>
                     {footer && (
-                      <VStack
-                        ref={footerRef}
-                        background="bgElevation2"
-                        flexShrink={0}
-                        style={styles?.footer}
-                      >
+                      <VStack background="bgElevation2" flexShrink={0} style={styles?.footer}>
                         {footer}
                       </VStack>
                     )}

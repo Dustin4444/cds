@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-mobile-visualization",
-  "version": "3.4.0-beta.7",
+  "version": "3.4.0-beta.10",
   "description": "Coinbase Design System - Mobile Visualization Native",
   "repository": {
     "type": "git",
@@ -15,6 +15,10 @@
     ".": {
       "types": "./dts/index.d.ts",
       "default": "./esm/index.js"
+    },
+    "./chart": {
+      "types": "./dts/chart/index.d.ts",
+      "default": "./esm/chart/index.js"
     },
     "./sparkline": {
       "types": "./dts/sparkline/index.d.ts",

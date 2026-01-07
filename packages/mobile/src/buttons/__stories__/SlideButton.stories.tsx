@@ -5,7 +5,7 @@ import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons';
 import { HStack, VStack } from '../../layout';
 import { Pressable } from '../../system';
-import { TextHeadline, TextLabel1, TextLabel2 } from '../../typography';
+import { Text } from '../../typography';
 import type {
   SlideButtonBackgroundProps,
   SlideButtonHandleProps,
@@ -26,7 +26,7 @@ const SlideButtonExample = ({
   return (
     <VStack gap={1}>
       <HStack alignItems="center" gap={1} justifyContent="flex-end" paddingBottom={2}>
-        <TextLabel1>Reset</TextLabel1>
+        <Text font="label1">Reset</Text>
         <IconButton compact name="refresh" onPress={toggleOff} />
       </HStack>
       <SlideButton
@@ -52,7 +52,7 @@ const CustomHandle = ({ checked, ...props }: SlideButtonHandleProps) => {
     >
       <HStack alignItems="center" height="100%" justifyContent="center" width="100%">
         <HStack alignItems="center" height="100%" padding={2} pin="right">
-          <TextLabel1>➡️</TextLabel1>
+          <Text font="label1">➡️</Text>
         </HStack>
       </HStack>
     </Pressable>
@@ -71,7 +71,7 @@ const CustomBackground = ({ checked, ...props }: SlideButtonBackgroundProps) => 
     justifyContent="center"
     width="100%"
   >
-    <TextHeadline>Slide me</TextHeadline>
+    <Text font="headline">Slide me</Text>
   </HStack>
 );
 
@@ -83,6 +83,12 @@ export const SlideButtonStories = () => {
       </Example>
       <Example title="Long label">
         <SlideButtonExample uncheckedLabel="Super long label that will get truncated when it exceeds the available space" />
+      </Example>
+      <Example title="Compact & long label">
+        <SlideButtonExample
+          compact
+          uncheckedLabel="Super long label that will get truncated when it exceeds the available space"
+        />
       </Example>
       <Example title="Auto complete slide on threshold met">
         <SlideButtonExample autoCompleteSlideOnThresholdMet />
@@ -101,8 +107,12 @@ export const SlideButtonStories = () => {
       </Example>
       <Example title="Labels as nodes">
         <SlideButtonExample
-          checkedLabel={<TextLabel2 color="fgInverse">Node checked label</TextLabel2>}
-          uncheckedLabel={<TextLabel2>Node label</TextLabel2>}
+          checkedLabel={
+            <Text color="fgInverse" font="label2">
+              Node checked label
+            </Text>
+          }
+          uncheckedLabel={<Text font="label2">Node label</Text>}
         />
       </Example>
       <Example title="Disabled">
@@ -113,6 +123,12 @@ export const SlideButtonStories = () => {
       </Example>
       <Example title="Checked and Disabled">
         <SlideButtonExample checked disabled />
+      </Example>
+      <Example title="Compact">
+        <SlideButtonExample compact />
+      </Example>
+      <Example title="Compact and disabled">
+        <SlideButtonExample compact disabled />
       </Example>
       <Example title="Custom components">
         <SlideButtonExample
