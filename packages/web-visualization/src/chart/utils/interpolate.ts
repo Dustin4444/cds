@@ -1,206 +1,10 @@
-// work in progress
-
-type Point = [number, number];
-
-type CommandType =
-  | 'M'
-  | 'L'
-  | 'H'
-  | 'V'
-  | 'C'
-  | 'S'
-  | 'Q'
-  | 'T'
-  | 'A'
-  | 'Z'
-  | 'm'
-  | 'l'
-  | 'h'
-  | 'v'
-  | 'c'
-  | 's'
-  | 'q'
-  | 't'
-  | 'a'
-  | 'z';
-
-type PathCommand = {
-  type: CommandType;
-  x?: number;
-  y?: number;
-  x1?: number;
-  y1?: number;
-  x2?: number;
-  y2?: number;
-  rx?: number;
-  ry?: number;
-  xAxisRotation?: number;
-  largeArcFlag?: number;
-  sweepFlag?: number;
-  [key: string]: any;
-};
-
-type SplitResult = {
-  left: Point[];
-  right: Point[];
-};
-
-/**
- * de Casteljau's algorithm for drawing and splitting bezier curves.
- * Inspired by https://pomax.github.io/bezierinfo/
- *
- * @param {Number[][]} points Array of [x,y] points: [start, control1, control2, ..., end]
- *   The original segment to split.
- * @param {Number} t Where to split the curve (value between [0, 1])
- * @return {Object} An object { left, right } where left is the segment from 0..t and
- *   right is the segment from t..1.
- */
-function decasteljau(points: Point[], t: number): SplitResult {
-  const left: Point[] = [];
-  const right: Point[] = [];
-
-  function decasteljauRecurse(points: Point[], t: number): void {
-    if (points.length === 1) {
-      left.push(points[0]);
-      right.push(points[0]);
-    } else {
-      const newPoints: Point[] = Array(points.length - 1);
-
-      for (let i = 0; i < newPoints.length; i++) {
-        if (i === 0) {
-          left.push(points[0]);
-        }
-        if (i === newPoints.length - 1) {
-          right.push(points[i + 1]);
-        }
-
-        newPoints[i] = [
-          (1 - t) * points[i][0] + t * points[i + 1][0],
-          (1 - t) * points[i][1] + t * points[i + 1][1],
-        ];
-      }
-
-      decasteljauRecurse(newPoints, t);
-    }
-  }
-
-  if (points.length) {
-    decasteljauRecurse(points, t);
-  }
-
-  return { left, right: right.reverse() };
-}
-
-/**
- * Convert segments represented as points back into a command object
- *
- * @param {Number[][]} points Array of [x,y] points: [start, control1, control2, ..., end]
- *   Represents a segment
- * @return {Object} A command object representing the segment.
- */
-function pointsToCommand(points: Point[]): PathCommand {
-  const command: Partial<PathCommand> = {};
-
-  if (points.length === 4) {
-    command.x2 = points[2][0];
-    command.y2 = points[2][1];
-  }
-  if (points.length >= 3) {
-    command.x1 = points[1][0];
-    command.y1 = points[1][1];
-  }
-
-  command.x = points[points.length - 1][0];
-  command.y = points[points.length - 1][1];
-
-  if (points.length === 4) {
-    // start, control1, control2, end
-    command.type = 'C';
-  } else if (points.length === 3) {
-    // start, control, end
-    command.type = 'Q';
-  } else {
-    // start, end
-    command.type = 'L';
-  }
-
-  return command as PathCommand;
-}
-
-/**
- * Runs de Casteljau's algorithm enough times to produce the desired number of segments.
- *
- * @param {Number[][]} points Array of [x,y] points for de Casteljau (the initial segment to split)
- * @param {Number} segmentCount Number of segments to split the original into
- * @return {Number[][][]} Array of segments
- */
-function splitCurveAsPoints(points: Point[], segmentCount?: number): Point[][] {
-  segmentCount = segmentCount || 2;
-
-  const segments: Point[][] = [];
-  let remainingCurve: Point[] = points;
-  const tIncrement = 1 / segmentCount;
-
-  // x-----x-----x-----x
-  // t=  0.33   0.66   1
-  // x-----o-----------x
-  // r=  0.33
-  //       x-----o-----x
-  // r=         0.5  (0.33 / (1 - 0.33))  === tIncrement / (1 - (tIncrement * (i - 1))
-
-  // x-----x-----x-----x----x
-  // t=  0.25   0.5   0.75  1
-  // x-----o----------------x
-  // r=  0.25
-  //       x-----o----------x
-  // r=         0.33  (0.25 / (1 - 0.25))
-  //             x-----o----x
-  // r=         0.5  (0.25 / (1 - 0.5))
-
-  for (let i = 0; i < segmentCount - 1; i++) {
-    const tRelative = tIncrement / (1 - tIncrement * i);
-    const split = decasteljau(remainingCurve, tRelative);
-    segments.push(split.left);
-    remainingCurve = split.right;
-  }
-
-  // last segment is just to the end from the last point
-  segments.push(remainingCurve);
-
-  return segments;
-}
-
-/**
- * Convert command objects to arrays of points, run de Casteljau's algorithm on it
- * to split into to the desired number of segments.
- *
- * @param {Object} commandStart The start command object
- * @param {Object} commandEnd The end command object
- * @param {Number} segmentCount The number of segments to create
- * @return {Object[]} An array of commands representing the segments in sequence
- */
-export function splitCurve(
-  commandStart: PathCommand,
-  commandEnd: PathCommand,
-  segmentCount?: number,
-): PathCommand[] {
-  const points: Point[] = [[commandStart.x!, commandStart.y!]];
-  if (commandEnd.x1 != null) {
-    points.push([commandEnd.x1, commandEnd.y1!]);
-  }
-  if (commandEnd.x2 != null) {
-    points.push([commandEnd.x2, commandEnd.y2!]);
-  }
-  points.push([commandEnd.x!, commandEnd.y!]);
-
-  return splitCurveAsPoints(points, segmentCount).map(pointsToCommand);
-}
+import splitCurve from './split';
 
 const commandTokenRegex = /[MLCSTQAHVZmlcstqahv]|-?[\d.e+-]+/g;
 /**
  * List of params for each command type in a path `d` attribute
  */
-const typeMap: Record<string, string[]> = {
+const typeMap = {
   M: ['x', 'y'],
   L: ['x', 'y'],
   H: ['x'],
@@ -218,10 +22,10 @@ Object.keys(typeMap).forEach((key) => {
   typeMap[key.toLowerCase()] = typeMap[key];
 });
 
-function arrayOfLength<T>(length: number, value?: T): T[] {
-  const array: T[] = Array(length);
+function arrayOfLength(length, value) {
+  const array = Array(length);
   for (let i = 0; i < length; i++) {
-    array[i] = value as T;
+    array[i] = value;
   }
 
   return array;
@@ -232,8 +36,8 @@ function arrayOfLength<T>(length: number, value?: T): T[] {
  * @param {Object} command A command object
  * @return {String} The string for the `d` attribute
  */
-function commandToString(command: PathCommand): string {
-  return `${command.type}${typeMap[command.type].map((p) => command[p as keyof PathCommand]).join(',')}`;
+function commandToString(command) {
+  return `${command.type}${typeMap[command.type].map((p) => command[p]).join(',')}`;
 }
 
 /**
@@ -256,8 +60,8 @@ function commandToString(command: PathCommand): string {
  * @param {Object} bCommand Command object from path `d` attribute to match against
  * @return {Object} aCommand converted to type of bCommand
  */
-function convertToSameType(aCommand: PathCommand, bCommand: PathCommand): PathCommand {
-  const conversionMap: Record<string, string> = {
+function convertToSameType(aCommand, bCommand) {
+  const conversionMap = {
     x1: 'x',
     y1: 'y',
     x2: 'x',
@@ -268,11 +72,11 @@ function convertToSameType(aCommand: PathCommand, bCommand: PathCommand): PathCo
 
   // convert (but ignore M types)
   if (aCommand.type !== bCommand.type && bCommand.type.toUpperCase() !== 'M') {
-    const aConverted: Partial<PathCommand> = {};
+    const aConverted = {};
     Object.keys(bCommand).forEach((bKey) => {
-      const bValue = bCommand[bKey as keyof PathCommand];
+      const bValue = bCommand[bKey];
       // first read from the A command
-      let aValue: any = aCommand[bKey as keyof PathCommand];
+      let aValue = aCommand[bKey];
 
       // if it is one of these values, read from B no matter what
       if (aValue === undefined) {
@@ -281,7 +85,7 @@ function convertToSameType(aCommand: PathCommand, bCommand: PathCommand): PathCo
         } else {
           // if it wasn't in the A command, see if an equivalent was
           if (aValue === undefined && conversionMap[bKey]) {
-            aValue = aCommand[conversionMap[bKey] as keyof PathCommand];
+            aValue = aCommand[conversionMap[bKey]];
           }
 
           // if it doesn't have a converted value, use 0
@@ -291,12 +95,12 @@ function convertToSameType(aCommand: PathCommand, bCommand: PathCommand): PathCo
         }
       }
 
-      aConverted[bKey as keyof PathCommand] = aValue;
+      aConverted[bKey] = aValue;
     });
 
     // update the type to match B
     aConverted.type = bCommand.type;
-    aCommand = aConverted as PathCommand;
+    aCommand = aConverted;
   }
 
   return aCommand;
@@ -314,12 +118,8 @@ function convertToSameType(aCommand: PathCommand, bCommand: PathCommand): PathCo
  * @return {Object[]} Array of ~segmentCount command objects between commandStart and
  *   commandEnd. (Can be segmentCount+1 objects if commandStart is type M).
  */
-function splitSegment(
-  commandStart: PathCommand,
-  commandEnd: PathCommand,
-  segmentCount: number,
-): PathCommand[] {
-  let segments: PathCommand[] = [];
+function splitSegment(commandStart, commandEnd, segmentCount) {
+  let segments = [];
 
   // line, quadratic bezier, or cubic bezier
   if (commandEnd.type === 'L' || commandEnd.type === 'Q' || commandEnd.type === 'C') {
@@ -340,8 +140,6 @@ function splitSegment(
 
   return segments;
 }
-type ExcludeSegmentFn = (commandStart: PathCommand, commandEnd: PathCommand) => boolean;
-
 /**
  * Extends an array of commandsToExtend to the length of the referenceCommands by
  * splitting segments until the number of commands match. Ensures all the actual
@@ -353,11 +151,7 @@ type ExcludeSegmentFn = (commandStart: PathCommand, commandEnd: PathCommand) => 
  *   end command object and returns true if the segment should be excluded from splitting.
  * @return {Object[]} The extended commandsToExtend array
  */
-function extend(
-  commandsToExtend: PathCommand[],
-  referenceCommands: PathCommand[],
-  excludeSegment?: ExcludeSegmentFn,
-): PathCommand[] {
+function extend(commandsToExtend, referenceCommands, excludeSegment) {
   // compute insertion points:
   // number of segments in the path to extend
   const numSegmentsToExtend = commandsToExtend.length - 1;
@@ -372,82 +166,76 @@ function extend(
   // should be added in that segment (should always be >= 1 since we need each
   // point itself).
   // 0 = segment 0-1, 1 = segment 1-2, n-1 = last vertex
-  const countPointsPerSegment = arrayOfLength<undefined>(numReferenceSegments).reduce(
-    (accum, d, i) => {
-      let insertIndex = Math.floor(segmentRatio * i);
+  const countPointsPerSegment = arrayOfLength(numReferenceSegments).reduce((accum, d, i) => {
+    let insertIndex = Math.floor(segmentRatio * i);
 
-      // handle excluding segments
-      if (
-        excludeSegment &&
-        insertIndex < commandsToExtend.length - 1 &&
-        excludeSegment(commandsToExtend[insertIndex], commandsToExtend[insertIndex + 1])
-      ) {
-        // set the insertIndex to the segment that this point should be added to:
+    // handle excluding segments
+    if (
+      excludeSegment &&
+      insertIndex < commandsToExtend.length - 1 &&
+      excludeSegment(commandsToExtend[insertIndex], commandsToExtend[insertIndex + 1])
+    ) {
+      // set the insertIndex to the segment that this point should be added to:
 
-        // round the insertIndex essentially so we split half and half on
-        // neighbouring segments. hence the segmentRatio * i < 0.5
-        const addToPriorSegment = (segmentRatio * i) % 1 < 0.5;
+      // round the insertIndex essentially so we split half and half on
+      // neighbouring segments. hence the segmentRatio * i < 0.5
+      const addToPriorSegment = (segmentRatio * i) % 1 < 0.5;
 
-        // only skip segment if we already have 1 point in it (can't entirely remove a segment)
-        if (accum[insertIndex]) {
-          // TODO - Note this is a naive algorithm that should work for most d3-area use cases
-          // but if two adjacent segments are supposed to be skipped, this will not perform as
-          // expected. Could be updated to search for nearest segment to place the point in, but
-          // will only do that if necessary.
+      // only skip segment if we already have 1 point in it (can't entirely remove a segment)
+      if (accum[insertIndex]) {
+        // TODO - Note this is a naive algorithm that should work for most d3-area use cases
+        // but if two adjacent segments are supposed to be skipped, this will not perform as
+        // expected. Could be updated to search for nearest segment to place the point in, but
+        // will only do that if necessary.
 
-          // add to the prior segment
-          if (addToPriorSegment) {
-            if (insertIndex > 0) {
-              insertIndex -= 1;
+        // add to the prior segment
+        if (addToPriorSegment) {
+          if (insertIndex > 0) {
+            insertIndex -= 1;
 
-              // not possible to add to previous so adding to next
-            } else if (insertIndex < commandsToExtend.length - 1) {
-              insertIndex += 1;
-            }
-            // add to next segment
+            // not possible to add to previous so adding to next
           } else if (insertIndex < commandsToExtend.length - 1) {
             insertIndex += 1;
-
-            // not possible to add to next so adding to previous
-          } else if (insertIndex > 0) {
-            insertIndex -= 1;
           }
+          // add to next segment
+        } else if (insertIndex < commandsToExtend.length - 1) {
+          insertIndex += 1;
+
+          // not possible to add to next so adding to previous
+        } else if (insertIndex > 0) {
+          insertIndex -= 1;
         }
       }
+    }
 
-      accum[insertIndex] = (accum[insertIndex] || 0) + 1;
+    accum[insertIndex] = (accum[insertIndex] || 0) + 1;
 
-      return accum;
-    },
-    [] as number[],
-  );
+    return accum;
+  }, []);
 
   // extend each segment to have the correct number of points for a smooth interpolation
-  const extended = countPointsPerSegment.reduce(
-    (extended: PathCommand[], segmentCount: number, i: number) => {
-      // if last command, just add `segmentCount` number of times
-      if (i === commandsToExtend.length - 1) {
-        const lastCommandCopies = arrayOfLength(
-          segmentCount,
-          Object.assign({}, commandsToExtend[commandsToExtend.length - 1]),
-        );
-
-        // convert M to L
-        if (lastCommandCopies[0].type === 'M') {
-          lastCommandCopies.forEach((d) => {
-            d.type = 'L';
-          });
-        }
-        return extended.concat(lastCommandCopies);
-      }
-
-      // otherwise, split the segment segmentCount times.
-      return extended.concat(
-        splitSegment(commandsToExtend[i], commandsToExtend[i + 1], segmentCount),
+  const extended = countPointsPerSegment.reduce((extended, segmentCount, i) => {
+    // if last command, just add `segmentCount` number of times
+    if (i === commandsToExtend.length - 1) {
+      const lastCommandCopies = arrayOfLength(
+        segmentCount,
+        Object.assign({}, commandsToExtend[commandsToExtend.length - 1]),
       );
-    },
-    [] as PathCommand[],
-  );
+
+      // convert M to L
+      if (lastCommandCopies[0].type === 'M') {
+        lastCommandCopies.forEach((d) => {
+          d.type = 'L';
+        });
+      }
+      return extended.concat(lastCommandCopies);
+    }
+
+    // otherwise, split the segment segmentCount times.
+    return extended.concat(
+      splitSegment(commandsToExtend[i], commandsToExtend[i + 1], segmentCount),
+    );
+  }, []);
 
   // add in the very first point since splitSegment only adds in the ones after it
   extended.unshift(commandsToExtend[0]);
@@ -461,12 +249,12 @@ function extend(
  *
  * @param {String|null} d A path `d` string
  */
-export function pathCommandsFromString(d: string | null | undefined): PathCommand[] {
+export function pathCommandsFromString(d) {
   // split into valid tokens
   const tokens = (d || '').match(commandTokenRegex) || [];
-  const commands: PathCommand[] = [];
-  let commandArgs: string[] | undefined;
-  let command: Partial<PathCommand> | undefined;
+  const commands = [];
+  let commandArgs;
+  let command;
 
   // iterate over each token, checking if we are at a new command
   // by presence in the typeMap
@@ -476,28 +264,23 @@ export function pathCommandsFromString(d: string | null | undefined): PathComman
     // new command found:
     if (commandArgs) {
       command = {
-        type: tokens[i] as CommandType,
+        type: tokens[i],
       };
 
       // add each of the expected args for this command:
       for (let a = 0; a < commandArgs.length; ++a) {
-        command[commandArgs[a] as keyof PathCommand] = +tokens[i + a + 1] as any;
+        command[commandArgs[a]] = +tokens[i + a + 1];
       }
 
       // need to increment our token index appropriately since
       // we consumed token args
       i += commandArgs.length;
 
-      commands.push(command as PathCommand);
+      commands.push(command);
     }
   }
   return commands;
 }
-
-type InterpolateOptions = {
-  excludeSegment?: ExcludeSegmentFn;
-  snapEndsToInput?: boolean;
-};
 
 /**
  * Interpolate from A to B by extending A and B during interpolation to have
@@ -518,11 +301,7 @@ type InterpolateOptions = {
  *   be sourced from input argument or computed.
  * @returns {Function} Interpolation function that maps t ([0, 1]) to an array of path commands.
  */
-export function interpolatePathCommands(
-  aCommandsInput: PathCommand[] | null | undefined,
-  bCommandsInput: PathCommand[] | null | undefined,
-  interpolateOptions?: ExcludeSegmentFn | InterpolateOptions,
-): (t: number) => PathCommand[] {
+export function interpolatePathCommands(aCommandsInput, bCommandsInput, interpolateOptions) {
   // make a copy so we don't mess with the input arrays
   let aCommands = aCommandsInput == null ? [] : aCommandsInput.slice();
   let bCommands = bCommandsInput == null ? [] : bCommandsInput.slice();
@@ -624,6 +403,8 @@ export function interpolatePathCommands(
   };
 }
 
+/** @typedef InterpolateOptions  */
+
 /**
  * Interpolate from A to B by extending A and B during interpolation to have
  * the same number of points. This allows for a smooth transition when they
@@ -643,11 +424,7 @@ export function interpolatePathCommands(
  *      be sourced from input argument or computed.
  * @returns {Function} Interpolation function that maps t ([0, 1]) to a path `d` string.
  */
-export function interpolatePath(
-  a: string | null | undefined,
-  b: string | null | undefined,
-  interpolateOptions?: ExcludeSegmentFn | InterpolateOptions,
-): (t: number) => string {
+export default function interpolatePath(a, b, interpolateOptions) {
   const aCommands = pathCommandsFromString(a);
   const bCommands = pathCommandsFromString(b);
 
@@ -665,19 +442,10 @@ export function interpolatePath(
     };
   }
 
-  let commandInterpolator: (t: number) => PathCommand[];
-
-  if (canTranslate(aCommands, bCommands)) {
-    commandInterpolator = createTranslateInterpolator(aCommands, bCommands, {
-      excludeSegment,
-      snapEndsToInput,
-    });
-  } else {
-    commandInterpolator = interpolatePathCommands(aCommands, bCommands, {
-      excludeSegment,
-      snapEndsToInput,
-    });
-  }
+  const commandInterpolator = interpolatePathCommands(aCommands, bCommands, {
+    excludeSegment,
+    snapEndsToInput,
+  });
 
   return function pathStringInterpolator(t) {
     // at 1 return the final value without the extensions used during interpolation
@@ -697,68 +465,149 @@ export function interpolatePath(
   };
 }
 
-// Custom code
-function canTranslate(aCommands: PathCommand[], bCommands: PathCommand[]): boolean {
-  if (!aCommands || !bCommands || aCommands.length !== bCommands.length || aCommands.length < 2) {
-    return false;
-  }
+/**
+ * de Casteljau's algorithm for drawing and splitting bezier curves.
+ * Inspired by https://pomax.github.io/bezierinfo/
+ *
+ * @param {Number[][]} points Array of [x,y] points: [start, control1, control2, ..., end]
+ *   The original segment to split.
+ * @param {Number} t Where to split the curve (value between [0, 1])
+ * @return {Object} An object { left, right } where left is the segment from 0..t and
+ *   right is the segment from t..1.
+ */
+function decasteljau(points, t) {
+  const left = [];
+  const right = [];
 
-  const n = aCommands.length;
-  for (let i = 0; i < n; i++) {
-    const aCommand = aCommands[i];
-    const bCommand = bCommands[i];
-    // Check X grid
-    if (aCommand?.x && bCommand?.x && Math.abs(aCommand.x - bCommand.x) > 0.001) {
-      return false;
-    }
-    // Check Y shift
-    if (i < n - 1) {
-      const y_a_shifted = aCommands[i + 1]?.y;
-      const y_b = bCommands[i]?.y;
-      if (y_a_shifted && y_b && Math.abs(y_a_shifted - y_b) > 0.001) {
-        return false;
+  function decasteljauRecurse(points, t) {
+    if (points.length === 1) {
+      left.push(points[0]);
+      right.push(points[0]);
+    } else {
+      const newPoints = Array(points.length - 1);
+
+      for (let i = 0; i < newPoints.length; i++) {
+        if (i === 0) {
+          left.push(points[0]);
+        }
+        if (i === newPoints.length - 1) {
+          right.push(points[i + 1]);
+        }
+
+        newPoints[i] = [
+          (1 - t) * points[i][0] + t * points[i + 1][0],
+          (1 - t) * points[i][1] + t * points[i + 1][1],
+        ];
       }
+
+      decasteljauRecurse(newPoints, t);
     }
   }
 
-  return true;
+  if (points.length) {
+    decasteljauRecurse(points, t);
+  }
+
+  return { left, right: right.reverse() };
 }
 
-function createTranslateInterpolator(
-  aCommands: PathCommand[],
-  bCommands: PathCommand[],
-  options: ExcludeSegmentFn | InterpolateOptions,
-): (t: number) => PathCommand[] {
-  if (aCommands.length < 2) {
-    // Not enough points to slide, fall back
-    return interpolatePathCommands(aCommands, bCommands, options);
+/**
+ * Convert segments represented as points back into a command object
+ *
+ * @param {Number[][]} points Array of [x,y] points: [start, control1, control2, ..., end]
+ *   Represents a segment
+ * @return {Object} A command object representing the segment.
+ */
+function pointsToCommand(points) {
+  const command = {};
+
+  if (points.length === 4) {
+    command.x2 = points[2][0];
+    command.y2 = points[2][1];
+  }
+  if (points.length >= 3) {
+    command.x1 = points[1][0];
+    command.y1 = points[1][1];
   }
 
-  // 1. Calculate the horizontal slide distance from one point to the next
-  const dx = (bCommands[0]?.x ?? 0) - (aCommands[1]?.x ?? 0);
+  command.x = points[points.length - 1][0];
+  command.y = points[points.length - 1][1];
 
-  // 2. Create the "fake" start point for B (this is where A[0] will animate TO)
-  // It's "off-screen" to the left, at the y-level of the new first point.
-  const b_fake_start: PathCommand = {
-    type: 'M', // Must be 'M'
-    x: (aCommands[0]?.x ?? 0) + dx,
-    y: bCommands[0].y, // Animate to the y-level of the next point
-  };
+  if (points.length === 4) {
+    // start, control1, control2, end
+    command.type = 'C';
+  } else if (points.length === 3) {
+    // start, control, end
+    command.type = 'Q';
+  } else {
+    // start, end
+    command.type = 'L';
+  }
 
-  // 3. Create aPrime (n+1 points)
-  // This is [A0, A1, ..., An-1, An-1]
-  // We duplicate the last point of A to give the new point (Bn-1) something to animate *from*.
-  const aPrime = aCommands.slice();
-  aPrime.push(aCommands[aCommands.length - 1]);
+  return command;
+}
 
-  // 4. Create bPrime (n+1 points)
-  // This is [B_fake, B0, B1, ..., Bn-1]
-  // We add our new "off-screen" point to the beginning of B.
-  const bPrime = [b_fake_start, ...bCommands];
+/**
+ * Runs de Casteljau's algorithm enough times to produce the desired number of segments.
+ *
+ * @param {Number[][]} points Array of [x,y] points for de Casteljau (the initial segment to split)
+ * @param {Number} segmentCount Number of segments to split the original into
+ * @return {Number[][][]} Array of segments
+ */
+function splitCurveAsPoints(points, segmentCount) {
+  segmentCount = segmentCount || 2;
 
-  // 5. Ensure first command of aPrime is 'M'
-  aPrime[0] = { ...aPrime[0], type: 'M' };
+  const segments = [];
+  let remainingCurve = points;
+  const tIncrement = 1 / segmentCount;
 
-  // Return the *original* morph interpolator with our new, smarter paths.
-  return interpolatePathCommands(aPrime, bPrime, options);
+  // x-----x-----x-----x
+  // t=  0.33   0.66   1
+  // x-----o-----------x
+  // r=  0.33
+  //       x-----o-----x
+  // r=         0.5  (0.33 / (1 - 0.33))  === tIncrement / (1 - (tIncrement * (i - 1))
+
+  // x-----x-----x-----x----x
+  // t=  0.25   0.5   0.75  1
+  // x-----o----------------x
+  // r=  0.25
+  //       x-----o----------x
+  // r=         0.33  (0.25 / (1 - 0.25))
+  //             x-----o----x
+  // r=         0.5  (0.25 / (1 - 0.5))
+
+  for (let i = 0; i < segmentCount - 1; i++) {
+    const tRelative = tIncrement / (1 - tIncrement * i);
+    const split = decasteljau(remainingCurve, tRelative);
+    segments.push(split.left);
+    remainingCurve = split.right;
+  }
+
+  // last segment is just to the end from the last point
+  segments.push(remainingCurve);
+
+  return segments;
+}
+
+/**
+ * Convert command objects to arrays of points, run de Casteljau's algorithm on it
+ * to split into to the desired number of segments.
+ *
+ * @param {Object} commandStart The start command object
+ * @param {Object} commandEnd The end command object
+ * @param {Number} segmentCount The number of segments to create
+ * @return {Object[]} An array of commands representing the segments in sequence
+ */
+export default function splitCurve(commandStart, commandEnd, segmentCount) {
+  const points = [[commandStart.x, commandStart.y]];
+  if (commandEnd.x1 != null) {
+    points.push([commandEnd.x1, commandEnd.y1]);
+  }
+  if (commandEnd.x2 != null) {
+    points.push([commandEnd.x2, commandEnd.y2]);
+  }
+  points.push([commandEnd.x, commandEnd.y]);
+
+  return splitCurveAsPoints(points, segmentCount).map(pointsToCommand);
 }
