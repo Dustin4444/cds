@@ -57,7 +57,7 @@ export const CreateButtonStories = () => (
 export const CustomEndIconButton = () => (
   <VStack gap={2}>
     <ButtonGroup accessibilityLabel="Group">
-      <Button end={<Icon color="fg" name="caretRight" size="s" />}>Test</Button>
+      <Button end={<Icon color="fg" name="caretLeft" size="s" />}>Test</Button>
       <Button end={<Icon active color="fg" name="add" size="s" />} variant="secondary">
         Test
       </Button>
