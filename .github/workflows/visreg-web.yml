@@ -1,5 +1,6 @@
 name: Visreg Web
 on:
+  workflow_dispatch: # Manual trigger via GitHub CLI or Actions UI
   push:
     branches: [master]
   pull_request:
