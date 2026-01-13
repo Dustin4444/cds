@@ -172,56 +172,245 @@ function ShapeVariants() {
 }
 ```
 
-## Composed Examples
+## Styling
 
-### Custom Legend Item
+### Custom Shape
 
-You can use `ItemComponent` to create fully custom legend items with additional information.
+You can pass a custom ReactNode as `legendShape` for fully custom indicators. On mobile, this uses React Native Skia for rendering dotted patterns.
 
 ```jsx
-function CustomLegendItem() {
+function CustomLegendShapes() {
   const theme = useTheme();
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
-  const CustomItem = memo(function CustomItem({ label, color, shape }) {
-    return (
-      <HStack gap={1} style={{ alignItems: 'center' }}>
-        <DefaultLegendShape color={color} shape={shape} />
-        <TextLabel2>{label}</TextLabel2>
-        <TextLabel1>100%</TextLabel1>
-      </HStack>
+  // Actual revenue (first 9 months)
+  const actualRevenue = [320, 380, 420, 390, 450, 480, 520, 490, 540, null, null, null];
+
+  // Forecasted revenue (last 3 months)
+  const forecastRevenue = [null, null, null, null, null, null, null, null, null, 580, 620, 680];
+
+  const numberFormatter = useCallback(
+    (value) => `$${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)}k`,
+    [],
+  );
+
+  // Pattern settings for dotted fill
+  const patternSize = 4;
+  const dotSize = 1;
+
+  // Custom legend indicator that matches the dotted bar pattern
+  const DottedLegendIndicator = useMemo(() => {
+    const indicatorSize = 10;
+    const legendPatternSize = patternSize / 2;
+    const legendDotSize = dotSize / 2;
+    const dottedPath = getDottedAreaPath(
+      { x: 1, y: 1, width: indicatorSize - 2, height: indicatorSize - 2 },
+      legendPatternSize,
+      legendDotSize,
     );
-  });
+    const skiaPath = Skia.Path.MakeFromSVGString(dottedPath);
+    const squirclePath = Skia.Path.Make();
+    squirclePath.addRRect(Skia.RRectXY(Skia.XYWHRect(1, 1, 8, 8), 2, 2));
+
+    return (
+      <Canvas style={{ width: indicatorSize, height: indicatorSize }}>
+        <Group clip={squirclePath}>
+          {skiaPath && <SkiaPath color={theme.color.fgPositive} path={skiaPath} style="fill" />}
+        </Group>
+        <SkiaPath
+          color={theme.color.fgPositive}
+          path={squirclePath}
+          strokeWidth={2}
+          style="stroke"
+        />
+      </Canvas>
+    );
+  }, [theme.color.fgPositive]);
+
+  // Custom bar component that renders bars with dotted pattern fill
+  const DottedBarComponent = useMemo(() => {
+    return memo(function DottedBar(props) {
+      const { x, y, width, height, fill, d } = props;
+
+      const dottedPath = useMemo(() => {
+        return getDottedAreaPath({ x, y, width, height }, patternSize, dotSize);
+      }, [x, y, width, height]);
+
+      const barClipPath = useMemo(() => {
+        return d ? (Skia.Path.MakeFromSVGString(d) ?? undefined) : undefined;
+      }, [d]);
+
+      const dotsSkiaPath = useMemo(() => {
+        return Skia.Path.MakeFromSVGString(dottedPath) ?? undefined;
+      }, [dottedPath]);
+
+      return (
+        <>
+          <Group clip={barClipPath}>
+            {dotsSkiaPath && <SkiaPath color={fill} path={dotsSkiaPath} style="fill" />}
+          </Group>
+          <DefaultBar {...props} fill={undefined} stroke={fill} strokeWidth={2} />
+        </>
+      );
+    });
+  }, []);
 
   return (
-    <VStack gap={2}>
-      <Text font="headline">Custom Legend Item</Text>
-      <LineChart
-        height={150}
-        legend={<Legend ItemComponent={CustomItem} />}
-        legendPosition="bottom"
-        series={[
-          {
-            id: 'btc',
-            data: [60, 50],
-            label: 'Bitcoin',
-            color: `rgb(${theme.spectrum.orange40})`,
-          },
-          {
-            id: 'eth',
-            data: [30, 20],
-            label: 'Ethereum',
-            color: `rgb(${theme.spectrum.purple40})`,
-          },
-          {
-            id: 'other',
-            data: [10, 5],
-            label: 'Other',
-            color: `rgb(${theme.spectrum.gray40})`,
-          },
-        ]}
-        width={150}
-      />
-    </VStack>
+    <BarChart
+      legend
+      showXAxis
+      showYAxis
+      height={250}
+      inset={0}
+      legendPosition="top"
+      series={[
+        {
+          id: 'actual',
+          label: 'Historical',
+          data: actualRevenue,
+          color: theme.color.fgPositive,
+          legendShape: 'squircle',
+          stackId: 'revenue',
+        },
+        {
+          id: 'forecast',
+          label: 'Forecasted',
+          data: forecastRevenue,
+          color: theme.color.fgPositive,
+          legendShape: DottedLegendIndicator,
+          stackId: 'revenue',
+          BarComponent: DottedBarComponent,
+        },
+      ]}
+      xAxis={{
+        data: months,
+        scaleType: 'band',
+        showLine: true,
+        showTickMarks: true,
+      }}
+      yAxis={{
+        domain: { min: 0 },
+        showGrid: true,
+        showLine: true,
+        showTickMarks: true,
+        position: 'left',
+        tickLabelFormatter: numberFormatter,
+        width: 60,
+      }}
+    />
+  );
+}
+```
+
+## Composed Examples
+
+### Dynamic Label
+
+You can use `ItemComponent` to display a label that updates as a user interacts with the chart.
+
+```jsx
+function DynamicLabel() {
+  const theme = useTheme();
+  const [scrubberPosition, setScrubberPosition] = useState();
+
+  const timeLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const seriesConfig = useMemo(
+    () => [
+      {
+        id: 'candidate-a',
+        label: 'Candidate A',
+        data: [48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 38],
+        color: `rgb(${theme.spectrum.blue40})`,
+        legendShape: 'circle',
+      },
+      {
+        id: 'candidate-b',
+        label: 'Candidate B',
+        data: [null, null, null, 6, 10, 14, 18, 22, 26, 29, 32, 35],
+        color: `rgb(${theme.spectrum.orange40})`,
+        legendShape: 'circle',
+      },
+      {
+        id: 'candidate-c',
+        label: 'Candidate C',
+        data: [52, 53, 54, 49, 46, 43, 40, 37, 34, 32, 30, 27],
+        color: `rgb(${theme.spectrum.gray40})`,
+        legendShape: 'circle',
+      },
+    ],
+    [theme.spectrum.blue40, theme.spectrum.gray40, theme.spectrum.orange40],
+  );
+
+  const dataLength = seriesConfig[0].data?.length ?? 0;
+  const dataIndex = scrubberPosition ?? dataLength - 1;
+
+  const ValueLegendItem = useCallback(
+    ({ seriesId, label, color, shape }) => {
+      const seriesData = seriesConfig.find((s) => s.id === seriesId);
+      const rawValue = seriesData?.data?.[dataIndex];
+
+      const formattedValue =
+        rawValue === null || rawValue === undefined ? '--' : `${Math.round(rawValue)}%`;
+
+      return (
+        <HStack gap={1} style={{ alignItems: 'center' }}>
+          <DefaultLegendShape color={color} shape={shape} />
+          <TextLabel2>{label}</TextLabel2>
+          <TextLabel1>{formattedValue}</TextLabel1>
+        </HStack>
+      );
+    },
+    [seriesConfig, dataIndex],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={250}
+      legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
+      legendPosition="top"
+      onScrubberPositionChange={setScrubberPosition}
+      series={seriesConfig}
+      width="100%"
+      xAxis={{
+        data: timeLabels,
+      }}
+      yAxis={{
+        domain: { max: 100, min: 0 },
+        showGrid: true,
+        tickLabelFormatter: (value) => `${value}%`,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
   );
 }
 ```
@@ -285,21 +474,23 @@ function InteractiveLegend() {
 
     const color10 = theme.spectrum[`${baseColor}10`];
     const color50 = theme.spectrum[`${baseColor}50`];
+    const color90 = theme.spectrum[`${baseColor}90`];
 
     return (
       <Chip
         compact
         accessibilityLabel={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
-        inverted={isEmphasized}
+        background="transparent"
         onPress={() => handleToggle(seriesId)}
         style={{
-          backgroundColor: `rgb(${color10})`,
+          backgroundColor: `rgb(${isEmphasized ? color90 : color10})`,
           borderWidth: 0,
+          borderRadius: theme.borderRadius[1000],
         }}
       >
         <HStack gap={1} style={{ alignItems: 'center' }}>
           <DefaultLegendShape color={`rgb(${color50})`} />
-          <TextLabel2>{label}</TextLabel2>
+          <TextLabel2 color={isEmphasized ? 'bg' : 'fg'}>{label}</TextLabel2>
         </HStack>
       </Chip>
     );
@@ -321,27 +512,22 @@ function InteractiveLegend() {
   }, [emphasizedId, seriesConfig, theme.spectrum]);
 
   return (
-    <VStack gap={2}>
-      <Text font="headline" textAlign="center">
-        Financial Overview
-      </Text>
-      <LineChart
-        showArea
-        height={300}
-        legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
-        legendPosition="top"
-        series={series}
-        width="100%"
-        xAxis={{
-          data: months,
-        }}
-        yAxis={{
-          domain: { min: 0 },
-          showGrid: true,
-          tickLabelFormatter: (value) => `$${value}k`,
-        }}
-      />
-    </VStack>
+    <LineChart
+      showArea
+      height={300}
+      legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
+      legendPosition="top"
+      series={series}
+      width="100%"
+      xAxis={{
+        data: months,
+      }}
+      yAxis={{
+        domain: { min: 0 },
+        showGrid: true,
+        tickLabelFormatter: (value) => `$${value}k`,
+      }}
+    />
   );
 }
 ```

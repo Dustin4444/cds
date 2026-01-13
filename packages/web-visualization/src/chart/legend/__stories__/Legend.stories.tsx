@@ -192,30 +192,25 @@ const AutoScale = () => {
 
   return (
     <Example title="Auto Scale">
-      <VStack gap={2}>
-        <Text font="headline" textAlign="center">
-          2024 Precipitation by Climate Region
-        </Text>
-        <LineChart
-          enableScrubbing
-          legend
-          showArea
-          showXAxis
-          showYAxis
-          height={{ base: 300, tablet: 400, desktop: 500 }}
-          legendPosition="bottom"
-          series={precipitationData}
-          xAxis={{ data: xAxisData, label: 'Month', showLine: true, showTickMarks: true }}
-          yAxis={{
-            label: 'Precipitation (in)',
-            showGrid: true,
-            showLine: true,
-            showTickMarks: true,
-          }}
-        >
-          <Scrubber hideOverlay />
-        </LineChart>
-      </VStack>
+      <LineChart
+        enableScrubbing
+        legend
+        showArea
+        showXAxis
+        showYAxis
+        height={{ base: 300, tablet: 400, desktop: 500 }}
+        legendPosition="bottom"
+        series={precipitationData}
+        xAxis={{ data: xAxisData, label: 'Month', showLine: true, showTickMarks: true }}
+        yAxis={{
+          label: 'Precipitation (in)',
+          showGrid: true,
+          showLine: true,
+          showTickMarks: true,
+        }}
+      >
+        <Scrubber hideBeaconLabels hideOverlay />
+      </LineChart>
     </Example>
   );
 };
@@ -405,33 +400,26 @@ const DynamicData = () => {
 
   return (
     <Example title="Dynamic Data">
-      <VStack gap={2}>
-        <Text font="headline" textAlign="center">
-          Election Polls
-        </Text>
-        <LineChart
-          enableScrubbing
-          showArea
-          showXAxis
-          showYAxis
-          height={{ base: 200, tablet: 250, desktop: 300 }}
-          legend={
-            <Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />
-          }
-          legendPosition="top"
-          series={series}
-          xAxis={{
-            data: timeLabels,
-          }}
-          yAxis={{
-            domain: { max: 100, min: 0 },
-            showGrid: true,
-            tickLabelFormatter: (value) => `${value}%`,
-          }}
-        >
-          <Scrubber />
-        </LineChart>
-      </VStack>
+      <LineChart
+        enableScrubbing
+        showArea
+        showXAxis
+        showYAxis
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
+        legendPosition="top"
+        series={series}
+        xAxis={{
+          data: timeLabels,
+        }}
+        yAxis={{
+          domain: { max: 100, min: 0 },
+          showGrid: true,
+          tickLabelFormatter: (value) => `${value}%`,
+        }}
+      >
+        <Scrubber />
+      </LineChart>
     </Example>
   );
 };
@@ -501,7 +489,7 @@ const Interactive = () => {
         compact
         aria-label={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
         aria-pressed={isEmphasized}
-        inverted={isEmphasized}
+        invertColorScheme={isEmphasized}
         onClick={() => handleToggle(seriesId)}
         style={{
           backgroundColor: `rgb(var(${baseColor}10))`,
@@ -535,28 +523,23 @@ const Interactive = () => {
 
   return (
     <Example title="Interactive Legend">
-      <VStack gap={2}>
-        <Text font="headline" textAlign="center">
-          Financial Overview
-        </Text>
-        <LineChart
-          showArea
-          showXAxis
-          showYAxis
-          height={{ base: 300, tablet: 350, desktop: 400 }}
-          legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
-          legendPosition="top"
-          series={series}
-          xAxis={{
-            data: months,
-          }}
-          yAxis={{
-            domain: { min: 0 },
-            showGrid: true,
-            tickLabelFormatter: (value) => `$${value}k`,
-          }}
-        />
-      </VStack>
+      <LineChart
+        showArea
+        showXAxis
+        showYAxis
+        height={{ base: 300, tablet: 350, desktop: 400 }}
+        legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
+        legendPosition="top"
+        series={series}
+        xAxis={{
+          data: months,
+        }}
+        yAxis={{
+          domain: { min: 0 },
+          showGrid: true,
+          tickLabelFormatter: (value) => `$${value}k`,
+        }}
+      />
     </Example>
   );
 };
@@ -676,6 +659,7 @@ const LegendShapes = () => {
             data: actualRevenue,
             color: 'var(--color-fgPositive)',
             legendShape: 'squircle',
+            stackId: 'revenue',
           },
           {
             id: 'forecast',
@@ -683,10 +667,13 @@ const LegendShapes = () => {
             data: forecastRevenue,
             color: 'var(--color-fgPositive)',
             legendShape: DottedLegendIndicator,
+            stackId: 'revenue',
+            BarComponent: DottedBarComponent,
           },
         ]}
         xAxis={{
           data: months,
+          scaleType: 'band',
           showLine: true,
           showTickMarks: true,
         }}
