@@ -20,6 +20,8 @@ module.exports = {
       'Components/Chart/LineChart: Transitions',
     ],
     include: [
+      // Only run Button stories for testing
+      'Components/Buttons/Button:*',
       // 'Core Components/SparklineInteractive:*',
       // 'Core Components/ProgressBar:*',
       // 'Core Components/Navigation/Sidebar:*',

@@ -28,8 +28,23 @@ const getPercyToken = (): string | undefined => {
 };
 
 const main = async () => {
+  console.log('========================================');
+  console.log('🔍 Percy Visual Regression Test Starting');
+  console.log('========================================');
+  console.log(`📁 Storybook dist path: ${path.join(MONOREPO_ROOT, 'apps/storybook/dist')}`);
+  console.log(`🌿 Branch: ${process.env.PERCY_BRANCH || 'not set'}`);
+  console.log(`🔧 CI: ${process.env.CI || 'false'}`);
+  console.log('========================================');
+
   process.env.PERCY_TOKEN = getPercyToken();
+  console.log('✅ PERCY_TOKEN is set');
+
+  console.log('🚀 Running Percy Storybook...');
   await $`percy storybook  --wait --fail-on-changes ${path.join(MONOREPO_ROOT, 'apps/storybook/dist')}`;
+
+  console.log('========================================');
+  console.log('✨ Percy run complete!');
+  console.log('========================================');
 };
 
 void main();
