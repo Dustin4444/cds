@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import type { IllustrationVariant } from '@coinbase/cds-common/types/IllustrationNames';
 import type {
   HeroSquareDimension,
@@ -10,6 +10,7 @@ import type {
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { convertDimensionToSize } from '@coinbase/cds-common/utils/convertDimensionToSize';
 import { convertSizeWithMultiplier } from '@coinbase/cds-common/utils/convertSizeWithMultiplier';
+import { convertThemedSvgToHex } from '@coinbase/cds-common/utils/convertThemedSvgToHex';
 import { getDefaultSizeObjectForIllustration } from '@coinbase/cds-common/utils/getDefaultSizeObjectForIllustration';
 import type {
   HeroSquareName,
@@ -56,6 +57,8 @@ export type IllustrationBaseProps<T extends keyof IllustrationNamesMap> = Shared
    * @default null
    * */
   fallback?: null | React.ReactElement;
+  /** Apply the theme to the illustration */
+  applyTheme?: boolean;
 };
 
 type IllustrationConfigShape<Variant extends IllustrationVariant> = Record<
@@ -88,11 +91,48 @@ export function createIllustration<Variant extends IllustrationVariant>(
     testID,
     alt = '',
     fallback = null,
+    applyTheme,
   }: IllustrationProps) {
-    const { activeColorScheme } = useTheme();
+    const theme = useTheme();
     const version = config[name];
+    const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
 
-    const src = `https://static-assets.coinbase.com/ui-infra/illustration/v1/${variant}/svg/${activeColorScheme}/${name}-${version}.svg`;
+    useEffect(() => {
+      let cancelled = false;
+
+      // Dynamically import the SVG file from the local package and update the color tokens inline
+      if (applyTheme) {
+        import(
+          `@coinbase/cds-illustrations/__generated__/${variant}/svg/themeable/${name}-${version}.svg`
+        )
+          .then((mod) => {
+            if (!cancelled) {
+              const svgContent = mod.default ?? mod;
+
+              // If it's a URL (starts with http/data:), fetch it; otherwise it's inline SVG markup
+              if (typeof svgContent === 'string' && svgContent.startsWith('<svg')) {
+                setSvgMarkup(svgContent);
+              } else {
+                fetch(svgContent)
+                  .then((res) => res.text())
+                  .then((svg) => {
+                    if (!cancelled) setSvgMarkup(svg);
+                  });
+              }
+            }
+          })
+          .catch((err) => {
+            if (isDevelopment()) {
+              console.error(`Failed to load illustration ${name}:`, err);
+            }
+            if (!cancelled) setSvgMarkup(null);
+          });
+      }
+
+      return () => {
+        cancelled = true;
+      };
+    }, [name, version, theme.activeColorScheme, applyTheme]);
 
     const { width, height } = useMemo(() => {
       let size = defaultSize;
@@ -105,14 +145,37 @@ export function createIllustration<Variant extends IllustrationVariant>(
       return size;
     }, [dimension, scaleMultiplier]);
 
-    if (version === undefined) {
+    const illustrationPalette = useMemo(
+      () =>
+        theme.activeColorScheme === 'dark'
+          ? (theme.darkIllustration as Record<string, string>)
+          : (theme.lightIllustration as Record<string, string>),
+      [theme.activeColorScheme, theme.darkIllustration, theme.lightIllustration],
+    );
+
+    if (version === undefined || (applyTheme && svgMarkup === null)) {
       if (isDevelopment()) {
         console.error(`Unable to find illustration with name: ${name}`);
       }
       return fallback;
     }
 
-    return <img alt={alt} data-testid={testID} height={height} src={src} width={width} />;
+    if (applyTheme && svgMarkup) {
+      return (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: convertThemedSvgToHex(svgMarkup, illustrationPalette),
+          }}
+          aria-label={alt || undefined}
+          data-testid={testID}
+          role={alt ? 'img' : 'presentation'}
+          style={{ width, height, display: 'inline-block' }}
+        />
+      );
+    } else {
+      const src = `https://static-assets.coinbase.com/ui-infra/illustration/v1/${variant}/svg/${theme.activeColorScheme}/${name}-${version}.svg`;
+      return <img alt={alt} data-testid={testID} height={height} src={src} width={width} />;
+    }
   });
 
   Illustration.displayName = 'Illustration';
