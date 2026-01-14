@@ -70,11 +70,14 @@ const BasicLegend = () => {
     [],
   );
 
+  const chartAccessibilityLabel = `Website traffic across ${pages.length} pages showing page views and unique visitors.`;
+
   return (
     <LineChart
       enableScrubbing
       legend
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
       height={150}
       legendPosition="right"
       series={[
@@ -224,20 +227,10 @@ const DynamicData = () => {
   const theme = useTheme();
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
 
-  const timeLabels = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+  const timeLabels = useMemo(
+    () => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    [],
+  );
 
   const seriesConfig: Series[] = useMemo(
     () => [
@@ -269,6 +262,8 @@ const DynamicData = () => {
   const dataLength = seriesConfig[0].data?.length ?? 0;
   const dataIndex = scrubberPosition ?? dataLength - 1;
 
+  const chartAccessibilityLabel = `Candidate polling data over ${timeLabels.length} months showing support percentages for 3 candidates.`;
+
   const ValueLegendItem = useCallback(
     ({ seriesId, label, color, shape }: LegendItemProps) => {
       const seriesData = seriesConfig.find((s) => s.id === seriesId);
@@ -292,6 +287,7 @@ const DynamicData = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
       height={250}
       legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
       legendPosition="top"
