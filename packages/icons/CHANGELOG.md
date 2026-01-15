@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 
 - Feat: Publish icons 2026-01-15. [[#307](https://github.com/coinbase/cds/pull/307)]
 
-##### ⭐️ Updated (1)
+##### ⭐️ Updated (2)
 
 - pencil
 - smartContract
