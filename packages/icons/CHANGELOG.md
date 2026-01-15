@@ -8,14 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.9.1 (1/15/2026 PST)
+
+#### 🐞 Fixes
+
+- Feat: Publish icons 2026-01-15. [[#307](https://github.com/coinbase/cds/pull/307)]
 
 ##### ⭐️ Updated (1)
 
+- pencil
 - smartContract
-
-##### ☠️ Renamed (1)
-
-- pencil → pencil
 
 ## 5.9.0 (12/22/2025 PST)
 
