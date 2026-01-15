@@ -1,40 +1,63 @@
 ---
-id: sparkline
-title: Sparkline
-platform_switcher_options: { web: true, mobile: true }
+id: sparklineOverview
+title: Sparkline Components (Deprecated)
 hide_title: true
 ---
 
 import { VStack } from '@coinbase/cds-web/layout';
-
-import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
-import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
-
-import webPropsToc from ':docgen/web-visualization/sparkline/Sparkline/toc-props';
-import mobilePropsToc from ':docgen/mobile-visualization/sparkline/Sparkline/toc-props';
-
-import WebPropsTable from './_webPropsTable.mdx';
-import MobilePropsTable from './_mobilePropsTable.mdx';
-import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
-import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
-
-import webMetadata from './webMetadata.json';
-import mobileMetadata from './mobileMetadata.json';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { Banner } from '@coinbase/cds-web/banner';
 
 <VStack gap={5}>
-  <ComponentHeader
-    title="Sparkline (Deprecated)"
-    webMetadata={webMetadata}
-    mobileMetadata={mobileMetadata}
-  />
-  <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
-    webExamples={<WebExamples />}
-    mobilePropsTable={<MobilePropsTable />}
-    mobileExamples={<MobileExamples />}
-    webExamplesToc={webExamplesToc}
-    mobileExamplesToc={mobileExamplesToc}
-    webPropsToc={webPropsToc}
-    mobilePropsToc={mobilePropsToc}
-  />
+<ContentHeader
+  title="Sparkline Components (Deprecated)"
+  description="Legacy sparkline components for inline chart visualizations."
+/>
+
+<MDXSection>
+<MDXArticle>
+
+<Banner variant="warning">
+  These components are deprecated and will be removed in a future release. Please migrate to the new chart components: `LineChart` or `AreaChart`.
+</Banner>
+
+## Overview
+
+Sparkline components provide compact inline chart visualizations. While still functional, these components are deprecated in favor of the more flexible and feature-rich `LineChart` and `AreaChart` components.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Components
+
+- **[Sparkline](/components/graphs/Sparkline/Sparkline/sparkline)** - Basic sparkline visualization
+- **[SparklineGradient](/components/graphs/Sparkline/SparklineGradient/sparklineGradient)** - Sparkline with gradient fill
+- **[SparklineInteractive](/components/graphs/Sparkline/SparklineInteractive/sparklineInteractive)** - Sparkline with touch/mouse interactions
+- **[SparklineInteractiveHeader](/components/graphs/Sparkline/SparklineInteractiveHeader/sparklineInteractiveHeader)** - Header component for interactive sparklines
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Migration Guide
+
+Replace sparkline components with the equivalent chart components:
+
+```tsx
+// Before (deprecated)
+import { Sparkline } from '@coinbase/cds-web-visualization';
+<Sparkline data={data} />
+
+// After (recommended)
+import { LineChart } from '@coinbase/cds-web-visualization';
+<LineChart data={data} xAccessor="x" yAccessor="y" />
+```
+
+</MDXArticle>
+</MDXSection>
 </VStack>

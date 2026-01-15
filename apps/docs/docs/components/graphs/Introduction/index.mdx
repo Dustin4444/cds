@@ -1,0 +1,93 @@
+---
+id: graphsIntroduction
+title: Introduction
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+
+<VStack gap={5}>
+<ContentHeader
+  title="Introduction to Charts"
+  description="Learn the fundamentals of building data visualizations with CDS charting components."
+/>
+
+<MDXSection>
+<MDXArticle>
+## Getting Started
+
+CDS provides a powerful and flexible charting system built on top of D3.js. The chart components are designed to be composable, allowing you to build complex visualizations from simple building blocks.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Core Concepts
+
+### CartesianChart Context
+
+All chart components operate within a `CartesianChart` context. This context provides:
+- Shared scales for X and Y axes
+- Data management
+- Coordinate system transformations
+- Event handling for interactions
+
+### Chart Wrappers
+
+For convenience, CDS provides pre-configured chart wrappers that include `CartesianChart` internally:
+- `LineChart` - For line visualizations
+- `AreaChart` - For area/filled visualizations  
+- `BarChart` - For bar/column visualizations
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Basic Example
+
+```tsx
+import { LineChart, XAxis, YAxis, Scrubber, Point } from '@coinbase/cds-web-visualization';
+
+const data = [
+  { date: new Date('2024-01-01'), value: 100 },
+  { date: new Date('2024-02-01'), value: 150 },
+  { date: new Date('2024-03-01'), value: 120 },
+];
+
+function MyChart() {
+  return (
+    <LineChart 
+      data={data} 
+      xAccessor="date" 
+      yAccessor="value"
+      height={300}
+    >
+      <XAxis />
+      <YAxis />
+      <Scrubber>
+        <Point />
+      </Scrubber>
+    </LineChart>
+  );
+}
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Next Steps
+
+- [Charts Overview](/components/graphs/ChartsOverview/chartsOverview) - See all available chart components
+- [LineChart](/components/graphs/LineChart/lineChart) - Build line visualizations
+- [Axis Components](/components/graphs/Axis/axisOverview) - Configure chart axes
+
+</MDXArticle>
+</MDXSection>
+</VStack>

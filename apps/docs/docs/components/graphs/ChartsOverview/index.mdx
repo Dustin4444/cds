@@ -1,0 +1,69 @@
+---
+id: chartsOverview
+title: Charts Overview
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+
+<VStack gap={5}>
+<ContentHeader
+  title="Charts Overview"
+  description="An overview of the charting components available in the Coinbase Design System."
+/>
+
+<MDXSection>
+<MDXArticle>
+## Overview
+
+CDS provides a comprehensive set of charting components for building data visualizations. The chart system is built around the `CartesianChart` component, which provides a shared context for chart elements like axes, lines, areas, bars, and interactive features.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Chart Types
+
+- **[LineChart](/components/graphs/LineChart/lineChart)** - Display trends over time with line visualizations
+- **[AreaChart](/components/graphs/AreaChart/areaChart)** - Show magnitude and trends with filled areas
+- **[BarChart](/components/graphs/BarChart/barChart)** - Compare discrete categories with vertical or horizontal bars
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Chart Building Blocks
+
+### Axis Components
+Configure how your chart axes display data:
+- **[XAxis](/components/graphs/Axis/XAxis/xAxis)** - Horizontal axis configuration
+- **[YAxis](/components/graphs/Axis/YAxis/yAxis)** - Vertical axis configuration
+
+### Interactive Components
+- **[Scrubber](/components/graphs/Scrubber/scrubber)** - Enable touch/mouse interactions on charts
+- **[Point](/components/graphs/Point/point)** - Highlight specific data points
+- **[ReferenceLine](/components/graphs/ReferenceLine/referenceLine)** - Add reference lines to charts
+- **[PeriodSelector](/components/graphs/PeriodSelector/periodSelector)** - Time period selection controls
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Legacy Components
+
+The following Sparkline components are deprecated and will be removed in a future release. Use `LineChart` or `AreaChart` instead:
+
+- [Sparkline (Deprecated)](/components/graphs/Sparkline/Sparkline/sparkline)
+- [SparklineGradient (Deprecated)](/components/graphs/Sparkline/SparklineGradient/sparklineGradient)
+- [SparklineInteractive (Deprecated)](/components/graphs/Sparkline/SparklineInteractive/sparklineInteractive)
+- [SparklineInteractiveHeader (Deprecated)](/components/graphs/Sparkline/SparklineInteractiveHeader/sparklineInteractiveHeader)
+
+</MDXArticle>
+</MDXSection>
+</VStack>

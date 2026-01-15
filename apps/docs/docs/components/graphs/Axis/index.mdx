@@ -1,0 +1,54 @@
+---
+id: axisOverview
+title: Axis Components
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+
+<VStack gap={5}>
+<ContentHeader
+  title="Axis Components"
+  description="Configure how your chart axes display and format data."
+/>
+
+<MDXSection>
+<MDXArticle>
+## Overview
+
+Axis components control how data is displayed along the horizontal (X) and vertical (Y) axes of your charts. They handle tick marks, labels, formatting, and positioning.
+
+Both `XAxis` and `YAxis` must be used inside a `CartesianChart` context (either directly or via `LineChart`, `AreaChart`, or `BarChart`).
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Components
+
+- **[XAxis](/components/graphs/Axis/XAxis/xAxis)** - Configures the horizontal axis, typically used for time or category data
+- **[YAxis](/components/graphs/Axis/YAxis/yAxis)** - Configures the vertical axis, typically used for numeric values
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Usage
+
+```tsx
+import { LineChart, XAxis, YAxis } from '@coinbase/cds-web-visualization';
+
+<LineChart data={data} xAccessor="date" yAccessor="value">
+  <XAxis tickFormat={(d) => d.toLocaleDateString()} />
+  <YAxis tickFormat={(d) => `$${d}`} />
+</LineChart>
+```
+
+</MDXArticle>
+</MDXSection>
+</VStack>
