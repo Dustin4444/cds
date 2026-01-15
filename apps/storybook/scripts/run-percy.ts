@@ -39,8 +39,8 @@ const main = async () => {
   process.env.PERCY_TOKEN = getPercyToken();
   console.log('✅ PERCY_TOKEN is set');
 
-  console.log('🚀 Running Percy Storybook...');
-  await $`percy storybook  --wait --fail-on-changes ${path.join(MONOREPO_ROOT, 'apps/storybook/dist')}`;
+  console.log('🚀 Running Percy build:wait...');
+  await $`npx percy build:wait --fail-on-changes`;
 
   console.log('========================================');
   console.log('✨ Percy run complete!');
