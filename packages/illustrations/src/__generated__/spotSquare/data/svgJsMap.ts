@@ -598,6 +598,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/globalTransactions-6.js').content,
     dark: () => require('../svgJs/dark/globalTransactions-6.js').content,
   },
+  goldSilverFutures: {
+    light: () => require('../svgJs/light/goldSilverFutures-0.js').content,
+    dark: () => require('../svgJs/dark/goldSilverFutures-0.js').content,
+  },
   guideBullCase: {
     light: () => require('../svgJs/light/guideBullCase-4.js').content,
     dark: () => require('../svgJs/dark/guideBullCase-4.js').content,

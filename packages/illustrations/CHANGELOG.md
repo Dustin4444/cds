@@ -8,6 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (3)
+
+###### HeroSquare (2)
+
+- test
+- borrowCoinsBtc
+
+###### SpotSquare (1)
+
+- goldSilverFutures
+
 ## 4.29.0 (12/5/2025 PST)
 
 #### 🚀 Updates

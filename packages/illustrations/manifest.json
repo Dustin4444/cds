@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2025-12-05T21:01:02.785Z",
+  "lastUpdated": "2026-01-15T23:49:50.512Z",
   "items": {
     "2:33979": {
       "type": "heroSquare",
@@ -210,7 +210,7 @@
       "height": 240,
       "description": "restricted, country, warning, map, pin, point, location, warning state",
       "createdAt": "2022-08-05T05:36:48.405Z",
-      "lastUpdated": "2025-12-01T18:17:47.000Z",
+      "lastUpdated": "2025-12-24T16:31:49.441Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/restrictedCountry-7.svg",
         "svgDark": "./heroSquare/svg/dark/restrictedCountry-7.svg",
@@ -10030,7 +10030,7 @@
       "height": 48,
       "description": "calendar, percentage, taxes, money, schedule, organize, funds, %, 📆, 📅, 🗓",
       "createdAt": "2022-08-05T05:36:58.128Z",
-      "lastUpdated": "2025-12-01T18:13:24.337Z",
+      "lastUpdated": "2025-12-24T16:31:49.434Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/taxSeason-3.svg",
         "svgDark": "./pictogram/svg/dark/taxSeason-3.svg",
@@ -24730,7 +24730,7 @@
       "height": 240,
       "description": "",
       "createdAt": "2025-07-03T14:26:31.504Z",
-      "lastUpdated": "2025-08-07T22:11:25.420Z",
+      "lastUpdated": "2025-12-09T23:08:10.526Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/baseCheck-1.svg",
         "svgDark": "./heroSquare/svg/dark/baseCheck-1.svg",
@@ -28670,7 +28670,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2025-12-05T17:03:40.067Z",
-      "lastUpdated": "2025-12-05T17:03:40.067Z",
+      "lastUpdated": "2025-12-24T16:31:49.427Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/robot-0.svg",
         "svgDark": "./pictogram/svg/dark/robot-0.svg",
@@ -28679,6 +28679,66 @@
         "svgJsDark": "./pictogram/svgJs/dark/robot-0.js",
         "pngLight": "./pictogram/png/light/robot-0.png",
         "pngDark": "./pictogram/png/dark/robot-0.png"
+      },
+      "version": 0
+    },
+    "24785:58": {
+      "type": "heroSquare",
+      "name": "test",
+      "hash": "l28eqcD75twYfnHO/GUElQbRXe4eAiknPy2nQXLb1HQ=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-12-10T22:56:27.793Z",
+      "lastUpdated": "2025-12-10T22:56:27.793Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/test-0.svg",
+        "svgDark": "./heroSquare/svg/dark/test-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/test-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/test-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/test-0.js",
+        "pngLight": "./heroSquare/png/light/test-0.png",
+        "pngDark": "./heroSquare/png/dark/test-0.png"
+      },
+      "version": 0
+    },
+    "25214:79": {
+      "type": "heroSquare",
+      "name": "borrowCoinsBtc",
+      "hash": "G+kBUhUcuSPmEP/QVVJKfh+q25FjL44+MVg64yr+YG8=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-12-24T16:31:49.400Z",
+      "lastUpdated": "2026-01-15T15:34:18.584Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/borrowCoinsBtc-0.svg",
+        "svgDark": "./heroSquare/svg/dark/borrowCoinsBtc-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/borrowCoinsBtc-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/borrowCoinsBtc-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/borrowCoinsBtc-0.js",
+        "pngLight": "./heroSquare/png/light/borrowCoinsBtc-0.png",
+        "pngDark": "./heroSquare/png/dark/borrowCoinsBtc-0.png"
+      },
+      "version": 0
+    },
+    "25928:225": {
+      "type": "spotSquare",
+      "name": "goldSilverFutures",
+      "hash": "x4PU3BC/HM/X4MSb0H8MGSYBLPe7l0D5s6lM+7AZJfY=",
+      "width": 96,
+      "height": 96,
+      "description": "coin, coins, moon, more, empty state",
+      "createdAt": "2026-01-15T15:34:18.568Z",
+      "lastUpdated": "2026-01-15T15:34:18.568Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/goldSilverFutures-0.svg",
+        "svgDark": "./spotSquare/svg/dark/goldSilverFutures-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/goldSilverFutures-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/goldSilverFutures-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/goldSilverFutures-0.js",
+        "pngLight": "./spotSquare/png/light/goldSilverFutures-0.png",
+        "pngDark": "./spotSquare/png/dark/goldSilverFutures-0.png"
       },
       "version": 0
     }
