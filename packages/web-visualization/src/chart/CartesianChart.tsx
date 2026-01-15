@@ -5,9 +5,11 @@ import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
-import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
+import { InteractionProvider } from './interaction/InteractionProvider';
 import { CartesianChartProvider } from './ChartProvider';
 import {
+  type ActiveItem,
+  type ActiveItems,
   type AxisConfig,
   type AxisConfigProps,
   type CartesianChartContextValue,
@@ -21,6 +23,9 @@ import {
   getAxisScale,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
+  type InteractionMode,
+  type InteractionScope,
+  type InteractionState,
   type Series,
   useTotalAxisPadding,
 } from './utils';
@@ -35,33 +40,83 @@ const focusStylesCss = css`
   }
 `;
 
-export type CartesianChartBaseProps = BoxBaseProps &
-  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
-    /**
-     * Configuration objects that define how to visualize the data.
-     * Each series contains its own data array.
-     */
-    series?: Array<Series>;
-    /**
-     * Whether to animate the chart.
-     * @default true
-     */
-    animate?: boolean;
-    /**
-     * Configuration for x-axis.
-     */
-    xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
-    /**
-     * Configuration for y-axis(es). Can be a single config or array of configs.
-     */
-    yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
-    /**
-     * Inset around the entire chart (outside the axes).
-     */
-    inset?: number | Partial<ChartInset>;
-  };
+export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> & {
+  /**
+   * Configuration objects that define how to visualize the data.
+   * Each series contains its own data array.
+   */
+  series?: Array<Series>;
+  /**
+   * Whether to animate the chart.
+   * @default true
+   */
+  animate?: boolean;
+  /**
+   * Configuration for x-axis.
+   */
+  xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
+  /**
+   * Configuration for y-axis(es). Can be a single config or array of configs.
+   */
+  yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
+  /**
+   * Inset around the entire chart (outside the axes).
+   */
+  inset?: number | Partial<ChartInset>;
 
-export type CartesianChartProps = Omit<BoxProps<'div'>, 'title'> &
+  // New Interaction API
+  /**
+   * The interaction mode.
+   * - 'none': Interaction disabled
+   * - 'single': Single pointer/touch interaction (default)
+   * - 'multi': Multi-touch/multi-pointer interaction
+   * @default 'single'
+   */
+  interaction?: InteractionMode;
+  /**
+   * Controls what aspects of the data can be interacted with.
+   * @default { dataIndex: true, series: false }
+   */
+  interactionScope?: InteractionScope;
+  /**
+   * Controlled active item state (for single mode).
+   * - `undefined` or not passed: uncontrolled mode, listens to user input
+   * - `null`: controlled mode with no active item, ignores user input
+   * - `ActiveItem`: controlled mode with specific active item
+   */
+  activeItem?: ActiveItem | null;
+  /**
+   * Controlled active items state (for multi mode).
+   * - `undefined` or not passed: uncontrolled mode, listens to user input
+   * - Empty array `[]`: controlled mode with no active items, ignores user input
+   * - `ActiveItems`: controlled mode with specific active items
+   */
+  activeItems?: ActiveItems;
+  /**
+   * Callback fired when the active item changes during interaction.
+   * For single mode: receives `ActiveItem | undefined`
+   * For multi mode: receives `ActiveItems`
+   */
+  onInteractionChange?: (state: InteractionState) => void;
+  /**
+   * Accessibility label for the chart.
+   * - When a string: Used as a static label for the chart element
+   * - When a function: Called with the active item to generate dynamic labels during interaction
+   */
+  accessibilityLabel?: string | ((activeItem: ActiveItem) => string);
+
+  // Legacy props for backwards compatibility
+  /**
+   * @deprecated Use `interaction="single"` instead. Will be removed in next major version.
+   */
+  enableScrubbing?: boolean;
+  /**
+   * @deprecated Use `onInteractionChange` instead. Will be removed in next major version.
+   */
+  onScrubberPositionChange?: (index: number | undefined) => void;
+};
+
+export type CartesianChartProps = Omit<BoxProps<'div'>, 'title' | 'accessibilityLabel'> &
   CartesianChartBaseProps & {
     /**
      * Custom class name for the root element.
@@ -109,6 +164,14 @@ export const CartesianChart = memo(
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
+        // New interaction props
+        interaction,
+        interactionScope,
+        activeItem,
+        activeItems,
+        onInteractionChange,
+        accessibilityLabel,
+        // Legacy props
         enableScrubbing,
         onScrubberPositionChange,
         width = '100%',
@@ -386,10 +449,25 @@ export const CartesianChart = memo(
       );
       const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
 
+      // Resolve interaction mode (backwards compatibility with enableScrubbing)
+      const resolvedInteraction: InteractionMode = useMemo(() => {
+        if (interaction !== undefined) return interaction;
+        if (enableScrubbing !== undefined) return enableScrubbing ? 'single' : 'none';
+        return 'single'; // Default to single
+      }, [interaction, enableScrubbing]);
+
+      const isInteractionEnabled = resolvedInteraction !== 'none';
+
       return (
         <CartesianChartProvider value={contextValue}>
-          <ScrubberProvider
-            enableScrubbing={!!enableScrubbing}
+          <InteractionProvider
+            accessibilityLabel={accessibilityLabel}
+            activeItem={activeItem}
+            activeItems={activeItems}
+            enableScrubbing={enableScrubbing}
+            interaction={resolvedInteraction}
+            interactionScope={interactionScope}
+            onInteractionChange={onInteractionChange}
             onScrubberPositionChange={onScrubberPositionChange}
             svgRef={svgRef}
           >
@@ -418,16 +496,16 @@ export const CartesianChart = memo(
                 }}
                 aria-live="polite"
                 as="svg"
-                className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
+                className={cx(isInteractionEnabled && focusStylesCss, classNames?.chart)}
                 height="100%"
                 style={styles?.chart}
-                tabIndex={enableScrubbing ? 0 : undefined}
+                tabIndex={isInteractionEnabled ? 0 : undefined}
                 width="100%"
               >
                 {children}
               </Box>
             </Box>
-          </ScrubberProvider>
+          </InteractionProvider>
         </CartesianChartProvider>
       );
     },

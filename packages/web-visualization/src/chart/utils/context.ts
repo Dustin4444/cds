@@ -110,3 +110,107 @@ export const useScrubberContext = (): ScrubberContextValue => {
   }
   return context;
 };
+
+// ============================================================================
+// Interaction Types (New API)
+// ============================================================================
+
+/**
+ * Interaction mode - controls how many simultaneous interactions to track.
+ * - 'none': Interaction disabled
+ * - 'single': Single pointer/touch interaction (default)
+ * - 'multi': Multi-touch/multi-pointer interaction
+ */
+export type InteractionMode = 'none' | 'single' | 'multi';
+
+/**
+ * Controls what aspects of the data can be interacted with.
+ */
+export type InteractionScope = {
+  /**
+   * Whether interaction tracks data index (x-axis position).
+   * @default true
+   */
+  dataIndex?: boolean;
+  /**
+   * Whether interaction tracks specific series.
+   * @default false
+   */
+  series?: boolean;
+};
+
+/**
+ * Represents a single active item during interaction.
+ * - `undefined` means the user is not interacting with the chart
+ * - `null` values mean the user is interacting but not over a specific item/series
+ */
+export type ActiveItem = {
+  /**
+   * The data index (x-axis position) being interacted with.
+   * `null` when interacting but not over a data point.
+   */
+  dataIndex: number | null;
+  /**
+   * The series ID being interacted with.
+   * `null` when series scope is disabled or not over a specific series.
+   */
+  seriesId: string | null;
+};
+
+/**
+ * Active items for multi-touch/multi-pointer interaction.
+ */
+export type ActiveItems = Array<ActiveItem>;
+
+/**
+ * Unified interaction state.
+ * - For 'single' mode: `ActiveItem | undefined`
+ * - For 'multi' mode: `ActiveItems` (empty array when not interacting)
+ */
+export type InteractionState = ActiveItem | ActiveItems | undefined;
+
+/**
+ * Context value for chart interaction state.
+ */
+export type InteractionContextValue = {
+  /**
+   * The current interaction mode.
+   */
+  mode: InteractionMode;
+  /**
+   * The interaction scope configuration.
+   */
+  scope: InteractionScope;
+  /**
+   * The current active item(s) during interaction.
+   * For 'single' mode: `ActiveItem | undefined`
+   * For 'multi' mode: `ActiveItems`
+   */
+  activeItem: InteractionState;
+  /**
+   * Callback to update the active item state.
+   */
+  setActiveItem: (item: InteractionState) => void;
+};
+
+export const InteractionContext = createContext<InteractionContextValue | undefined>(undefined);
+
+/**
+ * Hook to access the interaction context.
+ * @throws Error if used outside of an InteractionProvider
+ */
+export const useInteractionContext = (): InteractionContextValue => {
+  const context = useContext(InteractionContext);
+  if (!context) {
+    throw new Error('useInteractionContext must be used within an InteractionProvider');
+  }
+  return context;
+};
+
+/**
+ * Hook to optionally access the interaction context.
+ * Returns undefined if not within an InteractionProvider.
+ */
+export const useOptionalInteractionContext = (): InteractionContextValue | undefined => {
+  return useContext(InteractionContext);
+};
