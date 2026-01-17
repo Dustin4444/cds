@@ -14,15 +14,146 @@ function BasicTray() {
     <VStack gap={2}>
       <Button onClick={handleOpen}>Open Tray</Button>
       {visible && (
-        <Tray title="Example Title" pin="right" onCloseComplete={handleClose}>
-          {({ handleClose }) => (
-            <VStack gap={2} justifyContent="space-between" flexGrow={1} paddingBottom={1.5}>
-              <Text>This is the content of the tray.</Text>
-              <HStack justifyContent="flex-end">
-                <Button onClick={handleClose}>Close</Button>
-              </HStack>
-            </VStack>
+        <Tray
+          title="Example Title"
+          pin="right"
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
           )}
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text>Basic content.</Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Scrolling
+
+```jsx live
+function BasicScrollingTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          title="Example Title"
+          pin="right"
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
+          )}
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text>Scroll down to see more content. The footer stays fixed at the bottom.</Text>
+            {Array.from({ length: 20 }, (_, i) => (
+              <Box key={i} background="bgSecondary" borderRadius={200} padding={2}>
+                <Text>Item {i + 1}</Text>
+              </Box>
+            ))}
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Pinned to Bottom
+
+```jsx live
+function BasicBottomTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          title="Example Title"
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
+          )}
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text>Scroll down to see more content. The footer stays fixed at the bottom.</Text>
+            {Array.from({ length: 20 }, (_, i) => (
+              <Box key={i} background="bgSecondary" borderRadius={200} padding={2}>
+                <Text>Item {i + 1}</Text>
+              </Box>
+            ))}
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+## Responsive
+
+Use `useBreakpoints` to create a Tray that adapts between mobile and desktop layouts. On mobile, the tray pins to the bottom with a full-width button. On desktop, it pins to the right with a standard button.
+
+```jsx live
+function ResponsiveTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Responsive Tray</Button>
+      {visible && (
+        <Tray
+          title="Responsive Tray"
+          pin={isPhone ? 'bottom' : 'right'}
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+            />
+          )}
+        >
+          <VStack gap={2}>
+            <Text>
+              This tray adapts to your screen size. On mobile, it pins to the bottom with a
+              full-width close button. On desktop, it pins to the right.
+            </Text>
+            {Array.from({ length: 15 }, (_, i) => (
+              <Box key={i} background="bgSecondary" borderRadius={200} padding={2}>
+                <Text>Item {i + 1}</Text>
+              </Box>
+            ))}
+          </VStack>
         </Tray>
       )}
     </VStack>
@@ -119,7 +250,7 @@ function CustomTitleTray() {
 
 ### Custom Image Header
 
-You can include a full-bleed custom image in the header by using negative margins to break out of the parent padding.
+You can add a background image to the header using the `styles.header` prop with standard CSS background properties.
 
 ```jsx live
 function CustomImageTray() {
@@ -132,30 +263,30 @@ function CustomImageTray() {
       <Button onClick={handleOpen}>Open Tray</Button>
       {visible && (
         <Tray
-          title={
-            <Box flexGrow={1}>
-              <VStack gap={2} marginTop={-4}>
-                <Box marginX={-4} marginRight={6}>
-                  <img
-                    src="https://cds.coinbase.com/img/card/content_card_rewards.png"
-                    alt="Rewards"
-                    style={{
-                      width: '100%',
-                      height: 220,
-                      objectFit: 'cover',
-                    }}
-                  />
-                </Box>
-                <Text font="title3">Header</Text>
-              </VStack>
-            </Box>
-          }
           pin="right"
           onCloseComplete={handleClose}
+          styles={{
+            header: {
+              backgroundImage:
+                'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              minHeight: 220,
+            },
+          }}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
+          )}
         >
-          <VStack gap={2}>
+          <Text font="title3" paddingTop={2} paddingBottom={0.75}>
+            Header
+          </Text>
+          <VStack gap={2} paddingBottom={2}>
             <Text>This is the content of the tray.</Text>
-            <Button onClick={handleClose}>Close</Button>
           </VStack>
         </Tray>
       )}
@@ -404,15 +535,17 @@ function FloatingTrayExample() {
             offset="2"
             borderRadius="600"
             onCloseComplete={handleClose}
-          >
-            {({ handleClose }) => (
-              <VStack gap={2} justifyContent="space-between" flexGrow={1} paddingBottom={1.5}>
-                <Text>This Tray is floating and not touching the edge of the screen.</Text>
-                <HStack justifyContent="flex-end">
-                  <Button onClick={handleClose}>Close</Button>
-                </HStack>
-              </VStack>
+            footer={({ handleClose }) => (
+              <PageFooter
+                borderedTop
+                justifyContent="flex-end"
+                action={<Button onClick={handleClose}>Close</Button>}
+              />
             )}
+          >
+            <VStack gap={2} paddingBottom={2}>
+              <Text>This Tray is floating and not touching the edge of the screen.</Text>
+            </VStack>
           </FloatingTray>
         )}
       </VStack>

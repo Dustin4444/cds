@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { PinningDirection, SharedAccessibilityProps } from '@coinbase/cds-common';
+import type { PinningDirection, SharedAccessibilityProps, ThemeVars } from '@coinbase/cds-common';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -25,6 +25,7 @@ import { FocusTrap } from '../FocusTrap';
 import { Overlay } from '../overlay/Overlay';
 import { Portal } from '../Portal';
 import { trayContainerId } from '../PortalProvider';
+import type { ResponsiveProp } from '../../styles/styleProps';
 
 const MotionBox = motion(Box);
 
@@ -34,8 +35,8 @@ export type TrayBaseProps = {
   children?: React.ReactNode | TrayRenderChildren;
   /** ReactNode to render as the Drawer header */
   header?: React.ReactNode;
-  /** ReactNode to render as the Drawer footer */
-  footer?: React.ReactNode;
+  /** ReactNode to render as the Drawer footer. Can be a ReactNode or a function that receives { handleClose }. */
+  footer?: React.ReactNode | TrayRenderChildren;
   /** HTML ID for the tray */
   id?: string;
   /**
@@ -193,6 +194,14 @@ export const Tray = memo(
     const trayRef = useRef<HTMLDivElement>(null);
     const controls = useAnimation();
     const isSideTray = pin === 'right' || pin === 'left';
+    const horizontalPadding: ResponsiveProp<ThemeVars.Space> = useMemo(
+      () => (isSideTray ? { base: 4, phone: 3 } : 3),
+      [isSideTray],
+    );
+
+    // Scroll detection state
+    const [isContentScrollable, setIsContentScrollable] = useState(false);
+    const [hasScrolledDown, setHasScrolledDown] = useState(false);
 
     const blockScroll = useScrollBlocker();
     useEffect(() => {
@@ -212,6 +221,29 @@ export const Tray = memo(
       onVisibilityChange?.('visible');
       return () => onVisibilityChange?.('hidden');
     }, [onVisibilityChange]);
+
+    // Scroll detection for the scroll container (MotionBox - parent of trayRef)
+    useEffect(() => {
+      const el = trayRef.current?.parentElement;
+      if (!el) return;
+
+      const checkScroll = () => {
+        const { scrollTop, scrollHeight, clientHeight } = el;
+        setIsContentScrollable(scrollHeight > clientHeight);
+        setHasScrolledDown(scrollTop > 0);
+      };
+
+      checkScroll();
+
+      const observer = new ResizeObserver(checkScroll);
+      observer.observe(el);
+      el.addEventListener('scroll', checkScroll);
+
+      return () => {
+        observer.disconnect();
+        el.removeEventListener('scroll', checkScroll);
+      };
+    }, []);
 
     const handleClose = useCallback(() => {
       controls
@@ -261,6 +293,8 @@ export const Tray = memo(
     );
 
     if (!isOpen) return null;
+    // todo: would it be bad to not include horizontal padding on footer?
+    // We are going to recommend that consumers use PageFooter which has matching padding.
 
     // Web never had handle implemented, is this fine?
     // When we have the side tray, they want a divider for scrolling, which we can show in an example
@@ -320,21 +354,22 @@ export const Tray = memo(
                   <VStack
                     flexGrow={isSideTray ? 1 : undefined}
                     maxWidth={isSideTray ? undefined : '70em'}
-                    paddingX={isSideTray ? 4 : 3}
                     width="100%"
                   >
                     {!hideHeader && (
                       <HStack
-                        alignItems="flex-start"
+                        alignItems={isSideTray ? 'flex-start' : 'center'}
                         background="bgElevation2"
+                        borderedBottom={hasScrolledDown}
                         className={classNames?.header}
                         justifyContent={title ? 'space-between' : 'flex-end'}
-                        paddingBottom={2}
+                        paddingBottom={isSideTray ? (hasScrolledDown ? 1.5 : 0.75) : 2}
                         paddingTop={
                           isSideTray
                             ? 4
                             : 2 /* trying to reconcile existing tray specs with new ones, will sync with design */
                         }
+                        paddingX={horizontalPadding}
                         position="sticky"
                         style={styles?.header}
                         top={0}
@@ -352,7 +387,7 @@ export const Tray = memo(
                             transparent
                             accessibilityHint={closeAccessibilityHint}
                             accessibilityLabel={closeAccessibilityLabel}
-                            margin={-1.5}
+                            margin={isSideTray ? -1.5 : undefined}
                             name="close"
                             onClick={handleClose}
                             testID="tray-close-button"
@@ -364,6 +399,7 @@ export const Tray = memo(
                       className={classNames?.content}
                       flexGrow={1}
                       minHeight={0}
+                      paddingX={horizontalPadding}
                       style={styles?.content}
                     >
                       {typeof children === 'function' ? children({ handleClose }) : children}
@@ -371,11 +407,13 @@ export const Tray = memo(
                     {footer && (
                       <VStack
                         background="bgElevation2"
+                        bottom={0}
                         className={classNames?.footer}
                         flexShrink={0}
+                        position="sticky"
                         style={styles?.footer}
                       >
-                        {footer}
+                        {typeof footer === 'function' ? footer({ handleClose }) : footer}
                       </VStack>
                     )}
                   </VStack>

@@ -7,6 +7,13 @@ import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider, waitForNotToHappen } from '../../../utils/test';
 import { Tray } from '../Tray';
 
+// Mock ResizeObserver for scroll detection
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));
+
 const titleText = 'Test Title';
 
 describe('Tray', () => {
