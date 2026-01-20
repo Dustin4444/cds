@@ -5,12 +5,15 @@ import { css } from '@linaria/core';
 
 import { Button } from '../../../buttons/Button';
 import { UpsellCard } from '../../../cards/UpsellCard';
-import { TextInput } from '../../../controls';
+import { Select as OldSelect, TextInput } from '../../../controls';
 import { cx } from '../../../cx';
 import { Icon } from '../../../icons/Icon';
 import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
 import { Spinner } from '../../../loaders';
+import { ThemeProvider } from '../../../system';
+import { coinbaseDenseTheme } from '../../../themes/coinbaseDenseTheme';
+import { coinbaseTheme } from '../../../themes/coinbaseTheme';
 import { Text } from '../../../typography/Text';
 import {
   Select,
@@ -55,13 +58,36 @@ export const Default = () => {
   const [value, setValue] = useState<string | null>('1');
 
   return (
-    <Select
-      label="Single select"
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Empty value"
-      value={value}
-    />
+    <VStack gap={2}>
+      <Text font="title1">Coinbase Theme</Text>
+      <ThemeProvider activeColorScheme="light" theme={coinbaseTheme}>
+        <VStack>
+          <Select
+            label="Alpha select"
+            onChange={setValue}
+            options={exampleOptions}
+            placeholder="Empty value"
+            value={value}
+          />
+          <OldSelect label="Old select" onChange={setValue} placeholder="Empty value" />
+          <TextInput label="Text input" />
+        </VStack>
+      </ThemeProvider>
+      <Text font="title1">Coinbase Dense Theme</Text>
+      <ThemeProvider activeColorScheme="light" theme={coinbaseDenseTheme}>
+        <VStack>
+          <Select
+            label="Alpha select"
+            onChange={setValue}
+            options={exampleOptions}
+            placeholder="Empty value"
+            value={value}
+          />
+          <OldSelect label="Old select" onChange={setValue} placeholder="Empty value" />
+          <TextInput label="Text input" />
+        </VStack>
+      </ThemeProvider>
+    </VStack>
   );
 };
 
