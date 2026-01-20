@@ -535,6 +535,22 @@ export const LoopingSnapPage = () => (
   </NegativeMargin>
 );
 
+export const LoopingSnapPageMinContent = () => (
+  <NegativeMargin>
+    <Carousel loop snapMode="page" styles={overflowStyles} title="Looping - Snap Page">
+      {sampleItems.slice(0, 3).map((item, index) => (
+        <CarouselItem
+          key={`loop-page-${index}`}
+          id={`loop-page-${index}`}
+          width="calc((100% - 2 * var(--space-2)) / 3)"
+        >
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
+);
+
 export const LoopingSnapItem = () => (
   <NegativeMargin>
     <Carousel drag="snap" loop snapMode="item" styles={overflowStyles} title="Looping - Snap Item">

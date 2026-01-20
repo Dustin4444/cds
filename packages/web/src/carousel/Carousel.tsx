@@ -615,8 +615,10 @@ export const Carousel = memo(
       // Calculate wrap inset for looping
       const wrapInset = useMemo(() => {
         if (!loop || !hasDimensions) return null;
+        // Don't enable looping if content fits in viewport (single page)
+        if (maxScrollOffset <= 0) return null;
         return contentWidth + gap;
-      }, [loop, contentWidth, gap, hasDimensions]);
+      }, [loop, contentWidth, gap, hasDimensions, maxScrollOffset]);
 
       // Get current iteration for looping
       const getIteration = useCallback(
@@ -626,7 +628,6 @@ export const Carousel = memo(
         },
         [loop, wrapInset],
       );
-
 
       const updateVisibleCarouselItems = useCallback(
         (scrollOffset: number) => {
@@ -682,7 +683,7 @@ export const Carousel = memo(
           // - Forward clones: visible when scrollOffset is near wrapInset (iteration 1)
           // - Backward clones: visible when scrollOffset is near -wrapInset (iteration -1)
           const visibleItems = new Set<string>(visibleOriginalItems);
-          
+
           if (loop && wrapInset) {
             // If we're at iteration 1 or higher, we might be viewing forward clones
             // Forward clones are positioned at wrapInset offset in the DOM (after originals)
@@ -707,7 +708,7 @@ export const Carousel = memo(
                 });
               }
             }
-            
+
             // If we're at iteration -1 or lower, we might be viewing backward clones
             // Backward clones are positioned before originals with transform -wrapInset
             // So they appear at: originalPosition - wrapInset visually
@@ -915,7 +916,8 @@ export const Carousel = memo(
             if (isWrappingForward) {
               // Wrapping forward: animate to next iteration, then snap to iteration 0
               updateActivePageIndex(page);
-              const targetOffsetNextIteration = pageOffsets[page] + (currentIteration + 1) * wrapInset;
+              const targetOffsetNextIteration =
+                pageOffsets[page] + (currentIteration + 1) * wrapInset;
               updateVisibleCarouselItems(pageOffsets[page]);
 
               if (process.env.NODE_ENV === 'development') {
@@ -1075,7 +1077,7 @@ export const Carousel = memo(
             // This ensures smooth continuous scrolling without jumps
             const wrappedOffset = wrap(0, wrapInset, negatedTargetOffsetScroll);
             updateVisibleCarouselItems(wrappedOffset);
-            
+
             // Return the wrapped offset (negated for carousel x)
             return -wrappedOffset;
           } else {
@@ -1085,7 +1087,10 @@ export const Carousel = memo(
               maxScrollOffset,
               0,
             );
-            const closestPageIndex = getNearestPageIndexFromOffset(clampedScrollOffset, pageOffsets);
+            const closestPageIndex = getNearestPageIndexFromOffset(
+              clampedScrollOffset,
+              pageOffsets,
+            );
             updateActivePageIndex(closestPageIndex);
 
             if (drag === 'snap') {
@@ -1160,18 +1165,20 @@ export const Carousel = memo(
                   {!hideNavigation && (
                     <NavigationComponent
                       className={classNames?.navigation}
-                      disableGoNext={loop ? false : activePageIndex >= totalPages - 1}
-                      disableGoPrevious={loop ? false : activePageIndex <= 0}
+                      disableGoNext={
+                        totalPages <= 1 || (!loop && activePageIndex >= totalPages - 1)
+                      }
+                      disableGoPrevious={totalPages <= 1 || (!loop && activePageIndex <= 0)}
                       nextPageAccessibilityLabel={nextPageAccessibilityLabel}
                       onGoNext={() => {
-                        if (loop && totalPages > 0) {
+                        if (loop && totalPages > 1) {
                           goToPage(wrap(0, totalPages, activePageIndex + 1));
                         } else {
                           goToPage(activePageIndex + 1);
                         }
                       }}
                       onGoPrevious={() => {
-                        if (loop && totalPages > 0) {
+                        if (loop && totalPages > 1) {
                           goToPage(wrap(0, totalPages, activePageIndex - 1));
                         } else {
                           goToPage(activePageIndex - 1);
@@ -1204,9 +1211,7 @@ export const Carousel = memo(
                     animate={animationApi}
                     className={cx(classNames?.carousel, defaultCarouselCss)}
                     drag={isDragEnabled ? 'x' : false}
-                    dragConstraints={
-                      loop ? undefined : { left: -maxScrollOffset, right: 0 }
-                    }
+                    dragConstraints={loop ? undefined : { left: -maxScrollOffset, right: 0 }}
                     dragControls={dragControls}
                     dragTransition={{
                       // How much inertia affects the target
