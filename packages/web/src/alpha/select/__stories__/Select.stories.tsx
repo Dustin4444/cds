@@ -11,6 +11,9 @@ import { Icon } from '../../../icons/Icon';
 import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
 import { Spinner } from '../../../loaders';
+import { ThemeProvider } from '../../../system/ThemeProvider';
+import { coinbaseDenseTheme } from '../../../themes/coinbaseDenseTheme';
+import { coinbaseTheme } from '../../../themes/coinbaseTheme';
 import { Text } from '../../../typography/Text';
 import {
   Select,
@@ -62,6 +65,50 @@ export const Default = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+export const ThemeSpacing = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  const [defaultValue, setDefaultValue] = useState<string | null>('1');
+  const [denseValue, setDenseValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={3}>
+      <ThemeProvider activeColorScheme="light" theme={coinbaseTheme}>
+        <VStack background="bgSecondary" gap={2} padding={2}>
+          <Text as="p" color="fgMuted" display="block" font="body">
+            Coinbase theme
+          </Text>
+          <Select
+            label="Theme spacing"
+            onChange={setDefaultValue}
+            options={exampleOptions}
+            placeholder="Empty value"
+            value={defaultValue}
+          />
+        </VStack>
+      </ThemeProvider>
+      <ThemeProvider activeColorScheme="light" theme={coinbaseDenseTheme}>
+        <VStack background="bgSecondary" gap={2} padding={2}>
+          <Text as="p" color="fgMuted" display="block" font="body">
+            Coinbase dense theme
+          </Text>
+          <Select
+            label="Theme spacing"
+            onChange={setDenseValue}
+            options={exampleOptions}
+            placeholder="Empty value"
+            value={denseValue}
+          />
+        </VStack>
+      </ThemeProvider>
+    </VStack>
   );
 };
 

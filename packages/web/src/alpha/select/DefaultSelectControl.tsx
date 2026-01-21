@@ -23,9 +23,9 @@ import {
 
 // The height is smaller for the inside label variant since the label takes
 // up space above the input.
-const LABEL_VARIANT_INSIDE_HEIGHT = 32;
-const COMPACT_HEIGHT = 40;
-const DEFAULT_HEIGHT = 56;
+const LABEL_VARIANT_INSIDE_HEIGHT = 'var(--space-4)';
+const COMPACT_HEIGHT = 'var(--space-5)';
+const DEFAULT_HEIGHT = 'var(--space-7)';
 
 const noFocusOutlineCss = css`
   &:focus,

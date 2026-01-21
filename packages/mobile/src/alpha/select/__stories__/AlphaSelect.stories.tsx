@@ -8,6 +8,9 @@ import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
 import { Spinner } from '../../../loaders';
 import { Pressable } from '../../../system';
+import { ThemeProvider } from '../../../system/ThemeProvider';
+import { coinbaseDenseTheme } from '../../../themes/coinbaseDenseTheme';
+import { coinbaseTheme } from '../../../themes/coinbaseTheme';
 import { Text } from '../../../typography/Text';
 import {
   Select,
@@ -155,6 +158,44 @@ const DefaultExample = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+const ThemeSpacingExample = () => {
+  const [defaultValue, setDefaultValue] = useState<string | null>('1');
+  const [denseValue, setDenseValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={3}>
+      <ThemeProvider activeColorScheme="light" theme={coinbaseTheme}>
+        <VStack background="bgSecondary" gap={2} padding={2}>
+          <Text color="fgMuted" font="body">
+            Coinbase theme
+          </Text>
+          <Select
+            label="Theme spacing"
+            onChange={setDefaultValue}
+            options={exampleOptions}
+            placeholder="Empty value"
+            value={defaultValue}
+          />
+        </VStack>
+      </ThemeProvider>
+      <ThemeProvider activeColorScheme="light" theme={coinbaseDenseTheme}>
+        <VStack background="bgSecondary" gap={2} padding={2}>
+          <Text color="fgMuted" font="body">
+            Coinbase dense theme
+          </Text>
+          <Select
+            label="Theme spacing"
+            onChange={setDenseValue}
+            options={exampleOptions}
+            placeholder="Empty value"
+            value={denseValue}
+          />
+        </VStack>
+      </ThemeProvider>
+    </VStack>
   );
 };
 
@@ -1169,6 +1210,9 @@ const SelectV3Screen = () => {
     <ExampleScreen>
       <Example title="Default">
         <DefaultExample />
+      </Example>
+      <Example title="Theme Spacing">
+        <ThemeSpacingExample />
       </Example>
       <Example title="Typed">
         <TypedSelectExample />

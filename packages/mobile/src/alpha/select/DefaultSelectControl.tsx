@@ -8,6 +8,7 @@ import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
 import { useInputBorderStyle } from '../../hooks/useInputBorderStyle';
+import { useTheme } from '../../hooks/useTheme';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
@@ -15,12 +16,6 @@ import { Text } from '../../typography/Text';
 
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
 import { isSelectOptionGroup } from './Select';
-
-// The height is smaller for the inside label variant since the label takes
-// up space above the input.
-const LABEL_VARIANT_INSIDE_HEIGHT = 24;
-const COMPACT_HEIGHT = 40;
-const DEFAULT_HEIGHT = 56;
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -78,6 +73,10 @@ export const DefaultSelectControlComponent = memo(
       const isMultiSelect = type === 'multi';
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
+      const theme = useTheme();
+      const labelVariantInsideHeight = theme.space[3];
+      const compactHeight = theme.space[5];
+      const defaultHeight = theme.space[7];
 
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
@@ -260,10 +259,10 @@ export const DefaultSelectControlComponent = memo(
               justifyContent="space-between"
               minHeight={
                 labelVariant === 'inside'
-                  ? LABEL_VARIANT_INSIDE_HEIGHT
+                  ? labelVariantInsideHeight
                   : compact
-                    ? COMPACT_HEIGHT
-                    : DEFAULT_HEIGHT
+                    ? compactHeight
+                    : defaultHeight
               }
               paddingStart={startNode ? 0 : 2}
               paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 1.5}
@@ -302,6 +301,9 @@ export const DefaultSelectControlComponent = memo(
           props,
           labelVariant,
           compact,
+          labelVariantInsideHeight,
+          compactHeight,
+          defaultHeight,
           startNode,
           shouldShowCompactLabel,
           labelNode,
