@@ -2,6 +2,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import type { ThemeConfig } from '../../../core/theme';
+import { HStack } from '../../../layout/HStack';
+import { coinbaseTheme } from '../../../themes/coinbaseTheme';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { DefaultSelectControl } from '../DefaultSelectControl';
 import type { SelectControlProps, SelectOption } from '../Select';
@@ -33,9 +36,55 @@ const multiSelectProps: SelectControlProps<'multi'> = {
   label: 'Test Select Control',
 };
 
+const denseSpacingTheme: ThemeConfig = {
+  ...coinbaseTheme,
+  id: 'coinbase-dense-test',
+  space: {
+    '0': 0,
+    '0.25': 2,
+    '0.5': 4,
+    '0.75': 6,
+    '1': 8,
+    '1.5': 10,
+    '2': 12,
+    '3': 16,
+    '4': 20,
+    '5': 24,
+    '6': 28,
+    '7': 32,
+    '8': 36,
+    '9': 40,
+    '10': 44,
+  },
+};
+
 describe('DefaultSelectControl', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe('Theme spacing', () => {
+    const renderWithTheme = (theme: ThemeConfig) => {
+      render(
+        <DefaultThemeProvider theme={theme}>
+          <DefaultSelectControl {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+      const stacks = screen.UNSAFE_getAllByType(HStack);
+      const inputStack = stacks.find((stack) => typeof stack.props.minHeight !== 'undefined');
+      if (!inputStack) throw new Error('Unable to find Select input stack');
+      return inputStack;
+    };
+
+    it('uses default theme spacing for min height', () => {
+      const inputStack = renderWithTheme(coinbaseTheme);
+      expect(inputStack.props.minHeight).toBe(coinbaseTheme.space['7']);
+    });
+
+    it('uses dense spacing for min height', () => {
+      const inputStack = renderWithTheme(denseSpacingTheme);
+      expect(inputStack.props.minHeight).toBe(denseSpacingTheme.space['7']);
+    });
   });
 
   describe('Accessibility', () => {

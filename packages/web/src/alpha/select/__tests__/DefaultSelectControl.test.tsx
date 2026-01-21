@@ -2,6 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import type { ThemeConfig } from '../../../core/theme';
+import { coinbaseTheme } from '../../../themes/coinbaseTheme';
 import { DefaultThemeProvider } from '../../../utils/test';
 import { DefaultSelectControl } from '../DefaultSelectControl';
 import type { SelectControlProps, SelectOption } from '../Select';
@@ -23,9 +25,59 @@ const defaultProps: SelectControlProps<'single' | 'multi'> = {
   label: 'Test Select Control',
 };
 
+const denseSpacingTheme: ThemeConfig = {
+  ...coinbaseTheme,
+  id: 'coinbase-dense-test',
+  space: {
+    '0': 0,
+    '0.25': 2,
+    '0.5': 4,
+    '0.75': 6,
+    '1': 8,
+    '1.5': 10,
+    '2': 12,
+    '3': 16,
+    '4': 20,
+    '5': 24,
+    '6': 28,
+    '7': 32,
+    '8': 36,
+    '9': 40,
+    '10': 44,
+  },
+};
+
 describe('DefaultSelectControl', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe('Theme spacing', () => {
+    const renderWithTheme = (theme: ThemeConfig) => {
+      const { container } = render(
+        <DefaultThemeProvider theme={theme}>
+          <DefaultSelectControl {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+      return {
+        button: screen.getByRole('button'),
+        themeRoot: container.firstElementChild as HTMLElement,
+      };
+    };
+
+    it('uses default theme spacing for min height', () => {
+      const { button, themeRoot } = renderWithTheme(coinbaseTheme);
+      expect(button.style.getPropertyValue('--minHeight')).toBe('var(--space-7)');
+      expect(themeRoot.style.getPropertyValue('--space-7')).toBe(`${coinbaseTheme.space['7']}px`);
+    });
+
+    it('uses dense spacing for min height', () => {
+      const { button, themeRoot } = renderWithTheme(denseSpacingTheme);
+      expect(button.style.getPropertyValue('--minHeight')).toBe('var(--space-7)');
+      expect(themeRoot.style.getPropertyValue('--space-7')).toBe(
+        `${denseSpacingTheme.space['7']}px`,
+      );
+    });
   });
 
   describe('Accessibility', () => {
