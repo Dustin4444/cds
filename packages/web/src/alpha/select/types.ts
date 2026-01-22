@@ -5,7 +5,6 @@ import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
-import type { TrayProps } from '../../overlays/tray/Tray';
 import type { PressableDefaultElement, PressableProps } from '../../system';
 import type { InteractableBlendStyles } from '../../system/Interactable';
 
@@ -272,8 +271,11 @@ export type SelectDropdownProps<
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps<BoxDefaultElement>, 'onChange'> &
-  Pick<TrayProps, 'header' | 'footer'> &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> & {
+    /** Content to render above the options list */
+    header?: React.ReactNode;
+    /** Content to render below the options list */
+    footer?: React.ReactNode;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Array of options with their configuration and optional custom components. Can be individual options or groups with `label` and `options` */

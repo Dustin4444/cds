@@ -75,6 +75,48 @@ function BasicScrollingTray() {
 }
 ```
 
+### Mobile Scrolling
+
+```jsx live
+function BasicScrollingTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          title="Example Title for Scrolling"
+          pin="bottom"
+          showHandleBar
+          hideCloseButton
+          handleBarVariant="inside"
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
+          )}
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text>Scroll down to see more content. The footer stays fixed at the bottom.</Text>
+            {Array.from({ length: 20 }, (_, i) => (
+              <Box key={i} background="bgSecondary" borderRadius={200} padding={2}>
+                <Text>Item {i + 1}</Text>
+              </Box>
+            ))}
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
 ### Pinned to Bottom
 
 ```jsx live
@@ -115,10 +157,12 @@ function BasicBottomTray() {
 
 ## Responsive
 
-Use `useBreakpoints` to create a Tray that adapts between mobile and desktop layouts. On mobile, the tray pins to the bottom with a full-width button. On desktop, it pins to the right with a standard button.
+### Responsive with Illustration
+
+A responsive tray with an illustration header that adapts between mobile and desktop layouts.
 
 ```jsx live
-function ResponsiveTray() {
+function ResponsiveIllustrationTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
   const handleOpen = () => setVisible(true);
@@ -126,34 +170,107 @@ function ResponsiveTray() {
 
   return (
     <VStack gap={2}>
-      <Button onClick={handleOpen}>Open Responsive Tray</Button>
+      <Button onClick={handleOpen}>Open Illustration Tray</Button>
       {visible && (
         <Tray
-          title="Responsive Tray"
           pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          handleBarVariant="inside"
           onCloseComplete={handleClose}
+          hideCloseButton={isPhone}
+          styles={
+            isPhone
+              ? {
+                  container: {
+                    maxHeight: 650,
+                  },
+                }
+              : undefined
+          }
+          title={
+            <VStack gap={isPhone ? 1.5 : 2}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Welcome aboard</Text>
+            </VStack>
+          }
           footer={({ handleClose }) => (
             <PageFooter
               borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
               action={
                 <Button block={isPhone} onClick={handleClose}>
-                  Close
+                  Button
                 </Button>
               }
             />
           )}
         >
-          <VStack gap={2}>
-            <Text>
-              This tray adapts to your screen size. On mobile, it pins to the bottom with a
-              full-width close button. On desktop, it pins to the right.
-            </Text>
-            {Array.from({ length: 15 }, (_, i) => (
-              <Box key={i} background="bgSecondary" borderRadius={200} padding={2}>
-                <Text>Item {i + 1}</Text>
-              </Box>
-            ))}
-          </VStack>
+          <Text color="fgMuted" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Illustration with Section Header
+
+For informational trays with an illustration and descriptive text without a footer action, this pattern is useful for onboarding, explanatory content, or simple informational overlays. On mobile, use a custom `header` for the pictogram and section title. On desktop, the pictogram and text go in the content area below the standard close button.
+
+```jsx live
+function IllustrationSectionHeaderTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Illustration Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          hideHeader={isPhone}
+          onCloseComplete={handleClose}
+          styles={
+            isPhone
+              ? {
+                  container: {
+                    maxHeight: 650,
+                  },
+                }
+              : undefined
+          }
+          header={
+            isPhone ? (
+              <VStack gap={1.5} paddingX={3}>
+                <Pictogram name="addWallet" />
+                <Text font="title3">Section header</Text>
+              </VStack>
+            ) : undefined
+          }
+        >
+          {isPhone ? (
+            <VStack paddingY={2}>
+              <Text color="fgMuted" font="body">
+                Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+                interdum lorem id, viverra.
+              </Text>
+            </VStack>
+          ) : (
+            <VStack gap={1.5} paddingBottom={3}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Section header</Text>
+              <Text color="fgMuted" font="body">
+                Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+                interdum lorem id, viverra.
+              </Text>
+            </VStack>
+          )}
         </Tray>
       )}
     </VStack>
@@ -328,6 +445,127 @@ function CustomImageTray() {
           </Text>
           <VStack gap={2} paddingBottom={2}>
             <Text>This is the content of the tray.</Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Handle Bar
+
+Add a visual handle bar indicator to the tray using `showHandleBar`. The handle bar can be positioned outside (default) or inside the tray content using `handleBarVariant`.
+
+:::note
+The handle bar only appears when `pin="bottom"` (the default), matching mobile behavior where it serves as a drag-to-dismiss affordance.
+:::
+
+```jsx live
+function HandleBarTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray with Handle Bar</Button>
+      {visible && (
+        <Tray
+          title="Handle Bar Example"
+          showHandleBar
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
+          )}
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text>This tray has a handle bar positioned outside the container.</Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+#### Handle Bar Inside
+
+Use `handleBarVariant="inside"` to position the handle bar inside the tray content area.
+
+```jsx live
+function HandleBarInsideTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray with Inside Handle Bar</Button>
+      {visible && (
+        <Tray
+          title="Inside Handle Bar"
+          showHandleBar
+          handleBarVariant="inside"
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
+          )}
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text>This tray has a handle bar positioned inside the container.</Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+#### Handle Bar with Custom Styling
+
+Customize the handle bar appearance using `styles.handleBar` and `styles.handleBarHandle`.
+
+```jsx live
+function StyledHandleBarTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray with Styled Handle Bar</Button>
+      {visible && (
+        <Tray
+          title="Styled Handle Bar"
+          showHandleBar
+          onCloseComplete={handleClose}
+          styles={{
+            handleBarHandle: {
+              width: 48,
+              height: 6,
+              backgroundColor: 'var(--color-primary)',
+              borderRadius: 3,
+            },
+          }}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent="flex-end"
+              action={<Button onClick={handleClose}>Close</Button>}
+            />
+          )}
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text>This tray has a custom styled handle bar with primary color.</Text>
           </VStack>
         </Tray>
       )}
@@ -896,6 +1134,8 @@ The following keys are available:
 - `title` - The title text
 - `content` - The content area
 - `footer` - The footer section
+- `handleBar` - The handle bar container (when `showHandleBar` is true)
+- `handleBarHandle` - The handle bar element itself (when `showHandleBar` is true)
 
 ```tsx live
 function StyledTray() {

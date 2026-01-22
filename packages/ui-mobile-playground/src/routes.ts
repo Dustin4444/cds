@@ -171,6 +171,11 @@ export const routes = [
       require('@coinbase/cds-mobile/collapsible/__stories__/Collapsible.stories').default,
   },
   {
+    key: 'Combobox',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
+  },
+  {
     key: 'ContainedAssetCard',
     getComponent: () =>
       require('@coinbase/cds-mobile/cards/__stories__/ContainedAssetCard.stories').default,
@@ -806,9 +811,24 @@ export const routes = [
       require('@coinbase/cds-mobile/overlays/__stories__/TrayNavigation.stories').default,
   },
   {
+    key: 'TrayPinned',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayPinned.stories').default,
+  },
+  {
+    key: 'TrayPreventDismiss',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayPreventDismiss.stories').default,
+  },
+  {
     key: 'TrayPromotional',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/TrayPromotional.stories').default,
+  },
+  {
+    key: 'TrayRenderFunctions',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayRenderFunctions.stories').default,
   },
   {
     key: 'TrayScrollable',
@@ -819,6 +839,16 @@ export const routes = [
     key: 'TrayTall',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/TrayTall.stories').default,
+  },
+  {
+    key: 'TrayWithFooter',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayWithFooter.stories').default,
+  },
+  {
+    key: 'TrayWithRef',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayWithRef.stories').default,
   },
   {
     key: 'TrayWithTitle',

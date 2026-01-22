@@ -113,4 +113,118 @@ describe('Tray', () => {
       JSON.stringify({ verticalDrawerPercentageOfView, titleHeight }),
     );
   });
+
+  describe('hideHeader', () => {
+    it('hides the title when hideHeader is true', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+            <Tray hideHeader onCloseComplete={onCloseCompleteSpy} title={titleText}>
+              {loremIpsum}
+            </Tray>
+          </SafeAreaProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.queryByText(titleText)).toBeNull();
+    });
+
+    it('shows the title when hideHeader is false', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+            <Tray onCloseComplete={onCloseCompleteSpy} title={titleText}>
+              {loremIpsum}
+            </Tray>
+          </SafeAreaProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText(titleText)).toBeTruthy();
+    });
+  });
+
+  describe('render functions', () => {
+    it('renders footer as a function with handleClose', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+            <Tray
+              onCloseComplete={onCloseCompleteSpy}
+              footer={({ handleClose }) => (
+                <RNText testID="footer-content" onPress={handleClose}>
+                  Footer Close
+                </RNText>
+              )}
+            >
+              {loremIpsum}
+            </Tray>
+          </SafeAreaProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('footer-content')).toBeTruthy();
+    });
+
+    it('renders header as a function with handleClose', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+            <Tray
+              onCloseComplete={onCloseCompleteSpy}
+              header={({ handleClose }) => (
+                <RNText testID="header-content" onPress={handleClose}>
+                  Header Close
+                </RNText>
+              )}
+            >
+              {loremIpsum}
+            </Tray>
+          </SafeAreaProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('header-content')).toBeTruthy();
+    });
+
+    it('renders footer as a ReactNode', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+            <Tray
+              onCloseComplete={onCloseCompleteSpy}
+              footer={<RNText testID="static-footer">Static Footer</RNText>}
+            >
+              {loremIpsum}
+            </Tray>
+          </SafeAreaProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('static-footer')).toBeTruthy();
+    });
+
+    it('renders header as a ReactNode', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+            <Tray
+              onCloseComplete={onCloseCompleteSpy}
+              header={<RNText testID="static-header">Static Header</RNText>}
+            >
+              {loremIpsum}
+            </Tray>
+          </SafeAreaProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('static-header')).toBeTruthy();
+    });
+  });
 });

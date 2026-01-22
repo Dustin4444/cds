@@ -188,4 +188,105 @@ describe('Tray', () => {
 
     expect(onVisibilityChangeSpy).toHaveBeenCalledWith('hidden');
   });
+
+  describe('hideHeader', () => {
+    it('hides the header when hideHeader is true', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray hideHeader onCloseComplete={onCloseCompleteSpy} title={titleText}>
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.queryByText(titleText)).toBeNull();
+      expect(screen.queryByTestId('tray-close-button')).toBeNull();
+    });
+  });
+
+  describe('showHandleBar', () => {
+    it('does not render handle bar by default', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray onCloseComplete={onCloseCompleteSpy}>{loremIpsum}</Tray>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.queryByTestId('handleBar')).toBeNull();
+    });
+
+    it('renders handle bar when showHandleBar is true and pin is bottom', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray showHandleBar onCloseComplete={onCloseCompleteSpy} pin="bottom">
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('handleBar')).toBeTruthy();
+    });
+
+    it('does not render handle bar when pin is not bottom', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray showHandleBar onCloseComplete={onCloseCompleteSpy} pin="right">
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.queryByTestId('handleBar')).toBeNull();
+    });
+  });
+
+  describe('render functions', () => {
+    it('renders footer as a function with handleClose', async () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray
+            onCloseComplete={onCloseCompleteSpy}
+            footer={({ handleClose }) => (
+              <button data-testid="footer-close" onClick={handleClose}>
+                Footer Close
+              </button>
+            )}
+          >
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('footer-close')).toBeTruthy();
+      screen.getByTestId('footer-close').click();
+      await waitFor(() => expect(onCloseCompleteSpy).toHaveBeenCalled());
+    });
+
+    it('renders header as a function with handleClose', async () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray
+            onCloseComplete={onCloseCompleteSpy}
+            header={({ handleClose }) => (
+              <button data-testid="header-close" onClick={handleClose}>
+                Header Close
+              </button>
+            )}
+          >
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('header-close')).toBeTruthy();
+      screen.getByTestId('header-close').click();
+      await waitFor(() => expect(onCloseCompleteSpy).toHaveBeenCalled());
+    });
+  });
 });

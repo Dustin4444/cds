@@ -56,7 +56,7 @@ function TrayWithRef() {
 
 ### Scrollable Content
 
-To enable scrolling in a Tray, use `ScrollView` and set `disablePanGesture`:
+To enable scrolling in a Tray, use `ScrollView` and set `disableCapturePanGestureToDismiss` to prevent the scroll gesture from being captured by the tray's dismiss gesture.
 
 ```tsx
 function ScrollableTray() {
@@ -68,30 +68,26 @@ function ScrollableTray() {
     <VStack gap={2}>
       <Button onPress={handleOpen}>Open Scrollable Tray</Button>
       {visible && (
-        <Tray title="Scrollable Content" onCloseComplete={handleClose} disablePanGesture>
-          {({ handleClose }) => (
-            <VStack gap={2}>
-              <ScrollView style={{ maxHeight: 200 }}>
-                <Pressable>
-                  <VStack padding={3} gap={2}>
-                    <Text>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                      nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </Text>
-                    <Text>
-                      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                      eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-                      in culpa qui officia deserunt mollit anim id est laborum.
-                    </Text>
-                  </VStack>
-                </Pressable>
-              </ScrollView>
-              <HStack padding={3} justifyContent="flex-end">
-                <Button onPress={handleClose}>Close</Button>
-              </HStack>
-            </VStack>
+        <Tray
+          title="Scrollable Content"
+          onCloseComplete={handleClose}
+          disableCapturePanGestureToDismiss
+          footer={({ handleClose }) => (
+            <HStack padding={3} justifyContent="flex-end">
+              <Button onPress={handleClose}>Close</Button>
+            </HStack>
           )}
+        >
+          <ScrollView style={{ maxHeight: 300 }}>
+            <VStack padding={3} gap={2}>
+              <Text>Scroll down to see more content. The footer stays fixed at the bottom.</Text>
+              {Array.from({ length: 15 }, (_, i) => (
+                <Box key={i} background="bgSecondary" borderRadius={200} padding={2}>
+                  <Text>Item {i + 1}</Text>
+                </Box>
+              ))}
+            </VStack>
+          </ScrollView>
         </Tray>
       )}
     </VStack>
@@ -219,6 +215,244 @@ function PinDirectionTray() {
             <Text>
               Side-pinned trays (left/right) are useful for navigation drawers or settings panels.
             </Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Custom Title with Pictogram
+
+You can pass a custom node to the `title` prop to add an illustration or icon.
+
+```tsx
+function CustomTitleTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          title={
+            <VStack gap={2} paddingX={3} paddingTop={3}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Add Wallet</Text>
+            </VStack>
+          }
+          onCloseComplete={handleClose}
+        >
+          {({ handleClose }) => (
+            <VStack gap={2} padding={3}>
+              <Text>This tray has a custom title with a pictogram.</Text>
+              <Button onPress={handleClose}>Close</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Illustration with Section Header
+
+For informational trays with an illustration and descriptive text, use a custom `header` for the pictogram and section title, with body text as children.
+
+```tsx
+function IllustrationTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Illustration Tray</Button>
+      {visible && (
+        <Tray
+          hideHeader
+          onCloseComplete={handleClose}
+          header={
+            <VStack gap={1.5} paddingX={3}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Add a Wallet</Text>
+            </VStack>
+          }
+        >
+          <VStack paddingX={3} paddingBottom={3}>
+            <Text color="fgMuted" font="body">
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Illustration with Footer Action
+
+For trays with an illustration that require user action, combine the illustration header pattern with a footer button.
+
+```tsx
+function IllustrationWithActionTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          hideHeader
+          onCloseComplete={handleClose}
+          header={
+            <VStack gap={1.5} paddingX={3}>
+              <Pictogram name="send" />
+              <Text font="title3">Send Crypto</Text>
+            </VStack>
+          }
+          footer={({ handleClose }) => (
+            <StickyFooter>
+              <Button block onPress={handleClose}>
+                Continue
+              </Button>
+            </StickyFooter>
+          )}
+        >
+          <VStack paddingX={3}>
+            <Text color="fgMuted" font="body">
+              Send crypto to any wallet address or Coinbase user. Transactions are fast, secure, and
+              easy to track.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Title with Back Arrow
+
+Use the `header` prop with a render function to add a back arrow that can close the tray.
+
+```tsx
+function BackArrowTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          title={
+            <VStack paddingX={3} paddingTop={2}>
+              <Text font="title3">Details</Text>
+            </VStack>
+          }
+          header={({ handleClose }) => (
+            <HStack paddingX={2} paddingTop={2}>
+              <IconButton transparent name="backArrow" onPress={handleClose} />
+            </HStack>
+          )}
+          hideHeader
+          onCloseComplete={handleClose}
+        >
+          {({ handleClose }) => (
+            <VStack gap={2} padding={3}>
+              <Text>This tray has a back arrow in the header.</Text>
+              <Button onPress={handleClose}>Done</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Custom Image Header
+
+Add an image to the header area using a custom `header` prop.
+
+```tsx
+function CustomImageTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          header={
+            <Box height={180} width="100%">
+              <Image
+                source={{
+                  uri: 'https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png',
+                }}
+                style={{ width: '100%', height: '100%' }}
+                resizeMode="cover"
+              />
+            </Box>
+          }
+          onCloseComplete={handleClose}
+        >
+          {({ handleClose }) => (
+            <VStack gap={2} padding={3}>
+              <Text font="title3">Featured Content</Text>
+              <Text>This tray has a custom image header.</Text>
+              <Button onPress={handleClose}>Close</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Footer with Close Action
+
+Use the `footer` prop as a render function to access `handleClose` in the footer.
+
+```tsx
+function FooterActionTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          title="Confirm Action"
+          onCloseComplete={handleClose}
+          footer={({ handleClose }) => (
+            <HStack gap={2} padding={3}>
+              <Button variant="secondary" onPress={handleClose} flexGrow={1}>
+                Cancel
+              </Button>
+              <Button onPress={handleClose} flexGrow={1}>
+                Confirm
+              </Button>
+            </HStack>
+          )}
+        >
+          <VStack gap={2} padding={3}>
+            <Text>Are you sure you want to proceed with this action?</Text>
           </VStack>
         </Tray>
       )}
