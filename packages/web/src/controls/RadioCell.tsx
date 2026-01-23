@@ -5,7 +5,7 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { Box, HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
-import { Interactable, type InteractableProps } from '../system';
+import { Pressable, type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 import type { ControlBaseProps } from './Control';
@@ -13,7 +13,7 @@ import { Radio } from './Radio';
 import { useSelectionCellControlHeight } from './useSelectionCellControlHeight';
 
 export type RadioCellBaseProps<T extends string> = Omit<
-  InteractableProps<'label'>,
+  PressableProps<'label'>,
   'title' | 'onChange'
 > &
   Omit<
@@ -73,6 +73,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
     testID,
     style,
     value,
+    noScaleOnPress = true,
     readOnly,
     className,
     classNames,
@@ -103,7 +104,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
   const radioContainerHeight = useSelectionCellControlHeight();
 
   return (
-    <Interactable
+    <Pressable
       ref={ref}
       as="label"
       background="bg"
@@ -113,8 +114,11 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
       className={cx(baseCss, className, classNames?.root)}
       disabled={disabled || readOnly}
       gap={columnGap}
+      noScaleOnPress={noScaleOnPress}
       padding={padding}
+      // role="radio"
       style={interactableStyle}
+      tabIndex={-1}
       testID={testID}
       {...props}
     >
@@ -165,7 +169,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
             </Box>
           ))}
       </VStack>
-    </Interactable>
+    </Pressable>
   );
 }) as <T extends string>(
   props: RadioCellProps<T> & { ref?: React.Ref<HTMLLabelElement> },
