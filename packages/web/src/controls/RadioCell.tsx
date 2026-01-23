@@ -116,7 +116,6 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
       gap={columnGap}
       noScaleOnPress={noScaleOnPress}
       padding={padding}
-      // role="radio"
       style={interactableStyle}
       tabIndex={-1}
       testID={testID}
