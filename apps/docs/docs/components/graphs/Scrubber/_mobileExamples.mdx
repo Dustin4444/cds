@@ -669,3 +669,106 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
   <Scrubber hideOverlay />
 </LineChart>
 ```
+
+## Composed Examples
+
+### Percentage Scrubbers
+
+You can use Scrubber to show percentage values at each scrubber position and to adjust based on background color.
+
+```jsx
+function PercentageScrubbersChartExample() {
+  const theme = useTheme();
+
+  const MyScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
+    const { getSeriesData, dataLength } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+
+    const seriesData = useMemo(
+      () => getLineData(getSeriesData(seriesId)),
+      [getSeriesData, seriesId],
+    );
+
+    const dataIndex = useDerivedValue(() => {
+      return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+    }, [scrubberPosition, dataLength]);
+
+    const percentageLabel = useDerivedValue(() => {
+      if (seriesData !== undefined) {
+        const dataAtPosition = seriesData[dataIndex.value];
+        return `${dataAtPosition}%`;
+      }
+      return '';
+    }, [seriesData, dataIndex]);
+
+    return (
+      <DefaultScrubberBeaconLabel
+        {...props}
+        seriesId={seriesId}
+        color={`rgb(${theme.spectrum.gray0})`}
+        background={color}
+        label={percentageLabel}
+      />
+    );
+  });
+
+  const defaultInset = { top: 8, left: 8, bottom: 8, right: 0 };
+
+  const PercentageScrubberChart = memo(({
+    height = 300,
+    children,
+    showArea = true,
+    areaType = 'dotted',
+    xAxis,
+    yAxis,
+    inset = defaultInset,
+    background = `rgb(${theme.spectrum.teal80})`,
+    ...props
+  }: Omit<LineChartProps, 'background'> & { background?: string }) => {
+    return (
+      <Box background={background} borderRadius="lg" padding={2}>
+        <LineChart
+          {...props}
+          height={height}
+          showArea={showArea}
+          areaType={areaType}
+          xAxis={{
+            range: ({ min, max }) => ({ min, max: max - 64 }),
+            ...xAxis,
+          }}
+          yAxis={{
+            domain: { min: 0, max: 100 },
+            ...yAxis,
+          }}
+          inset={inset}
+        >
+          {children}
+          <Scrubber
+            idlePulse
+            BeaconLabelComponent={MyScrubberBeaconLabel}
+            hideOverlay
+            beaconStroke={background}
+          />
+        </LineChart>
+      </Box>
+    );
+  });
+
+  const series = [
+    {
+      id: 'Boston',
+      data: [25, 30, 35, 45, 60],
+      color: `rgb(${theme.spectrum.green40})`,
+      label: 'Boston',
+    },
+    {
+      id: 'Miami',
+      data: [20, 25, 30, 35, 20],
+      color: `rgb(${theme.spectrum.blue40})`,
+      label: 'Miami',
+    },
+  ];
+
+  return <PercentageScrubberChart series={series} />;
+}
+```
