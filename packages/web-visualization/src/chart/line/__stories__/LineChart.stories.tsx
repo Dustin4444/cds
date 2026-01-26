@@ -718,6 +718,41 @@ function StylingScrubber() {
   );
 }
 
+function HideBeaconLabels() {
+  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+
+  return (
+    <LineChart
+      enableScrubbing
+      legend
+      showArea
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      inset={{ top: 60 }}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: 'var(--color-accentBoldGreen)',
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: 'var(--color-accentBoldPurple)',
+          label: 'Unique Visitors',
+        },
+      ]}
+    >
+      <Scrubber
+        hideBeaconLabels
+        labelElevated
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+
 function DynamicChartSizing() {
   const candles = [...btcCandles].reverse();
   const prices = candles.map((candle) => parseFloat(candle.close));
@@ -2091,6 +2126,130 @@ function AdaptiveDetail() {
   return <AdaptiveDetailChart />;
 }
 
+function CustomBeaconStroke() {
+  const backgroundColor = 'rgb(var(--red40))';
+  const foregroundColor = 'rgb(var(--gray0))';
+
+  return (
+    <Box borderRadius={300} padding={2} style={{ background: backgroundColor }}>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            color: foregroundColor,
+          },
+        ]}
+      >
+        <Scrubber
+          hideOverlay
+          idlePulse
+          beaconStroke={backgroundColor}
+          lineStroke={foregroundColor}
+        />
+      </LineChart>
+    </Box>
+  );
+}
+
+function CustomBeaconSize() {
+  const dataCount = 14;
+  const minDataValue = 0;
+  const maxDataValue = 100;
+  const minStepOffset = 5;
+  const maxStepOffset = 20;
+  const updateInterval = 2000;
+
+  function generateNextValue(previousValue: number) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataValue) {
+      direction = -1;
+    } else if (previousValue <= minDataValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    const newValue = previousValue + offset * direction;
+    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
+  }
+
+  function generateInitialData() {
+    const data = [];
+    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+    return data;
+  }
+
+  const InvertedBeacon = useMemo(
+    () => (props: ScrubberBeaconProps) => (
+      <DefaultScrubberBeacon
+        {...props}
+        color="var(--color-bg)"
+        radius={5}
+        stroke="var(--color-fg)"
+        strokeWidth={3}
+      />
+    ),
+    [],
+  );
+
+  const CustomBeaconSizeChart = memo(() => {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 50;
+          const newValue = generateNextValue(lastValue);
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data,
+            color: 'var(--color-fg)',
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 0, max: 100 },
+        }}
+      >
+        <Scrubber BeaconComponent={InvertedBeacon} />
+      </LineChart>
+    );
+  });
+
+  return <CustomBeaconSizeChart />;
+}
+
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -2294,6 +2453,15 @@ export const All = () => {
       </Example>
       <Example title="Adaptive Detail">
         <AdaptiveDetail />
+      </Example>
+      <Example title="Hide Beacon Labels">
+        <HideBeaconLabels />
+      </Example>
+      <Example title="Custom Beacon Stroke">
+        <CustomBeaconStroke />
+      </Example>
+      <Example title="Custom Beacon Size">
+        <CustomBeaconSize />
       </Example>
     </VStack>
   );

@@ -7,6 +7,7 @@ import { css } from '@linaria/core';
 
 import { InteractionProvider } from './interaction/InteractionProvider';
 import { CartesianChartProvider } from './ChartProvider';
+import { Legend, type LegendProps } from './legend';
 import {
   type ActiveItem,
   type ActiveItems,
@@ -26,6 +27,7 @@ import {
   type InteractionMode,
   type InteractionScope,
   type InteractionState,
+  type LegendPosition,
   type Series,
   useTotalAxisPadding,
 } from './utils';
@@ -63,8 +65,23 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> &
    * Inset around the entire chart (outside the axes).
    */
   inset?: number | Partial<ChartInset>;
-
-  // New Interaction API
+  /**
+   * Whether to show the legend or a custom legend element.
+   * - `true` renders the default Legend component
+   * - A React element renders that element as the legend
+   * - `false` or omitted hides the legend
+   */
+  legend?: boolean | React.ReactNode;
+  /**
+   * Position of the legend relative to the chart.
+   * @default 'bottom'
+   */
+  legendPosition?: LegendPosition;
+  /**
+   * Accessibility label for the legend group.
+   * @default 'Legend'
+   */
+  legendAccessibilityLabel?: string;
   /**
    * The interaction mode.
    * - 'none': Interaction disabled
@@ -170,16 +187,20 @@ export const CartesianChart = memo(
         activeItem,
         activeItems,
         onInteractionChange,
-        accessibilityLabel,
         // Legacy props
         enableScrubbing,
         onScrubberPositionChange,
+        // Back to regular props
+        legend,
+        legendPosition = 'bottom',
+        legendAccessibilityLabel,
         width = '100%',
         height = '100%',
         className,
         classNames,
         style,
         styles,
+        accessibilityLabel,
         ...props
       },
       ref,
@@ -457,6 +478,66 @@ export const CartesianChart = memo(
       }, [interaction, enableScrubbing]);
 
       const isInteractionEnabled = resolvedInteraction !== 'none';
+      const legendElement = useMemo(() => {
+        if (!legend) return;
+
+        if (legend === true) {
+          const isHorizontal = legendPosition === 'top' || legendPosition === 'bottom';
+          const flexDirection = isHorizontal ? 'row' : 'column';
+
+          return (
+            <Legend accessibilityLabel={legendAccessibilityLabel} flexDirection={flexDirection} />
+          );
+        }
+
+        return legend;
+      }, [legend, legendAccessibilityLabel, legendPosition]);
+
+      const rootBoxProps: BoxProps<'div'> = useMemo(
+        () => ({
+          className: rootClassNames,
+          height,
+          style: rootStyles,
+          width,
+          ...props,
+        }),
+        [rootClassNames, height, rootStyles, width, props],
+      );
+
+      const chartContent = (
+        <Box
+          ref={(node) => {
+            observe(node as unknown as HTMLElement);
+          }}
+          height={legend ? undefined : height}
+          style={{ flex: 1, minHeight: 0, minWidth: 0 }}
+          width={legend ? undefined : width}
+        >
+          <Box
+            ref={(node) => {
+              const svgElement = node as unknown as SVGSVGElement;
+              svgRef.current = svgElement;
+              // Forward the ref to the user
+              if (ref) {
+                if (typeof ref === 'function') {
+                  ref(svgElement);
+                } else {
+                  (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
+                }
+              }
+            }}
+            aria-live="polite"
+            as="svg"
+            className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
+            height="100%"
+            style={styles?.chart}
+            tabIndex={enableScrubbing ? 0 : undefined}
+            width="100%"
+          >
+            {children}
+          </Box>
+        </Box>
+      );
 
       return (
         <CartesianChartProvider value={contextValue}>
@@ -471,16 +552,7 @@ export const CartesianChart = memo(
             onScrubberPositionChange={onScrubberPositionChange}
             svgRef={svgRef}
           >
-            <Box
-              ref={(node) => {
-                observe(node as unknown as HTMLElement);
-              }}
-              className={rootClassNames}
-              height={height}
-              style={rootStyles}
-              width={width}
-              {...props}
-            >
+            {legend ? (
               <Box
                 ref={(node) => {
                   const svgElement = node as unknown as SVGSVGElement;
@@ -502,9 +574,13 @@ export const CartesianChart = memo(
                 tabIndex={isInteractionEnabled ? 0 : undefined}
                 width="100%"
               >
-                {children}
+                {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
+                {chartContent}
+                {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
-            </Box>
+            ) : (
+              <Box {...rootBoxProps}>{chartContent}</Box>
+            )}
           </InteractionProvider>
         </CartesianChartProvider>
       );

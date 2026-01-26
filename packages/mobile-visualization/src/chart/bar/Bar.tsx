@@ -48,8 +48,7 @@ export type BarBaseProps = {
    */
   dataY?: number | [number, number] | null;
   /**
-   * The series ID this bar belongs to.
-   * Used for interaction tracking when `interactionScope.series` is true.
+   * The ID of the series this bar belongs to.
    */
   seriesId?: string;
   /**

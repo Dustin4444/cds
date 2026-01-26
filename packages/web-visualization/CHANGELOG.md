@@ -8,6 +8,25 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.14 (1/22/2026 PST)
+
+#### 🚀 Updates
+
+- Add chart Legend component. [[#302](https://github.com/coinbase/cds/pull/302)]
+- Add support for hideBeaconLabels in Scrubber. [[#302](https://github.com/coinbase/cds/pull/302)]
+- Add support for custom bar components. [[#302](https://github.com/coinbase/cds/pull/302)]
+
+## 3.4.0-beta.13 (1/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support styling default scrubber beacon. [[#315](https://github.com/coinbase/cds/pull/315)]
+
+#### 📘 Misc
+
+- Internal: code connect file lint fixes. [[#311](https://github.com/coinbase/cds/pull/311)]
+- Internal: update figma code connect config and some mapping files. [[#304](https://github.com/coinbase/cds/pull/304)]
+
 ## 3.4.0-beta.12 (1/8/2026 PST)
 
 This is an artificial version bump with no new change.

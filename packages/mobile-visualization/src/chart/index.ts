@@ -7,6 +7,7 @@ export * from './ChartContextBridge';
 export * from './ChartProvider';
 export * from './gradient';
 export * from './interaction';
+export * from './legend';
 export * from './line';
 export * from './Path';
 export * from './PeriodSelector';
