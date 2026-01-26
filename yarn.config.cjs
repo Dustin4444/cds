@@ -12,6 +12,26 @@ const isOptionalDependency = (dependency) => {
 };
 
 /**
+ * Workspaces that are excluded from dependency version consistency checks.
+ * These packages are allowed to have different versions of dependencies
+ * for specific testing or compatibility purposes.
+ */
+const CONSTRAINT_EXCLUDED_WORKSPACES = new Set([
+  // This app validates React 18 compatibility and must stay on React 18
+  // even when other packages upgrade to React 19
+  'react18-compat-test',
+]);
+
+/**
+ * Checks if a workspace is excluded from consistency constraints.
+ * @param {import('@yarnpkg/types').Yarn.Constraints.Dependency} dependency
+ * @returns {boolean}
+ */
+const isExcludedWorkspace = (dependency) => {
+  return CONSTRAINT_EXCLUDED_WORKSPACES.has(dependency.workspace.ident);
+};
+
+/**
  * This rule will enforce that a workspace MUST depend on the same version of
  * a dependency as the one used by the other workspaces.
  *
@@ -23,8 +43,12 @@ const enforceConsistentDependenciesAcrossTheProject = ({ Yarn }) => {
     // There's a bug in yarn constraint dependency.update where the update function expects
     // the dependency to be part of dependencies instead of optionalDependencies.
     if (isOptionalDependency(dependency)) continue;
+    // Skip workspaces that are excluded from consistency checks
+    if (isExcludedWorkspace(dependency)) continue;
     for (const otherDependency of Yarn.dependencies({ ident: dependency.ident })) {
       if (otherDependency.type === `peerDependencies`) continue;
+      // Don't enforce consistency with excluded workspaces
+      if (isExcludedWorkspace(otherDependency)) continue;
       dependency.update(otherDependency.range);
     }
   }
