@@ -36,6 +36,10 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
      * Test ID for the next button.
      */
     nextButton?: string;
+    /**
+     * Test ID for the play/pause button.
+     */
+    playPauseButton?: string;
   };
   /**
    * Icon to use for the previous button.
@@ -45,6 +49,14 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
    * Icon to use for the next button.
    */
   nextIcon?: IconName;
+  /**
+   * Icon to use for the play button.
+   */
+  playIcon?: IconName;
+  /**
+   * Icon to use for the pause button.
+   */
+  pauseIcon?: IconName;
   /**
    * Variant of the icon button.
    */
@@ -73,6 +85,10 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
      * Custom class name for the next button.
      */
     nextButton?: string;
+    /**
+     * Custom class name for the play/pause button.
+     */
+    playPauseButton?: string;
   };
   /**
    * Custom styles for the component.
@@ -90,6 +106,10 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
      * Custom styles for the next button.
      */
     nextButton?: React.CSSProperties;
+    /**
+     * Custom styles for the play/pause button.
+     */
+    playPauseButton?: React.CSSProperties;
   };
 };
 
@@ -102,6 +122,13 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   previousPageAccessibilityLabel = 'Previous page',
   previousIcon = 'caretLeft',
   nextIcon = 'caretRight',
+  playIcon = 'play',
+  pauseIcon = 'pause',
+  autoplay,
+  isPlaying,
+  onTogglePlayPause,
+  playAccessibilityLabel = 'Play',
+  pauseAccessibilityLabel = 'Pause',
   variant = 'secondary',
   compact,
   className,
@@ -118,6 +145,18 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
       gap={1}
       style={{ ...style, ...styles?.root }}
     >
+      {autoplay && (
+        <IconButton
+          accessibilityLabel={isPlaying ? pauseAccessibilityLabel : playAccessibilityLabel}
+          className={classNames?.playPauseButton}
+          compact={compact}
+          name={isPlaying ? pauseIcon : playIcon}
+          onClick={onTogglePlayPause}
+          style={styles?.playPauseButton}
+          testID={testIDMap?.playPauseButton ?? 'carousel-play-pause-button'}
+          variant={variant}
+        />
+      )}
       <IconButton
         accessibilityLabel={previousPageAccessibilityLabel}
         className={classNames?.previousButton}

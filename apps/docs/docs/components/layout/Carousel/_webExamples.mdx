@@ -1527,6 +1527,141 @@ function ImperativeApiCarousel() {
 }
 ```
 
+## Autoplay
+
+Enable automatic page transitions with the `autoplay` prop. The carousel will automatically advance to the next page at regular intervals.
+
+### Basic Autoplay
+
+When `autoplay` is enabled, a play/pause button appears in the navigation controls.
+
+```jsx live
+function AutoplayCarousel() {
+  function SquareAssetCard({ imageUrl, name }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        autoplay
+        title="Autoplay Carousel"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
+### Custom Autoplay Interval
+
+Use the `autoplayInterval` prop to customize the time between transitions (in milliseconds). The default is 3000ms (3 seconds).
+
+```jsx live
+function CustomIntervalCarousel() {
+  function SquareAssetCard({ imageUrl, name }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        autoplay
+        autoplayInterval={5000}
+        title="5 Second Interval"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
+### Autoplay with Looping
+
+Combine `autoplay` with `loop` for an infinite auto-scrolling carousel.
+
+```jsx live
+function AutoplayLoopCarousel() {
+  function SquareAssetCard({ imageUrl, name }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        autoplay
+        loop
+        title="Infinite Autoplay"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
+:::tip Pause Preserves Progress
+
+When the user pauses the autoplay, the remaining time is preserved. For example, if 2 seconds have elapsed out of a 3 second interval, pressing play will resume with only 1 second remaining before the next transition.
+
+:::
+
 ## Callbacks
 
 You can use the `onChangePage`, `onDragStart`, and `onDragEnd` callbacks to listen for user interaction in the carousel.

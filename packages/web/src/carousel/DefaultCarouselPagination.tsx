@@ -1,10 +1,11 @@
-import React, { type KeyboardEvent, memo, useCallback } from 'react';
+import React, { type KeyboardEvent, memo, useCallback, useMemo } from 'react';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import { RefMapContext, useRefMapContext } from '@coinbase/cds-common/system/RefMapContext';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { Box } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
 
@@ -17,6 +18,19 @@ const defaultPaginationCss = css`
 const dotCss = css`
   width: var(--space-3);
   height: var(--space-0_5);
+  border-radius: var(--borderRadius-100);
+`;
+
+const dotWithProgressCss = css`
+  position: relative;
+  overflow: hidden;
+`;
+
+const progressBarCss = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
   border-radius: var(--borderRadius-100);
 `;
 
@@ -53,11 +67,16 @@ export type DefaultCarouselPaginationProps = CarouselPaginationComponentProps &
 type PaginationDotProps = PressableProps<'button'> & {
   id: string;
   isActive?: boolean;
+  autoplay?: boolean;
+  autoplayProgress?: number;
 };
 
 const PaginationDot = memo(function PressableWithRef({
   id,
   isActive,
+  autoplay,
+  autoplayProgress = 0,
+  className,
   ...props
 }: PaginationDotProps) {
   const { registerRef } = useRefMapContext();
@@ -65,15 +84,30 @@ const PaginationDot = memo(function PressableWithRef({
     (ref: HTMLButtonElement) => registerRef(id, ref),
     [registerRef, id],
   );
+
+  const showProgress = autoplay && isActive;
+
+  const progressStyle = useMemo(
+    () => ({
+      width: `${autoplayProgress * 100}%`,
+    }),
+    [autoplayProgress],
+  );
+
   return (
     <Pressable
       ref={refCallback}
-      background={isActive ? 'bgPrimary' : 'bgLine'}
-      borderColor="transparent"
+      background={showProgress ? 'bgLine' : isActive ? 'bgPrimary' : 'bgLine'}
+      borderWidth={0}
+      className={cx(className, showProgress && dotWithProgressCss)}
       data-active={isActive}
       tabIndex={isActive ? undefined : -1}
       {...props}
-    />
+    >
+      {showProgress && (
+        <Box background="bgPrimary" className={progressBarCss} style={progressStyle} />
+      )}
+    </Pressable>
   );
 });
 
@@ -82,6 +116,8 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   activePageIndex,
   onClickPage,
   paginationAccessibilityLabel = 'Go to page',
+  autoplay,
+  autoplayProgress,
   className,
   classNames,
   style,
@@ -145,6 +181,8 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
                   ? paginationAccessibilityLabel(index)
                   : `${paginationAccessibilityLabel} ${index + 1}`
               }
+              autoplay={autoplay}
+              autoplayProgress={index === activePageIndex ? autoplayProgress : 0}
               className={cx(dotCss, classNames?.dot)}
               id={`${testID}-${index}`}
               isActive={index === activePageIndex}
@@ -159,7 +197,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
             disabled
             aria-hidden="true"
             background="bgLine"
-            borderColor="transparent"
+            borderWidth={0}
             className={cx(dotCss, classNames?.dot)}
             style={{ opacity: 0, ...styles?.dot }}
           />
