@@ -21,6 +21,10 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
      * Test ID for the next button.
      */
     nextButton?: string;
+    /**
+     * Test ID for the play/pause button.
+     */
+    playPauseButton?: string;
   };
   /**
    * Icon to use for the previous button.
@@ -54,6 +58,10 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
      * Custom styles for the next button.
      */
     nextButton?: StyleProp<ViewStyle>;
+    /**
+     * Custom styles for the play/pause button.
+     */
+    playPauseButton?: StyleProp<ViewStyle>;
   };
 };
 
@@ -64,6 +72,11 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   disableGoNext,
   previousPageAccessibilityLabel = 'Previous page',
   nextPageAccessibilityLabel = 'Next page',
+  autoplay,
+  isPlaying,
+  onTogglePlayPause,
+  playAccessibilityLabel = 'Play',
+  pauseAccessibilityLabel = 'Pause',
   variant = 'secondary',
   compact,
   previousIcon = 'caretLeft',
@@ -82,6 +95,17 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
 
   return (
     <HStack gap={1} style={rootStyles}>
+      {autoplay && onTogglePlayPause && (
+        <IconButton
+          accessibilityLabel={isPlaying ? pauseAccessibilityLabel : playAccessibilityLabel}
+          compact={compact}
+          name={isPlaying ? 'pause' : 'play'}
+          onPress={onTogglePlayPause}
+          style={styles?.playPauseButton}
+          testID={testIDMap?.playPauseButton ?? 'carousel-play-pause-button'}
+          variant={variant}
+        />
+      )}
       <IconButton
         accessibilityLabel={previousPageAccessibilityLabel}
         compact={compact}

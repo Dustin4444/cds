@@ -626,6 +626,69 @@ const LoopingExamples = () => (
   </VStack>
 );
 
+const AutoplayExamples = () => (
+  <VStack gap={4}>
+    <NegativeMargin>
+      <Carousel autoplay snapMode="page" styles={overflowStyles} title="Autoplay - Snap Page">
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`autoplay-page-${index}`}
+            id={`autoplay-page-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <NegativeMargin>
+      <Carousel autoplay snapMode="item" styles={overflowStyles} title="Autoplay - Snap Item">
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`autoplay-item-${index}`}
+            id={`autoplay-item-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <NegativeMargin>
+      <Carousel
+        autoplay
+        drag="free"
+        snapMode="item"
+        styles={overflowStyles}
+        title="Autoplay - Free Drag"
+      >
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`autoplay-free-${index}`}
+            id={`autoplay-free-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <NegativeMargin>
+      <Carousel autoplay loop snapMode="item" styles={overflowStyles} title="Autoplay with Looping">
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`autoplay-loop-${index}`}
+            id={`autoplay-loop-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+  </VStack>
+);
+
 export const All = () => (
   <VStack gap={2}>
     <BasicExamples />
@@ -633,5 +696,38 @@ export const All = () => (
     <CustomStylesExample />
     <AnimatedPaginationExample />
     <LoopingExamples />
+    <AutoplayExamples />
   </VStack>
+);
+
+export const Autoplay = () => (
+  <NegativeMargin>
+    <Carousel autoplay styles={overflowStyles} title="Autoplay (3s default)">
+      {sampleItems.map((item, index) => (
+        <CarouselItem
+          key={`autoplay-single-${index}`}
+          id={`autoplay-single-${index}`}
+          width="calc((100% - 2 * var(--space-2)) / 3)"
+        >
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
+);
+
+export const AutoplayWithLooping = () => (
+  <NegativeMargin>
+    <Carousel autoplay loop snapMode="item" styles={overflowStyles} title="Autoplay with Looping">
+      {sampleItems.map((item, index) => (
+        <CarouselItem
+          key={`autoplay-loop-single-${index}`}
+          id={`autoplay-loop-single-${index}`}
+          width="calc((100% - 2 * var(--space-2)) / 3)"
+        >
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
 );

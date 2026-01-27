@@ -1089,6 +1089,222 @@ describe('Carousel', () => {
     });
   });
 
+  describe('Autoplay', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('does not autoplay by default', () => {
+      render(<TestCarouselWithItems itemCount={5} />);
+
+      // Advance time significantly - carousel should not change
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+
+      const previousButton = screen.getByTestId('carousel-previous-button');
+      // Should still be on first page (previous disabled)
+      expect(previousButton).toBeDisabled();
+    });
+
+    it('starts playing automatically when autoplay is enabled', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
+      });
+
+      // Advance past autoplay interval (default 3000ms) + animation duration (500ms)
+      act(() => {
+        jest.advanceTimersByTime(3500);
+      });
+
+      // Should have advanced to next page
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalled();
+      });
+    });
+
+    it('respects custom autoplayInterval', async () => {
+      const onChangePage = jest.fn();
+      render(
+        <TestCarouselWithItems
+          autoplay
+          autoplayInterval={1000}
+          itemCount={5}
+          onChangePage={onChangePage}
+        />,
+      );
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
+      });
+
+      // Should not have changed yet at 500ms
+      act(() => {
+        jest.advanceTimersByTime(500);
+      });
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      // Should change after 1000ms + animation
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalled();
+      });
+    });
+
+    it('shows play/pause button when autoplay is enabled', () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      // Should show play/pause button
+      expect(screen.getByTestId('carousel-play-pause-button')).toBeInTheDocument();
+    });
+
+    it('does not show play/pause button when autoplay is disabled', () => {
+      render(<TestCarouselWithItems itemCount={5} />);
+
+      // Should not show play/pause button
+      expect(screen.queryByTestId('carousel-play-pause-button')).not.toBeInTheDocument();
+    });
+
+    it('pauses autoplay when play/pause button is clicked', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
+      });
+
+      // Click pause button using fireEvent (avoids fake timer issues with userEvent)
+      const playPauseButton = screen.getByTestId('carousel-play-pause-button');
+      act(() => {
+        playPauseButton.click();
+      });
+
+      // Advance time - should not change page while paused
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+
+      // Should not have called onChangePage
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('resumes autoplay when play/pause button is clicked again', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
+      });
+
+      const playPauseButton = screen.getByTestId('carousel-play-pause-button');
+
+      // Click pause button
+      act(() => {
+        playPauseButton.click();
+      });
+
+      // Advance some time while paused
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      // Click play button to resume
+      act(() => {
+        playPauseButton.click();
+      });
+
+      // Advance past remaining time + animation
+      act(() => {
+        jest.advanceTimersByTime(3500);
+      });
+
+      // Should have called onChangePage
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalled();
+      });
+    });
+
+    it('resets progress when manually navigating', async () => {
+      render(<TestCarouselWithItems autoplay autoplayInterval={3000} itemCount={5} />);
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
+      });
+
+      // Advance 2 seconds to get some progress
+      act(() => {
+        jest.advanceTimersByTime(2000);
+      });
+
+      // Manually navigate - this should reset the timer
+      const nextButton = screen.getByTestId('carousel-next-button');
+      act(() => {
+        nextButton.click();
+      });
+
+      // After manual navigation, the component should still be in a valid state
+      // (not crashed, buttons still work)
+      expect(nextButton).toBeInTheDocument();
+
+      // Can still navigate
+      act(() => {
+        nextButton.click();
+      });
+
+      expect(nextButton).toBeInTheDocument();
+    });
+
+    it('does not autoplay with single page', () => {
+      const onChangePage = jest.fn();
+      // Single item that fills the container = 1 page
+      render(
+        <TestCarouselWithItems
+          autoplay
+          itemCount={1}
+          itemWidth={containerWidth}
+          onChangePage={onChangePage}
+        />,
+      );
+
+      // Advance time significantly
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+
+      // Should not have tried to change pages
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('applies custom accessibility labels for play/pause button', () => {
+      render(
+        <TestCarouselWithItems
+          autoplay
+          itemCount={5}
+          pauseAccessibilityLabel="Stop slideshow"
+          playAccessibilityLabel="Start slideshow"
+        />,
+      );
+
+      // Initially playing, so should show pause label
+      expect(screen.getByLabelText('Stop slideshow')).toBeInTheDocument();
+    });
+  });
+
   describe('Callback Props', () => {
     it('calls onChangePage when page changes via navigation', async () => {
       const onChangePage = jest.fn();

@@ -2,6 +2,7 @@ import React, {
   forwardRef,
   memo,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -83,6 +84,26 @@ export type CarouselNavigationComponentBaseProps = {
    * Accessibility label for the previous page button.
    */
   previousPageAccessibilityLabel?: string;
+  /**
+   * Whether autoplay is enabled.
+   */
+  autoplay?: boolean;
+  /**
+   * Whether autoplay is currently playing.
+   */
+  isPlaying?: boolean;
+  /**
+   * Callback to toggle play/pause state.
+   */
+  onTogglePlayPause?: () => void;
+  /**
+   * Accessibility label for the play button.
+   */
+  playAccessibilityLabel?: string;
+  /**
+   * Accessibility label for the pause button.
+   */
+  pauseAccessibilityLabel?: string;
 };
 
 export type CarouselNavigationComponentProps = CarouselNavigationComponentBaseProps & {
@@ -111,6 +132,14 @@ export type CarouselPaginationComponentBaseProps = {
    * Accessibility label for the go to page button. You can optionally pass a function that will receive the pageIndex as an argument, and return an accessibility label string.
    */
   paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
+  /**
+   * Whether autoplay is enabled.
+   */
+  autoplay?: boolean;
+  /**
+   * Current autoplay progress (0-1).
+   */
+  autoplayProgress?: number;
 };
 
 export type CarouselPaginationComponentProps = CarouselPaginationComponentBaseProps & {
@@ -221,6 +250,27 @@ export type CarouselBaseProps = SharedProps &
      * @note Requires at least 2 pages worth of content to function.
      */
     loop?: boolean;
+    /**
+     * Enables automatic advancement through carousel pages.
+     * When enabled, a play/pause button appears in the navigation.
+     */
+    autoplay?: boolean;
+    /**
+     * The interval in milliseconds between automatic page transitions.
+     * Only applies when `autoplay` is true.
+     * @default 3000
+     */
+    autoplayInterval?: number;
+    /**
+     * Accessibility label for the play button when autoplay is paused.
+     * @default "Play"
+     */
+    playAccessibilityLabel?: string;
+    /**
+     * Accessibility label for the pause button when autoplay is playing.
+     * @default "Pause"
+     */
+    pauseAccessibilityLabel?: string;
   };
 
 export type CarouselProps = CarouselBaseProps & {
@@ -495,6 +545,9 @@ const getVisibleItems = (
 
 const animationConfig = { tension: 200, friction: 25 };
 
+// Default autoplay animation duration in milliseconds
+const autoplayAnimationDuration = 500;
+
 export const Carousel = memo(
   forwardRef<CarouselImperativeHandle, CarouselProps>(
     (
@@ -516,6 +569,10 @@ export const Carousel = memo(
         onDragStart,
         onDragEnd,
         loop,
+        autoplay = false,
+        autoplayInterval = 3000,
+        playAccessibilityLabel = 'Play',
+        pauseAccessibilityLabel = 'Pause',
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -536,6 +593,21 @@ export const Carousel = memo(
       const rootRef = useRef<View>(null);
 
       const isDragEnabled = drag !== 'none';
+
+      // Autoplay state
+      const [isPlaying, setIsPlaying] = useState(autoplay);
+      const [autoplayProgress, setAutoplayProgress] = useState(0);
+      const autoplayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+      const animationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+      const autoplayRafRef = useRef<number | null>(null);
+      const remainingTimeRef = useRef(autoplayInterval);
+      const lastStartTimeRef = useRef<number | null>(null);
+      const isTransitioningRef = useRef(false);
+      const activePageIndexRef = useRef(0);
+      const countdownStartRemainingRef = useRef(autoplayInterval);
+
+      // Keep activePageIndexRef in sync with activePageIndex
+      activePageIndexRef.current = activePageIndex;
 
       const updateActivePageIndex = useCallback(
         (newPageIndexOrUpdater: number | ((prevIndex: number) => number)) => {
@@ -703,7 +775,7 @@ export const Carousel = memo(
       ]);
 
       const goToPage = useCallback(
-        (page: number) => {
+        (page: number, duration?: number) => {
           const newPage = Math.max(0, Math.min(totalPages - 1, page));
           updateActivePageIndex(newPage);
           updateVisibleCarouselItems(pageOffsets[newPage]);
@@ -714,7 +786,10 @@ export const Carousel = memo(
             : pageOffsets[newPage];
 
           carouselScrollX.current = targetOffset;
-          animationApi.x.start({ to: targetOffset, config: animationConfig });
+          const config = duration
+            ? { ...animationConfig, duration: duration * 1000 }
+            : animationConfig;
+          animationApi.x.start({ to: targetOffset, config });
         },
         [
           isLoopingActive,
@@ -737,19 +812,155 @@ export const Carousel = memo(
         [activePageIndex, totalPages, goToPage],
       );
 
+      // Reset autoplay timer when manual navigation occurs
+      const resetAutoplayTimer = useCallback(() => {
+        if (autoplay) {
+          remainingTimeRef.current = autoplayInterval;
+          countdownStartRemainingRef.current = autoplayInterval;
+          setAutoplayProgress(0);
+          lastStartTimeRef.current = isPlaying ? Date.now() : null;
+          isTransitioningRef.current = false;
+          if (autoplayTimerRef.current) {
+            clearTimeout(autoplayTimerRef.current);
+            autoplayTimerRef.current = null;
+          }
+          if (animationTimerRef.current) {
+            clearTimeout(animationTimerRef.current);
+            animationTimerRef.current = null;
+          }
+        }
+      }, [autoplay, autoplayInterval, isPlaying]);
+
+      // Toggle play/pause for autoplay
+      const handleTogglePlayPause = useCallback(() => {
+        const wasPaused = !isPlaying;
+
+        if (!wasPaused) {
+          // Pausing: calculate how much time has elapsed and store remaining time
+          if (lastStartTimeRef.current !== null) {
+            const elapsed = Date.now() - lastStartTimeRef.current;
+            remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+          }
+          lastStartTimeRef.current = null;
+          isTransitioningRef.current = false;
+        } else {
+          // Resuming: set the starting remaining time for the progress calculation
+          countdownStartRemainingRef.current = remainingTimeRef.current;
+          lastStartTimeRef.current = Date.now();
+        }
+
+        setIsPlaying(wasPaused);
+      }, [isPlaying]);
+
       const handleGoNext = useCallback(() => {
         const nextPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex + 1)
           : activePageIndex + 1;
         goToPage(nextPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        resetAutoplayTimer();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, resetAutoplayTimer]);
 
       const handleGoPrevious = useCallback(() => {
         const prevPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex - 1)
           : activePageIndex - 1;
         goToPage(prevPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        resetAutoplayTimer();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, resetAutoplayTimer]);
+
+      // Handle pressing a specific page in pagination
+      const handlePressPage = useCallback(
+        (page: number) => {
+          goToPage(page);
+          resetAutoplayTimer();
+        },
+        [goToPage, resetAutoplayTimer],
+      );
+
+      // Autoplay progress tracking effect
+      useEffect(() => {
+        if (!autoplay || totalPages <= 1) {
+          setAutoplayProgress(0);
+          return;
+        }
+
+        if (!isPlaying) {
+          return;
+        }
+
+        let rafId: number | null = null;
+
+        const updateProgress = () => {
+          // During page transition animation, keep progress at 0
+          if (isTransitioningRef.current) {
+            setAutoplayProgress(0);
+            rafId = requestAnimationFrame(updateProgress);
+            return;
+          }
+
+          if (lastStartTimeRef.current !== null) {
+            const elapsed = Date.now() - lastStartTimeRef.current;
+            const startProgress = 1 - countdownStartRemainingRef.current / autoplayInterval;
+            const currentProgress =
+              startProgress + (elapsed / countdownStartRemainingRef.current) * (1 - startProgress);
+            setAutoplayProgress(Math.min(currentProgress, 1));
+          }
+          rafId = requestAnimationFrame(updateProgress);
+        };
+
+        rafId = requestAnimationFrame(updateProgress);
+
+        return () => {
+          if (rafId) {
+            cancelAnimationFrame(rafId);
+          }
+        };
+      }, [autoplay, isPlaying, totalPages, autoplayInterval]);
+
+      // Autoplay timer effect
+      useEffect(() => {
+        if (!autoplay || !isPlaying || totalPages <= 1) {
+          return;
+        }
+
+        if (isTransitioningRef.current) {
+          return;
+        }
+
+        const startTimer = () => {
+          lastStartTimeRef.current = Date.now();
+          countdownStartRemainingRef.current = remainingTimeRef.current;
+          autoplayTimerRef.current = setTimeout(() => {
+            isTransitioningRef.current = true;
+            remainingTimeRef.current = autoplayInterval;
+            setAutoplayProgress(0);
+
+            // Always wrap to first page when at the last page
+            const nextPage = wrap(0, totalPages, activePageIndexRef.current + 1);
+            goToPage(nextPage, autoplayAnimationDuration / 1000);
+
+            animationTimerRef.current = setTimeout(() => {
+              isTransitioningRef.current = false;
+              animationTimerRef.current = null;
+              startTimer();
+            }, autoplayAnimationDuration);
+          }, remainingTimeRef.current);
+        };
+
+        startTimer();
+
+        return () => {
+          if (autoplayTimerRef.current) {
+            clearTimeout(autoplayTimerRef.current);
+            autoplayTimerRef.current = null;
+          }
+          if (animationTimerRef.current) {
+            clearTimeout(animationTimerRef.current);
+            animationTimerRef.current = null;
+          }
+          isTransitioningRef.current = false;
+        };
+      }, [autoplay, isPlaying, totalPages, autoplayInterval, goToPage]);
 
       const handleDragStart = useCallback(() => {
         onDragStart?.();
@@ -757,7 +968,8 @@ export const Carousel = memo(
 
       const handleDragEnd = useCallback(() => {
         onDragEnd?.();
-      }, [onDragEnd]);
+        resetAutoplayTimer();
+      }, [onDragEnd, resetAutoplayTimer]);
 
       const handleDragTransition = useCallback(
         (targetOffsetScroll: number) => {
@@ -1019,8 +1231,20 @@ export const Carousel = memo(
           registerItem,
           unregisterItem,
           visibleCarouselItems,
+          autoplay,
+          isPlaying,
+          onTogglePlayPause: handleTogglePlayPause,
+          autoplayProgress,
         }),
-        [registerItem, unregisterItem, visibleCarouselItems],
+        [
+          registerItem,
+          unregisterItem,
+          visibleCarouselItems,
+          autoplay,
+          isPlaying,
+          handleTogglePlayPause,
+          autoplayProgress,
+        ],
       );
 
       return (
@@ -1045,13 +1269,18 @@ export const Carousel = memo(
                 )}
                 {!hideNavigation && (
                   <NavigationComponent
+                    autoplay={autoplay}
                     disableGoNext={
                       totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
                     }
                     disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
+                    isPlaying={isPlaying}
                     nextPageAccessibilityLabel={nextPageAccessibilityLabel}
                     onGoNext={handleGoNext}
                     onGoPrevious={handleGoPrevious}
+                    onTogglePlayPause={handleTogglePlayPause}
+                    pauseAccessibilityLabel={pauseAccessibilityLabel}
+                    playAccessibilityLabel={playAccessibilityLabel}
                     previousPageAccessibilityLabel={previousPageAccessibilityLabel}
                     style={styles?.navigation}
                   />
@@ -1068,7 +1297,9 @@ export const Carousel = memo(
             {!hidePagination && (
               <PaginationComponent
                 activePageIndex={activePageIndex}
-                onPressPage={goToPage}
+                autoplay={autoplay}
+                autoplayProgress={autoplayProgress}
+                onPressPage={handlePressPage}
                 paginationAccessibilityLabel={goToPageAccessibilityLabel}
                 style={styles?.pagination}
                 totalPages={totalPages}

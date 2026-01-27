@@ -8,6 +8,22 @@ export type CarouselContextValue = {
    * Set of item IDs that are currently visible in the carousel viewport.
    */
   visibleCarouselItems: Set<string>;
+  /**
+   * Whether autoplay is enabled for the carousel.
+   */
+  autoplay?: boolean;
+  /**
+   * The current play/pause state of the autoplay.
+   */
+  isPlaying?: boolean;
+  /**
+   * Callback to toggle the play/pause state of the autoplay.
+   */
+  onTogglePlayPause?: () => void;
+  /**
+   * The current progress of the autoplay animation (0-1).
+   */
+  autoplayProgress?: number;
 };
 
 export const CarouselContext = React.createContext<CarouselContextValue | undefined>(undefined);

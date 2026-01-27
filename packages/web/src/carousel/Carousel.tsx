@@ -644,9 +644,17 @@ export const Carousel = memo(
       const [isPlaying, setIsPlaying] = useState(autoplay);
       const [autoplayProgress, setAutoplayProgress] = useState(0);
       const autoplayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+      const animationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
       const autoplayRafRef = useRef<number | null>(null);
       const remainingTimeRef = useRef(autoplayInterval);
       const lastStartTimeRef = useRef<number | null>(null);
+      const isTransitioningRef = useRef(false);
+      const activePageIndexRef = useRef(activePageIndex);
+      // Stores the remaining time at the start of the current countdown (for progress calculation)
+      const countdownStartRemainingRef = useRef(autoplayInterval);
+
+      // Keep ref in sync with state
+      activePageIndexRef.current = activePageIndex;
 
       const isDragEnabled = drag !== 'none';
 
@@ -953,19 +961,41 @@ export const Carousel = memo(
         [activePageIndex, totalPages, goToPage],
       );
 
+      // Reset autoplay timer when manually navigating
+      const resetAutoplayTimer = useCallback(() => {
+        if (autoplay) {
+          remainingTimeRef.current = autoplayInterval;
+          countdownStartRemainingRef.current = autoplayInterval;
+          setAutoplayProgress(0);
+          lastStartTimeRef.current = isPlaying ? Date.now() : null;
+          isTransitioningRef.current = false;
+          // Clear existing timers so it restarts with full interval
+          if (autoplayTimerRef.current) {
+            clearTimeout(autoplayTimerRef.current);
+            autoplayTimerRef.current = null;
+          }
+          if (animationTimerRef.current) {
+            clearTimeout(animationTimerRef.current);
+            animationTimerRef.current = null;
+          }
+        }
+      }, [autoplay, autoplayInterval, isPlaying]);
+
       const handleGoNext = useCallback(() => {
         const nextPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex + 1)
           : activePageIndex + 1;
         goToPage(nextPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        resetAutoplayTimer();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, resetAutoplayTimer]);
 
       const handleGoPrevious = useCallback(() => {
         const prevPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex - 1)
           : activePageIndex - 1;
         goToPage(prevPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        resetAutoplayTimer();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, resetAutoplayTimer]);
 
       // Autoplay toggle function
       const handleTogglePlayPause = useCallback(() => {
@@ -976,11 +1006,16 @@ export const Carousel = memo(
               const elapsed = Date.now() - lastStartTimeRef.current;
               remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
             }
-            // Clear timer
+            // Clear timers and reset transition state
             if (autoplayTimerRef.current) {
               clearTimeout(autoplayTimerRef.current);
               autoplayTimerRef.current = null;
             }
+            if (animationTimerRef.current) {
+              clearTimeout(animationTimerRef.current);
+              animationTimerRef.current = null;
+            }
+            isTransitioningRef.current = false;
             lastStartTimeRef.current = null;
           }
           return !prev;
@@ -1001,12 +1036,21 @@ export const Carousel = memo(
         }
 
         const updateProgress = () => {
+          // During page transition animation, keep progress at 0
+          if (isTransitioningRef.current) {
+            setAutoplayProgress(0);
+            autoplayRafRef.current = requestAnimationFrame(updateProgress);
+            return;
+          }
+
           if (lastStartTimeRef.current !== null) {
             const elapsed = Date.now() - lastStartTimeRef.current;
-            const totalDuration = autoplayInterval;
-            // Calculate progress based on how much time has passed relative to full interval
-            const startProgress = 1 - remainingTimeRef.current / autoplayInterval;
-            const currentProgress = startProgress + (elapsed / totalDuration) * (1 - startProgress);
+            const remainingAtStart = countdownStartRemainingRef.current;
+            // Calculate progress: start from where we left off, complete over remaining time
+            const startProgress = 1 - remainingAtStart / autoplayInterval;
+            // Divide by remainingAtStart (not full interval) so animation completes in time
+            const currentProgress =
+              startProgress + (elapsed / remainingAtStart) * (1 - startProgress);
             setAutoplayProgress(Math.min(currentProgress, 1));
           }
           autoplayRafRef.current = requestAnimationFrame(updateProgress);
@@ -1030,17 +1074,27 @@ export const Carousel = memo(
         }
 
         const startTimer = () => {
+          // Record the remaining time at start of this countdown for progress calculation
+          countdownStartRemainingRef.current = remainingTimeRef.current;
           lastStartTimeRef.current = Date.now();
           autoplayTimerRef.current = setTimeout(() => {
+            // Mark that we're transitioning
+            isTransitioningRef.current = true;
+
+            // Reset remaining time and progress FIRST before changing page
+            remainingTimeRef.current = autoplayInterval;
+            setAutoplayProgress(0);
+
             // Always wrap to first page when at the last page
-            const nextPage = wrap(0, totalPages, activePageIndex + 1);
-            // Use slower animation duration (4x slower = 1 second)
+            // Use ref to avoid stale closure
+            const nextPage = wrap(0, totalPages, activePageIndexRef.current + 1);
+            // Use slower animation duration
             goToPage(nextPage, autoplayAnimationDuration / 1000);
+
             // Wait for animation to complete before starting next countdown
-            autoplayTimerRef.current = setTimeout(() => {
-              // Reset remaining time and progress for next cycle
-              remainingTimeRef.current = autoplayInterval;
-              setAutoplayProgress(0);
+            animationTimerRef.current = setTimeout(() => {
+              isTransitioningRef.current = false;
+              animationTimerRef.current = null;
               // Start next timer
               startTimer();
             }, autoplayAnimationDuration);
@@ -1054,8 +1108,15 @@ export const Carousel = memo(
             clearTimeout(autoplayTimerRef.current);
             autoplayTimerRef.current = null;
           }
+          if (animationTimerRef.current) {
+            clearTimeout(animationTimerRef.current);
+            animationTimerRef.current = null;
+          }
+          isTransitioningRef.current = false;
         };
-      }, [autoplay, isPlaying, totalPages, autoplayInterval, activePageIndex, goToPage]);
+        // Note: activePageIndex intentionally not in deps - we use activePageIndexRef to avoid
+        // restarting the timer loop on every page change
+      }, [autoplay, isPlaying, totalPages, autoplayInterval, goToPage]);
 
       // Reset remaining time when autoplayInterval changes
       useEffect(() => {
@@ -1127,7 +1188,16 @@ export const Carousel = memo(
 
       const handleDragEnd = useCallback(() => {
         onDragEnd?.();
-      }, [onDragEnd]);
+        resetAutoplayTimer();
+      }, [onDragEnd, resetAutoplayTimer]);
+
+      const handleClickPage = useCallback(
+        (page: number) => {
+          goToPage(page);
+          resetAutoplayTimer();
+        },
+        [goToPage, resetAutoplayTimer],
+      );
 
       const carouselContextValue = useMemo(
         () => ({
@@ -1236,7 +1306,7 @@ export const Carousel = memo(
                   autoplay={autoplay}
                   autoplayProgress={autoplayProgress}
                   className={classNames?.pagination}
-                  onClickPage={goToPage}
+                  onClickPage={handleClickPage}
                   paginationAccessibilityLabel={paginationAccessibilityLabel}
                   style={styles?.pagination}
                   totalPages={totalPages}

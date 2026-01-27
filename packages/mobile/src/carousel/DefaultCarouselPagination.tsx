@@ -1,7 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 
 import { useTheme } from '../hooks/useTheme';
+import { Box } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { Pressable } from '../system/Pressable';
 
@@ -27,6 +29,8 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   totalPages,
   activePageIndex,
   onPressPage,
+  autoplay,
+  autoplayProgress = 0,
   style,
   styles,
   paginationAccessibilityLabel = 'Go to page',
@@ -42,29 +46,46 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   return (
     <HStack gap={0.5} justifyContent="center" style={rootStyles}>
       {totalPages > 0 ? (
-        Array.from({ length: totalPages }, (_, index) => (
-          <Pressable
-            key={index}
-            accessibilityLabel={
-              typeof paginationAccessibilityLabel === 'function'
-                ? paginationAccessibilityLabel(index)
-                : `${paginationAccessibilityLabel} ${index + 1}`
-            }
-            background={index === activePageIndex ? 'bgPrimary' : 'bgLine'}
-            borderColor="transparent"
-            borderRadius={100}
-            height={4}
-            onPress={() => onPressPage(index)}
-            style={styles?.dot}
-            testID={`carousel-page-${index}`}
-            width={24}
-          />
-        ))
+        Array.from({ length: totalPages }, (_, index) => {
+          const isActive = index === activePageIndex;
+          const showProgress = autoplay && isActive;
+
+          return (
+            <Pressable
+              key={index}
+              accessibilityLabel={
+                typeof paginationAccessibilityLabel === 'function'
+                  ? paginationAccessibilityLabel(index)
+                  : `${paginationAccessibilityLabel} ${index + 1}`
+              }
+              background={showProgress ? 'bgLine' : isActive ? 'bgPrimary' : 'bgLine'}
+              borderRadius={100}
+              height={4}
+              onPress={() => onPressPage(index)}
+              style={[{ overflow: 'hidden' }, styles?.dot]}
+              testID={`carousel-page-${index}`}
+              width={24}
+            >
+              {showProgress && (
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    height: '100%',
+                    width: `${autoplayProgress * 100}%`,
+                    backgroundColor: theme.color.bgPrimary,
+                    borderRadius: theme.borderRadius[100],
+                  }}
+                />
+              )}
+            </Pressable>
+          );
+        })
       ) : (
         <Pressable
           disabled
           background="bgLine"
-          borderColor="transparent"
           borderRadius={100}
           height={4}
           style={[{ opacity: 0 }, styles?.dot]}
