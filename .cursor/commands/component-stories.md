@@ -95,7 +95,7 @@ export default ComponentNameScreen;
 6. **Update .percy.js** if adding stories with random/animated data that should be excluded
 7. **Run checks:**
    ```bash
-   yarn nx format:write && yarn nx run <project>:typecheck
+   yarn nx format:write && yarn nx run <project>:typecheck && yarn nx run <project>:lint --fix
    ```
    Projects: `web`, `mobile`, `web-visualization`, `mobile-visualization`
 

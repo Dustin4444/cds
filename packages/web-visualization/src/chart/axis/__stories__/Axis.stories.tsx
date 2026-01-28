@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { Examples } from '@coinbase/cds-web/dates/__stories__/Calendar.stories';
 import { Example, ExampleScreen } from '@coinbase/cds-web/__stories__/storybook';
+import { Examples } from '@coinbase/cds-web/dates/__stories__/Calendar.stories';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 

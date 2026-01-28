@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { css } from '@linaria/core';
 
+import { Example, ExampleScreen } from '../../__stories__/storybook';
 import { IconButton } from '../../buttons';
 import { SelectOption } from '../../controls';
 import { Icon, LogoMark, SubBrandLogoMark } from '../../icons';
 import { Box, HStack, Spacer, VStack } from '../../layout';
 import { PortalProvider } from '../../overlays/PortalProvider';
 import { Pressable } from '../../system';
-import { Example, ExampleScreen } from '../../__stories__/storybook';
 import { Text } from '../../typography/Text';
 import { Sidebar, SidebarItem, SidebarMoreMenu } from '..';
 

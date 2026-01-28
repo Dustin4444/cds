@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { css } from '@linaria/core';
 
+import { Example, ExampleScreen } from '../../__stories__/storybook';
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { ThemeProvider } from '../../system/ThemeProvider';
-import { Example, ExampleScreen } from '../../__stories__/storybook';
 import { Switch } from '../Switch';
 
 const darkModeWrapperCss = css`

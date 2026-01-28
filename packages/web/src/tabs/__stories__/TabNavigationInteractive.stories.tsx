@@ -3,9 +3,9 @@ import { expect } from '@storybook/jest';
 import type { ComponentStoryObj } from '@storybook/react';
 import { fireEvent, userEvent, within } from '@storybook/testing-library';
 
+import { pauseStory } from '../../__stories__/storybook';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
-import { pauseStory } from '../../__stories__/storybook';
 import { TabNavigation } from '../TabNavigation';
 
 const WAIT = 200;

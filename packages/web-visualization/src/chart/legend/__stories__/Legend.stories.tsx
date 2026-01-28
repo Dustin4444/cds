@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Chip } from '@coinbase/cds-web/chips';
 import { Example, ExampleScreen } from '@coinbase/cds-web/__stories__/storybook';
+import { Chip } from '@coinbase/cds-web/chips';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
