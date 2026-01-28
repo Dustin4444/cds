@@ -7,14 +7,11 @@ import { Box } from '@coinbase/cds-mobile/layout';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import { type HighlightProps, HighlightProvider } from './interaction/HighlightProvider';
-import { InteractionProvider } from './interaction/InteractionProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
 import { Legend, type LegendProps } from './legend';
 import {
-  type ActiveItem,
-  type ActiveItems,
   type AxisConfig,
   type AxisConfigProps,
   type CartesianChartContextValue,
@@ -29,9 +26,6 @@ import {
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
   type HighlightedItem,
-  type InteractionMode,
-  type InteractionScope,
-  type InteractionState,
   type LegendPosition,
   type Series,
   useTotalAxisPadding,
@@ -118,26 +112,6 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily' | 'accessi
      * @deprecated Use `onHighlightChange` instead. Will be removed in next major version.
      */
     onScrubberPositionChange?: (index: number | undefined) => void;
-    /**
-     * @deprecated Use `enableHighlighting` instead.
-     */
-    interaction?: InteractionMode;
-    /**
-     * @deprecated Use `highlightScope` instead.
-     */
-    interactionScope?: InteractionScope;
-    /**
-     * @deprecated Use `highlight` instead.
-     */
-    activeItem?: ActiveItem | null;
-    /**
-     * @deprecated Use `highlight` instead.
-     */
-    activeItems?: ActiveItems;
-    /**
-     * @deprecated Use `onHighlightChange` instead.
-     */
-    onInteractionChange?: (state: InteractionState) => void;
   };
 
 export type CartesianChartProps = CartesianChartBaseProps &
@@ -198,11 +172,6 @@ export const CartesianChart = memo(
         // Legacy props
         enableScrubbing,
         onScrubberPositionChange,
-        interaction,
-        interactionScope,
-        activeItem,
-        activeItems,
-        onInteractionChange,
         legend,
         legendPosition = 'bottom',
         legendAccessibilityLabel,
@@ -523,49 +492,24 @@ export const CartesianChart = memo(
         return [style, styles?.root];
       }, [style, styles?.root]);
 
-      // Resolve highlighting enabled (backwards compatibility with enableScrubbing and interaction)
-      const isHighlightingEnabled: boolean = useMemo(() => {
+      // Resolve enableHighlighting (backwards compatibility with enableScrubbing)
+      const resolvedEnableHighlighting = useMemo(() => {
         if (enableHighlighting !== undefined) return enableHighlighting;
-        if (interaction !== undefined) return interaction !== 'none';
         if (enableScrubbing !== undefined) return enableScrubbing;
-        return true; // Default to enabled
-      }, [enableHighlighting, interaction, enableScrubbing]);
+        return false; // Default to disabled
+      }, [enableHighlighting, enableScrubbing]);
 
-      // Resolve highlight scope (backwards compatibility with interactionScope)
-      const resolvedHighlightScope = useMemo(() => {
-        if (highlightScope !== undefined) return highlightScope;
-        if (interactionScope !== undefined) return interactionScope;
-        return undefined;
-      }, [highlightScope, interactionScope]);
-
-      // Resolve highlight state (backwards compatibility with activeItem/activeItems)
-      const resolvedHighlight = useMemo((): HighlightedItem[] | undefined => {
-        if (highlight !== undefined) return highlight;
-        if (activeItems !== undefined) return activeItems;
-        if (activeItem !== undefined) {
-          return activeItem === null ? [] : [activeItem];
-        }
-        return undefined;
-      }, [highlight, activeItem, activeItems]);
-
-      // Wrap onHighlightChange to also call legacy callbacks
+      // Wrap onHighlightChange to also call legacy onScrubberPositionChange
       const handleHighlightChange = useCallback(
         (items: HighlightedItem[]) => {
           onHighlightChange?.(items);
 
           // Legacy callback support
-          if (onInteractionChange) {
-            // Convert to old InteractionState format
-            const singleItem = items[0];
-            onInteractionChange(singleItem);
-          }
-
           if (onScrubberPositionChange) {
-            const singleItem = items[0];
-            onScrubberPositionChange(singleItem?.dataIndex ?? undefined);
+            onScrubberPositionChange(items[0]?.dataIndex ?? undefined);
           }
         },
-        [onHighlightChange, onInteractionChange, onScrubberPositionChange],
+        [onHighlightChange, onScrubberPositionChange],
       );
       const legendElement = useMemo(() => {
         if (!legend) return;
@@ -602,9 +546,9 @@ export const CartesianChart = memo(
             accessibilityLabel={accessibilityLabel}
             accessibilityMode={accessibilityMode}
             allowOverflowGestures={allowOverflowGestures}
-            enableHighlighting={isHighlightingEnabled}
-            highlight={resolvedHighlight}
-            highlightScope={resolvedHighlightScope}
+            enableHighlighting={resolvedEnableHighlighting}
+            highlight={highlight}
+            highlightScope={highlightScope}
             onHighlightChange={handleHighlightChange}
           >
             {legend ? (

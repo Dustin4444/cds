@@ -437,7 +437,7 @@ export const CartesianChart = memo(
       const resolvedEnableHighlighting = useMemo(() => {
         if (enableHighlighting !== undefined) return enableHighlighting;
         if (enableScrubbing !== undefined) return enableScrubbing;
-        return true; // Default to enabled
+        return false; // Default to disabled
       }, [enableHighlighting, enableScrubbing]);
 
       // Wrap onHighlightChange to also call legacy onScrubberPositionChange

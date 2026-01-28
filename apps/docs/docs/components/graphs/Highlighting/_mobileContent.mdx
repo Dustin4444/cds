@@ -259,11 +259,6 @@ The following legacy props are still supported for backwards compatibility but a
 | -------------------------- | -------------------- |
 | `enableScrubbing`          | `enableHighlighting` |
 | `onScrubberPositionChange` | `onHighlightChange`  |
-| `interaction`              | `enableHighlighting` |
-| `interactionScope`         | `highlightScope`     |
-| `activeItem`               | `highlight`          |
-| `activeItems`              | `highlight`          |
-| `onInteractionChange`      | `onHighlightChange`  |
 
 ```tsx
 // Legacy (still works)
@@ -293,7 +288,7 @@ The following legacy props are still supported for backwards compatibility but a
 
 | Prop                      | Type                                            | Default               | Description                         |
 | ------------------------- | ----------------------------------------------- | --------------------- | ----------------------------------- |
-| `enableHighlighting`      | `boolean`                                       | `true`                | Enable/disable highlighting         |
+| `enableHighlighting`      | `boolean`                                       | `false`               | Enable/disable highlighting         |
 | `highlight`               | `HighlightedItem[]`                             | `undefined`           | Controlled highlight state          |
 | `onHighlightChange`       | `(items: HighlightedItem[]) => void`            | -                     | Callback when highlight changes     |
 | `highlightScope`          | `HighlightScope`                                | `{ dataIndex: true }` | What aspects to track               |
