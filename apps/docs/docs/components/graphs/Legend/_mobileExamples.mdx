@@ -402,7 +402,11 @@ You can use `EntryComponent` to display a label that updates as a user interacts
 ```jsx
 function DynamicLabel() {
   const theme = useTheme();
-  const [scrubberPosition, setScrubberPosition] = useState();
+  const [highlightedIndex, setHighlightedIndex] = useState();
+
+  const handleHighlightChange = useCallback((items) => {
+    setHighlightedIndex(items[0]?.dataIndex ?? undefined);
+  }, []);
 
   const timeLabels = [
     'Jan',
@@ -447,7 +451,7 @@ function DynamicLabel() {
   );
 
   const dataLength = seriesConfig[0].data?.length ?? 0;
-  const dataIndex = scrubberPosition ?? dataLength - 1;
+  const dataIndex = highlightedIndex ?? dataLength - 1;
 
   const ValueLegendEntry = useCallback(
     ({ seriesId, label, color, shape }) => {
@@ -470,12 +474,12 @@ function DynamicLabel() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={250}
       legend={<Legend EntryComponent={ValueLegendEntry} justifyContent="flex-start" paddingX={2} />}
       legendPosition="top"
-      onScrubberPositionChange={setScrubberPosition}
+      onHighlightChange={handleHighlightChange}
       series={seriesConfig}
       width="100%"
       xAxis={{

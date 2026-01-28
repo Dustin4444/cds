@@ -348,8 +348,12 @@ function CustomizableAssetPriceExample() {
     const [showSettings, setShowSettings] = useState(false);
     const [showYAxis, setShowYAxis] = useState(true);
     const [showXAxis, setShowXAxis] = useState(true);
-    const [scrubIndex, setScrubIndex] = useState();
+    const [highlightedIndex, setHighlightedIndex] = useState();
     const breakpoints = useBreakpoints();
+
+    const handleHighlightChange = useCallback((items) => {
+      setHighlightedIndex(items[0]?.dataIndex ?? undefined);
+    }, []);
 
     const formatPrice = useCallback((price: number) => {
       return new Intl.NumberFormat('en-US', {
@@ -381,11 +385,11 @@ function CustomizableAssetPriceExample() {
     const data = useMemo(() => sparklineInteractiveData[activeTab.id], [activeTab.id]);
     const currentPrice = useMemo(() => sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value, []);
     const currentTimePrice = useMemo(() => {
-      if (scrubIndex !== undefined) {
-        return data[scrubIndex].value;
+      if (highlightedIndex !== undefined) {
+        return data[highlightedIndex].value;
       }
       return currentPrice;
-    }, [data, scrubIndex, currentPrice]);
+    }, [data, highlightedIndex, currentPrice]);
 
     const formatDate = useCallback((date) => {
       const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -402,19 +406,19 @@ function CustomizableAssetPriceExample() {
     }, []);
 
     const scrubberLabel = useMemo(() => {
-      if (scrubIndex === undefined) return;
-      return formatDate(data[scrubIndex].date);
-    }, [scrubIndex, data, formatDate]);
+      if (highlightedIndex === undefined) return;
+      return formatDate(data[highlightedIndex].date);
+    }, [highlightedIndex, data, formatDate]);
 
     const accessibilityLabel = useMemo(() => {
-      if (scrubIndex === undefined) return;
+      if (highlightedIndex === undefined) return;
       const price = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-      }).format(data[scrubIndex].value);
-      const date = formatDate(data[scrubIndex].date);
+      }).format(data[highlightedIndex].value);
+      const date = formatDate(data[highlightedIndex].date);
       return `Asset price: ${price} USD on ${date}`;
-    }, [scrubIndex, data, formatDate]);
+    }, [highlightedIndex, data, formatDate]);
 
     const onClickSettings = useCallback(() => setShowSettings(!showSettings), [showSettings]);
 
@@ -477,9 +481,9 @@ function CustomizableAssetPriceExample() {
           }
         />
         <LineChart
-          enableScrubbing
+          enableHighlighting
           height={{ base: 200, tablet: 250, desktop: 300 }}
-          onScrubberPositionChange={setScrubIndex}
+          onHighlightChange={handleHighlightChange}
           series={seriesData}
           yAxis={{
             domainLimit: 'strict',

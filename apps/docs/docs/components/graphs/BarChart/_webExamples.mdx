@@ -774,10 +774,11 @@ function Candlesticks() {
     [stockData],
   );
 
-  const updateInfoText = React.useCallback(
-    (index) => {
+  const handleHighlightChange = React.useCallback(
+    (items) => {
       if (!infoTextRef.current) return;
 
+      const index = items[0]?.dataIndex;
       const text =
         index !== null && index !== undefined
           ? `Open: ${formatThousandsPrice(stockData[index].open)}, Close: ${formatThousandsPrice(
@@ -798,7 +799,7 @@ function Candlesticks() {
         <span ref={infoTextRef}>{initialInfo}</span>
       </Text>
       <BarChart
-        enableScrubbing
+        enableHighlighting
         showXAxis
         showYAxis
         BarComponent={CandlestickBarComponent}
@@ -807,7 +808,7 @@ function Candlesticks() {
         borderRadius={0}
         height={{ base: 150, tablet: 200, desktop: 250 }}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        onScrubberPositionChange={updateInfoText}
+        onHighlightChange={handleHighlightChange}
         series={[
           {
             id: 'stock-prices',

@@ -4,7 +4,7 @@ The XAxis component provides a horizontal axis for charts with automatic tick ge
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -132,7 +132,7 @@ Using number data with a numeric scale will allow you to adjust the x values for
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   series={[
     {
       id: 'line',
@@ -239,7 +239,7 @@ function XAxisPositionExample() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
 
       height={400}
       series={[
@@ -293,7 +293,7 @@ function XAxisGridExample() {
         </Switch>
       </HStack>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         height={250}
         series={[
           {
@@ -322,7 +322,7 @@ function CustomGridLineExample() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={250}
       series={[
         {
@@ -413,7 +413,7 @@ function XAxisLineExample() {
         </Switch>
       </HStack>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         height={250}
         series={[
           {
@@ -447,7 +447,7 @@ function XAxisLineStylesExample() {
         </Switch>
       </HStack>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         height={250}
         series={[
           {
@@ -475,7 +475,7 @@ The `size` prop sets the size of the axis in pixels. The default is 32 for XAxis
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -501,7 +501,7 @@ You can use the `ticks`, `requestedTickCount`, and `tickInterval` (default for X
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -520,7 +520,7 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -539,7 +539,7 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -569,7 +569,7 @@ function XAxisTickMarksExample() {
         </Switch>
       </HStack>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         height={250}
         series={[
           {
@@ -651,7 +651,7 @@ You can customize the tick labels using the `tickLabelFormatter` prop. It will r
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -673,7 +673,7 @@ If no data is set for the axis, it will receive the regular number value of the 
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -697,7 +697,7 @@ You can add a label to the axis using the `label` prop.
 
 ```jsx live
 <CartesianChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -729,7 +729,7 @@ function CustomTickLabelExample() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={250}
       series={[
         {

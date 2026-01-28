@@ -7,7 +7,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
 ```jsx live
 <VStack gap={2}>
   <AreaChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
@@ -23,7 +23,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
     <Scrubber />
   </AreaChart>
   <BarChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
@@ -39,7 +39,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
     <Scrubber hideOverlay seriesIds={[]} />
   </BarChart>
   <LineChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
@@ -89,7 +89,7 @@ function ForecastedPrice() {
   });
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
@@ -192,7 +192,7 @@ You can provide a `stackId` to stack series together.
 
 ```jsx live
 <AreaChart
-  enableScrubbing
+  enableHighlighting
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -286,7 +286,7 @@ const formatPrice = useCallback((dataIndex: number) => {
       <VStack gap={1}>
         <Text font="label1">Custom inset</Text>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           height={100}
           inset={{ left: 10, top: 16, right: 10, bottom: 10 }}
           series={[
@@ -306,7 +306,7 @@ const formatPrice = useCallback((dataIndex: number) => {
       <VStack gap={1}>
         <Text font="label1">Default inset</Text>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           height={100}
           series={[
             {
@@ -327,24 +327,24 @@ const formatPrice = useCallback((dataIndex: number) => {
 }
 ```
 
-## Scrubbing
+## Highlighting
 
-CartesianChart has built-in scrubbing functionality that can be enabled with the `enableScrubbing` prop. This will then enable the usage of `onScrubberPositionChange` to get the current position of the scrubber as the user interacts with the chart.
+CartesianChart has built-in highlighting functionality that can be enabled with the `enableHighlighting` prop. This will then enable the usage of `onHighlightChange` to get the current highlighted position as the user interacts with the chart.
 
 ```jsx live
-function Scrubbing() {
-  const [scrubIndex, setScrubIndex] = useState(undefined);
+function Highlighting() {
+  const [highlightedIndex, setHighlightedIndex] = useState(undefined);
 
-  const onScrubberPositionChange = useCallback((index: number | undefined) => {
-    setScrubIndex(index);
+  const handleHighlightChange = useCallback((items) => {
+    setHighlightedIndex(items[0]?.dataIndex ?? undefined);
   }, []);
 
   return (
     <VStack gap={2}>
-    <Text font="label1">Scrubber index: {scrubIndex ?? 'none'}</Text>
+      <Text font="label1">Highlighted index: {highlightedIndex ?? 'none'}</Text>
       <LineChart
-        enableScrubbing
-        onScrubberPositionChange={onScrubberPositionChange}
+        enableHighlighting
+        onHighlightChange={handleHighlightChange}
         height={{ base: 150, tablet: 200, desktop: 250 }}
         series={[
           {
@@ -352,12 +352,11 @@ function Scrubbing() {
             data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
           },
         ]}
-
         showYAxis
         showArea
         yAxis={{
           showGrid: true,
-          width: 32
+          width: 32,
         }}
         inset={{ right: 0 }}
       >
@@ -376,7 +375,7 @@ You can showcase the price and volume of an asset over time within one chart.
 
 ```jsx live
 function PriceWithVolume() {
-  const [scrubIndex, setScrubIndex] = useState(null);
+  const [highlightedIndex, setHighlightedIndex] = useState(null);
   const btcData = btcCandles
     .slice(0, 180)
     .reverse()
@@ -410,7 +409,11 @@ function PriceWithVolume() {
     });
   }, []);
 
-  const displayIndex = scrubIndex ?? btcPrices.length - 1;
+  const handleHighlightChange = useCallback((items) => {
+    setHighlightedIndex(items[0]?.dataIndex ?? null);
+  }, []);
+
+  const displayIndex = highlightedIndex ?? btcPrices.length - 1;
   const currentPrice = btcPrices[displayIndex];
   const currentVolume = btcVolumes[displayIndex];
   const currentDate = btcDates[displayIndex];
@@ -419,9 +422,9 @@ function PriceWithVolume() {
     : 0;
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+    if (highlightedIndex === null) return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
     return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
-  }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
+  }, [highlightedIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -447,8 +450,8 @@ function PriceWithVolume() {
         }
       />
       <CartesianChart
-        enableScrubbing
-        onScrubberPositionChange={setScrubIndex}
+        enableHighlighting
+        onHighlightChange={handleHighlightChange}
         height={250}
         series={[
           {
