@@ -1662,6 +1662,90 @@ When the user pauses the autoplay, the remaining time is preserved. For example,
 
 :::
 
+### Pause on Interaction
+
+By default, autoplay pauses when the user hovers anywhere over the carousel area, including the title, navigation, content, and pagination (`autoplayPauseOnInteraction` defaults to `true`). You can customize the delay before autoplay resumes after the user stops interacting using the `autoplayResumeDelay` prop.
+
+```jsx live
+function PauseOnInteractionCarousel() {
+  function SquareAssetCard({ imageUrl, name }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        autoplay
+        autoplayResumeDelay={500}
+        loop
+        title="Hover to pause (resumes after 500ms)"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
+You can disable this behavior by setting `autoplayPauseOnInteraction` to `false`:
+
+```jsx live
+function NoPauseOnInteractionCarousel() {
+  function SquareAssetCard({ imageUrl, name }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        autoplay
+        autoplayPauseOnInteraction={false}
+        loop
+        title="Continues playing on hover"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
 ## Callbacks
 
 You can use the `onChangePage`, `onDragStart`, and `onDragEnd` callbacks to listen for user interaction in the carousel.

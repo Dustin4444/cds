@@ -277,6 +277,16 @@ export type CarouselBaseProps = SharedProps &
      * Accessibility label for the pause button.
      */
     pauseAccessibilityLabel?: string;
+    /**
+     * Whether to pause autoplay when the user hovers over the carousel.
+     * @default true
+     */
+    autoplayPauseOnInteraction?: boolean;
+    /**
+     * Delay in milliseconds before resuming autoplay after interaction ends.
+     * @default 0
+     */
+    autoplayResumeDelay?: number;
   };
 
 export type CarouselProps = Omit<BoxProps<BoxDefaultElement>, 'title'> &
@@ -622,6 +632,8 @@ export const Carousel = memo(
         autoplayInterval = 3000,
         playAccessibilityLabel,
         pauseAccessibilityLabel,
+        autoplayPauseOnInteraction = true,
+        autoplayResumeDelay = 0,
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -652,6 +664,9 @@ export const Carousel = memo(
       const activePageIndexRef = useRef(activePageIndex);
       // Stores the remaining time at the start of the current countdown (for progress calculation)
       const countdownStartRemainingRef = useRef(autoplayInterval);
+      // Interaction pause state (for hover/touch)
+      const [isPausedForInteraction, setIsPausedForInteraction] = useState(false);
+      const interactionResumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
       // Keep ref in sync with state
       activePageIndexRef.current = activePageIndex;
@@ -1022,6 +1037,55 @@ export const Carousel = memo(
         });
       }, []);
 
+      // Interaction pause handlers (for hover)
+      const handleInteractionStart = useCallback(() => {
+        if (!autoplay || !autoplayPauseOnInteraction || !isPlaying) return;
+
+        // Clear any pending resume timer
+        if (interactionResumeTimerRef.current) {
+          clearTimeout(interactionResumeTimerRef.current);
+          interactionResumeTimerRef.current = null;
+        }
+
+        // Calculate and store remaining time
+        if (lastStartTimeRef.current !== null) {
+          const elapsed = Date.now() - lastStartTimeRef.current;
+          remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+        }
+
+        // Clear autoplay timers
+        if (autoplayTimerRef.current) {
+          clearTimeout(autoplayTimerRef.current);
+          autoplayTimerRef.current = null;
+        }
+        if (animationTimerRef.current) {
+          clearTimeout(animationTimerRef.current);
+          animationTimerRef.current = null;
+        }
+        isTransitioningRef.current = false;
+        lastStartTimeRef.current = null;
+
+        setIsPausedForInteraction(true);
+      }, [autoplay, autoplayPauseOnInteraction, isPlaying]);
+
+      const handleInteractionEnd = useCallback(() => {
+        if (!autoplay || !autoplayPauseOnInteraction || !isPlaying) return;
+
+        // Clear any existing resume timer
+        if (interactionResumeTimerRef.current) {
+          clearTimeout(interactionResumeTimerRef.current);
+        }
+
+        // Resume after delay
+        interactionResumeTimerRef.current = setTimeout(() => {
+          setIsPausedForInteraction(false);
+          // Reset timing refs for resumption
+          countdownStartRemainingRef.current = remainingTimeRef.current;
+          lastStartTimeRef.current = Date.now();
+          interactionResumeTimerRef.current = null;
+        }, autoplayResumeDelay);
+      }, [autoplay, autoplayPauseOnInteraction, autoplayResumeDelay, isPlaying]);
+
       // Autoplay progress tracking effect
       useEffect(() => {
         // Only reset progress when autoplay is disabled or not enough pages
@@ -1030,8 +1094,8 @@ export const Carousel = memo(
           return;
         }
 
-        // When paused, keep the current progress (don't update or reset)
-        if (!isPlaying) {
+        // When paused (manually or due to interaction), keep the current progress
+        if (!isPlaying || isPausedForInteraction) {
           return;
         }
 
@@ -1064,12 +1128,12 @@ export const Carousel = memo(
             autoplayRafRef.current = null;
           }
         };
-      }, [autoplay, isPlaying, totalPages, autoplayInterval]);
+      }, [autoplay, isPlaying, isPausedForInteraction, totalPages, autoplayInterval]);
 
       // Autoplay timer effect
       const autoplayAnimationDuration = 500; // 0.5 second animation
       useEffect(() => {
-        if (!autoplay || !isPlaying || totalPages <= 1) {
+        if (!autoplay || !isPlaying || isPausedForInteraction || totalPages <= 1) {
           return;
         }
 
@@ -1116,13 +1180,22 @@ export const Carousel = memo(
         };
         // Note: activePageIndex intentionally not in deps - we use activePageIndexRef to avoid
         // restarting the timer loop on every page change
-      }, [autoplay, isPlaying, totalPages, autoplayInterval, goToPage]);
+      }, [autoplay, isPlaying, isPausedForInteraction, totalPages, autoplayInterval, goToPage]);
 
       // Reset remaining time when autoplayInterval changes
       useEffect(() => {
         remainingTimeRef.current = autoplayInterval;
         setAutoplayProgress(0);
       }, [autoplayInterval]);
+
+      // Cleanup interaction resume timer on unmount
+      useEffect(() => {
+        return () => {
+          if (interactionResumeTimerRef.current) {
+            clearTimeout(interactionResumeTimerRef.current);
+          }
+        };
+      }, []);
 
       const handleDragTransition = useCallback(
         (targetOffsetScroll: number) => {
@@ -1219,6 +1292,8 @@ export const Carousel = memo(
               aria-roledescription="carousel"
               className={cx(className, classNames?.root)}
               gap={2}
+              onMouseEnter={handleInteractionStart}
+              onMouseLeave={handleInteractionEnd}
               role="group"
               style={{ overflow: 'hidden', ...style, ...styles?.root }}
               width="100%"

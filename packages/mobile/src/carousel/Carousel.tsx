@@ -271,6 +271,16 @@ export type CarouselBaseProps = SharedProps &
      * @default "Pause"
      */
     pauseAccessibilityLabel?: string;
+    /**
+     * Whether to pause autoplay when the user touches the carousel.
+     * @default true
+     */
+    autoplayPauseOnInteraction?: boolean;
+    /**
+     * Delay in milliseconds before resuming autoplay after interaction ends.
+     * @default 0
+     */
+    autoplayResumeDelay?: number;
   };
 
 export type CarouselProps = CarouselBaseProps & {
@@ -573,6 +583,8 @@ export const Carousel = memo(
         autoplayInterval = 3000,
         playAccessibilityLabel = 'Play',
         pauseAccessibilityLabel = 'Pause',
+        autoplayPauseOnInteraction = true,
+        autoplayResumeDelay = 0,
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -605,6 +617,9 @@ export const Carousel = memo(
       const isTransitioningRef = useRef(false);
       const activePageIndexRef = useRef(0);
       const countdownStartRemainingRef = useRef(autoplayInterval);
+      // Interaction pause state (for touch)
+      const [isPausedForInteraction, setIsPausedForInteraction] = useState(false);
+      const interactionResumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
       // Keep activePageIndexRef in sync with activePageIndex
       activePageIndexRef.current = activePageIndex;
@@ -852,6 +867,55 @@ export const Carousel = memo(
         setIsPlaying(wasPaused);
       }, [isPlaying]);
 
+      // Interaction pause handlers (for touch)
+      const handleInteractionStart = useCallback(() => {
+        if (!autoplay || !autoplayPauseOnInteraction || !isPlaying) return;
+
+        // Clear any pending resume timer
+        if (interactionResumeTimerRef.current) {
+          clearTimeout(interactionResumeTimerRef.current);
+          interactionResumeTimerRef.current = null;
+        }
+
+        // Calculate and store remaining time
+        if (lastStartTimeRef.current !== null) {
+          const elapsed = Date.now() - lastStartTimeRef.current;
+          remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+        }
+
+        // Clear autoplay timers
+        if (autoplayTimerRef.current) {
+          clearTimeout(autoplayTimerRef.current);
+          autoplayTimerRef.current = null;
+        }
+        if (animationTimerRef.current) {
+          clearTimeout(animationTimerRef.current);
+          animationTimerRef.current = null;
+        }
+        isTransitioningRef.current = false;
+        lastStartTimeRef.current = null;
+
+        setIsPausedForInteraction(true);
+      }, [autoplay, autoplayPauseOnInteraction, isPlaying]);
+
+      const handleInteractionEnd = useCallback(() => {
+        if (!autoplay || !autoplayPauseOnInteraction || !isPlaying) return;
+
+        // Clear any existing resume timer
+        if (interactionResumeTimerRef.current) {
+          clearTimeout(interactionResumeTimerRef.current);
+        }
+
+        // Resume after delay
+        interactionResumeTimerRef.current = setTimeout(() => {
+          setIsPausedForInteraction(false);
+          // Reset timing refs for resumption
+          countdownStartRemainingRef.current = remainingTimeRef.current;
+          lastStartTimeRef.current = Date.now();
+          interactionResumeTimerRef.current = null;
+        }, autoplayResumeDelay);
+      }, [autoplay, autoplayPauseOnInteraction, autoplayResumeDelay, isPlaying]);
+
       const handleGoNext = useCallback(() => {
         const nextPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex + 1)
@@ -884,7 +948,8 @@ export const Carousel = memo(
           return;
         }
 
-        if (!isPlaying) {
+        // When paused (manually or due to interaction), keep the current progress
+        if (!isPlaying || isPausedForInteraction) {
           return;
         }
 
@@ -915,11 +980,11 @@ export const Carousel = memo(
             cancelAnimationFrame(rafId);
           }
         };
-      }, [autoplay, isPlaying, totalPages, autoplayInterval]);
+      }, [autoplay, isPlaying, isPausedForInteraction, totalPages, autoplayInterval]);
 
       // Autoplay timer effect
       useEffect(() => {
-        if (!autoplay || !isPlaying || totalPages <= 1) {
+        if (!autoplay || !isPlaying || isPausedForInteraction || totalPages <= 1) {
           return;
         }
 
@@ -960,7 +1025,16 @@ export const Carousel = memo(
           }
           isTransitioningRef.current = false;
         };
-      }, [autoplay, isPlaying, totalPages, autoplayInterval, goToPage]);
+      }, [autoplay, isPlaying, isPausedForInteraction, totalPages, autoplayInterval, goToPage]);
+
+      // Cleanup interaction resume timer on unmount
+      useEffect(() => {
+        return () => {
+          if (interactionResumeTimerRef.current) {
+            clearTimeout(interactionResumeTimerRef.current);
+          }
+        };
+      }, []);
 
       const handleDragStart = useCallback(() => {
         onDragStart?.();
@@ -1254,6 +1328,8 @@ export const Carousel = memo(
             aria-live="polite"
             aria-roledescription="carousel"
             gap={2}
+            onTouchEnd={handleInteractionEnd}
+            onTouchStart={handleInteractionStart}
             role="group"
             style={containerStyle}
             {...props}

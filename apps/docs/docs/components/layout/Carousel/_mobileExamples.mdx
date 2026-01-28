@@ -1024,6 +1024,155 @@ function AnimatedPaginationCarousel() {
 }
 ```
 
+## Autoplay
+
+Enable automatic page transitions with the `autoplay` prop. The carousel will automatically advance to the next page at regular intervals.
+
+### Basic Autoplay
+
+When `autoplay` is enabled, a play/pause button appears in the navigation controls.
+
+```jsx
+function AutoplayCarousel() {
+  const theme = useTheme();
+
+  return (
+    <Carousel
+      autoplay
+      title="Autoplay Carousel"
+      styles={{
+        root: { paddingHorizontal: theme.space[3] },
+        carousel: { gap: theme.space[1] },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+### Custom Autoplay Interval
+
+Use the `autoplayInterval` prop to customize the time between transitions (in milliseconds). The default is 3000ms (3 seconds).
+
+```jsx
+function CustomIntervalCarousel() {
+  const theme = useTheme();
+
+  return (
+    <Carousel
+      autoplay
+      autoplayInterval={5000}
+      title="5 Second Interval"
+      styles={{
+        root: { paddingHorizontal: theme.space[3] },
+        carousel: { gap: theme.space[1] },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+### Autoplay with Looping
+
+Combine `autoplay` with `loop` for an infinite auto-scrolling carousel.
+
+```jsx
+function AutoplayLoopCarousel() {
+  const theme = useTheme();
+
+  return (
+    <Carousel
+      autoplay
+      loop
+      title="Infinite Autoplay"
+      styles={{
+        root: { paddingHorizontal: theme.space[3] },
+        carousel: { gap: theme.space[1] },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+:::tip Pause Preserves Progress
+
+When the user pauses the autoplay, the remaining time is preserved. For example, if 2 seconds have elapsed out of a 3 second interval, pressing play will resume with only 1 second remaining before the next transition.
+
+:::
+
+### Pause on Interaction
+
+By default, autoplay pauses when the user touches anywhere on the carousel area, including the title, navigation, content, and pagination (`autoplayPauseOnInteraction` defaults to `true`). You can customize the delay before autoplay resumes after the user stops interacting using the `autoplayResumeDelay` prop.
+
+```jsx
+function PauseOnInteractionCarousel() {
+  const theme = useTheme();
+
+  return (
+    <Carousel
+      autoplay
+      autoplayResumeDelay={500}
+      loop
+      title="Touch to pause (resumes after 500ms)"
+      styles={{
+        root: { paddingHorizontal: theme.space[3] },
+        carousel: { gap: theme.space[1] },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+You can disable this behavior by setting `autoplayPauseOnInteraction` to `false`:
+
+```jsx
+function NoPauseOnInteractionCarousel() {
+  const theme = useTheme();
+
+  return (
+    <Carousel
+      autoplay
+      autoplayPauseOnInteraction={false}
+      loop
+      title="Continues playing on touch"
+      styles={{
+        root: { paddingHorizontal: theme.space[3] },
+        carousel: { gap: theme.space[1] },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
 ## Callbacks
 
 You can use the `onChangePage`, `onDragStart`, and `onDragEnd` callbacks to listen for user interaction in the carousel.
