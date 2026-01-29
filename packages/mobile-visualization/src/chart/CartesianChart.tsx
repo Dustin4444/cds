@@ -15,6 +15,7 @@ import {
   type AxisConfig,
   type AxisConfigProps,
   type CartesianChartContextValue,
+  type CartesianSeries,
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
@@ -29,7 +30,6 @@ import {
   type HighlightedItem,
   type HighlightScope,
   type LegendPosition,
-  type Series,
   useTotalAxisPadding,
 } from './utils';
 
@@ -51,7 +51,7 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily' | 'accessi
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
      */
-    series?: Array<Series>;
+    series?: Array<CartesianSeries>;
     /**
      * Whether to animate the chart.
      * @default true
@@ -453,6 +453,7 @@ export const CartesianChart = memo(
 
       const contextValue: CartesianChartContextValue = useMemo(
         () => ({
+          type: 'cartesian',
           series: series ?? [],
           getSeries,
           getSeriesData: getStackedSeriesData,

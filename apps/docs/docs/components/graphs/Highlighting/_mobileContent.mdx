@@ -25,7 +25,7 @@ Key features:
 
 ## Basic Usage
 
-Highlighting is enabled by default on all Cartesian charts. Use the `onHighlightChange` callback to respond to user interactions.
+To enable highlighting, set `enableHighlighting={true}` on your chart. Use the `onHighlightChange` callback to respond to user interactions.
 
 ```tsx
 import { LineChart, Scrubber } from '@coinbase/cds-mobile-visualization';
@@ -45,6 +45,7 @@ function BasicHighlighting() {
     <VStack gap={2}>
       <Text font="body">{displayValue}</Text>
       <LineChart
+        enableHighlighting
         showArea
         height={200}
         onHighlightChange={setHighlight}
@@ -78,7 +79,7 @@ For full control over the highlighted state, use the `highlight` prop along with
 
 ```tsx
 function ControlledHighlighting() {
-  const [highlight, setHighlight] = useState<HighlightedItem[] | undefined>(undefined);
+  const [highlight, setHighlight] = useState<HighlightedItem[]>([]);
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   return (
@@ -90,12 +91,19 @@ function ControlledHighlighting() {
         <Button compact onPress={() => setHighlight([{ dataIndex: 6, seriesId: null }])}>
           Middle
         </Button>
-        <Button compact onPress={() => setHighlight(undefined)} variant="secondary">
+        <Button compact onPress={() => setHighlight([])} variant="secondary">
           Clear
         </Button>
       </HStack>
 
-      <LineChart showArea height={200} highlight={highlight} series={[{ id: 'prices', data }]}>
+      <LineChart
+        enableHighlighting
+        showArea
+        height={200}
+        highlight={highlight}
+        onHighlightChange={setHighlight}
+        series={[{ id: 'prices', data }]}
+      >
         <Scrubber />
       </LineChart>
     </VStack>
@@ -107,9 +115,13 @@ function ControlledHighlighting() {
 
 | `highlight` value           | Behavior                                                                                                              |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `undefined`                 | **Uncontrolled mode** - Chart manages its own state                                                                   |
+| `undefined`                 | **Uncontrolled mode** - Chart manages its own state internally                                                        |
 | `[]` (empty array)          | **Controlled mode** - No items highlighted, user interactions don't change the UI but `onHighlightChange` still fires |
 | `[{ dataIndex, seriesId }]` | **Controlled mode** - Specified items are highlighted                                                                 |
+
+:::tip
+In controlled mode, pass an empty array `[]` (not `undefined`) to clear highlights while staying in controlled mode. Using `undefined` switches back to uncontrolled mode.
+:::
 
 </MDXArticle>
 </MDXSection>
@@ -148,6 +160,7 @@ function SeriesHighlighting() {
       </Text>
 
       <BarChart
+        enableHighlighting
         height={250}
         highlightScope={{ dataIndex: true, series: true }}
         onHighlightChange={setHighlight}
@@ -190,6 +203,7 @@ Mobile charts support VoiceOver with configurable accessibility modes.
 
 ```tsx
 <LineChart
+  enableHighlighting
   accessibilityLabel={(item) =>
     item.dataIndex !== null
       ? `Day ${item.dataIndex + 1}: $${data[item.dataIndex].toFixed(2)}`

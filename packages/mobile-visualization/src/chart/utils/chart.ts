@@ -44,11 +44,38 @@ export type AxisBounds = {
 export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds =>
   bounds.min !== undefined && bounds.max !== undefined;
 
+/**
+ * Base series type with common properties shared across all chart types.
+ * Used by generic chart components like HighlightProvider.
+ */
 export type Series = {
   /**
-   * Id of the series.
+   * Unique identifier for the series.
    */
   id: string;
+  /**
+   * Label of the series.
+   * Used for scrubber beacon labels and legend items.
+   */
+  label?: string;
+  /**
+   * Color of the series.
+   * If gradient is provided, that will be used for chart components.
+   * Color will still be used by scrubber beacon labels.
+   */
+  color?: string;
+  /**
+   * Shape of the legend item for this series.
+   * Can be a preset shape variant or a custom ReactNode.
+   * @default 'circle'
+   */
+  legendShape?: LegendShape;
+};
+
+/**
+ * Series type for cartesian (X/Y) charts with axis-specific properties.
+ */
+export type CartesianSeries = Series & {
   /**
    * Data array for this series. Use null values to create gaps in the visualization.
    *
@@ -57,17 +84,6 @@ export type Series = {
    * - Array of tuples: `[[0, 10], [0, -5], [0, 20]]` [baseline, value] pairs
    */
   data?: Array<number | null> | Array<[number, number] | null>;
-  /**
-   * Label of the series.
-   * Used for scrubber beacon labels.
-   */
-  label?: string;
-  /**
-   * Color for the series.
-   * If gradient is provided, that will be used for chart components
-   * Color will still be used by scrubber beacon labels
-   */
-  color?: string;
   /**
    * Color gradient configuration.
    * Takes precedence over color except for scrubber beacon labels.
@@ -84,12 +100,6 @@ export type Series = {
    * If not specified, the series will not be stacked.
    */
   stackId?: string;
-  /**
-   * Shape of the legend item for this series.
-   * Can be a preset shape variant or a custom ReactNode.
-   * @default 'circle'
-   */
-  legendShape?: LegendShape;
 };
 
 /**
@@ -97,7 +107,7 @@ export type Series = {
  * Domain represents the range of x-values from the data.
  */
 export const getChartDomain = (
-  series: Series[],
+  series: CartesianSeries[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {
@@ -126,7 +136,7 @@ export const getChartDomain = (
  * Creates a composite stack key that includes both stack ID and y-axis ID.
  * This ensures series with different y-scales don't get stacked together.
  */
-const createStackKey = (series: Series): string | undefined => {
+const createStackKey = (series: CartesianSeries): string | undefined => {
   if (series.stackId === undefined) return undefined;
 
   // Include y-axis ID to prevent cross-scale stacking
@@ -142,7 +152,7 @@ const createStackKey = (series: Series): string | undefined => {
  * @returns Map of series ID to stacked data arrays
  */
 export const getStackedSeriesData = (
-  series: Series[],
+  series: CartesianSeries[],
 ): Map<string, Array<[number, number] | null>> => {
   const stackedDataMap = new Map<string, Array<[number, number] | null>>();
 
@@ -252,7 +262,7 @@ export const getLineData = (
  * Handles stacking by transforming data when series have stack properties.
  */
 export const getChartRange = (
-  series: Series[],
+  series: CartesianSeries[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {

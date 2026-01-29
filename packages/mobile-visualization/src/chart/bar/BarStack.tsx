@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, Series, Transition } from '../utils';
+import type { CartesianSeries, ChartScaleFunction, Transition } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
@@ -15,7 +15,7 @@ const EPSILON = 1e-4;
 /**
  * Extended series type that includes bar-specific properties.
  */
-export type BarSeries = Series & {
+export type BarSeries = CartesianSeries & {
   /**
    * Custom component to render bars for this series.
    */

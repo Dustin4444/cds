@@ -25,7 +25,7 @@ Key features:
 
 ## Basic Usage
 
-Highlighting is enabled by default on all Cartesian charts. Use the `onHighlightChange` callback to respond to user interactions.
+To enable highlighting, set `enableHighlighting={true}` on your chart. Use the `onHighlightChange` callback to respond to user interactions.
 
 ```jsx live
 function BasicHighlighting() {
@@ -51,6 +51,7 @@ function BasicHighlighting() {
         <Text font="body">{displayValue}</Text>
       </Box>
       <LineChart
+        enableHighlighting
         showArea
         height={200}
         onHighlightChange={setHighlight}
@@ -88,7 +89,7 @@ For full control over the highlighted state, use the `highlight` prop along with
 
 ```jsx live
 function ControlledHighlighting() {
-  const [highlight, setHighlight] = useState(undefined);
+  const [highlight, setHighlight] = useState([]);
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   return (
@@ -103,16 +104,22 @@ function ControlledHighlighting() {
         <Button compact onClick={() => setHighlight([{ dataIndex: 13, seriesId: null }])}>
           Last
         </Button>
-        <Button compact onClick={() => setHighlight(undefined)} variant="secondary">
+        <Button compact onClick={() => setHighlight([])} variant="secondary">
           Clear
         </Button>
       </HStack>
 
       <Box background="bgSecondary" borderRadius={200} padding={2}>
-        <Text font="body">Index: {highlight?.[0]?.dataIndex ?? 'none'}</Text>
+        <Text font="body">Index: {highlight[0]?.dataIndex ?? 'none'}</Text>
       </Box>
 
-      <LineChart showArea height={200} highlight={highlight} series={[{ id: 'prices', data }]}>
+      <LineChart
+        enableHighlighting
+        showArea
+        height={200}
+        highlight={highlight}
+        series={[{ id: 'prices', data }]}
+      >
         <Scrubber />
       </LineChart>
     </VStack>
@@ -124,9 +131,13 @@ function ControlledHighlighting() {
 
 | `highlight` value           | Behavior                                                                                                              |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `undefined`                 | **Uncontrolled mode** - Chart manages its own state                                                                   |
+| `undefined`                 | **Uncontrolled mode** - Chart manages its own state internally                                                        |
 | `[]` (empty array)          | **Controlled mode** - No items highlighted, user interactions don't change the UI but `onHighlightChange` still fires |
 | `[{ dataIndex, seriesId }]` | **Controlled mode** - Specified items are highlighted                                                                 |
+
+:::tip
+In controlled mode, pass an empty array `[]` (not `undefined`) to clear highlights while staying in controlled mode. Using `undefined` switches back to uncontrolled mode.
+:::
 
 :::tip
 Even in controlled mode, `onHighlightChange` still fires when the user interacts with the chart. This allows you to respond to user gestures without necessarily updating the controlled state.
@@ -198,6 +209,7 @@ function SeriesHighlighting() {
       </Box>
 
       <BarChart
+        enableHighlighting
         height={250}
         highlightScope={{ dataIndex: true, series: true }}
         onHighlightChange={setHighlight}
@@ -234,7 +246,7 @@ Use controlled state to synchronize chart highlighting with other UI elements li
 
 ```jsx live
 function SynchronizedWithList() {
-  const [highlight, setHighlight] = useState(undefined);
+  const [highlight, setHighlight] = useState([]);
 
   const data = [
     { name: 'Bitcoin', symbol: 'BTC', price: 42150, change: 2.4 },
@@ -259,6 +271,7 @@ function SynchronizedWithList() {
       </Text>
 
       <LineChart
+        enableHighlighting
         showArea
         height={200}
         highlight={highlight}
@@ -282,7 +295,7 @@ function SynchronizedWithList() {
             variant={item.change >= 0 ? 'positive' : 'negative'}
             selected={highlightedIndex === index}
             onMouseEnter={() => setHighlight([{ dataIndex: index, seriesId: null }])}
-            onMouseLeave={() => setHighlight(undefined)}
+            onMouseLeave={() => setHighlight([])}
           />
         ))}
       </VStack>
@@ -343,6 +356,7 @@ function MultiTouchHighlighting() {
       </Box>
 
       <LineChart
+        enableHighlighting
         showArea
         height={250}
         inset={{ top: 40 }}

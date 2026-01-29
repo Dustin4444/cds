@@ -9,14 +9,14 @@ import {
 } from '../CartesianChart';
 import {
   type AxisConfigProps,
+  type CartesianSeries,
   defaultCartesianChartInset,
   getChartInset,
-  type Series,
 } from '../utils';
 
 import { Line, type LineProps } from './Line';
 
-export type LineSeries = Series &
+export type LineSeries = CartesianSeries &
   Partial<
     Pick<
       LineProps,
@@ -118,10 +118,10 @@ export const LineChart = memo(
         [inset],
       );
 
-      // Convert LineSeries to Series for Chart context
+      // Convert LineSeries to CartesianSeries for Chart context
       const chartSeries = useMemo(() => {
         return series?.map(
-          (s): Series => ({
+          (s): CartesianSeries => ({
             id: s.id,
             data: s.data,
             label: s.label,

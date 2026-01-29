@@ -2,41 +2,73 @@ import { createContext, useContext } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 
 import type { AxisConfig } from './axis';
-import type { Series } from './chart';
+import type { CartesianSeries, Series } from './chart';
 import type { ChartScaleFunction } from './scale';
 
 /**
- * Context value for Cartesian (X/Y) coordinate charts.
- * Contains axis-specific methods and properties for rectangular coordinate systems.
+ * Supported chart types.
  */
-export type CartesianChartContextValue = {
+export type ChartType = 'cartesian';
+
+/**
+ * Base context value shared by all chart types.
+ * Contains common properties like series and dimensions.
+ */
+export type ChartContextValue = {
+  /**
+   * The type of chart.
+   */
+  type: ChartType;
   /**
    * The series data for the chart.
    */
   series: Series[];
   /**
+   * Whether to animate the chart.
+   */
+  animate: boolean;
+  /**
+   * Width of the chart.
+   */
+  width: number;
+  /**
+   * Height of the chart.
+   */
+  height: number;
+  /**
+   * Drawing area of the chart.
+   */
+  drawingArea: Rect;
+  /**
+   * Length of the data domain.
+   */
+  dataLength: number;
+};
+
+/**
+ * Context value for Cartesian (X/Y) coordinate charts.
+ * Contains axis-specific methods and properties for rectangular coordinate systems.
+ */
+export type CartesianChartContextValue = Omit<ChartContextValue, 'type' | 'series'> & {
+  /**
+   * The chart type (always 'cartesian' for this context).
+   */
+  type: 'cartesian';
+  /**
+   * The series data for the chart.
+   */
+  series: CartesianSeries[];
+  /**
    * Returns the series which matches the seriesId or undefined.
    * @param seriesId - A series' id
    */
-  getSeries: (seriesId?: string) => Series | undefined;
+  getSeries: (seriesId?: string) => CartesianSeries | undefined;
   /**
    * Returns the data for a series
    * @param seriesId - A series' id
    * @returns data for series, if series exists
    */
   getSeriesData: (seriesId?: string) => Array<[number, number] | null> | undefined;
-  /**
-   * Whether to animate the chart.
-   */
-  animate: boolean;
-  /**
-   * Width of the chart SVG.
-   */
-  width: number;
-  /**
-   * Height of the chart SVG.
-   */
-  height: number;
   /**
    * Get x-axis configuration.
    */
@@ -55,16 +87,6 @@ export type CartesianChartContextValue = {
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
   getYScale: (id?: string) => ChartScaleFunction | undefined;
-  /**
-   * Drawing area of the chart.
-   */
-  drawingArea: Rect;
-  /**
-   * Length of the data domain.
-   * This is equal to the length of xAxis.data or the longest series data length
-   * This equals the number of possible scrubber positions
-   */
-  dataLength: number;
   /**
    * Registers an axis.
    * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
