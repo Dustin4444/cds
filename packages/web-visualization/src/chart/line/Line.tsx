@@ -150,11 +150,6 @@ export type LineComponentProps = Pick<
      * If not provided, defaults to the default y-axis.
      */
     yAxisId?: string;
-    /**
-     * The series ID this line belongs to.
-     * Used for interaction tracking when `interactionScope.series` is true.
-     */
-    seriesId?: string;
   };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -187,11 +182,7 @@ export const Line = memo<LineProps>(
       () => gradientProp ?? matchedSeries?.gradient,
       [gradientProp, matchedSeries?.gradient],
     );
-    const sourceData = useMemo(() => {
-      const data = getSeriesData(seriesId);
-      console.log('[Line] sourceData for seriesId:', seriesId, 'length:', data?.length);
-      return data;
-    }, [getSeriesData, seriesId]);
+    const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
     const xAxis = useMemo(() => getXAxis(), [getXAxis]);
     const xScale = useMemo(() => getXScale(), [getXScale]);
@@ -201,11 +192,7 @@ export const Line = memo<LineProps>(
     );
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
-    const chartData = useMemo(() => {
-      const data = getLineData(sourceData);
-      console.log('[Line] chartData length:', data.length);
-      return data;
-    }, [sourceData]);
+    const chartData = useMemo(() => getLineData(sourceData), [sourceData]);
 
     const path = useMemo(() => {
       if (!xScale || !yScale || chartData.length === 0) return '';
@@ -216,7 +203,7 @@ export const Line = memo<LineProps>(
           ? (xAxis.data as number[])
           : undefined;
 
-      const result = getLinePath({
+      return getLinePath({
         data: chartData,
         xScale,
         yScale,
@@ -224,13 +211,6 @@ export const Line = memo<LineProps>(
         xData,
         connectNulls,
       });
-      console.log(
-        '[Line] path computed, chartData.length:',
-        chartData.length,
-        'path length:',
-        result.length,
-      );
-      return result;
     }, [chartData, xScale, yScale, curve, xAxis?.data, connectNulls]);
 
     const LineComponent = useMemo((): LineComponent => {
@@ -290,7 +270,6 @@ export const Line = memo<LineProps>(
         <LineComponent
           d={path}
           gradient={gradient}
-          seriesId={seriesId}
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}

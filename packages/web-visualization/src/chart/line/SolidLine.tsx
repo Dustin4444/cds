@@ -36,7 +36,6 @@ export const SolidLine = memo<SolidLineProps>(
     strokeWidth = 2,
     gradient,
     yAxisId,
-    seriesId,
     animate,
     transition,
     d,
@@ -58,7 +57,6 @@ export const SolidLine = memo<SolidLineProps>(
           </defs>
         )}
         <Path
-          {...props}
           animate={animate}
           clipOffset={strokeWidth}
           d={d}
@@ -69,6 +67,7 @@ export const SolidLine = memo<SolidLineProps>(
           strokeOpacity={strokeOpacity}
           strokeWidth={strokeWidth}
           transition={transition}
+          {...props}
         />
       </>
     );
