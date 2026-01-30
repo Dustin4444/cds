@@ -8,6 +8,26 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Add descriptive names for generic types. [[#341](https://github.com/coinbase/cds/pull/341)] [DX-5037]
+
+## 8.40.0 (1/28/2026 PST)
+
+#### 🚀 Updates
+
+- Add token manager logo.
+
+## 8.39.1 ((1/28/2026, 06:48 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.0 ((1/27/2026, 11:17 AM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.38.7 ((1/26/2026, 10:28 AM PST))
 
 This is an artificial version bump with no new change.
