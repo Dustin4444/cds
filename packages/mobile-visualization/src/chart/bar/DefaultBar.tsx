@@ -2,8 +2,9 @@ import { memo, useEffect, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { useHighlightContext } from '../HighlightProvider';
 import { Path } from '../Path';
-import { getBarPath, useOptionalHighlightContext } from '../utils';
+import { getBarPath } from '../utils';
 
 import type { BarComponentProps } from './Bar';
 
@@ -11,9 +12,7 @@ export type DefaultBarProps = BarComponentProps;
 
 /**
  * Default bar component that renders a solid bar with animation support.
- *
- * Automatically registers bounds for series highlighting hit testing when
- * `highlightScope.series` is enabled.
+ * Registers bounds for series highlighting hit testing when `highlightScope.series` is enabled.
  */
 export const DefaultBar = memo<DefaultBarProps>(
   ({
@@ -35,13 +34,13 @@ export const DefaultBar = memo<DefaultBarProps>(
     transition,
   }) => {
     const { animate } = useCartesianChartContext();
-    const highlightContext = useOptionalHighlightContext();
+    const highlightContext = useHighlightContext();
+    const theme = useTheme();
 
     // Register bar bounds for hit testing when series highlighting is enabled
     useEffect(() => {
-      if (!highlightContext?.scope.series || !seriesId) return;
+      if (!highlightContext.scope.series || !seriesId) return;
 
-      // Get the data index as a number
       const dataIndex = typeof dataX === 'number' ? dataX : 0;
 
       highlightContext.registerBar({
@@ -57,7 +56,6 @@ export const DefaultBar = memo<DefaultBarProps>(
         highlightContext.unregisterBar(seriesId, dataIndex);
       };
     }, [x, y, width, height, dataX, seriesId, highlightContext]);
-    const theme = useTheme();
 
     const defaultFill = fill || theme.color.fgPrimary;
 

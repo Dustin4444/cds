@@ -1,15 +1,44 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { useCartesianChartContext } from '../ChartProvider';
-import {
-  HighlightContext,
-  type HighlightContextValue,
-  type HighlightedItem,
-  type HighlightScope,
-  isCategoricalScale,
-  ScrubberContext,
-  type ScrubberContextValue,
-} from '../utils';
+import { useCartesianChartContext } from './ChartProvider';
+import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from './utils';
+import type { HighlightedItem, HighlightScope } from './utils/highlight';
+
+/**
+ * Context value for chart highlight state.
+ */
+export type HighlightContextValue = {
+  /**
+   * Whether highlighting is enabled.
+   */
+  enabled: boolean;
+  /**
+   * The highlight scope configuration.
+   */
+  scope: HighlightScope;
+  /**
+   * The currently highlighted items.
+   */
+  highlight: HighlightedItem[];
+  /**
+   * Callback to update the highlight state.
+   */
+  setHighlight: (items: HighlightedItem[]) => void;
+};
+
+const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
+
+/**
+ * Hook to access the highlight context.
+ * @throws Error if used outside of a HighlightProvider
+ */
+export const useHighlightContext = (): HighlightContextValue => {
+  const context = useContext(HighlightContext);
+  if (!context) {
+    throw new Error('useHighlightContext must be used within a HighlightProvider');
+  }
+  return context;
+};
 
 /**
  * Props for configuring chart highlight behavior.

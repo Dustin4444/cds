@@ -6,10 +6,10 @@ import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
-import { type HighlightProps, HighlightProvider } from './interaction/HighlightProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
+import { type HighlightProps, HighlightProvider } from './HighlightProvider';
 import { Legend } from './legend';
 import {
   type AxisConfig,

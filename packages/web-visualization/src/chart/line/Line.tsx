@@ -98,16 +98,6 @@ export type LineBaseProps = SharedProps & {
    */
   strokeWidth?: number;
   /**
-   * Additional pixels to add to each side of the stroke for interaction hit area.
-   * When set, renders an invisible path with a larger stroke width to make the line
-   * easier to interact with. Only active when `interactionScope.series` is enabled.
-   *
-   * @example
-   * // A 2px visible line with a 10px hit area (2 + 4*2 = 10px)
-   * <Line strokeWidth={2} interactionOffset={4} />
-   */
-  interactionOffset?: number;
-  /**
    * Gradient configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
@@ -144,7 +134,6 @@ export type LineComponentProps = Pick<
   | 'stroke'
   | 'strokeOpacity'
   | 'strokeWidth'
-  | 'interactionOffset'
   | 'gradient'
   | 'animate'
   | 'transition'

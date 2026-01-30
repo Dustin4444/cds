@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useRef } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
@@ -10,21 +10,54 @@ import {
 } from 'react-native-reanimated';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
-import { useCartesianChartContext } from '../ChartProvider';
-import {
-  type ElementBounds,
-  HighlightContext,
-  type HighlightContextValue,
-  type HighlightedItem,
-  type HighlightScope,
-  type InteractionRegistry,
-  invertSerializableScale,
-  type LinePath,
-  type PointBounds,
-  ScrubberContext,
-  type ScrubberContextValue,
-} from '../utils';
-import { getPointOnSerializableScale } from '../utils/point';
+import type { BarBounds, HighlightedItem, HighlightScope } from './utils/highlight';
+import { getPointOnSerializableScale } from './utils/point';
+import { useCartesianChartContext } from './ChartProvider';
+import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from './utils';
+
+/**
+ * Context value for chart highlighting state.
+ */
+export type HighlightContextValue = {
+  /**
+   * Whether highlighting is enabled.
+   */
+  enabled: boolean;
+  /**
+   * The highlight scope configuration.
+   */
+  scope: HighlightScope;
+  /**
+   * The current highlighted item(s) during interaction.
+   */
+  highlight: SharedValue<HighlightedItem[]>;
+  /**
+   * Function to programmatically set the highlighted items.
+   */
+  setHighlight: (items: HighlightedItem[]) => void;
+  /**
+   * Register a bar element for hit testing.
+   */
+  registerBar: (bounds: BarBounds) => void;
+  /**
+   * Unregister a bar element.
+   */
+  unregisterBar: (seriesId: string, dataIndex: number) => void;
+};
+
+const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
+
+/**
+ * Hook to access the highlight context.
+ * @throws Error if used outside of a HighlightProvider
+ */
+export const useHighlightContext = (): HighlightContextValue => {
+  const context = useContext(HighlightContext);
+  if (!context) {
+    throw new Error('useHighlightContext must be used within a HighlightProvider');
+  }
+  return context;
+};
 
 export type HighlightProps = {
   /**
@@ -61,10 +94,9 @@ export type HighlightProviderProps = HighlightProps & {
    * The accessibility mode for the chart.
    * - 'chunked': Divides chart into N accessible regions (default for line charts)
    * - 'item': Each data point is an accessible region (default for bar charts)
-   * - 'series': Each series is an accessible region
    * @default 'chunked'
    */
-  accessibilityMode?: 'chunked' | 'item' | 'series';
+  accessibilityMode?: 'chunked' | 'item';
   /**
    * Number of accessible chunks when accessibilityMode is 'chunked'.
    * @default 10
@@ -74,7 +106,6 @@ export type HighlightProviderProps = HighlightProps & {
 
 /**
  * HighlightProvider manages chart highlighting state and gesture handling for mobile.
- * It supports single and multi-touch interactions with configurable scope.
  */
 export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   children,
@@ -103,62 +134,22 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [scopeProp],
   );
 
-  // ============================================================================
-  // Interaction Registry (for coordinate-based hit testing)
-  // ============================================================================
+  // Bar registry for hit testing (use ref to avoid re-renders)
+  const barsRef = useRef<BarBounds[]>([]);
 
-  // Use ref to avoid re-renders when registering elements
-  const registryRef = useRef<InteractionRegistry>({
-    bars: [],
-    points: [],
-    lines: [],
-  });
-
-  // Register a bar element for hit testing
-  const registerBar = useCallback((bounds: ElementBounds) => {
-    // Add to registry (elements are stored in render order)
-    registryRef.current.bars.push(bounds);
+  const registerBar = useCallback((bounds: BarBounds) => {
+    barsRef.current.push(bounds);
   }, []);
 
-  // Unregister a bar element
   const unregisterBar = useCallback((seriesId: string, dataIndex: number) => {
-    registryRef.current.bars = registryRef.current.bars.filter(
+    barsRef.current = barsRef.current.filter(
       (bar) => !(bar.seriesId === seriesId && bar.dataIndex === dataIndex),
     );
   }, []);
 
-  // Register a point element for hit testing
-  const registerPoint = useCallback((bounds: PointBounds) => {
-    registryRef.current.points.push(bounds);
-  }, []);
-
-  // Unregister a point element
-  const unregisterPoint = useCallback((seriesId: string, dataIndex: number) => {
-    registryRef.current.points = registryRef.current.points.filter(
-      (point) => !(point.seriesId === seriesId && point.dataIndex === dataIndex),
-    );
-  }, []);
-
-  // Register a line path for hit testing
-  const registerLine = useCallback((path: LinePath) => {
-    // Replace existing line with same seriesId (path may update)
-    registryRef.current.lines = registryRef.current.lines.filter(
-      (line) => line.seriesId !== path.seriesId,
-    );
-    registryRef.current.lines.push(path);
-  }, []);
-
-  // Unregister a line path
-  const unregisterLine = useCallback((seriesId: string) => {
-    registryRef.current.lines = registryRef.current.lines.filter(
-      (line) => line.seriesId !== seriesId,
-    );
-  }, []);
-
   // Find bar at touch point (iterates in reverse for correct z-order)
-  const findBarAtPoint = useCallback((touchX: number, touchY: number): ElementBounds | null => {
-    const bars = registryRef.current.bars;
-    // Iterate in reverse order (last rendered = on top = checked first)
+  const findBarAtPoint = useCallback((touchX: number, touchY: number): BarBounds | null => {
+    const bars = barsRef.current;
     for (let i = bars.length - 1; i >= 0; i--) {
       const bar = bars[i];
       if (
@@ -172,40 +163,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     }
     return null;
   }, []);
-
-  // Find point at touch point
-  const findPointAtTouch = useCallback(
-    (touchX: number, touchY: number, touchTolerance: number = 10): PointBounds | null => {
-      const points = registryRef.current.points;
-      for (let i = points.length - 1; i >= 0; i--) {
-        const point = points[i];
-        const distance = Math.sqrt(Math.pow(touchX - point.cx, 2) + Math.pow(touchY - point.cy, 2));
-        if (distance <= point.radius + touchTolerance) {
-          return point;
-        }
-      }
-      return null;
-    },
-    [],
-  );
-
-  // Find series at touch point (checks bars first, then points)
-  const findSeriesAtPoint = useCallback(
-    (touchX: number, touchY: number): string | null => {
-      // Check bars first
-      const hitBar = findBarAtPoint(touchX, touchY);
-      if (hitBar) return hitBar.seriesId;
-
-      // Check points
-      const hitPoint = findPointAtTouch(touchX, touchY);
-      if (hitPoint) return hitPoint.seriesId;
-
-      return null;
-    },
-    [findBarAtPoint, findPointAtTouch],
-  );
-
-  // ============================================================================
 
   // Determine if we're in controlled mode
   const isControlled = controlledHighlight !== undefined;
@@ -325,16 +282,19 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [isControlled, internalHighlight, onHighlightChange],
   );
 
-  // Helper to create highlighted item with optional series hit testing (runs on JS thread)
-  const createHighlightedItemWithSeries = useCallback(
+  // Helper to create highlighted item with optional series hit testing
+  const createHighlightedItem = useCallback(
     (x: number, y: number, dataIndex: number | null): HighlightedItem => {
       let seriesId: string | null = null;
       if (scope.series) {
-        seriesId = findSeriesAtPoint(x, y);
+        const hitBar = findBarAtPoint(x, y);
+        if (hitBar) {
+          seriesId = hitBar.seriesId;
+        }
       }
       return { dataIndex, seriesId };
     },
-    [scope.series, findSeriesAtPoint],
+    [scope.series, findBarAtPoint],
   );
 
   // Create the long press pan gesture for single touch
@@ -349,9 +309,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
           // Android does not trigger onUpdate when the gesture starts
           if (Platform.OS === 'android') {
             const dataIndex = scope.dataIndex ? getDataIndexFromX(event.x) : null;
-            // Series hit testing runs on JS thread
             runOnJS((x: number, y: number, di: number | null) => {
-              const newItem = createHighlightedItemWithSeries(x, y, di);
+              const newItem = createHighlightedItem(x, y, di);
               const currentItems = internalHighlight.value;
               const currentItem = currentItems[0];
               if (
@@ -368,9 +327,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         })
         .onUpdate(function onUpdate(event) {
           const dataIndex = scope.dataIndex ? getDataIndexFromX(event.x) : null;
-          // Series hit testing runs on JS thread
           runOnJS((x: number, y: number, di: number | null) => {
-            const newItem = createHighlightedItemWithSeries(x, y, di);
+            const newItem = createHighlightedItem(x, y, di);
             const currentItems = internalHighlight.value;
             const currentItem = currentItems[0];
             if (
@@ -406,7 +364,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
       handleStartEndHaptics,
       getDataIndexFromX,
       scope.dataIndex,
-      createHighlightedItemWithSeries,
+      createHighlightedItem,
       internalHighlight,
       enableHighlighting,
       isControlled,
@@ -414,84 +372,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     ],
   );
 
-  // Helper to process touches and create highlighted items (runs on JS thread)
-  const processMultiTouches = useCallback(
-    (touches: Array<{ x: number; y: number }>): HighlightedItem[] => {
-      return touches.map((touch) => {
-        const dataIndex = scope.dataIndex ? getDataIndexFromX(touch.x) : null;
-        let seriesId: string | null = null;
-        if (scope.series) {
-          seriesId = findSeriesAtPoint(touch.x, touch.y);
-        }
-        return { dataIndex, seriesId };
-      });
-    },
-    [scope.dataIndex, scope.series, getDataIndexFromX, findSeriesAtPoint],
-  );
-
-  // Create multi-touch gesture
-  const multiTouchGesture = useMemo(
-    () =>
-      Gesture.Manual()
-        .shouldCancelWhenOutside(!allowOverflowGestures)
-        .onTouchesDown(function onTouchesDown(event) {
-          runOnJS(handleStartEndHaptics)();
-
-          // Extract touch coordinates for JS thread processing
-          const touches = event.allTouches.map((t) => ({ x: t.x, y: t.y }));
-          runOnJS((touchData: Array<{ x: number; y: number }>) => {
-            const items = processMultiTouches(touchData);
-            if (!isControlled) {
-              internalHighlight.value = items;
-            }
-            onHighlightChange?.(items);
-          })(touches);
-        })
-        .onTouchesMove(function onTouchesMove(event) {
-          const touches = event.allTouches.map((t) => ({ x: t.x, y: t.y }));
-          runOnJS((touchData: Array<{ x: number; y: number }>) => {
-            const items = processMultiTouches(touchData);
-            if (!isControlled) {
-              internalHighlight.value = items;
-            }
-            onHighlightChange?.(items);
-          })(touches);
-        })
-        .onTouchesUp(function onTouchesUp(event) {
-          if (event.allTouches.length === 0) {
-            runOnJS(handleStartEndHaptics)();
-            if (!isControlled) {
-              internalHighlight.value = [];
-            }
-            runOnJS(onHighlightChange ?? (() => {}))([]);
-          } else {
-            const touches = event.allTouches.map((t) => ({ x: t.x, y: t.y }));
-            runOnJS((touchData: Array<{ x: number; y: number }>) => {
-              const items = processMultiTouches(touchData);
-              if (!isControlled) {
-                internalHighlight.value = items;
-              }
-              onHighlightChange?.(items);
-            })(touches);
-          }
-        })
-        .onTouchesCancelled(function onTouchesCancelled() {
-          if (!isControlled) {
-            internalHighlight.value = [];
-          }
-          runOnJS(onHighlightChange ?? (() => {}))([]);
-        }),
-    [
-      allowOverflowGestures,
-      handleStartEndHaptics,
-      processMultiTouches,
-      internalHighlight,
-      isControlled,
-      onHighlightChange,
-    ],
-  );
-
-  // Use single touch gesture by default (multi-touch can be enabled via context if needed)
   const gesture = singleTouchGesture;
 
   const contextValue: HighlightContextValue = useMemo(
@@ -502,23 +382,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
       setHighlight,
       registerBar,
       unregisterBar,
-      registerPoint,
-      unregisterPoint,
-      registerLine,
-      unregisterLine,
     }),
-    [
-      enableHighlighting,
-      scope,
-      highlight,
-      setHighlight,
-      registerBar,
-      unregisterBar,
-      registerPoint,
-      unregisterPoint,
-      registerLine,
-      unregisterLine,
-    ],
+    [enableHighlighting, scope, highlight, setHighlight, registerBar, unregisterBar],
   );
 
   // Derive scrubberPosition from internal highlight for backwards compatibility

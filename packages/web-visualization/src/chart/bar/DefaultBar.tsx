@@ -2,7 +2,8 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getBarPath, useOptionalHighlightContext } from '../utils';
+import { useHighlightContext } from '../HighlightProvider';
+import { getBarPath } from '../utils';
 
 import type { BarComponentProps } from './Bar';
 
@@ -39,7 +40,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     ...props
   }) => {
     const { animate } = useCartesianChartContext();
-    const highlightContext = useOptionalHighlightContext();
+    const highlightContext = useHighlightContext();
 
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
@@ -53,8 +54,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     const dataIndex = typeof dataX === 'number' ? dataX : null;
 
     const handleMouseEnter = useCallback(() => {
-      if (!highlightContext || !highlightContext.enabled) return;
-      if (!highlightContext.scope.series) return;
+      if (!highlightContext.enabled || !highlightContext.scope.series) return;
 
       highlightContext.setHighlight([
         {
@@ -65,8 +65,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     }, [highlightContext, dataIndex, seriesId]);
 
     const handleMouseLeave = useCallback(() => {
-      if (!highlightContext || !highlightContext.enabled) return;
-      if (!highlightContext.scope.series) return;
+      if (!highlightContext.enabled || !highlightContext.scope.series) return;
 
       // Reset to just dataIndex (keep dataIndex tracking, clear series)
       if (highlightContext.scope.dataIndex) {
@@ -82,7 +81,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     }, [highlightContext, dataIndex, seriesId]);
 
     // Only add event handlers when series scope is enabled
-    const eventHandlers = highlightContext?.scope.series
+    const eventHandlers = highlightContext.scope.series
       ? {
           onMouseEnter: handleMouseEnter,
           onMouseLeave: handleMouseLeave,
