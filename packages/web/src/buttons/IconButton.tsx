@@ -3,6 +3,7 @@ import { transparentVariants, variants } from '@coinbase/cds-common/tokens/butto
 import type { IconButtonVariant, IconName } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
+import { mergeComponentProps } from '../core/mergeComponentProps';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
@@ -67,7 +68,16 @@ const flushEndCss = css`
 export const IconButton: IconButtonComponent = memo(
   forwardRef<React.ReactElement<IconButtonBaseProps>, IconButtonBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: IconButtonProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const theme = useTheme();
+      const mergedProps = mergeComponentProps(
+        theme?.components?.IconButton,
+        _props,
+        theme?.components?.mergeClassNameAndStyle,
+      );
+      const {
         as,
         variant = 'secondary',
         transparent,
@@ -90,11 +100,9 @@ export const IconButton: IconButtonComponent = memo(
         accessibilityLabel,
         accessibilityHint,
         ...props
-      }: IconButtonProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
+
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
-      const theme = useTheme();
 
       const iconSize = compact ? 's' : 'm';
       const iconSizeValue = theme.iconSize[iconSize];

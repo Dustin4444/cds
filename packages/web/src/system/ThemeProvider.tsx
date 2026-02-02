@@ -3,7 +3,8 @@ import React, { createContext, useContext, useMemo } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
 
 import { createThemeCssVars } from '../core/createThemeCssVars';
-import type { Theme, ThemeConfig, ThemeCSSVars } from '../core/theme';
+// import { mergeComponentsConfig } from '../core/mergeComponentsConfig';
+import type { ComponentsConfig, Theme, ThemeConfig, ThemeCore, ThemeCSSVars } from '../core/theme';
 import { cx } from '../cx';
 
 import { FramerMotionProvider, type FramerMotionProviderProps } from './FramerMotionProvider';
@@ -23,10 +24,10 @@ type ThemeManagerProps = {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  theme: Theme;
+  theme: ThemeCore;
 };
 
-export const useThemeProviderStyles = (theme: Theme) => {
+export const useThemeProviderStyles = (theme: ThemeCore) => {
   const style = useMemo(() => createThemeCssVars(theme), [theme]);
   return style;
 };
@@ -49,6 +50,12 @@ export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className'
     theme: ThemeConfig;
     activeColorScheme: ColorScheme;
     children?: React.ReactNode;
+    // Keep the components config seperately from the theme config for the following reasons:
+    // 1. Not polluting the theme and keeping the theme purely for lower level design tokens.
+    // 2. The theme configs are also used to create ThemeVars, which end up composing the style props.
+    // 3. `theme` are currently not inherited from parent ThemeProvider, but `components` are.
+    // 4. `components` is passed to theme context instead of a new context, because it makes sense to have components and theme in the same context.
+    components?: ComponentsConfig;
   };
 
 export const ThemeProvider = ({
@@ -59,14 +66,23 @@ export const ThemeProvider = ({
   display,
   style,
   motionFeatures,
+  components,
 }: ThemeProviderProps) => {
+  const parentTheme = useContext(ThemeContext);
+  // TODO: Review the merge strategy for components config. Currently it is a shallow merge as it's more predictable.
+  const resolvedComponents = useMemo(
+    () => ({ ...parentTheme?.components, ...components }),
+    [parentTheme?.components, components],
+  );
+  // const resolvedComponents = mergeComponentsConfig(parentTheme?.components, components);
+
   const themeApi = useMemo(() => {
     const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
     const activeColorKey = activeColorScheme === 'dark' ? 'darkColor' : 'lightColor';
     const inverseSpectrumKey = activeColorScheme === 'dark' ? 'lightSpectrum' : 'darkSpectrum';
     const inverseColorKey = activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
 
-    // TO DO: Link to color / theme docs in these error messages
+    // TODO: Link to color / theme docs in these error messages
     if (!theme[activeColorKey])
       throw Error(
         `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeColorScheme} colors are defined for the theme`,
@@ -95,9 +111,21 @@ export const ThemeProvider = ({
     };
   }, [theme, activeColorScheme]);
 
+  // TODO: Review the structure of the theme context value. Keep components config in theme context for the following reasons:
+  // Semantic Coherence: Components config IS part of the theming system. It defines how components look within a theme.
+  // Simple Access: It's easier to access the components config from the theme context. e.g. const { components, color, space } = useTheme();
+  // Industry Standard: Most of the component libs keep components config within the theme context. Mantine theme context structure (https://github.com/mantinedev/mantine/blob/master/packages/%40mantine/core/src/core/MantineProvider/theme.types.ts#L129).
+  const themeContextValue = useMemo(
+    () => ({
+      ...themeApi,
+      components: resolvedComponents,
+    }),
+    [themeApi, resolvedComponents],
+  );
+
   return (
     <FramerMotionProvider motionFeatures={motionFeatures}>
-      <ThemeContext.Provider value={themeApi}>
+      <ThemeContext.Provider value={themeContextValue}>
         <ThemeManager className={className} display={display} style={style} theme={themeApi}>
           {children}
         </ThemeManager>
@@ -122,6 +150,7 @@ export const InvertedThemeProvider = ({
 }: InvertedThemeProviderProps) => {
   const context = useContext(ThemeContext);
   if (!context) throw Error('InvertedThemeProvider must be used within a ThemeProvider');
+  const { components, ...theme } = context;
   const inverseColorScheme = context.activeColorScheme === 'dark' ? 'light' : 'dark';
   const inverseColorKey = context.activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
   const newColorScheme = context[inverseColorKey] ? inverseColorScheme : context.activeColorScheme;
@@ -130,9 +159,10 @@ export const InvertedThemeProvider = ({
     <ThemeProvider
       activeColorScheme={newColorScheme}
       className={className}
+      components={components}
       display={display}
       style={style}
-      theme={context}
+      theme={theme}
     >
       {children}
     </ThemeProvider>

@@ -1,6 +1,25 @@
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Property } from 'csstype';
 
+import type { ButtonBaseProps } from '../buttons/Button';
+import type { IconButtonBaseProps } from '../buttons/IconButton';
+
+// TODO: Review the component config structure and allowed props. Using Partial<ComponentProps> for the following reasons:
+// 1. Simpler architecture: Avoids nested `defaultProps` structure, keeping config flat and intuitive (e.g., `Button: { variant: 'primary' }` instead of `Button: { defaultProps: { variant: 'primary' } }`).
+// 2. Type flexibility: Not all components expose className, classNames, style, and styles props. Partial<ComponentProps> accommodates varying component APIs.
+// 3. Industry alignment: Most component libraries use `any` or `Partial<ComponentProps>` for component configuration (see Mantine, Material-UI, React Native Elements below).
+// Mantine component config structure (https://github.com/mantinedev/mantine/blob/master/packages/@mantine/core/src/core/MantineProvider/theme.types.ts#L145).
+// Material UI component config structure (https://github.com/mui/material-ui/blob/master/packages/mui-system/src/DefaultPropsProvider/DefaultPropsProvider.tsx#L32).
+// React Native Elements component config structure (https://github.com/react-native-elements/react-native-elements/blob/next/packages/themed/src/config/theme.component.ts#L44-L100).
+export type ComponentTheme = {
+  Button: Partial<ButtonBaseProps>;
+  IconButton: Partial<IconButtonBaseProps>;
+  mergeClassNameAndStyle?: boolean;
+};
+export type ComponentsConfig<Components = ComponentTheme> = {
+  [Key in keyof Components]?: Components[Key];
+};
+
 export type ThemeConfig = {
   /** A unique identifier for the theme. Must be a valid CSS class name. */
   id?: string;
@@ -41,6 +60,13 @@ export type ThemeConfig = {
 };
 
 export type Theme = ThemeConfig & {
+  /**
+   * Optional component configs at theme level.
+   * Allows configuring default props for specific components throughout the theme.
+   * These are merged with props passed directly to components, with local props taking precedence.
+   * Supports nested ThemeProvider inheritance.
+   */
+  components?: ComponentsConfig;
   /** The currently active color scheme for the parent ThemeProvider, either "light" or "dark". */
   activeColorScheme: ColorScheme;
   /** The light or dark spectrum color values, as appropriate based on the activeColorScheme. */
@@ -48,6 +74,9 @@ export type Theme = ThemeConfig & {
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: Property.Color };
 };
+
+/** The core theme data used to create CSS variables, excluding the components config. */
+export type ThemeCore = Omit<Theme, 'components'>;
 
 /** Maps our StyleVars to their CSS variable prefixes. For example, the names of CSS vars generated from `iconSize` vars will be prefixed with `--iconSize-`. */
 export const styleVarPrefixes = {
@@ -70,7 +99,10 @@ export const styleVarPrefixes = {
   textTransform: 'textTransform',
   shadow: 'shadow',
   controlSize: 'controlSize',
-} as const satisfies Record<Exclude<keyof Theme, 'id' | 'activeColorScheme'>, string>;
+} as const satisfies Record<
+  Exclude<keyof Theme, 'id' | 'activeColorScheme' | 'components'>,
+  string
+>;
 
 /** Used to generate intellisense via ThemeCSSVars below. */
 type ThemeObjectCssVars = {

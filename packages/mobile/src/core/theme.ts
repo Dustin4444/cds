@@ -1,11 +1,22 @@
 import type { TextStyle, ViewStyle } from 'react-native';
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
 
+import type { ButtonBaseProps } from '../buttons/Button';
+import type { IconButtonBaseProps } from '../buttons/IconButton';
+
 type Shadow = {
   shadowColor?: ViewStyle['shadowColor'];
   shadowOpacity?: ViewStyle['shadowOpacity'];
   shadowOffset?: ViewStyle['shadowOffset'];
   shadowRadius?: ViewStyle['shadowRadius'];
+};
+
+export type ComponentTheme = {
+  Button: Partial<ButtonBaseProps>;
+  IconButton: Partial<IconButtonBaseProps>;
+};
+export type ComponentsConfig<Components = ComponentTheme> = {
+  [Key in keyof Components]?: Components[Key];
 };
 
 export type ThemeConfig = {
@@ -48,6 +59,8 @@ export type ThemeConfig = {
 };
 
 export type Theme = ThemeConfig & {
+  /** The component configuration. */
+  components?: ComponentsConfig;
   /** The currently active color scheme for the parent ThemeProvider, either "light" or "dark". */
   activeColorScheme: ColorScheme;
   /** The light or dark spectrum color values, as appropriate based on the activeColorScheme. */

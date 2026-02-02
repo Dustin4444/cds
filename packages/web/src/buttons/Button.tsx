@@ -8,8 +8,10 @@ import type {
 } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
+import { mergeComponentProps } from '../core/mergeComponentProps';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
@@ -180,7 +182,16 @@ type ButtonComponent = (<AsComponent extends React.ElementType = ButtonDefaultEl
 export const Button: ButtonComponent = memo(
   forwardRef<React.ReactElement<ButtonBaseProps>, ButtonBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: ButtonProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const { components } = useTheme();
+      const mergedProps = mergeComponentProps(
+        components?.Button,
+        _props,
+        components?.mergeClassNameAndStyle,
+      );
+      const {
         as,
         variant = 'primary',
         loading,
@@ -211,9 +222,7 @@ export const Button: ButtonComponent = memo(
         margin = 0,
         minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
         ...props
-      }: ButtonProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? buttonDefaultElement) satisfies React.ElementType;
       const iconSize = compact ? 's' : 'm';
       const hasIcon = Boolean(startIcon ?? endIcon);
@@ -224,7 +233,6 @@ export const Button: ButtonComponent = memo(
       const colorValue = color ?? variantStyle.color;
       const backgroundValue = background ?? variantStyle.background;
       const borderColorValue = borderColor ?? variantStyle.borderColor;
-
       return (
         <Pressable
           ref={ref}

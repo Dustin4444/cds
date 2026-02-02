@@ -1,15 +1,15 @@
-import { styleVarPrefixes, type Theme } from './theme';
+import { styleVarPrefixes, type ThemeCore } from './theme';
 
 const periodsRegex = /\./g;
 
 /** Takes a theme object and formats its keys as CSS variables to be used in inline styles. */
-export const createThemeCssVars = (theme: Partial<Theme>) => {
+export const createThemeCssVars = (theme: Partial<ThemeCore>) => {
   const themeCss: Record<string, unknown> = {};
 
   const themeKeys = Object.keys(theme);
 
   for (const key of themeKeys) {
-    const themeVars = theme[key as keyof Theme];
+    const themeVars = theme[key as keyof ThemeCore];
     if (!themeVars || key === 'id') continue;
 
     // Handle activeColorScheme separately
