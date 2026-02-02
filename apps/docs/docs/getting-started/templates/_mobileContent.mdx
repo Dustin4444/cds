@@ -1,0 +1,135 @@
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { TemplateCard } from '@site/src/components/page/TemplateCard';
+import { HStack } from '@coinbase/cds-web/layout';
+import ThemedImage from '@theme/ThemedImage';
+
+<MDXSection>
+<MDXArticle>
+
+## Get started
+
+The easiest way to get started with CDS for mobile is with a template. All templates include the required CDS packages, dependencies, and pre-configured settings. Each template provides a working example application with common UI patterns to help you start building.
+
+<HStack gap={2} style={{ marginTop: '1.5rem', flexWrap: 'wrap', alignItems: 'stretch' }}>
+  <TemplateCard
+    name="Expo"
+    description="Built for cross-platform mobile apps with managed workflow"
+    href="https://github.com/coinbase/cds/tree/master/templates/expo"
+    icon={
+      <ThemedImage
+        sources={{
+          light: '/img/logos/frameworks/expo_light.png',
+          dark: '/img/logos/frameworks/expo_dark.png',
+        }}
+        alt="Expo"
+        style={{ paddingTop: 'var(--space-1_5)', paddingBottom: 'var(--space-1_5)' }}
+        height="100%"
+      />
+    }
+  />
+</HStack>
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Prerequisites
+
+- Node.js (v22 or later recommended)
+- Yarn package manager
+- iOS Simulator (macOS) or Android Emulator
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Installation
+
+To create a new project from a template, use `gitpick` to bootstrap your application:
+
+### Expo
+
+```bash
+npx -y gitpick coinbase/cds/tree/master/templates/expo cds-expo
+cd cds-expo
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Setup
+
+After creating your project, install dependencies and start developing:
+
+```bash
+# We suggest using nvm to manage Node.js versions
+nvm install
+nvm use
+
+# Enable corepack for package manager setup
+corepack enable
+
+# Install dependencies
+yarn
+
+# Start development server
+yarn start
+```
+
+This will start the Expo development server. You can then:
+
+- Press `i` to open in iOS Simulator
+- Press `a` to open in Android Emulator
+- Scan the QR code with the Expo Go app on your device
+
+For a full development build with native debugging:
+
+```bash
+# iOS (requires Xcode)
+yarn ios
+
+# Android (requires Android Studio)
+yarn android
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## What's included
+
+The Expo template comes pre-configured with:
+
+- **Expo SDK 53** with New Architecture enabled (Fabric + TurboModules)
+- **React 19** and **React Native**
+- Latest CDS packages (`@coinbase/cds-mobile`, `@coinbase/cds-icons`, etc.)
+- TypeScript configuration
+- Example app demonstrating common UI patterns
+- Theme setup with CDS default theme and dark mode support
+- Required peer dependencies (`react-native-reanimated`, `react-native-gesture-handler`, etc.)
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Next steps
+
+After setting up your template, learn how to customize and extend CDS:
+
+- [Theming](/getting-started/theming) - Customize colors, spacing, and typography
+- [Installation](/getting-started/installation) - Manual installation and setup options
+
+</MDXArticle>
+</MDXSection>
