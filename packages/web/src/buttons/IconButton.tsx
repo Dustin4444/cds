@@ -3,7 +3,7 @@ import { transparentVariants, variants } from '@coinbase/cds-common/tokens/butto
 import type { IconButtonVariant, IconName } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
-import { mergeComponentProps } from '../core/mergeComponentProps';
+import { mergeComponentProps } from '../utils/mergeComponentProps';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';

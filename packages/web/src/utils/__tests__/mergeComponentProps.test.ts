@@ -1,4 +1,4 @@
-import { mergeComponentProps } from '../mergeComponentProps';
+import { mergeComponentProps } from '../../utils/mergeComponentProps';
 
 describe('mergeComponentProps', () => {
   describe('edge cases', () => {

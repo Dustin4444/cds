@@ -20,6 +20,7 @@ import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { mergeComponentProps } from '../utils/mergeComponentProps';
 
 export const styles = StyleSheet.create({
   inline: {
@@ -89,8 +90,14 @@ export type ButtonBaseProps = SharedProps &
 export type ButtonProps = ButtonBaseProps;
 
 export const Button = memo(
-  forwardRef(function Button(
-    {
+  forwardRef(function Button(_props: ButtonProps, ref: React.ForwardedRef<View>) {
+    const theme = useTheme();
+    const mergedProps = mergeComponentProps(
+      theme?.components?.Button,
+      _props,
+      theme?.components?.mergeStyleProps,
+    );
+    const {
       variant = 'primary',
       loading,
       transparent,
@@ -117,10 +124,7 @@ export const Button = memo(
       accessibilityLabel,
       accessibilityHint,
       ...props
-    }: ButtonProps,
-    ref: React.ForwardedRef<View>,
-  ) {
-    const theme = useTheme();
+    } = mergedProps;
     const iconSize = compact ? 's' : 'm';
     const hasIcon = Boolean(startIcon || endIcon);
 

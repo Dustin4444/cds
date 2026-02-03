@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import { css } from '@linaria/core';
 
 import { Button, IconButton } from '../../buttons';
 import type { ComponentsConfig, ThemeConfig } from '../../core/theme';
@@ -157,18 +158,20 @@ export const ThemeProviderTest = () => {
  * All Buttons and IconButtons will use the configured defaults.
  */
 const SimpleComponentsConfig = () => {
+  const { activeColorScheme } = useTheme();
   const componentsConfig: ComponentsConfig = {
     Button: {
       variant: 'secondary',
       compact: true,
     },
-    IconButton: {
-      variant: 'secondary',
-    },
   };
 
   return (
-    <ThemeProvider activeColorScheme="light" components={componentsConfig} theme={defaultTheme}>
+    <ThemeProvider
+      activeColorScheme={activeColorScheme}
+      components={componentsConfig}
+      theme={defaultTheme}
+    >
       <VStack gap={{ base: 2, tablet: 3 }} padding={{ base: 2, tablet: 4 }}>
         <Text as="h3" display="block" font="title2">
           Simple Components Config
@@ -182,12 +185,6 @@ const SimpleComponentsConfig = () => {
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </HStack>
-
-        <HStack flexWrap="wrap" gap={2}>
-          <IconButton name="settings" />
-          <IconButton name="info" />
-          <IconButton name="close" />
-        </HStack>
       </VStack>
     </ThemeProvider>
   );
@@ -198,18 +195,20 @@ const SimpleComponentsConfig = () => {
  * Local props take precedence over ThemeProvider configuration.
  */
 const ComponentsConfigWithLocalOverrides = () => {
+  const { activeColorScheme } = useTheme();
   const componentsConfig: ComponentsConfig = {
     Button: {
       variant: 'secondary',
       compact: true,
     },
-    IconButton: {
-      variant: 'secondary',
-    },
   };
 
   return (
-    <ThemeProvider activeColorScheme="light" components={componentsConfig} theme={defaultTheme}>
+    <ThemeProvider
+      activeColorScheme={activeColorScheme}
+      components={componentsConfig}
+      theme={defaultTheme}
+    >
       <VStack gap={{ base: 2, tablet: 3 }} padding={{ base: 2, tablet: 4 }}>
         <Text as="h3" display="block" font="title2">
           Components Config with Local Overrides
@@ -228,17 +227,6 @@ const ComponentsConfigWithLocalOverrides = () => {
             <Button compact={false}>Local Not Compact</Button>
           </HStack>
         </VStack>
-
-        <VStack gap={2}>
-          <Text as="p" display="block" font="label1">
-            IconButtons (theme: secondary, local overrides)
-          </Text>
-          <HStack flexWrap="wrap" gap={2}>
-            <IconButton name="settings" />
-            <IconButton name="info" variant="primary" />
-            <IconButton compact={false} name="close" />
-          </HStack>
-        </VStack>
       </VStack>
     </ThemeProvider>
   );
@@ -249,27 +237,25 @@ const ComponentsConfigWithLocalOverrides = () => {
  * Child ThemeProvider merges with parent configuration.
  */
 const NestedComponentsConfig = () => {
+  const { activeColorScheme } = useTheme();
   const parentConfig: ComponentsConfig = {
     Button: {
       variant: 'secondary',
     },
-    IconButton: {
-      variant: 'secondary',
-      compact: false,
-    },
   };
 
   const childConfig: ComponentsConfig = {
-    Button: {
-      compact: true,
-    },
     IconButton: {
-      compact: true,
+      variant: 'secondary',
     },
   };
 
   return (
-    <ThemeProvider activeColorScheme="light" components={parentConfig} theme={defaultTheme}>
+    <ThemeProvider
+      activeColorScheme={activeColorScheme}
+      components={parentConfig}
+      theme={defaultTheme}
+    >
       <VStack gap={{ base: 2, tablet: 4 }} padding={{ base: 2, tablet: 4 }}>
         <Text as="h3" display="block" font="title2">
           Nested Components Config
@@ -282,19 +268,22 @@ const NestedComponentsConfig = () => {
           <HStack flexWrap="wrap" gap={2}>
             <Button>Parent Button 1</Button>
             <Button>Parent Button 2</Button>
-            <IconButton name="settings" />
-            <IconButton name="info" />
           </HStack>
         </VStack>
 
-        <ThemeProvider activeColorScheme="light" components={childConfig} theme={defaultTheme}>
+        <ThemeProvider
+          activeColorScheme={activeColorScheme}
+          components={childConfig}
+          theme={defaultTheme}
+        >
           <VStack
             gap={2}
             padding={{ base: 2, tablet: 3 }}
             style={{ border: '2px dashed var(--color-bgPositive)' }}
           >
             <Text as="p" display="block" font="label1">
-              Child Level (inherits secondary + adds compact)
+              Child Level (inherits Button global config + adds IconButton config - variant:
+              secondary)
             </Text>
             <HStack flexWrap="wrap" gap={2}>
               <Button>Child Button 1</Button>
@@ -314,16 +303,10 @@ const NestedComponentsConfig = () => {
  * Demonstrates deep nesting and configuration inheritance.
  */
 const ComplexNestedComponentsConfig = () => {
+  const { activeColorScheme } = useTheme();
   const level1Config: ComponentsConfig = {
     Button: {
       variant: 'primary',
-      style: {
-        borderColor: 'red',
-      },
-    },
-    IconButton: {
-      variant: 'primary',
-      compact: false,
       style: {
         borderColor: 'red',
       },
@@ -333,12 +316,6 @@ const ComplexNestedComponentsConfig = () => {
   const level2Config: ComponentsConfig = {
     Button: {
       variant: 'secondary',
-      compact: true,
-      style: {
-        borderColor: 'green',
-      },
-    },
-    IconButton: {
       compact: true,
       style: {
         borderColor: 'green',
@@ -354,17 +331,14 @@ const ComplexNestedComponentsConfig = () => {
         borderColor: 'blue',
       },
     },
-    IconButton: {
-      transparent: true,
-      variant: 'positive',
-      style: {
-        borderColor: 'blue',
-      },
-    },
   };
 
   return (
-    <ThemeProvider activeColorScheme="light" components={level1Config} theme={defaultTheme}>
+    <ThemeProvider
+      activeColorScheme={activeColorScheme}
+      components={level1Config}
+      theme={defaultTheme}
+    >
       <VStack gap={{ base: 2, tablet: 4 }} padding={{ base: 2, tablet: 4 }}>
         <Text as="h3" display="block" font="title2">
           Complex Nested Components Config
@@ -376,11 +350,14 @@ const ComplexNestedComponentsConfig = () => {
           </Text>
           <HStack flexWrap="wrap" gap={2}>
             <Button>Level 1 Button</Button>
-            <IconButton name="settings" />
           </HStack>
         </VStack>
 
-        <ThemeProvider activeColorScheme="light" components={level2Config} theme={defaultTheme}>
+        <ThemeProvider
+          activeColorScheme={activeColorScheme}
+          components={level2Config}
+          theme={defaultTheme}
+        >
           <VStack
             gap={2}
             padding={{ base: 2, tablet: 3 }}
@@ -391,10 +368,13 @@ const ComplexNestedComponentsConfig = () => {
             </Text>
             <HStack flexWrap="wrap" gap={2}>
               <Button>Level 2 Button</Button>
-              <IconButton name="info" />
             </HStack>
 
-            <ThemeProvider activeColorScheme="light" components={level3Config} theme={defaultTheme}>
+            <ThemeProvider
+              activeColorScheme={activeColorScheme}
+              components={level3Config}
+              theme={defaultTheme}
+            >
               <VStack
                 gap={2}
                 padding={{ base: 2, tablet: 3 }}
@@ -405,7 +385,6 @@ const ComplexNestedComponentsConfig = () => {
                 </Text>
                 <HStack flexWrap="wrap" gap={2}>
                   <Button>Level 3 Button</Button>
-                  <IconButton name="close" />
                 </HStack>
               </VStack>
             </ThemeProvider>
@@ -421,13 +400,11 @@ const ComplexNestedComponentsConfig = () => {
  * Some nested providers have config, others don't.
  */
 const NestedWithSelectiveOverrides = () => {
+  const { activeColorScheme } = useTheme();
   const parentConfig: ComponentsConfig = {
     Button: {
       variant: 'primary',
       compact: true,
-    },
-    IconButton: {
-      variant: 'primary',
     },
   };
 
@@ -435,13 +412,14 @@ const NestedWithSelectiveOverrides = () => {
     Button: {
       variant: 'secondary',
     },
-    IconButton: {
-      variant: 'secondary',
-    },
   };
 
   return (
-    <ThemeProvider activeColorScheme="light" components={parentConfig} theme={defaultTheme}>
+    <ThemeProvider
+      activeColorScheme={activeColorScheme}
+      components={parentConfig}
+      theme={defaultTheme}
+    >
       <VStack gap={{ base: 2, tablet: 4 }} padding={{ base: 2, tablet: 4 }}>
         <Text as="h3" display="block" font="title2">
           Nested with Selective Overrides
@@ -453,11 +431,10 @@ const NestedWithSelectiveOverrides = () => {
           </Text>
           <HStack flexWrap="wrap" gap={2}>
             <Button>Parent Button</Button>
-            <IconButton name="settings" />
           </HStack>
         </VStack>
 
-        <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        <ThemeProvider activeColorScheme={activeColorScheme} theme={defaultTheme}>
           <VStack
             gap={2}
             padding={{ base: 2, tablet: 3 }}
@@ -468,13 +445,12 @@ const NestedWithSelectiveOverrides = () => {
             </Text>
             <HStack flexWrap="wrap" gap={2}>
               <Button>Child 1 Button</Button>
-              <IconButton name="info" />
             </HStack>
           </VStack>
         </ThemeProvider>
 
         <ThemeProvider
-          activeColorScheme="light"
+          activeColorScheme={activeColorScheme}
           components={childOverrideConfig}
           theme={defaultTheme}
         >
@@ -484,11 +460,10 @@ const NestedWithSelectiveOverrides = () => {
             style={{ border: '2px dashed var(--color-bgPositive)' }}
           >
             <Text as="p" display="block" font="label1">
-              Child 2: Overrides to secondary (keeps compact)
+              Child 2: Overrides Button config totally (variant: secondary)
             </Text>
             <HStack flexWrap="wrap" gap={2}>
               <Button>Child 2 Button</Button>
-              <IconButton name="close" />
             </HStack>
           </VStack>
         </ThemeProvider>
@@ -502,11 +477,9 @@ const NestedWithSelectiveOverrides = () => {
  * and nested providers.
  */
 const ComprehensiveExample = () => {
+  const { activeColorScheme } = useTheme();
   const globalConfig: ComponentsConfig = {
     Button: {
-      variant: 'secondary',
-    },
-    IconButton: {
       variant: 'secondary',
     },
   };
@@ -518,7 +491,11 @@ const ComprehensiveExample = () => {
   };
 
   return (
-    <ThemeProvider activeColorScheme="light" components={globalConfig} theme={defaultTheme}>
+    <ThemeProvider
+      activeColorScheme={activeColorScheme}
+      components={globalConfig}
+      theme={defaultTheme}
+    >
       <VStack gap={{ base: 2, tablet: 4 }} padding={{ base: 2, tablet: 4 }}>
         <Text as="h3" display="block" font="title2">
           Comprehensive Example
@@ -534,34 +511,189 @@ const ComprehensiveExample = () => {
           <HStack flexWrap="wrap" gap={2}>
             <Button>Global Default</Button>
             <Button variant="primary">Local Override to Primary</Button>
-            <IconButton name="settings" />
-            <IconButton name="info" variant="primary" />
           </HStack>
         </VStack>
 
-        <ThemeProvider activeColorScheme="light" components={sectionConfig} theme={defaultTheme}>
+        <ThemeProvider
+          activeColorScheme={activeColorScheme}
+          components={sectionConfig}
+          theme={defaultTheme}
+        >
           <VStack
             gap={{ base: 2, tablet: 3 }}
             padding={{ base: 2, tablet: 3 }}
             style={{ border: '2px dashed var(--color-bgPositive)' }}
           >
             <Text as="p" display="block" font="label1">
-              Section Level: Adds compact=true to global config
+              Section Level: sets Button global config to compact=true
             </Text>
             <HStack flexWrap="wrap" gap={2}>
               <Button>Section Default (compact)</Button>
               <Button variant="positive">Local Positive (still compact)</Button>
               <Button compact={false}>Local Not Compact</Button>
             </HStack>
-
-            <HStack flexWrap="wrap" gap={2}>
-              <IconButton name="settings" />
-              <IconButton name="info" variant="primary" />
-            </HStack>
           </VStack>
         </ThemeProvider>
       </VStack>
     </ThemeProvider>
+  );
+};
+
+/**
+ * Example demonstrating mergeClassNameAndStyle feature.
+ * When enabled, className and styles are merged instead of being overridden.
+ */
+const themeButtonCss = css`
+  background-color: var(--color-bgWarning);
+  padding: 0;
+`;
+const localButtonCss = css`
+  background-color: var(--color-bgTertiary);
+  border-radius: 0;
+`;
+
+const StyleConfigurationDetails = () => (
+  <>
+    <Text as="p" display="block" font="label1">
+      Theme:
+      <Text as="p" display="block" font="inherit">
+        - className:{' '}
+        <Text mono font="label2">
+          background-color: var(--color-bgWarning); padding: 0;
+        </Text>
+      </Text>
+      <Text as="p" display="block" font="inherit">
+        - style:{' '}
+        <Text mono font="label2">
+          borderColor: var(--color-bgPositive); color: var(--color-bgPositive); border-style:
+          dashed;
+        </Text>
+      </Text>
+    </Text>
+    <Text as="p" display="block" font="label1">
+      Local:
+      <Text as="p" display="block" font="inherit">
+        - className:{' '}
+        <Text mono font="label2">
+          background-color: var(--color-bgTertiary); border-radius: 0;
+        </Text>
+      </Text>
+      <Text as="p" display="block" font="inherit">
+        - style:{' '}
+        <Text mono font="label2">
+          borderColor: var(--color-bgNegative); color: var(--color-bgNegative);
+        </Text>
+      </Text>
+    </Text>
+  </>
+);
+const MergeClassNameAndStyleExample = () => {
+  const { activeColorScheme } = useTheme();
+  // Config without merging (default behavior)
+  const configWithoutMerge: ComponentsConfig = {
+    Button: {
+      className: themeButtonCss,
+      style: {
+        borderColor: 'var(--color-bgPositive)',
+        color: 'var(--color-fgPositive)',
+        borderStyle: 'dashed',
+      },
+    },
+  };
+
+  // Config with merging enabled
+  const configWithMerge: ComponentsConfig = {
+    ...configWithoutMerge,
+    mergeClassNameAndStyle: true,
+  };
+
+  return (
+    <VStack gap={{ base: 3, tablet: 4 }} padding={{ base: 2, tablet: 4 }}>
+      <Text as="h3" display="block" font="title2">
+        mergeClassNameAndStyle Feature
+      </Text>
+      <Text as="p" color="fgMuted" display="block" font="body">
+        Demonstrates how className and styles are handled with merging enabled vs disabled
+      </Text>
+
+      {/* Without merging (default) */}
+      <ThemeProvider
+        activeColorScheme={activeColorScheme}
+        components={configWithoutMerge}
+        theme={defaultTheme}
+      >
+        <VStack
+          gap={2}
+          padding={{ base: 2, tablet: 3 }}
+          style={{ border: '2px solid var(--color-bgLine)' }}
+        >
+          <Text as="p" display="block" font="label1">
+            Without Merging (default: mergeClassNameAndStyle=false)
+          </Text>
+          <Text as="p" color="fgMuted" display="block" font="label1">
+            Local className and style completely override theme values
+          </Text>
+
+          <VStack gap={1}>
+            <StyleConfigurationDetails />
+            <HStack flexWrap="wrap" gap={2}>
+              <Button>Theme Only</Button>
+              <Button className={localButtonCss}>Local className (overrides theme)</Button>
+              <Button
+                style={{ borderColor: 'var(--color-bgNegative)', color: 'var(--color-bgNegative)' }}
+              >
+                Local style (overrides theme)
+              </Button>
+              <Button
+                className={localButtonCss}
+                style={{ borderColor: 'var(--color-bgNegative)', color: 'var(--color-bgNegative)' }}
+              >
+                Both (both override)
+              </Button>
+            </HStack>
+          </VStack>
+        </VStack>
+      </ThemeProvider>
+
+      {/* With merging enabled */}
+      <ThemeProvider
+        activeColorScheme={activeColorScheme}
+        components={configWithMerge}
+        theme={defaultTheme}
+      >
+        <VStack
+          gap={2}
+          padding={{ base: 2, tablet: 3 }}
+          style={{ border: '2px solid var(--color-bgPositive)' }}
+        >
+          <Text as="p" display="block" font="label1">
+            With Merging (mergeClassNameAndStyle=true)
+          </Text>
+          <Text as="p" color="fgMuted" display="block" font="label1">
+            Local className concatenated with theme, local style merged with theme
+          </Text>
+
+          <VStack gap={1}>
+            <StyleConfigurationDetails />
+            <HStack flexWrap="wrap" gap={2}>
+              <Button>Theme Only</Button>
+              <Button className={localButtonCss}>Local className (concatenated)</Button>
+              <Button
+                style={{ borderColor: 'var(--color-bgNegative)', color: 'var(--color-bgNegative)' }}
+              >
+                Local style (merged)
+              </Button>
+              <Button
+                className={localButtonCss}
+                style={{ borderColor: 'var(--color-bgNegative)', color: 'var(--color-bgNegative)' }}
+              >
+                Both (className concatenated, style merged)
+              </Button>
+            </HStack>
+          </VStack>
+        </VStack>
+      </ThemeProvider>
+    </VStack>
   );
 };
 
@@ -579,6 +711,8 @@ export const ThemeProviderWithComponentsConfig = () => {
       <NestedWithSelectiveOverrides />
       <Divider />
       <ComprehensiveExample />
+      <Divider />
+      <MergeClassNameAndStyleExample />
       <Divider />
     </VStack>
   );

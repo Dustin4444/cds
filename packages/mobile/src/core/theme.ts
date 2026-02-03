@@ -14,6 +14,7 @@ type Shadow = {
 export type ComponentTheme = {
   Button: Partial<ButtonBaseProps>;
   IconButton: Partial<IconButtonBaseProps>;
+  mergeStyleProps?: boolean;
 };
 export type ComponentsConfig<Components = ComponentTheme> = {
   [Key in keyof Components]?: Components[Key];
@@ -59,7 +60,12 @@ export type ThemeConfig = {
 };
 
 export type Theme = ThemeConfig & {
-  /** The component configuration. */
+  /**
+   * Optional component configs at theme level.
+   * Allows configuring default props for specific components throughout the theme.
+   * These are merged with props passed directly to components, with local props taking precedence.
+   * Supports nested ThemeProvider inheritance with shallow merge.
+   */
   components?: ComponentsConfig;
   /** The currently active color scheme for the parent ThemeProvider, either "light" or "dark". */
   activeColorScheme: ColorScheme;

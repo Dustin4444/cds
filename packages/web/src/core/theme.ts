@@ -64,7 +64,7 @@ export type Theme = ThemeConfig & {
    * Optional component configs at theme level.
    * Allows configuring default props for specific components throughout the theme.
    * These are merged with props passed directly to components, with local props taking precedence.
-   * Supports nested ThemeProvider inheritance.
+   * Supports nested ThemeProvider inheritance with shallow merge.
    */
   components?: ComponentsConfig;
   /** The currently active color scheme for the parent ThemeProvider, either "light" or "dark". */

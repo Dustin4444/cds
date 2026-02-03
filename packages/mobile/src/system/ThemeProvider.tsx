@@ -15,10 +15,6 @@ export type ThemeProviderProps = {
   theme: ThemeConfig;
   activeColorScheme: ColorScheme;
   children?: React.ReactNode;
-  // Keep the components config seperately from the theme config for the following reasons:
-  // 1. Not polluting the theme and keeping the theme purely for lower level design tokens.
-  // 2. The theme configs are also used to create ThemeVars, which end up composing the style props.
-  // 3. `theme` are currently not inherited from parent ThemeProvider, but `components` are.
   components?: ComponentsConfig;
 };
 
@@ -29,7 +25,10 @@ export const ThemeProvider = ({
   components,
 }: ThemeProviderProps) => {
   const parentTheme = useContext(ThemeContext);
-  const resolvedComponents = components ?? parentTheme?.components;
+  const resolvedComponents = useMemo(
+    () => ({ ...parentTheme?.components, ...components }),
+    [parentTheme?.components, components],
+  );
 
   const themeApi = useMemo(() => {
     const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
@@ -84,7 +83,6 @@ export type InvertedThemeProviderProps = {
 export const InvertedThemeProvider = ({ children }: InvertedThemeProviderProps) => {
   const context = useContext(ThemeContext);
   if (!context) throw Error('InvertedThemeProvider must be used within a ThemeProvider');
-  // TODO: this feels a bit counter-intuitive that we need to extract components and theme vars from the context for the new theme.
   const { components, ...theme } = context;
   const inverseColorScheme = context.activeColorScheme === 'dark' ? 'light' : 'dark';
   const inverseColorKey = context.activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';

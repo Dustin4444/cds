@@ -1,6 +1,7 @@
 // TODO: Review the merge strategy for components config. This helper function may not be needed.
+import type { ComponentsConfig } from '../core/theme';
+
 import { mergeComponentProps } from './mergeComponentProps';
-import type { ComponentsConfig } from './theme';
 
 /**
  * Merges two component configurations, handling nested ThemeProvider component configs.
