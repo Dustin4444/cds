@@ -9,6 +9,8 @@
 import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
 import { css, type LinariaClassName } from '@linaria/core';
 
+import { gradientBackground } from '../layout/BoxCSSProperties';
+
 export const borderStyle = {
   bordered: css`
     border-width: var(--borderWidth-100);
@@ -84,3 +86,7 @@ export const pinStyle: Record<PinningDirection, LinariaClassName> = {
     right: 0;
   `,
 } as const;
+
+export const gradientCss = css`
+  background: var(${gradientBackground});
+`;

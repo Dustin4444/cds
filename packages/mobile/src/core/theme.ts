@@ -1,5 +1,6 @@
 import type { TextStyle, ViewStyle } from 'react-native';
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { GradientPreset, LinearGradientConfig } from '@coinbase/cds-common/types/Gradient';
 
 type Shadow = {
   shadowColor?: ViewStyle['shadowColor'];
@@ -45,6 +46,8 @@ export type ThemeConfig = {
   shadow: { [key in ThemeVars.Shadow]: Shadow };
   /** The control size values. */
   controlSize: { [key in ThemeVars.ControlSize]: number };
+  /** Custom gradient presets. Merged with default presets. */
+  gradients?: Partial<Record<GradientPreset, LinearGradientConfig>>;
 };
 
 export type Theme = ThemeConfig & {

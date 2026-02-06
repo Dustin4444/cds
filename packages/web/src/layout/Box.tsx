@@ -6,11 +6,13 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
-import { borderStyle, pinStyle } from '../styles/booleanStyles';
+import { borderStyle, gradientCss, pinStyle } from '../styles/booleanStyles';
 import { gradientToCSS } from '../styles/gradient';
 import type { fontFamily } from '../styles/responsive/base';
 import { getStyles, type ResponsiveProp, type StyleProps } from '../styles/styleProps';
 import { ThemeContext } from '../system/ThemeProvider';
+
+import { gradientBackground } from './BoxCSSProperties';
 
 export const boxDefaultElement = 'div';
 
@@ -176,7 +178,7 @@ export const Box: BoxComponent = memo(
       const inlineStyle = useMemo(
         () => ({
           backgroundColor: dangerouslySetBackground,
-          ...(gradient && theme && { background: gradientToCSS(gradient, theme) }),
+          ...(gradient && theme && { [gradientBackground]: gradientToCSS(gradient, theme) }),
           ...style,
         }),
         [dangerouslySetBackground, gradient, theme, style],
@@ -372,6 +374,7 @@ export const Box: BoxComponent = memo(
             borderedEnd && borderStyle.borderedEnd,
             borderedHorizontal && borderStyle.borderedHorizontal,
             borderedVertical && borderStyle.borderedVertical,
+            gradient && gradientCss,
             className,
           )}
           data-testid={testID}

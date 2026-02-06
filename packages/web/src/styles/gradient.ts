@@ -120,7 +120,9 @@ export function linearGradientToCSS(config: LinearGradientConfig, theme: Theme):
  * Converts a Gradient prop value to a CSS linear-gradient string.
  */
 export function gradientToCSS(gradient: Gradient, theme: Theme): string {
-  const config = isGradientPreset(gradient) ? resolveGradientPreset(gradient) : gradient;
+  const config = isGradientPreset(gradient)
+    ? resolveGradientPreset(gradient, theme.gradients)
+    : gradient;
 
   return linearGradientToCSS(config, theme);
 }

@@ -1,4 +1,5 @@
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { GradientPreset, LinearGradientConfig } from '@coinbase/cds-common/types/Gradient';
 import type { Property } from 'csstype';
 
 export type ThemeConfig = {
@@ -38,6 +39,8 @@ export type ThemeConfig = {
   shadow: { [key in ThemeVars.Shadow]: Property.BoxShadow };
   /** The control size values. */
   controlSize: { [key in ThemeVars.ControlSize]: number };
+  /** Custom gradient presets. Merged with default presets. */
+  gradients?: Partial<Record<GradientPreset, LinearGradientConfig>>;
 };
 
 export type Theme = ThemeConfig & {

@@ -30,6 +30,8 @@ import {
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Interactable';
 
+// TODO: Interactable uses `background-color` which blocks CSS gradient backgrounds in blendStyles.
+// Migrating to `background` would be a breaking change for consumers overriding background colors.
 const baseCss = css`
   appearance: none;
   cursor: pointer;
@@ -82,20 +84,6 @@ const baseCss = css`
     outline-offset: 2px;
     outline-color: var(--color-bgPrimary);
   }
-`;
-
-const gradientCss = css`
-  background: var(${interactableBackground});
-    &:hover {
-    background: var(${interactableHoveredBackground});
-  }
-  &:active,
-  &[aria-pressed='true'] {
-    background: var(${interactablePressedBackground});
-  }
-  &:disabled,
-  &[aria-disabled='true'] {
-    background: var(${interactableDisabledBackground});
 `;
 
 const blockCss = css`
@@ -266,7 +254,6 @@ export const Interactable: InteractableComponent = forwardRef<
           transparentWhileInactive && transparentWhileInactiveCss,
           transparentWhilePressed && transparentActiveCss,
           className,
-          props.gradient && gradientCss,
         )}
         data-disabled={disabled}
         disabled={disabled}

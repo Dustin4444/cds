@@ -119,7 +119,9 @@ export function linearGradientToProps(
  * Converts a Gradient prop value to props for the LinearGradient component.
  */
 export function gradientToProps(gradient: Gradient, theme: Theme): LinearGradientProps {
-  const config = isGradientPreset(gradient) ? resolveGradientPreset(gradient) : gradient;
+  const config = isGradientPreset(gradient)
+    ? resolveGradientPreset(gradient, theme.gradients)
+    : gradient;
 
   return linearGradientToProps(config, theme);
 }

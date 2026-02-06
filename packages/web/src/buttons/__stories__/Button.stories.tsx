@@ -1,7 +1,12 @@
 import React from 'react';
+import { css } from '@linaria/core';
 
+import type { ThemeConfig } from '../../core/theme';
+import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '../../icons/Icon';
 import { VStack } from '../../layout';
+import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Button, type ButtonBaseProps } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
 
@@ -177,31 +182,28 @@ export const GradientButtonBlock = () => (
   </VStack>
 );
 
-export const GradientButtonWithBlendStyles = () => (
+const gradientCss = css`
+  &:hover {
+    background: linear-gradient(90deg, #0047e0 0%, #4c1d95 100%);
+  }
+  &:active,
+  &[aria-pressed='true'] {
+    background: linear-gradient(90deg, rgb(238, 137, 83) 0%, rgb(246, 244, 79) 100%);
+  }
+  &:disabled {
+    background: linear-gradient(90deg, #999999 0%, #555555 100%);
+  }
+`;
+
+export const GradientButtonWithInteractiveStates = () => (
   <VStack alignItems="flex-start" gap={2}>
     <Button
-      data-
-      blendStyles={{
-        background: 'linear-gradient(90deg, #0052FF 0%, #5B21B6 100%)',
-        hoveredBackground: 'linear-gradient(90deg, #0047E0 0%, #4C1D95 100%)',
-        pressedBackground: 'linear-gradient(90deg, #003BB3 0%, #3B0764 100%)',
-      }}
+      className={gradientCss}
       color="fgInverse"
+      gradient={{ direction: 'to-r', colors: ['bgPositive', 'bgPrimary'] }}
       onClick={() => console.log('clicked')}
     >
       Gradient with Hover States
-    </Button>
-
-    <Button
-      blendStyles={{
-        background: 'linear-gradient(135deg, #FF6B6B 0%, #FFE66D 100%)',
-        hoveredBackground: 'linear-gradient(135deg, #E85555 0%, #E5CF55 100%)',
-        pressedBackground: 'linear-gradient(135deg, #CC4444 0%, #CCB844 100%)',
-      }}
-      color="fg"
-      onClick={() => console.log('clicked')}
-    >
-      Warm Gradient with States
     </Button>
 
     <Button
@@ -210,7 +212,16 @@ export const GradientButtonWithBlendStyles = () => (
         hoveredBackground: 'linear-gradient(90deg, #5A6FD1 0%, #683F8E 50%, #D683E2 100%)',
         pressedBackground: 'linear-gradient(90deg, #4E60B8 0%, #5A337A 50%, #BC73C9 100%)',
       }}
+      className={gradientCss}
       color="fgInverse"
+      gradient={{
+        direction: 90,
+        colors: [
+          { color: '#667EEA', offset: 0 },
+          { color: '#764BA2', offset: 0.5 },
+          { color: '#F093FB', offset: 1 },
+        ],
+      }}
       onClick={() => console.log('clicked')}
     >
       Multi-Stop Gradient States
@@ -218,13 +229,15 @@ export const GradientButtonWithBlendStyles = () => (
 
     <Button
       disabled
-      blendStyles={{
-        background: 'linear-gradient(45deg, #00D9FF 0%, #00FF94 100%)',
-        hoveredBackground: 'linear-gradient(45deg, #00C4E5 0%, #00E585 100%)',
-        pressedBackground: 'linear-gradient(45deg, #00AFCC 0%, #00CC76 100%)',
-        disabledBackground: 'linear-gradient(45deg, #99E5F2 0%, #99F2C9 100%)',
-      }}
+      className={gradientCss}
       color="fg"
+      gradient={{
+        direction: 45,
+        colors: [
+          { color: '#00D9FF', offset: 0 },
+          { color: '#00FF94', offset: 1 },
+        ],
+      }}
       onClick={() => console.log('clicked')}
     >
       Disabled Gradient State
@@ -232,15 +245,41 @@ export const GradientButtonWithBlendStyles = () => (
 
     <Button
       block
-      blendStyles={{
-        background: 'linear-gradient(90deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%)',
-        hoveredBackground: 'linear-gradient(90deg, #2A2A4E 0%, #26315E 50%, #1F4480 100%)',
-        pressedBackground: 'linear-gradient(90deg, #0A0A1E 0%, #06112E 50%, #001440 100%)',
-      }}
+      className={gradientCss}
       color="fgInverse"
+      gradient={{
+        direction: 'to-r',
+        colors: [
+          { color: '#1A1A2E', offset: 0 },
+          { color: '#16213E', offset: 0.3 },
+          { color: '#0F3469', offset: 1 },
+        ],
+      }}
       onClick={() => console.log('clicked')}
     >
       Dark Gradient Block Button
     </Button>
   </VStack>
 );
+
+const customTheme: ThemeConfig = {
+  ...defaultTheme,
+  gradients: {
+    brand: {
+      direction: 'to-r',
+      colors: ['bgPositive', 'bgPrimary'],
+    },
+  },
+};
+export const GradientButtonWithThemePresets = () => {
+  const { activeColorScheme } = useTheme();
+  return (
+    <ThemeProvider activeColorScheme={activeColorScheme} theme={customTheme}>
+      <VStack gap={2}>
+        <Button color="fgInverse" gradient="brand" onClick={() => console.log('clicked')}>
+          Brand Gradient Button
+        </Button>
+      </VStack>
+    </ThemeProvider>
+  );
+};

@@ -4,7 +4,7 @@ import type { GradientPreset, LinearGradientConfig } from '../types/Gradient';
  * Default gradient presets.
  * These can be extended or overridden by theme configuration.
  */
-export const gradientPresets: Record<GradientPreset, LinearGradientConfig> = {
+export const defaultGradientPresets: Record<GradientPreset, LinearGradientConfig> = {
   primary: {
     direction: 'to-b',
     colors: ['bgPrimary', { color: 'bgPrimary', opacity: 0.8 }],
@@ -33,12 +33,20 @@ export const gradientPresets: Record<GradientPreset, LinearGradientConfig> = {
 
 /**
  * Resolve a gradient preset or config to a LinearGradientConfig.
+ *
+ * @param gradient - A gradient preset name or a LinearGradientConfig object.
+ * @param themePresets - Optional custom gradient presets from theme. Falls back to default presets if not provided.
  */
 export function resolveGradientPreset(
   gradient: GradientPreset | LinearGradientConfig,
+  themePresets?: Partial<Record<GradientPreset, LinearGradientConfig>>,
 ): LinearGradientConfig {
   if (typeof gradient === 'string') {
-    return gradientPresets[gradient];
+    // Use theme presets if available, otherwise fall back to defaults
+    const presets = themePresets
+      ? { ...defaultGradientPresets, ...themePresets }
+      : defaultGradientPresets;
+    return presets[gradient];
   }
   return gradient;
 }
