@@ -15,11 +15,11 @@ import type {
   Projects,
   WriteFileConfig,
 } from '../types';
+import type { EntryPointCacheEntry } from '../utils/docgenCache';
+import { computeEntryPointHash, loadDocgenCache, saveDocgenCache } from '../utils/docgenCache';
 import { getPackageJsonFromTsconfig } from '../utils/getPackageJsonFromTsconfig';
 import { logger } from '../utils/logger';
 
-import { computeEntryPointHash, loadDocgenCache, saveDocgenCache } from '../utils/docgenCache';
-import type { EntryPointCacheEntry } from '../utils/docgenCache';
 import { docgenParser, sharedParentTypesCache, sharedTypeAliasesCache } from './docgenParser';
 import { docgenScaffolder } from './docgenScaffolder';
 

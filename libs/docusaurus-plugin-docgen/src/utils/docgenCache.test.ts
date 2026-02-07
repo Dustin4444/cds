@@ -4,8 +4,8 @@ import path from 'node:path';
 
 import type { ProcessedDoc, ProcessedPropItem } from '../types';
 
-import { computeEntryPointHash, loadDocgenCache, saveDocgenCache } from './docgenCache';
 import type { EntryPointCacheEntry } from './docgenCache';
+import { computeEntryPointHash, loadDocgenCache, saveDocgenCache } from './docgenCache';
 
 function createTempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'docgen-cache-test-'));
