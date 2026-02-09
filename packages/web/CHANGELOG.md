@@ -8,6 +8,59 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.43.0 (2/6/2026 PST)
+
+#### 🚀 Updates
+
+- Carousel autoplay. [[#361](https://github.com/coinbase/cds/pull/361)]
+
+## 8.42.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Added MediaCard, MessagingCard, and alpha DataCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+- Updated ContentCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+
+## 8.41.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Add align prop to Select and Combobox. [[#348](https://github.com/coinbase/cds/pull/348)]
+
+## 8.40.2 ((2/2/2026, 11:25 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.1 ((1/30/2026, 04:58 PM PST))
+
+This is an artificial version bump with no new change.
+
+#### 📘 Misc
+
+- Add descriptive names for generic types. [[#341](https://github.com/coinbase/cds/pull/341)] [DX-5037]
+
+## 8.40.0 ((1/28/2026, 11:12 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.1 (1/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix padding on Tab components. [[#330](https://github.com/coinbase/cds/pull/330)]
+
+## 8.39.0 (1/27/2026 PST)
+
+#### 🚀 Updates
+
+- Support Carousel looping. [[#327](https://github.com/coinbase/cds/pull/327)]
+
+## 8.38.7 (1/26/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Switch rendering with an unintended drop shadow. Add optional `elevation` prop to Control components (Switch, Checkbox, Radio). [[#325](https://github.com/coinbase/cds/pull/325)]
+
 ## 8.38.6 (1/23/2026 PST)
 
 #### 🐞 Fixes

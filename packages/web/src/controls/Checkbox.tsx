@@ -39,7 +39,7 @@ const checkboxCss = css`
   }
 `;
 
-export type CheckboxProps<T extends string> = ControlBaseProps<T> & {
+export type CheckboxProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue> & {
   /** Sets the checked/active color of the control.
    * @default fgInverse
    */
@@ -51,7 +51,7 @@ export type CheckboxProps<T extends string> = ControlBaseProps<T> & {
   borderWidth?: ThemeVars.BorderWidth;
 };
 
-const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
+const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extends string>(
   {
     children,
     checked,
@@ -61,8 +61,9 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
     borderColor = checked || indeterminate ? 'bgPrimary' : 'bgLineHeavy',
     borderRadius,
     borderWidth = 100,
+    elevation,
     ...props
-  }: CheckboxProps<T>,
+  }: CheckboxProps<CheckboxValue>,
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   const filled = checked || indeterminate;
@@ -96,6 +97,7 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
       borderRadius={borderRadius}
       borderWidth={borderWidth}
       checked={checked}
+      elevation={elevation}
       label={children}
       type="checkbox"
       {...props}
@@ -126,8 +128,8 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
       </Box>
     </Control>
   );
-}) as <T extends string>(
-  props: CheckboxProps<T> & { ref?: React.Ref<HTMLInputElement> },
+}) as <CheckboxValue extends string>(
+  props: CheckboxProps<CheckboxValue> & { ref?: React.Ref<HTMLInputElement> },
 ) => React.ReactElement;
 
 export const Checkbox = memo(CheckboxWithRef) as typeof CheckboxWithRef &

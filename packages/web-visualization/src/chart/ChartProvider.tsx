@@ -2,7 +2,9 @@ import { createContext, useContext } from 'react';
 
 import type { CartesianChartContextValue, ChartContextValue } from './utils/context';
 
-const CartesianChartContext = createContext<CartesianChartContextValue | undefined>(undefined);
+export const CartesianChartContext = createContext<CartesianChartContextValue | undefined>(
+  undefined,
+);
 
 /**
  * Hook to access the generic chart context.
