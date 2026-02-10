@@ -7,7 +7,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { borderStyle, gradientCss, pinStyle } from '../styles/booleanStyles';
-import { gradientToCSS } from '../styles/gradient';
+import { gradientToCSS } from '../utils/gradient';
 import type { fontFamily } from '../styles/responsive/base';
 import { getStyles, type ResponsiveProp, type StyleProps } from '../styles/styleProps';
 import { ThemeContext } from '../system/ThemeProvider';

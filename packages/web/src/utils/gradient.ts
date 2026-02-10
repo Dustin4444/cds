@@ -10,22 +10,20 @@ import { isGradientColorStop, isGradientPreset } from '@coinbase/cds-common/type
 import type { Theme } from '../core/theme';
 
 /**
- * Checks if a color string is a CDS theme token.
- * Theme tokens don't contain special characters like #, rgb, hsl, etc.
+ * Type guard to check if a color string is a valid CDS theme color token.
+ * Uses the theme's color object to verify the token exists.
  */
-function isThemeToken(color: string): boolean {
-  return /^[a-zA-Z][a-zA-Z0-9]*$/.test(color);
+function isThemeColorToken(color: string, theme: Theme): color is keyof typeof theme.color {
+  return color in theme.color;
 }
 
 /**
  * Resolves a color value to a CSS color string.
- * Theme tokens are converted to CSS variables.
+ * Theme tokens are converted to their actual color values.
  */
 function resolveColor(color: string, theme: Theme): string {
-  if (isThemeToken(color)) {
-    // Use the actual color value from theme for gradient rendering
-    const colorValue = theme.color[color as keyof typeof theme.color];
-    return colorValue ?? `var(--cds-color-${color})`;
+  if (isThemeColorToken(color, theme)) {
+    return theme.color[color];
   }
   return color;
 }

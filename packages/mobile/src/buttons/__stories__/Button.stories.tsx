@@ -1,12 +1,16 @@
 import React from 'react';
 
+import type { ThemeConfig } from '../../core/theme';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { LinearGradient } from '../../gradients/LinearGradient';
+import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '../../icons';
 import { Box } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { RemoteImage } from '../../media/RemoteImage';
+import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { Button, type ButtonProps } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
@@ -56,7 +60,7 @@ const ButtonScreen = () => {
       {buttonStories.map((props, index) => {
         return (
           <Example inline>
-            <Button key={index} width={100} {...props}>
+            <Button key={index} {...props}>
               I am a button
             </Button>
           </Example>
@@ -203,8 +207,69 @@ const ButtonScreen = () => {
           Gradient with Icon
         </Button>
       </Example>
+
+      <Example title="Custom Theme Gradient Presets">
+        <CustomThemeGradientExample />
+      </Example>
     </ExampleScreen>
   );
 };
+
+/**
+ * Custom theme with overridden gradient presets.
+ * The `gradients` property allows you to override default presets
+ * or define custom gradient configurations.
+ */
+const customTheme: ThemeConfig = {
+  ...defaultTheme,
+  gradients: {
+    // Override the default 'brand' gradient
+    brand: {
+      direction: 'to-r',
+      colors: ['bgWarning', 'accentBoldPurple'],
+    },
+    // Override the default 'premium' gradient
+    premium: {
+      direction: 45,
+      colors: ['bgNegative', 'accentBoldYellow'],
+    },
+  },
+};
+
+function CustomThemeGradientExample() {
+  const { activeColorScheme } = useTheme();
+
+  return (
+    <ThemeProvider activeColorScheme={activeColorScheme} theme={customTheme}>
+      <VStack gap={2}>
+        <Text color="fgMuted" font="caption">
+          Using ThemeProvider with custom gradient presets:
+        </Text>
+
+        <Button
+          GradientComponent={LinearGradient}
+          color="fgInverse"
+          gradient="brand"
+          onPress={() => {}}
+        >
+          Custom Brand Gradient
+        </Button>
+
+        <Button
+          GradientComponent={LinearGradient}
+          color="fgInverse"
+          gradient="premium"
+          onPress={() => {}}
+        >
+          Custom Premium Gradient
+        </Button>
+
+        <Text color="fgMuted" font="caption">
+          Theme: gradients.brand = to-r, bgPositive → accentBoldGreen
+        </Text>
+      </VStack>
+    </ThemeProvider>
+  );
+}
 
 export default ButtonScreen;

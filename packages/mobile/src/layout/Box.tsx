@@ -13,7 +13,7 @@ import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels
 import type { Gradient } from '@coinbase/cds-common/types/Gradient';
 
 import type { Theme } from '../core/theme';
-import { gradientToProps } from '../gradients/utils';
+import { gradientToProps } from '../utils/gradient';
 import { useTheme } from '../hooks/useTheme';
 import { pinStyles } from '../styles/pinStyles';
 import { getStyles, type StyleProps } from '../styles/styleProps';
@@ -195,7 +195,8 @@ export const Box = memo(
         // Begin style props
         display,
         position,
-        overflow,
+        // When gradient is used, we need overflow hidden to clip the gradient to border radius
+        overflow = gradient && GradientComponent ? 'hidden' : undefined,
         zIndex,
         gap,
         columnGap,
