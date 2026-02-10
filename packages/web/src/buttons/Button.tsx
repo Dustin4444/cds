@@ -28,7 +28,6 @@ const baseCss = css`
   vertical-align: middle;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
   position: relative;
   white-space: nowrap;
   appearance: none;
@@ -105,8 +104,8 @@ const flushEndCss = css`
 `;
 
 const spinnerStyle = {
-  width: '24px',
-  height: '24px',
+  width: '1lh',
+  height: '1lh',
   border: '2px solid',
   borderTopColor: 'var(--color-transparent)',
   borderRightColor: 'var(--color-transparent)',
@@ -200,14 +199,15 @@ export const Button: ButtonComponent = memo(
         background,
         color,
         className,
-        // TO DO: get rid of this height and interactableHeight (mobile and web both)
-        height = compact ? 40 : 56,
+        font = 'headline',
+        height,
         borderColor,
-        borderWidth = 100,
+        borderWidth = 0,
         borderRadius = compact ? 700 : 900,
         accessibilityLabel,
         padding,
         paddingX = padding ?? (compact ? 2 : 4),
+        paddingY = padding ?? (compact ? 1 : 2),
         margin = 0,
         minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
         ...props
@@ -246,6 +246,7 @@ export const Button: ButtonComponent = memo(
             className,
           )}
           color={colorValue}
+          font={font}
           data-block={block}
           data-compact={compact}
           data-flush={flush}
@@ -258,6 +259,7 @@ export const Button: ButtonComponent = memo(
           noScaleOnPress={noScaleOnPress}
           padding={padding}
           paddingX={paddingX}
+          paddingY={paddingY}
           transparentWhileInactive={transparent}
           {...props}
         >
@@ -280,12 +282,7 @@ export const Button: ButtonComponent = memo(
                 <Spinner color="currentColor" size={spinnerHeight} style={spinnerStyle} />
               </span>
             )}
-            <Text
-              color="currentColor"
-              display="inline"
-              font="headline"
-              numberOfLines={numberOfLines}
-            >
+            <Text color="currentColor" display="inline" numberOfLines={numberOfLines}>
               <span className={cx(loading && hiddenCss)}>{children}</span>
             </Text>
           </span>

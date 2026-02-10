@@ -227,3 +227,42 @@ A full-width primary action with a compact secondary option.
   </Button>
 </VStack>
 ```
+
+## Testing
+
+This seems to work well on web (haven't tested mobile). However our spinner thickness doesn't increase with size, contrary to what would happen if you adjusted size prop.
+
+```jsx live
+<VStack gap={2} flexWrap="wrap" alignItems="center">
+  <HStack gap={2} flexWrap="wrap" alignItems="center">
+    <Button onClick={console.log}>Default</Button>
+    <Button onClick={console.log} compact>
+      Compact
+    </Button>
+    <Button onClick={console.log} loading>Default</Button>
+    <Button onClick={console.log} compact loading>
+      Compact
+    </Button>
+  </HStack>
+  <HStack gap={2} flexWrap="wrap" alignItems="center">
+    <Button onClick={console.log} font="title1">Title1</Button>
+    <Button onClick={console.log} font="title1" compact>
+      Title1 Compact
+    </Button>
+    <Button onClick={console.log} font="title1" loading>Title1</Button>
+    <Button onClick={console.log} font="title1" loading compact>
+      Title1 Compact
+    </Button>
+  </HStack>
+  <HStack gap={2} flexWrap="wrap" alignItems="center">
+    <Button onClick={console.log} padding={0}>Custom padding</Button>
+    <Button onClick={console.log} padding={0} compact>
+      Custom padding compact
+    </Button>
+    <Button onClick={console.log} padding={0} loading>Custom padding</Button>
+    <Button onClick={console.log} padding={0} compact loading>
+      Custom padding compact
+    </Button>
+  </HStack>
+</VStack>
+```
