@@ -8,6 +8,113 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.44.2 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Update styles jsdocs for tray. [[#385](https://github.com/coinbase/cds/pull/385)]
+
+## 8.44.1 ((2/10/2026, 12:05 PM PST))
+
+This is an artificial version bump with no new change.
+
+#### 📘 Misc
+
+- Update jsdocs for styles props. [[#384](https://github.com/coinbase/cds/pull/384)]
+
+## 8.44.0 (2/9/2026 PST)
+
+#### 🚀 Updates
+
+- Add new tray design. [[#349](https://github.com/coinbase/cds/pull/349)]
+
+## 8.43.2 ((2/9/2026, 09:05 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.1 (2/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Update chip prop export. [[#328](https://github.com/coinbase/cds/pull/328)]
+
+## 8.43.0 (2/6/2026 PST)
+
+#### 🚀 Updates
+
+- Carousel autoplay. [[#361](https://github.com/coinbase/cds/pull/361)]
+
+## 8.42.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Added MediaCard, MessagingCard, and alpha DataCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+- Updated ContentCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+
+#### 📘 Misc
+
+- Update storybook ExampleScreen. [[#366](https://github.com/coinbase/cds/pull/366)]
+
+## 8.41.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Add align prop to Select and Combobox. [[#348](https://github.com/coinbase/cds/pull/348)]
+
+## 8.40.2 (2/2/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: carousel block scrolling on y axis. [[#358](https://github.com/coinbase/cds/pull/358)] [DX-5096]
+
+## 8.40.1 (1/30/2026 PST)
+
+#### 🐞 Fixes
+
+- Add Math.round to ProgressCircle accessibilityValue to prevent precision crash. [[#354](https://github.com/eccentricdz/cds/pull/354)] [HNWI-766]
+
+#### 📘 Misc
+
+- Add descriptive names for generic types. [[#341](https://github.com/coinbase/cds/pull/341)] [DX-5037]
+
+## 8.40.0 ((1/28/2026, 11:12 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.1 (1/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix padding on Tab components. [[#330](https://github.com/coinbase/cds/pull/330)]
+
+## 8.39.0 (1/27/2026 PST)
+
+#### 🚀 Updates
+
+- Support Carousel looping. [[#327](https://github.com/coinbase/cds/pull/327)]
+
+## 8.38.7 (1/26/2026 PST)
+
+#### 🐞 Fixes
+
+- Add optional `elevation` prop to Control components (Switch, Checkbox, Radio). [[#325](https://github.com/coinbase/cds/pull/325)]
+
+## 8.38.6 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: align version with web package.
+
+## 8.38.5 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Update ARIA labels used for Select and Combobox. [[#250](https://github.com/coinbase/cds/pull/250)]
+
+## 8.38.4 ((1/22/2026, 01:55 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.38.3 ((1/22/2026, 01:42 PM PST))
 
 This is an artificial version bump with no new change.

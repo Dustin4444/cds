@@ -52,22 +52,23 @@ const baseCss = css`
   }
 `;
 
-export type RadioProps<T extends string> = ControlBaseProps<T> & {
+export type RadioProps<RadioValue extends string> = ControlBaseProps<RadioValue> & {
   /** Sets the checked/active color of the control.
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
 };
 
-const RadioWithRef = forwardRef(function RadioWithRef<T extends string>(
+const RadioWithRef = forwardRef(function RadioWithRef<RadioValue extends string>(
   {
     children,
     controlColor = 'bgPrimary',
     checked = false,
     background = 'bg',
     borderColor = checked ? controlColor : 'bgLineHeavy',
+    elevation,
     ...props
-  }: RadioProps<T>,
+  }: RadioProps<RadioValue>,
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   const theme = useTheme();
@@ -80,7 +81,14 @@ const RadioWithRef = forwardRef(function RadioWithRef<T extends string>(
   });
 
   return (
-    <Control ref={ref} checked={checked} label={children} type="radio" {...props}>
+    <Control
+      ref={ref}
+      checked={checked}
+      elevation={elevation}
+      label={children}
+      type="radio"
+      {...props}
+    >
       <Box
         alignItems="center"
         background={background}
@@ -102,8 +110,8 @@ const RadioWithRef = forwardRef(function RadioWithRef<T extends string>(
       </Box>
     </Control>
   );
-}) as <T extends string>(
-  props: RadioProps<T> & { ref?: React.Ref<HTMLInputElement> },
+}) as <RadioValue extends string>(
+  props: RadioProps<RadioValue> & { ref?: React.Ref<HTMLInputElement> },
 ) => React.ReactElement;
 
 export const Radio = memo(RadioWithRef) as typeof RadioWithRef &

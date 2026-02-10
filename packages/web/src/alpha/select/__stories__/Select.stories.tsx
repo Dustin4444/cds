@@ -282,7 +282,7 @@ export const AccessibilityLabel = () => {
 
   return (
     <Select
-      accessibilityLabel="Custom accessibility label"
+      accessibilityLabel="Custom dropdown accessibility label"
       controlAccessibilityLabel="Custom control accessibility label"
       label="Single select - accessibility label"
       onChange={setValue}
@@ -317,6 +317,70 @@ export const AccessibilityRoles = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+export const Alignments = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={2}>
+      <Select
+        label="Default align - start"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        align="center"
+        label="Center align"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        align="end"
+        label="End align"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        label="Compact align - start"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        align="end"
+        label="Compact align - end"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+    </VStack>
   );
 };
 

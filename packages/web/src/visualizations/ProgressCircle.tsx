@@ -47,54 +47,28 @@ export type ProgressCircleBaseProps = ProgressBaseProps & {
 };
 
 export type ProgressCircleProps = ProgressCircleBaseProps & {
-  /**
-   * Custom styles for the progress circle root.
-   */
   style?: React.CSSProperties;
-  /**
-   * Custom class name for the progress circle root.
-   */
   className?: string;
-  /**
-   * Custom styles for the progress circle.
-   */
+  /** Custom styles for individual elements of the ProgressCircle component */
   styles?: {
-    /**
-     * Custom styles for the progress circle root.
-     */
+    /** Root element */
     root?: React.CSSProperties;
-    /**
-     * Custom styles for the progress circle svg.
-     */
+    /** SVG element */
     svg?: React.CSSProperties;
-    /**
-     * Custom styles for the background circle.
-     */
+    /** Background circle element */
     circle?: React.CSSProperties;
-    /**
-     * Custom styles for the foreground circle.
-     */
+    /** Foreground progress circle element */
     progress?: React.CSSProperties;
   };
-  /**
-   * Custom class names for the progress circle.
-   */
+  /** Custom class names for individual elements of the ProgressCircle component */
   classNames?: {
-    /**
-     * Class name for the progress circle root.
-     */
+    /** Root element */
     root?: string;
-    /**
-     * Class name for the progress circle svg.
-     */
+    /** SVG element */
     svg?: string;
-    /**
-     * Class name for the progress circle background circle.
-     */
+    /** Background circle element */
     circle?: string;
-    /**
-     * Class name for the progress circle foreground circle.
-     */
+    /** Foreground progress circle element */
     progress?: string;
   };
 };
@@ -156,19 +130,22 @@ const ProgressCircleInner = memo(
 
     return (
       <motion.circle
-        ref={circleRef}
-        data-testid="cds-progress-circle-inner"
-        strokeDasharray={circumference}
-        strokeLinecap="round"
-        {...motionProps}
-        {...getProgressCircleParams({
-          size,
-          strokeWidth,
-          stroke: !visuallyDisabled ? `var(--color-${color})` : 'var(--color-bgLineHeavy)',
-        })}
-        className={className}
-        onAnimationComplete={onAnimationEnd}
-        onAnimationStart={onAnimationStart}
+        // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
+        {...({
+          ref: circleRef,
+          'data-testid': 'cds-progress-circle-inner',
+          strokeDasharray: circumference,
+          strokeLinecap: 'round',
+          ...motionProps,
+          ...getProgressCircleParams({
+            size,
+            strokeWidth,
+            stroke: !visuallyDisabled ? `var(--color-${color})` : 'var(--color-bgLineHeavy)',
+          }),
+          className: className,
+          onAnimationComplete: onAnimationEnd,
+          onAnimationStart: onAnimationStart,
+        } as React.ComponentProps<typeof motion.circle>)}
       />
     );
   },

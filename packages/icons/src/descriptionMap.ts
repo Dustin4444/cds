@@ -307,7 +307,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'smartContract',
     'paperclip',
     'list',
-    'document'
+    'document',
+    'birthcertificate'
   ],
   '📄': [
     'taxes',
@@ -1016,7 +1017,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'briefcaseAlt',
     'pillCapsule',
     'singlecloud',
-    'rain'
+    'rain',
+    'autoCar'
   ],
   'profile': [
     'account',
@@ -5008,7 +5010,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'car': [
     'gasFees',
-    'car'
+    'car',
+    'autoCar'
   ],
   '⛽️': [
     'gasFees'
@@ -5698,7 +5701,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'instantUnstakingClock'
   ],
   'auto': [
-    'auto'
+    'auto',
+    'autoCar'
   ],
   'creator': [
     'creatorCoin'
@@ -6501,5 +6505,26 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'candidate': [
     'politicsCandidate'
+  ],
+  'birthcertificate': [
+    'birthcertificate'
+  ],
+  'birth': [
+    'birthcertificate'
+  ],
+  'certificate': [
+    'birthcertificate'
+  ],
+  'doc': [
+    'birthcertificate'
+  ],
+  'webhooks': [
+    'webhooks'
+  ],
+  'web': [
+    'webhooks'
+  ],
+  'hooks': [
+    'webhooks'
   ]
 };

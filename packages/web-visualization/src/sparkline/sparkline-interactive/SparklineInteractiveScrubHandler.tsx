@@ -146,6 +146,7 @@ const SparklineInteractiveScrubHandlerWithGeneric = <Period extends string>({
     [setXPos],
   );
 
+  // eslint-disable-next-line react-hooks/use-memo
   const safelyUpdatePosition = useCallback(debouncedUpdatePositionHandler, [
     debouncedUpdatePositionHandler,
   ]);

@@ -145,6 +145,134 @@ const InitialValuesExample = () => {
   );
 };
 
+const AlignmentsExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana', 'cherry'] });
+
+  return (
+    <VStack gap={2}>
+      <Combobox
+        label="Default align - start"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        align="center"
+        label="Center align"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        align="end"
+        label="End align"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        compact
+        label="Compact align - start"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        compact
+        align="end"
+        label="Compact align - end"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+const SingleAlignmentsExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={2}>
+      <Combobox
+        label="Default align - start"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Empty value"
+        type="single"
+        value={value}
+      />
+      <Combobox
+        align="center"
+        label="Center align"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Empty value"
+        type="single"
+        value={value}
+      />
+      <Combobox
+        align="end"
+        label="End align"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Empty value"
+        type="single"
+        value={value}
+      />
+      <Combobox
+        compact
+        label="Compact align - start"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Empty value"
+        type="single"
+        value={value}
+      />
+      <Combobox
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Empty value"
+        type="single"
+        value={value}
+      />
+      <Combobox
+        compact
+        align="end"
+        label="Compact align - end"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Empty value"
+        type="single"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 const ControlledSearchExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   const [searchText, setSearchText] = useState('');
@@ -166,6 +294,22 @@ const ControlledSearchExample = () => {
         Set search to &quot;apple&quot;
       </Button>
     </VStack>
+  );
+};
+
+const AccessibilityLabelExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      accessibilityLabel="Custom accessibility label"
+      label="Accessible combobox"
+      onChange={onChange}
+      options={fruitOptions}
+      placeholder="Has accessibility label..."
+      type="multi"
+      value={value}
+    />
   );
 };
 
@@ -781,11 +925,20 @@ const Default = () => {
       <Example title="No Label">
         <NoLabelExample />
       </Example>
+      <Example title="Alignments">
+        <AlignmentsExample />
+      </Example>
+      <Example title="Single select alignments">
+        <SingleAlignmentsExample />
+      </Example>
       <Example title="Pre-selected values">
         <InitialValuesExample />
       </Example>
       <Example title="Controlled search">
         <ControlledSearchExample />
+      </Example>
+      <Example title="Custom accessibility label">
+        <AccessibilityLabelExample />
       </Example>
       <Example title="Options with descriptions">
         <WithDescriptionsExample />

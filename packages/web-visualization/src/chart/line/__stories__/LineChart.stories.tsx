@@ -1,10 +1,11 @@
 import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { DataCard } from '@coinbase/cds-web/alpha/data-card/DataCard';
 import { ListCell } from '@coinbase/cds-web/cells';
 import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
@@ -23,7 +24,6 @@ import { m } from 'framer-motion';
 import {
   type AxisBounds,
   DefaultScrubberBeacon,
-  DefaultScrubberLabel,
   defaultTransition,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
@@ -31,7 +31,6 @@ import {
   projectPoint,
   Scrubber,
   type ScrubberBeaconProps,
-  type ScrubberLabelProps,
   type ScrubberRef,
   useCartesianChartContext,
   useScrubberContext,
@@ -48,6 +47,8 @@ import {
   SolidLine,
   type SolidLineProps,
 } from '..';
+
+const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
 export default {
   component: LineChart,
@@ -326,7 +327,7 @@ function Interaction() {
         series={[
           {
             id: 'prices',
-            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            data: sampleData,
           },
         ]}
       >
@@ -338,7 +339,6 @@ function Interaction() {
 
 function Points() {
   const keyMarketShiftIndices = [4, 6, 7, 9, 10];
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   return (
     <CartesianChart
@@ -346,7 +346,7 @@ function Points() {
       series={[
         {
           id: 'prices',
-          data: data,
+          data: sampleData,
         },
       ]}
     >
@@ -374,21 +374,16 @@ function Points() {
 }
 
 function BasicAccessible() {
-  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
-
   // Chart-level accessibility label provides overview
   const chartAccessibilityLabel = useMemo(() => {
-    const currentPrice = data[data.length - 1];
-    return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
-  }, [data]);
+    const currentPrice = sampleData[sampleData.length - 1];
+    return `Price chart showing trend over ${sampleData.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
+  }, []);
 
   // Scrubber-level accessibility label provides specific position info
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
-    },
-    [data],
-  );
+  const scrubberAccessibilityLabel = useCallback((index: number) => {
+    return `Price at position ${index + 1} of ${sampleData.length}: ${sampleData[index]}`;
+  }, []);
 
   return (
     <LineChart
@@ -400,7 +395,7 @@ function BasicAccessible() {
       series={[
         {
           id: 'prices',
-          data: data,
+          data: sampleData,
         },
       ]}
       yAxis={{
@@ -414,21 +409,17 @@ function BasicAccessible() {
 
 function AccessibleWithHeader() {
   const headerId = useId();
-  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
   // Display label provides overview
   const displayLabel = useMemo(
-    () => `Revenue chart showing trend. Current value: ${data[data.length - 1]}`,
-    [data],
+    () => `Revenue chart showing trend. Current value: ${sampleData[sampleData.length - 1]}`,
+    [],
   );
 
   // Scrubber-specific accessibility label
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Viewing position ${index + 1} of ${data.length}, value: ${data[index]}`;
-    },
-    [data],
-  );
+  const scrubberAccessibilityLabel = useCallback((index: number) => {
+    return `Viewing position ${index + 1} of ${sampleData.length}, value: ${sampleData[index]}`;
+  }, []);
 
   return (
     <VStack gap={2}>
@@ -444,7 +435,7 @@ function AccessibleWithHeader() {
         series={[
           {
             id: 'revenue',
-            data: data,
+            data: sampleData,
           },
         ]}
         yAxis={{
@@ -471,7 +462,6 @@ function Gradients() {
     'teal',
     'chartreuse',
   ];
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
 
@@ -503,17 +493,17 @@ function Gradients() {
         series={[
           {
             id: 'continuousGradient',
-            data: data,
+            data: sampleData,
             gradient: {
               stops: [
                 { offset: 0, color: `rgb(var(--${currentSpectrumColor}80))` },
-                { offset: Math.max(...data), color: `rgb(var(--${currentSpectrumColor}20))` },
+                { offset: Math.max(...sampleData), color: `rgb(var(--${currentSpectrumColor}20))` },
               ],
             },
           },
           {
             id: 'discreteGradient',
-            data: data.map((d) => d + 50),
+            data: sampleData.map((d) => d + 50),
             // You can create a "discrete" gradient by having multiple stops at the same offset
             gradient: {
               stops: ({ min, max }) => [
@@ -535,7 +525,7 @@ function Gradients() {
           },
           {
             id: 'xAxisGradient',
-            data: data.map((d) => d + 100),
+            data: sampleData.map((d) => d + 100),
             gradient: {
               // You can also configure by the x-axis.
               axis: 'x',
@@ -624,12 +614,11 @@ function GainLossChart() {
 }
 
 function HighLowPrice() {
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-  const minPrice = Math.min(...data);
-  const maxPrice = Math.max(...data);
+  const minPrice = Math.min(...sampleData);
+  const maxPrice = Math.max(...sampleData);
 
-  const minPriceIndex = data.indexOf(minPrice);
-  const maxPriceIndex = data.indexOf(maxPrice);
+  const minPriceIndex = sampleData.indexOf(minPrice);
+  const maxPriceIndex = sampleData.indexOf(maxPrice);
 
   const formatPrice = useCallback((price: number) => {
     return `$${price.toLocaleString('en-US', {
@@ -645,7 +634,7 @@ function HighLowPrice() {
       series={[
         {
           id: 'prices',
-          data: data,
+          data: sampleData,
         },
       ]}
     >
@@ -1560,169 +1549,6 @@ function MonotoneAssetPrice() {
   );
 }
 
-function CustomLabelComponent() {
-  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
-    const { drawingArea } = useCartesianChartContext();
-
-    if (!drawingArea) return;
-
-    return (
-      <DefaultScrubberLabel
-        {...props}
-        elevated
-        background="var(--color-bgPrimary)"
-        color="var(--color-bgPrimaryWash)"
-        dy={32}
-        fontWeight="label1"
-        y={drawingArea.y + drawingArea.height}
-      />
-    );
-  });
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      inset={{ top: 16, bottom: 64 }}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-        },
-      ]}
-    >
-      <Scrubber
-        LabelComponent={CustomLabelComponent}
-        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-      />
-    </LineChart>
-  );
-}
-
-function CustomBeaconStroke() {
-  const backgroundColor = 'rgb(var(--red40))';
-  const foregroundColor = 'rgb(var(--gray0))';
-
-  return (
-    <Box borderRadius={300} padding={2} style={{ background: backgroundColor }}>
-      <LineChart
-        enableScrubbing
-        showArea
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-            color: foregroundColor,
-          },
-        ]}
-      >
-        <Scrubber
-          hideOverlay
-          idlePulse
-          beaconStroke={backgroundColor}
-          lineStroke={foregroundColor}
-        />
-      </LineChart>
-    </Box>
-  );
-}
-
-function CustomBeaconSize() {
-  const dataCount = 14;
-  const minDataValue = 0;
-  const maxDataValue = 100;
-  const minStepOffset = 5;
-  const maxStepOffset = 20;
-  const updateInterval = 2000;
-
-  function generateNextValue(previousValue: number) {
-    const range = maxStepOffset - minStepOffset;
-    const offset = Math.random() * range + minStepOffset;
-
-    let direction;
-    if (previousValue >= maxDataValue) {
-      direction = -1;
-    } else if (previousValue <= minDataValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    const newValue = previousValue + offset * direction;
-    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
-  }
-
-  function generateInitialData() {
-    const data = [];
-    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-    return data;
-  }
-
-  const InvertedBeacon = useMemo(
-    () => (props: ScrubberBeaconProps) => (
-      <DefaultScrubberBeacon
-        {...props}
-        color="var(--color-bg)"
-        radius={5}
-        stroke="var(--color-fg)"
-        strokeWidth={3}
-      />
-    ),
-    [],
-  );
-
-  const CustomBeaconSizeChart = memo(() => {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? 50;
-          const newValue = generateNextValue(lastValue);
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    return (
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data,
-            color: 'var(--color-fg)',
-          },
-        ]}
-        xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 16 }),
-        }}
-        yAxis={{
-          showGrid: true,
-          domain: { min: 0, max: 100 },
-        }}
-      >
-        <Scrubber BeaconComponent={InvertedBeacon} />
-      </LineChart>
-    );
-  });
-
-  return <CustomBeaconSizeChart />;
-}
-
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -1733,7 +1559,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
             },
           ]}
         />
@@ -1772,7 +1598,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
             },
           ]}
           yAxis={{
@@ -1803,7 +1629,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
             },
           ]}
           xAxis={{
@@ -1872,7 +1698,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
               color: 'var(--color-fgPositive)',
             },
           ]}
@@ -1918,14 +1744,8 @@ export const All = () => {
       <Example title="Forecast Asset Price">
         <ForecastAssetPrice />
       </Example>
-      <Example title="Custom Label Component">
-        <CustomLabelComponent />
-      </Example>
-      <Example title="Custom Beacon Stroke">
-        <CustomBeaconStroke />
-      </Example>
-      <Example title="Custom Beacon Size">
-        <CustomBeaconSize />
+      <Example title="In DataCard">
+        <DataCardWithLineChart />
       </Example>
     </VStack>
   );
@@ -2064,3 +1884,120 @@ export const Transitions = () => {
 
   return <CustomTransitionsChart />;
 };
+function DataCardWithLineChart() {
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={ethBackground}
+      testID="thumbnail"
+    />
+  );
+
+  const getLineChartSeries = () => [
+    {
+      id: 'price',
+      data: prices.slice(0, 30).map((price: string) => parseFloat(price)),
+      color: 'var(--color-accentBoldBlue)',
+    },
+  ];
+
+  const lineChartSeries = useMemo(() => getLineChartSeries(), []);
+  const lineChartSeries2 = useMemo(() => getLineChartSeries(), []);
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart Card"
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart with Tag"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        ref={ref}
+        renderAsPressable
+        as="a"
+        href="https://www.coinbase.com"
+        layout="vertical"
+        subtitle="Clickable line chart card"
+        target="_blank"
+        thumbnail={exampleThumbnail}
+        title="Actionable Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={
+          <RemoteImage
+            accessibilityLabel="Bitcoin"
+            shape="circle"
+            size="l"
+            source={assets.btc.imageUrl}
+            testID="thumbnail"
+          />
+        }
+        title="Card with Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries2}
+        />
+      </DataCard>
+    </VStack>
+  );
+}

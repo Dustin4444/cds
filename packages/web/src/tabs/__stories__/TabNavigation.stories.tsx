@@ -374,3 +374,22 @@ export const Disabled: Story = {
   render: () => <DisabledRender />,
   parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
 };
+
+const WithPaddingRender = () => {
+  const [currentTab, setCurrentTab] = useState<TabProps['id']>(tabs[0].id);
+
+  return (
+    <TabNavigation
+      onChange={setCurrentTab}
+      paddingX={3}
+      paddingY={1}
+      tabs={tabs.slice(0, 3)}
+      value={currentTab}
+    />
+  );
+};
+
+export const WithPadding: Story = {
+  render: () => <WithPaddingRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};

@@ -8,7 +8,7 @@ import {
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
 } from '../line';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
@@ -127,7 +127,7 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
     /**
      * Label for the series.
      */
-    label: string;
+    label: ChartTextChildren;
     /**
      * Id of the series.
      */
@@ -148,6 +148,10 @@ export type ScrubberBaseProps = SharedProps &
      * By default, all series will be highlighted.
      */
     seriesIds?: string[];
+    /**
+     * Hides the beacon labels while keeping the line label visible (if provided).
+     */
+    hideBeaconLabels?: boolean;
     /**
      * Hides the scrubber line.
      * @note This hides Scrubber's ReferenceLine including the label.
@@ -173,6 +177,12 @@ export type ScrubberBaseProps = SharedProps &
      * Measured in pixels.
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
+    /**
+     * Preferred side for beacon labels.
+     * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+     * @default 'right'
+     */
+    beaconLabelPreferredSide?: ScrubberBeaconLabelGroupBaseProps['labelPreferredSide'];
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
@@ -214,22 +224,26 @@ export type ScrubberProps = ScrubberBaseProps & {
    * If not provided, label will be used if it resolves to a string.
    */
   accessibilityLabel?: string | ((dataIndex: number) => string);
-  /**
-   * Custom styles for scrubber elements.
-   */
+  /** Custom styles for individual elements of the Scrubber component */
   styles?: {
+    /** Overlay element */
     overlay?: React.CSSProperties;
+    /** Beacon circle element */
     beacon?: React.CSSProperties;
+    /** Scrubber line element */
     line?: React.CSSProperties;
+    /** Beacon label element */
     beaconLabel?: React.CSSProperties;
   };
-  /**
-   * Custom class names for scrubber elements.
-   */
+  /** Custom class names for individual elements of the Scrubber component */
   classNames?: {
+    /** Overlay element */
     overlay?: string;
+    /** Beacon circle element */
     beacon?: string;
+    /** Scrubber line element */
     line?: string;
+    /** Beacon label element */
     beaconLabel?: string;
   };
 };
@@ -244,6 +258,7 @@ export const Scrubber = memo(
     (
       {
         seriesIds,
+        hideBeaconLabels,
         hideLine,
         label,
         accessibilityLabel,
@@ -257,6 +272,7 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
+        beaconLabelPreferredSide,
         labelFont,
         labelBoundsInset,
         beaconLabelFont,
@@ -403,12 +419,13 @@ export const Scrubber = memo(
             testID={testID}
             transitions={beaconTransitions}
           />
-          {beaconLabels.length > 0 && (
+          {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
+              labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
             />
           )}

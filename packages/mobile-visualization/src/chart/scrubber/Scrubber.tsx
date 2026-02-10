@@ -23,7 +23,7 @@ import {
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
 } from '../line';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
@@ -134,7 +134,7 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
     /**
      * Label for the series.
      */
-    label: AnimatedProp<string>;
+    label: ChartTextChildren;
     /**
      * Id of the series.
      */
@@ -154,6 +154,10 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      * By default, all series will be highlighted.
      */
     seriesIds?: string[];
+    /**
+     * Hides the beacon labels while keeping the line label visible (if provided).
+     */
+    hideBeaconLabels?: boolean;
     /**
      * Hides the scrubber line.
      * @note This hides Scrubber's ReferenceLine including the label.
@@ -179,6 +183,12 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      * Measured in pixels.
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
+    /**
+     * Preferred side for beacon labels.
+     * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+     * @default 'right'
+     */
+    beaconLabelPreferredSide?: ScrubberBeaconLabelGroupBaseProps['labelPreferredSide'];
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
@@ -224,6 +234,7 @@ export const Scrubber = memo(
     (
       {
         seriesIds,
+        hideBeaconLabels,
         hideLine,
         label,
         lineStroke,
@@ -236,6 +247,7 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
+        beaconLabelPreferredSide,
         labelFont,
         labelBoundsInset,
         beaconLabelFont,
@@ -257,16 +269,6 @@ export const Scrubber = memo(
 
       // Animation state for delayed scrubber rendering (matches web timing)
       const scrubberOpacity = useSharedValue(animate ? 0 : 1);
-
-      // Delay scrubber appearance until after path enter animation completes
-      useEffect(() => {
-        if (animate) {
-          scrubberOpacity.value = withDelay(
-            accessoryFadeTransitionDelay,
-            withTiming(1, { duration: accessoryFadeTransitionDuration }),
-          );
-        }
-      }, [animate, scrubberOpacity]);
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -360,7 +362,18 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
-      if (!xScale) return;
+      const isReady = !!xScale;
+
+      useEffect(() => {
+        if (animate && isReady) {
+          scrubberOpacity.value = withDelay(
+            accessoryFadeTransitionDelay,
+            withTiming(1, { duration: accessoryFadeTransitionDuration }),
+          );
+        }
+      }, [animate, isReady, scrubberOpacity]);
+
+      if (!isReady) return;
 
       return (
         <Group opacity={scrubberOpacity}>
@@ -395,12 +408,13 @@ export const Scrubber = memo(
             stroke={beaconStroke}
             transitions={beaconTransitions}
           />
-          {beaconLabels.length > 0 && (
+          {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
+              labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
             />
           )}

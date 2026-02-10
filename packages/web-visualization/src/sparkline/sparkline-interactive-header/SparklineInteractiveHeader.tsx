@@ -161,6 +161,7 @@ const SparklineInteractiveHeaderStable = memo(
           }, 500),
         [],
       );
+      // eslint-disable-next-line react-hooks/use-memo
       const safelyUpdateSubHeadA11yRef = useCallback(debouncedUpdateMessage, [
         debouncedUpdateMessage,
       ]);

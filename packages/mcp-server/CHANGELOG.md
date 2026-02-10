@@ -8,6 +8,76 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.44.2 ((2/10/2026, 08:38 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.44.1 ((2/10/2026, 12:05 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.44.0 ((2/9/2026, 07:07 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.2 ((2/9/2026, 09:05 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.1 ((2/6/2026, 02:15 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.0 ((2/6/2026, 9:00 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.42.0 ((2/4/2026, 01:51 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.41.0 ((2/4/2026, 09:22 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.2 ((2/2/2026, 11:25 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.1 ((1/30/2026, 04:58 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.0 ((1/28/2026, 11:12 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.1 ((1/28/2026, 06:48 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.0 ((1/27/2026, 11:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.7 ((1/26/2026, 10:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.6 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: align version with web package.
+
+## 8.38.5 ((1/23/2026, 06:35 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.4 ((1/22/2026, 01:55 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.38.3 ((1/22/2026, 01:42 PM PST))
 
 This is an artificial version bump with no new change.

@@ -338,34 +338,35 @@ export const Point = memo<PointProps>(
 
       return (
         <motion.circle
-          animate={{
+          // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
+          {...({
+            animate: {
+              cx: pixelCoordinate.x,
+              cy: pixelCoordinate.y,
+            },
+            'aria-label': accessibilityLabel,
+            className: cx(innerPointCss, className, classNames?.point),
             cx: pixelCoordinate.x,
             cy: pixelCoordinate.y,
-          }}
-          aria-label={accessibilityLabel}
-          className={cx(innerPointCss, className, classNames?.point)}
-          cx={pixelCoordinate.x}
-          cy={pixelCoordinate.y}
-          fill={fill}
-          initial={false}
-          onClick={
-            onClick
+            fill: fill,
+            initial: false,
+            onClick: onClick
               ? (event: any) =>
                   onClick(event, { dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
-              : undefined
-          }
-          onKeyDown={handleKeyDown}
-          r={radius}
-          role={onClick ? 'button' : undefined}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
-          style={mergedStyles}
-          tabIndex={onClick ? 0 : -1}
-          transition={transition}
-          variants={variants}
-          whileHover={onClick ? 'hovered' : 'default'}
-          whileTap={onClick ? 'pressed' : 'default'}
-          {...svgProps}
+              : undefined,
+            onKeyDown: handleKeyDown,
+            r: radius,
+            role: onClick ? 'button' : undefined,
+            stroke: stroke,
+            strokeWidth: strokeWidth,
+            style: mergedStyles,
+            tabIndex: onClick ? 0 : -1,
+            transition: transition,
+            variants: variants,
+            whileHover: onClick ? 'hovered' : 'default',
+            whileTap: onClick ? 'pressed' : 'default',
+            ...svgProps,
+          } as React.ComponentProps<typeof motion.circle>)}
         />
       );
     }, [
