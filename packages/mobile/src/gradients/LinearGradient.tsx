@@ -107,10 +107,9 @@ export function LinearGradient({
   }, [colors, start, end, angle, stops]);
 
   const items = isBelowChildren || !elevated ? [svg, children] : [children, svg];
-  return svg;
-  // return (
-  //   <View pointerEvents={pointerEvents} style={style} testID={testID}>
-  //     {items}
-  //   </View>
-  // );
+  return (
+    <View pointerEvents={pointerEvents} style={style} testID={testID}>
+      {items}
+    </View>
+  );
 }

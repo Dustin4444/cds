@@ -457,6 +457,7 @@ export const Box = memo(
 
       return (
         <Component ref={ref} style={styles} testID={testID} {...props}>
+          {/* TODO: Fix LinearGradient to remove redundant View wrapper or create a new component that does not require the View wrapper*/}
           {resolvedGradientProps && GradientComponent && (
             <GradientComponent
               angle={resolvedGradientProps.angle}
