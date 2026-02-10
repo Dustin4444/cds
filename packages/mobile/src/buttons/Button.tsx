@@ -91,7 +91,8 @@ export type ButtonProps = ButtonBaseProps;
 export const Button = memo(
   forwardRef(function Button(
     {
-      variant = 'primary',
+      gradient,
+      variant = gradient ? 'gradient' : 'primary',
       loading,
       transparent,
       block,
@@ -117,7 +118,7 @@ export const Button = memo(
       wrapperStyles,
       feedback = compact ? 'light' : 'normal',
       borderColor,
-      borderWidth = 100,
+      borderWidth = gradient ? 0 : 100,
       borderRadius = compact ? 700 : 900,
       accessibilityLabel,
       accessibilityHint,
@@ -198,6 +199,7 @@ export const Button = memo(
         style={pressableStyle}
         transparentWhileInactive={transparent}
         wrapperStyles={wrapperStyles}
+        gradient={gradient}
         {...props}
       >
         <HStack

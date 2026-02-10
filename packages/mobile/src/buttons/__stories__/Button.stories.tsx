@@ -189,7 +189,7 @@ const ButtonScreen = () => {
           color="fgInverse"
           gradient={{
             direction: 'to-r',
-            colors: ['accentBoldBlue', 'accentBoldPurple', 'accentBoldPink'],
+            colors: ['accentBoldPurple', 'transparent'],
           }}
           onPress={() => {}}
         >

@@ -280,7 +280,7 @@ const BoxScreen = () => {
             direction: 'to-b',
             colors: [
               { color: 'bgPrimary', opacity: 1 },
-              { color: 'bgPrimary', opacity: 0.3 },
+              { color: 'bgPrimary', opacity: 0 },
             ],
           }}
           padding={2}

@@ -182,7 +182,8 @@ export const Button: ButtonComponent = memo(
     <AsComponent extends React.ElementType>(
       {
         as,
-        variant = 'primary',
+        gradient,
+        variant = gradient ? 'gradient' : 'primary',
         loading,
         transparent,
         block,
@@ -208,7 +209,7 @@ export const Button: ButtonComponent = memo(
         // TO DO: get rid of this height and interactableHeight (mobile and web both)
         height = compact ? 40 : 56,
         borderColor,
-        borderWidth = 100,
+        borderWidth = gradient ? 0 : 100,
         borderRadius = compact ? 700 : 900,
         accessibilityLabel,
         padding,
@@ -264,6 +265,7 @@ export const Button: ButtonComponent = memo(
           padding={padding}
           paddingX={paddingX}
           transparentWhileInactive={transparent}
+          gradient={gradient}
           {...props}
         >
           {start ? (
