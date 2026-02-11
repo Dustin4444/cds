@@ -1,0 +1,30 @@
+.coinbase-advanced-theme .cds-Button {
+  height: 32px;
+  border-radius: var(--borderRadius-200);
+}
+
+.coinbase-advanced-theme .cds-Button[data-compact="true"] {
+  height: 24px;
+}
+
+/* allowing us to do .cds-Button-label would be helpful */
+.coinbase-advanced-theme .cds-Button[data-compact="true"] span {
+  line-height: var(--lineHeight-label1);
+  font-weight: var(--fontWeight-label1);
+  font-size: var(--fontSize-label1);
+  font-family: var(--fontFamily-label1);
+  text-transform: var(--textTransform-label1);
+}
+
+.coinbase-advanced-theme .cds-IconButton {
+    height: 32px;
+    width: 32px;
+    border-radius: var(--borderRadius-200);
+}
+  
+.coinbase-advanced-theme .cds-IconButton[data-compact="true"] {
+  height: 24px;
+  width: 24px;
+}
+  
+/* No easy way to adjust spinner */
