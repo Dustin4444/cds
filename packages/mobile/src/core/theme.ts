@@ -46,8 +46,10 @@ export type ThemeConfig = {
   shadow: { [key in ThemeVars.Shadow]: Shadow };
   /** The control size values. */
   controlSize: { [key in ThemeVars.ControlSize]: number };
-  /** Custom gradient presets. Merged with default presets. */
-  gradients?: Partial<Record<GradientPreset, LinearGradientConfig>>;
+  /** Custom gradient presets for light mode. Merged with default presets. */
+  lightGradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
+  /** Custom gradient presets for dark mode. Merged with default presets. */
+  darkGradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
 };
 
 export type Theme = ThemeConfig & {
@@ -57,4 +59,6 @@ export type Theme = ThemeConfig & {
   spectrum: { [key in ThemeVars.SpectrumColor]: string };
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: string };
+  /** The light or dark gradient presets, as appropriate based on the activeColorScheme. */
+  gradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
 };

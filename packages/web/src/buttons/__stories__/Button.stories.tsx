@@ -9,6 +9,7 @@ import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { Button, type ButtonBaseProps } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
+import { defaultGradientTheme } from '../../themes/gradients/defaultGradientPresets';
 
 export default {
   component: Button,
@@ -101,87 +102,6 @@ export const FlushProps = () => (
   </VStack>
 );
 
-export const GradientButton = () => (
-  <VStack alignItems="flex-start" gap={2}>
-    <Button color="fgInverse" gradient="brand" onClick={() => console.log('clicked')}>
-      Brand Gradient Button
-    </Button>
-
-    <Button
-      color="fgInverse"
-      gradient={{ direction: 'to-r', colors: ['bgPositive', 'bgPrimary'] }}
-      onClick={() => console.log('clicked')}
-    >
-      Positive to Primary
-    </Button>
-
-    <Button
-      color="fgInverse"
-      gradient={{ direction: 'to-r', colors: ['bgNegative', 'bgWarning'] }}
-      onClick={() => console.log('clicked')}
-    >
-      Negative to Warning
-    </Button>
-
-    <Button color="fgInverse" gradient="premium" onClick={() => console.log('clicked')}>
-      Premium Gradient
-    </Button>
-
-    <Button
-      color="fgInverse"
-      gradient={{ direction: 45, colors: ['accentBoldBlue', 'accentBoldPurple'] }}
-      onClick={() => console.log('clicked')}
-    >
-      Custom Angle (45°)
-    </Button>
-
-    <Button
-      color="fgInverse"
-      gradient={{
-        direction: 'to-r',
-        colors: [
-          { color: 'accentBoldBlue', offset: 0 },
-          { color: 'accentBoldPurple', offset: 0.5 },
-          { color: 'accentBoldYellow', offset: 1 },
-        ],
-      }}
-      onClick={() => console.log('clicked')}
-    >
-      Custom Color Stops
-    </Button>
-  </VStack>
-);
-
-export const GradientButtonBlock = () => (
-  <VStack gap={2}>
-    <Button block color="fgInverse" gradient="brand" onClick={() => console.log('clicked')}>
-      Full Width Gradient Button
-    </Button>
-
-    <Button
-      block
-      color="fgInverse"
-      gradient={{
-        direction: 'to-r',
-        colors: ['accentBoldBlue', 'accentBoldPurple', 'accentBoldYellow'],
-      }}
-      onClick={() => console.log('clicked')}
-    >
-      Multi-Color Gradient
-    </Button>
-
-    <Button
-      block
-      color="fgInverse"
-      gradient="positive"
-      onClick={() => console.log('clicked')}
-      startIcon="checkmark"
-    >
-      Gradient with Icon
-    </Button>
-  </VStack>
-);
-
 const gradientCss = css`
   &:hover {
     background: linear-gradient(90deg, #0047e0 0%, #4c1d95 100%);
@@ -191,95 +111,194 @@ const gradientCss = css`
     background: linear-gradient(90deg, rgb(238, 137, 83) 0%, rgb(246, 244, 79) 100%);
   }
   &:disabled {
-    background: linear-gradient(90deg, #999999 0%, #555555 100%);
+    background: linear-gradient(90deg, #999999 0%, #333333 100%);
   }
 `;
 
-export const GradientButtonWithInteractiveStates = () => (
-  <VStack alignItems="flex-start" gap={2}>
-    <Button
-      className={gradientCss}
-      color="fgInverse"
-      gradient={{ direction: 'to-r', colors: ['bgPositive', 'bgPrimary'] }}
-      onClick={() => console.log('clicked')}
-    >
-      Gradient with Hover States
-    </Button>
-
-    <Button
-      blendStyles={{
-        background: 'linear-gradient(90deg, #667EEA 0%, #764BA2 50%, #F093FB 100%)',
-        hoveredBackground: 'linear-gradient(90deg, #5A6FD1 0%, #683F8E 50%, #D683E2 100%)',
-        pressedBackground: 'linear-gradient(90deg, #4E60B8 0%, #5A337A 50%, #BC73C9 100%)',
-      }}
-      className={gradientCss}
-      color="fgInverse"
-      gradient={{
-        direction: 90,
-        colors: [
-          { color: '#667EEA', offset: 0 },
-          { color: '#764BA2', offset: 0.5 },
-          { color: '#F093FB', offset: 1 },
-        ],
-      }}
-      onClick={() => console.log('clicked')}
-    >
-      Multi-Stop Gradient States
-    </Button>
-
-    <Button
-      disabled
-      className={gradientCss}
-      color="fg"
-      gradient={{
-        direction: 45,
-        colors: [
-          { color: '#00D9FF', offset: 0 },
-          { color: '#00FF94', offset: 1 },
-        ],
-      }}
-      onClick={() => console.log('clicked')}
-    >
-      Disabled Gradient State
-    </Button>
-
-    <Button
-      block
-      className={gradientCss}
-      color="fgInverse"
-      gradient={{
-        direction: 'to-r',
-        colors: [
-          { color: '#1A1A2E', offset: 0 },
-          { color: '#16213E', offset: 0.3 },
-          { color: '#0F3469', offset: 1 },
-        ],
-      }}
-      onClick={() => console.log('clicked')}
-    >
-      Dark Gradient Block Button
-    </Button>
-  </VStack>
-);
-
+/**
+ * Custom theme with dramatically different gradient colors
+ * to demonstrate theme customization.
+ * - brand: orange → yellow (warm, instead of default blue → purple)
+ * - premium: red → orange → yellow (warm gradient)
+ * - positive: uses warning color for contrast
+ */
 const customTheme: ThemeConfig = {
   ...defaultTheme,
-  gradients: {
+  lightGradient: {
     brand: {
       direction: 'to-r',
-      colors: ['bgPositive', 'bgPrimary'],
+      colors: [defaultTheme.lightColor.bgWarning, defaultTheme.lightColor.accentBoldYellow],
+    },
+    premium: {
+      direction: 135,
+      colors: [
+        defaultTheme.lightColor.accentBoldRed,
+        defaultTheme.lightColor.bgWarning,
+        defaultTheme.lightColor.accentBoldYellow,
+      ],
+    },
+    positive: {
+      direction: 'to-b',
+      colors: [
+        defaultTheme.lightColor.bgWarning,
+        { color: defaultTheme.lightColor.bgWarning, opacity: 0.7 },
+      ],
+    },
+  },
+  darkGradient: {
+    brand: {
+      direction: 'to-r',
+      colors: [defaultTheme.darkColor.bgWarning, defaultTheme.darkColor.accentBoldYellow],
+    },
+    premium: {
+      direction: 135,
+      colors: [
+        defaultTheme.darkColor.accentBoldRed,
+        defaultTheme.darkColor.bgWarning,
+        defaultTheme.darkColor.accentBoldYellow,
+      ],
+    },
+    positive: {
+      direction: 'to-b',
+      colors: [
+        defaultTheme.darkColor.bgWarning,
+        { color: defaultTheme.darkColor.bgWarning, opacity: 0.7 },
+      ],
     },
   },
 };
-export const GradientButtonWithThemePresets = () => {
+
+export const GradientButtons = () => {
   const { activeColorScheme } = useTheme();
+
   return (
-    <ThemeProvider activeColorScheme={activeColorScheme} theme={customTheme}>
-      <VStack gap={2}>
-        <Button color="fgInverse" gradient="brand" onClick={() => console.log('clicked')}>
-          Brand Gradient Button
-        </Button>
-      </VStack>
+    <ThemeProvider activeColorScheme={activeColorScheme} theme={defaultGradientTheme}>
+      <GradientButtonsContent />
     </ThemeProvider>
   );
 };
+
+function GradientButtonsContent() {
+  const theme = useTheme();
+
+  return (
+    <VStack alignItems="flex-start" gap={4}>
+      {/* Preset Gradients */}
+      <VStack alignItems="flex-start" gap={2}>
+        <Button color="fgInverse" gradient="brand" onClick={onClickConsole}>
+          Brand Gradient (Preset)
+        </Button>
+        <Button color="fgInverse" gradient="premium" onClick={onClickConsole}>
+          Premium Gradient (Preset)
+        </Button>
+        <Button
+          block
+          color="fgInverse"
+          gradient="positive"
+          onClick={onClickConsole}
+          startIcon="checkmark"
+        >
+          Positive Gradient with Icon
+        </Button>
+      </VStack>
+
+      {/* Custom Inline Gradients */}
+      <VStack alignItems="flex-start" gap={2}>
+        <Button
+          color="fgInverse"
+          gradient={{
+            direction: 'to-r',
+            colors: [theme.color.bgPositive, theme.color.bgPrimary],
+          }}
+          onClick={onClickConsole}
+        >
+          Custom: Positive to Primary
+        </Button>
+        <Button
+          color="fgInverse"
+          gradient={{
+            direction: 45,
+            colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
+          }}
+          onClick={onClickConsole}
+        >
+          Custom: 45° Angle
+        </Button>
+        <Button
+          color="fgInverse"
+          gradient={{
+            direction: 'to-r',
+            colors: [
+              { color: theme.color.accentBoldBlue, offset: 0 },
+              { color: theme.color.accentBoldPurple, offset: 0.5 },
+              { color: theme.color.accentBoldYellow, offset: 1 },
+            ],
+          }}
+          onClick={onClickConsole}
+        >
+          Custom: Color Stops
+        </Button>
+      </VStack>
+
+      {/* Block Gradients */}
+      <VStack gap={2}>
+        <Button block color="fgInverse" gradient="brand" onClick={onClickConsole}>
+          Full Width Gradient
+        </Button>
+        <Button
+          block
+          color="fgInverse"
+          gradient={{
+            direction: 'to-r',
+            colors: [
+              theme.color.accentBoldBlue,
+              theme.color.accentBoldPurple,
+              theme.color.accentBoldYellow,
+            ],
+          }}
+          onClick={onClickConsole}
+        >
+          Multi-Color Block Gradient
+        </Button>
+      </VStack>
+
+      {/* Interactive States (CSS overrides) */}
+      <VStack alignItems="flex-start" gap={2}>
+        <Button
+          className={gradientCss}
+          color="fgInverse"
+          gradient={{
+            direction: 'to-r',
+            colors: [theme.color.bgPositive, theme.color.bgPrimary],
+          }}
+          onClick={onClickConsole}
+        >
+          Gradient with Hover/Active States
+        </Button>
+        <Button
+          disabled
+          className={gradientCss}
+          color="fg"
+          gradient={{
+            direction: 45,
+            colors: [theme.color.accentBoldBlue, theme.color.accentBoldYellow],
+          }}
+          onClick={onClickConsole}
+        >
+          Disabled Gradient
+        </Button>
+      </VStack>
+      {/* Custom theme gradient */}
+      <ThemeProvider activeColorScheme={theme.activeColorScheme} theme={customTheme}>
+        <VStack alignItems="flex-start" gap={2}>
+          <Button color="fgInverse" gradient="brand" onClick={onClickConsole}>
+            Custom Brand Gradient
+          </Button>
+          <Button color="fgInverse" gradient="premium" onClick={onClickConsole}>
+            Custom Premium Gradient
+          </Button>
+        </VStack>
+      </ThemeProvider>
+    </VStack>
+  );
+}

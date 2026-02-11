@@ -9,24 +9,7 @@ import { isGradientColorStop, isGradientPreset } from '@coinbase/cds-common/type
 
 import type { Theme } from '../core/theme';
 
-/**
- * Type guard to check if a color string is a valid CDS theme color token.
- * Uses the theme's color object to verify the token exists.
- */
-function isThemeColorToken(color: string, theme: Theme): color is keyof typeof theme.color {
-  return color in theme.color;
-}
-
-/**
- * Resolves a color value using the theme.
- * Theme tokens are converted to their actual color values.
- */
-function resolveColor(color: string, theme: Theme): string {
-  if (isThemeColorToken(color, theme)) {
-    return theme.color[color];
-  }
-  return color;
-}
+type ThemeGradient = Theme['gradient'];
 
 /**
  * Applies opacity to a color by converting to rgba.
@@ -83,10 +66,7 @@ export type LinearGradientProps = {
 /**
  * Converts a LinearGradientConfig to props for the LinearGradient component.
  */
-export function linearGradientToProps(
-  config: LinearGradientConfig,
-  theme: Theme,
-): LinearGradientProps {
+export function linearGradientToProps(config: LinearGradientConfig): LinearGradientProps {
   const angle = resolveDirection(config.direction);
 
   const colors: string[] = [];
@@ -98,13 +78,13 @@ export function linearGradientToProps(
     let offset: number;
 
     if (isGradientColorStop(colorInput)) {
-      colorValue = resolveColor(colorInput.color, theme);
+      colorValue = colorInput.color;
       if (colorInput.opacity !== undefined) {
         colorValue = applyOpacity(colorValue, colorInput.opacity);
       }
       offset = colorInput.offset ?? index / (colorsCount - 1);
     } else {
-      colorValue = resolveColor(colorInput, theme);
+      colorValue = colorInput;
       offset = index / (colorsCount - 1);
     }
 
@@ -118,10 +98,13 @@ export function linearGradientToProps(
 /**
  * Converts a Gradient prop value to props for the LinearGradient component.
  */
-export function gradientToProps(gradient: Gradient, theme: Theme): LinearGradientProps {
+export function gradientToProps(
+  gradient: Gradient,
+  themeGradient: ThemeGradient,
+): LinearGradientProps {
   const config = isGradientPreset(gradient)
-    ? resolveGradientPreset(gradient, theme.gradients)
+    ? resolveGradientPreset(gradient, themeGradient)
     : gradient;
 
-  return linearGradientToProps(config, theme);
+  return linearGradientToProps(config);
 }

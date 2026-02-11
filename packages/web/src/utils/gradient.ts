@@ -9,42 +9,24 @@ import { isGradientColorStop, isGradientPreset } from '@coinbase/cds-common/type
 
 import type { Theme } from '../core/theme';
 
-/**
- * Type guard to check if a color string is a valid CDS theme color token.
- * Uses the theme's color object to verify the token exists.
- */
-function isThemeColorToken(color: string, theme: Theme): color is keyof typeof theme.color {
-  return color in theme.color;
-}
+type ThemeGradient = Theme['gradient'];
 
 /**
- * Resolves a color value to a CSS color string.
- * Theme tokens are converted to their actual color values.
+ * Resolves a gradient color input to a CSS color stop object.
  */
-function resolveColor(color: string, theme: Theme): string {
-  if (isThemeColorToken(color, theme)) {
-    return theme.color[color];
-  }
-  return color;
-}
-
-/**
- * Resolves a gradient color input to a CSS color stop string.
- */
-function resolveColorStop(
-  colorInput: GradientColorInput,
-  theme: Theme,
-): { color: string; offset?: number; opacity?: number } {
+function resolveColorStop(colorInput: GradientColorInput): {
+  color: string;
+  offset?: number;
+  opacity?: number;
+} {
   if (isGradientColorStop(colorInput)) {
     return {
-      color: resolveColor(colorInput.color, theme),
+      color: colorInput.color,
       offset: colorInput.offset,
       opacity: colorInput.opacity,
     };
   }
-  return {
-    color: resolveColor(colorInput, theme),
-  };
+  return { color: colorInput };
 }
 
 /**
@@ -52,10 +34,6 @@ function resolveColorStop(
  * Handles hex, rgb, rgba, and other color formats.
  */
 function applyOpacity(color: string, opacity: number): string {
-  // For CSS variables, use color-mix
-  if (color.startsWith('var(')) {
-    return `color-mix(in srgb, ${color} ${Math.round(opacity * 100)}%, transparent)`;
-  }
   // For hex colors
   if (color.startsWith('#')) {
     const hex = color.slice(1);
@@ -92,11 +70,11 @@ function applyOpacity(color: string, opacity: number): string {
 /**
  * Converts a LinearGradientConfig to a CSS linear-gradient string.
  */
-export function linearGradientToCSS(config: LinearGradientConfig, theme: Theme): string {
+export function linearGradientToCSS(config: LinearGradientConfig): string {
   const angle = resolveDirection(config.direction);
 
-  const colorStops = config.colors.map((colorInput, index) => {
-    const stop = resolveColorStop(colorInput, theme);
+  const colorStops = config.colors.map((colorInput) => {
+    const stop = resolveColorStop(colorInput);
     let colorValue = stop.color;
 
     if (stop.opacity !== undefined) {
@@ -117,10 +95,10 @@ export function linearGradientToCSS(config: LinearGradientConfig, theme: Theme):
 /**
  * Converts a Gradient prop value to a CSS linear-gradient string.
  */
-export function gradientToCSS(gradient: Gradient, theme: Theme): string {
+export function gradientToCSS(gradient: Gradient, themeGradient: ThemeGradient): string {
   const config = isGradientPreset(gradient)
-    ? resolveGradientPreset(gradient, theme.gradients)
+    ? resolveGradientPreset(gradient, themeGradient)
     : gradient;
 
-  return linearGradientToCSS(config, theme);
+  return linearGradientToCSS(config);
 }

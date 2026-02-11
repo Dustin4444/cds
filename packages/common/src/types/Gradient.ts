@@ -1,5 +1,3 @@
-import type { ThemeVars } from '../core/theme';
-
 // ============================================
 // Direction Types
 // ============================================
@@ -26,8 +24,8 @@ export type GradientDirection =
  * A single color stop in a gradient with optional offset and opacity.
  */
 export type GradientColorStop = {
-  /** Color value - accepts CDS tokens or raw color values (hex, rgb, etc.) */
-  color: ThemeVars.Color | string;
+  /** Color value - raw color string (hex, rgb, rgba, etc.) */
+  color: string;
   /** Position in gradient (0-1). If omitted, colors are evenly distributed. */
   offset?: number;
   /** Opacity override (0-1). */
@@ -35,9 +33,9 @@ export type GradientColorStop = {
 };
 
 /**
- * Simplified color input - can be a CDS token, raw color string, or full stop config.
+ * Simplified color input - can be a raw color string or full stop config.
  */
-export type GradientColorInput = ThemeVars.Color | string | GradientColorStop;
+export type GradientColorInput = string | GradientColorStop;
 
 // ============================================
 // Linear Gradient Configuration
@@ -81,8 +79,8 @@ export type GradientPreset = 'primary' | 'positive' | 'negative' | 'brand' | 'pr
  * // Using a preset
  * gradient="primary"
  *
- * // Using a configuration object
- * gradient={{ direction: 'to-r', colors: ['bgPrimary', 'accentBoldBlue'] }}
+ * // Using a configuration object with color strings
+ * gradient={{ direction: 'to-r', colors: ['#0052FF', '#7B3FE4'] }}
  */
 export type Gradient = GradientPreset | LinearGradientConfig;
 

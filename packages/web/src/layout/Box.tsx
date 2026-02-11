@@ -178,7 +178,8 @@ export const Box: BoxComponent = memo(
       const inlineStyle = useMemo(
         () => ({
           backgroundColor: dangerouslySetBackground,
-          ...(gradient && theme && { [gradientBackground]: gradientToCSS(gradient, theme) }),
+          ...(gradient &&
+            theme && { [gradientBackground]: gradientToCSS(gradient, theme.gradient) }),
           ...style,
         }),
         [dangerouslySetBackground, gradient, theme, style],

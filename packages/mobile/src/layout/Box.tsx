@@ -279,10 +279,10 @@ export const Box = memo(
 
       const resolvedGradientProps = useMemo(() => {
         if (gradient && GradientComponent) {
-          return gradientToProps(gradient, theme);
+          return gradientToProps(gradient, theme.gradient);
         }
         return null;
-      }, [gradient, GradientComponent, theme]);
+      }, [gradient, GradientComponent, theme.gradient]);
 
       const styles = useMemo(
         () => [

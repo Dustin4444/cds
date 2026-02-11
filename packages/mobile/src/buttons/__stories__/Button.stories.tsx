@@ -14,6 +14,7 @@ import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { Button, type ButtonProps } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
+import { defaultGradientTheme } from '../../themes/gradients/defaultGradientTheme';
 
 const buttonStories: Omit<ButtonProps, 'children'>[] = [
   { variant: 'foregroundMuted' },
@@ -45,6 +46,7 @@ const buttonStories: Omit<ButtonProps, 'children'>[] = [
 ];
 
 const ButtonScreen = () => {
+  const theme = useTheme();
   return (
     <ExampleScreen>
       <Example inline title="Complex example">
@@ -109,104 +111,115 @@ const ButtonScreen = () => {
         </Button>
       </Example>
 
-      <Example title="Gradient Buttons">
-        <Button
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient="brand"
-          onPress={() => {}}
-        >
-          Brand Gradient Button
-        </Button>
+      <ThemeProvider activeColorScheme={theme.activeColorScheme} theme={defaultGradientTheme}>
+        <Example title="Gradient Buttons">
+          <Button
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient="brand"
+            onPress={() => {}}
+          >
+            Brand Gradient Button
+          </Button>
 
-        <Button
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient={{ direction: 'to-r', colors: ['bgPositive', 'bgPrimary'] }}
-          onPress={() => {}}
-        >
-          Positive to Primary
-        </Button>
+          <Button
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient={{
+              direction: 'to-r',
+              colors: [`${theme.color.bgPositive}`, `${theme.color.bgPrimary}`],
+            }}
+            onPress={() => {}}
+          >
+            Positive to Primary
+          </Button>
 
-        <Button
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient={{ direction: 'to-r', colors: ['bgNegative', 'bgWarning'] }}
-          onPress={() => {}}
-        >
-          Negative to Warning
-        </Button>
+          <Button
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient={{
+              direction: 'to-r',
+              colors: [`${theme.color.bgNegative}`, `${theme.color.bgWarning}`],
+            }}
+            onPress={() => {}}
+          >
+            Negative to Warning
+          </Button>
 
-        <Button
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient="premium"
-          onPress={() => {}}
-        >
-          Premium Gradient
-        </Button>
+          <Button
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient="premium"
+            onPress={() => {}}
+          >
+            Premium Gradient
+          </Button>
 
-        <Button
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient={{ direction: 45, colors: ['accentBoldBlue', 'accentBoldPurple'] }}
-          onPress={() => {}}
-        >
-          Custom Angle (45°)
-        </Button>
+          <Button
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient={{
+              direction: 45,
+              colors: [`${theme.color.accentBoldBlue}`, `${theme.color.accentBoldPurple}`],
+            }}
+            onPress={() => {}}
+          >
+            Custom Angle (45°)
+          </Button>
 
-        <Button
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient={{
-            direction: 'to-r',
-            colors: [
-              { color: 'accentBoldBlue', offset: 0 },
-              { color: 'accentBoldPurple', offset: 0.5 },
-              { color: 'accentBoldPink', offset: 1 },
-            ],
-          }}
-          onPress={() => {}}
-        >
-          Custom Color Stops
-        </Button>
-      </Example>
+          <Button
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient={{
+              direction: 'to-r',
+              colors: [
+                { color: `${theme.color.accentBoldBlue}`, offset: 0 },
+                { color: `${theme.color.accentBoldPurple}`, offset: 0.5 },
+                { color: `${theme.color.accentBoldRed}`, offset: 1 },
+              ],
+            }}
+            onPress={() => {}}
+          >
+            Custom Color Stops
+          </Button>
+        </Example>
 
-      <Example title="Gradient Button Block">
-        <Button
-          block
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient="brand"
-          onPress={() => {}}
-        >
-          Full Width Gradient Button
-        </Button>
+        <Example title="Gradient Button Block">
+          <Button
+            block
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient="brand"
+            onPress={() => {}}
+          >
+            Full Width Gradient Button
+          </Button>
 
-        <Button
-          block
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient={{
-            direction: 'to-r',
-            colors: ['accentBoldPurple', 'transparent'],
-          }}
-          onPress={() => {}}
-        >
-          Multi-Color Gradient
-        </Button>
+          <Button
+            block
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient={{
+              direction: 'to-r',
+              colors: [`${theme.color.accentBoldPurple}`, `${theme.color.transparent}`],
+            }}
+            onPress={() => {}}
+          >
+            Multi-Color Gradient
+          </Button>
 
-        <Button
-          block
-          GradientComponent={LinearGradient}
-          color="fgInverse"
-          gradient="positive"
-          onPress={() => {}}
-          startIcon="checkmark"
-        >
-          Gradient with Icon
-        </Button>
-      </Example>
+          <Button
+            block
+            GradientComponent={LinearGradient}
+            color="fgInverse"
+            gradient="positive"
+            onPress={() => {}}
+            startIcon="checkmark"
+          >
+            Gradient with Icon
+          </Button>
+        </Example>
+      </ThemeProvider>
 
       <Example title="Custom Theme Gradient Presets">
         <CustomThemeGradientExample />
@@ -217,21 +230,33 @@ const ButtonScreen = () => {
 
 /**
  * Custom theme with overridden gradient presets.
- * The `gradients` property allows you to override default presets
- * or define custom gradient configurations.
+ * The `lightGradient` and `darkGradient` properties allow you to override
+ * default presets or define custom gradient configurations using hex/rgba colors.
  */
 const customTheme: ThemeConfig = {
-  ...defaultTheme,
-  gradients: {
-    // Override the default 'brand' gradient
+  ...defaultGradientTheme,
+  lightGradient: {
+    // Override the default 'brand' gradient for light mode
     brand: {
       direction: 'to-r',
-      colors: ['bgWarning', 'accentBoldPurple'],
+      colors: [defaultTheme.lightColor.bgWarning, defaultTheme.lightColor.accentBoldPurple],
     },
-    // Override the default 'premium' gradient
+    // Override the default 'premium' gradient for light mode
     premium: {
       direction: 45,
-      colors: ['bgNegative', 'accentBoldYellow'],
+      colors: [defaultTheme.lightColor.bgNegative, defaultTheme.lightColor.bgWarning],
+    },
+  },
+  darkGradient: {
+    // Override the default 'brand' gradient for dark mode
+    brand: {
+      direction: 'to-r',
+      colors: [defaultTheme.darkColor.bgWarning, defaultTheme.darkColor.accentBoldPurple],
+    },
+    // Override the default 'premium' gradient for dark mode
+    premium: {
+      direction: 45,
+      colors: [defaultTheme.darkColor.bgNegative, defaultTheme.darkColor.bgWarning],
     },
   },
 };
@@ -265,7 +290,7 @@ function CustomThemeGradientExample() {
         </Button>
 
         <Text color="fgMuted" font="caption">
-          Theme: gradients.brand = to-r, bgPositive → accentBoldGreen
+          Theme: gradients.brand = to-r, #F5A623 → #7B3FE4
         </Text>
       </VStack>
     </ThemeProvider>

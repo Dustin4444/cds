@@ -39,8 +39,10 @@ export type ThemeConfig = {
   shadow: { [key in ThemeVars.Shadow]: Property.BoxShadow };
   /** The control size values. */
   controlSize: { [key in ThemeVars.ControlSize]: number };
-  /** Custom gradient presets. Merged with default presets. */
-  gradients?: Partial<Record<GradientPreset, LinearGradientConfig>>;
+  /** Custom gradient presets for light mode. Merged with default presets. */
+  lightGradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
+  /** Custom gradient presets for dark mode. Merged with default presets. */
+  darkGradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
 };
 
 export type Theme = ThemeConfig & {
@@ -50,8 +52,11 @@ export type Theme = ThemeConfig & {
   spectrum: { [key in ThemeVars.SpectrumColor]: string };
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: Property.Color };
+  /** The light or dark gradient presets, as appropriate based on the activeColorScheme. */
+  gradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
 };
 
+// TO DO: consider if we should include the lightGradient and darkGradient in the styleVarPrefixes
 /** Maps our StyleVars to their CSS variable prefixes. For example, the names of CSS vars generated from `iconSize` vars will be prefixed with `--iconSize-`. */
 export const styleVarPrefixes = {
   lightSpectrum: 'light',
@@ -73,7 +78,10 @@ export const styleVarPrefixes = {
   textTransform: 'textTransform',
   shadow: 'shadow',
   controlSize: 'controlSize',
-} as const satisfies Record<Exclude<keyof Theme, 'id' | 'activeColorScheme'>, string>;
+} as const satisfies Record<
+  Exclude<keyof Theme, 'id' | 'activeColorScheme' | 'lightGradient' | 'darkGradient' | 'gradient'>,
+  string
+>;
 
 /** Used to generate intellisense via ThemeCSSVars below. */
 type ThemeObjectCssVars = {

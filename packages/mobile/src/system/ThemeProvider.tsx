@@ -21,6 +21,7 @@ export const ThemeProvider = ({ theme, activeColorScheme, children }: ThemeProvi
   const themeApi = useMemo(() => {
     const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
     const activeColorKey = activeColorScheme === 'dark' ? 'darkColor' : 'lightColor';
+    const activeGradientKey = activeColorScheme === 'dark' ? 'darkGradient' : 'lightGradient';
     const inverseSpectrumKey = activeColorScheme === 'dark' ? 'lightSpectrum' : 'darkSpectrum';
     const inverseColorKey = activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
 
@@ -49,6 +50,7 @@ export const ThemeProvider = ({ theme, activeColorScheme, children }: ThemeProvi
       activeColorScheme: activeColorScheme,
       spectrum: theme[activeSpectrumKey],
       color: theme[activeColorKey],
+      ...(theme[activeGradientKey] && { gradient: theme[activeGradientKey] }),
     };
   }, [theme, activeColorScheme]);
 

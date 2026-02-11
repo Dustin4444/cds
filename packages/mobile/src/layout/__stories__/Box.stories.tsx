@@ -5,8 +5,10 @@ import { LinearGradient } from '../../gradients/LinearGradient';
 import { Text } from '../../typography/Text';
 import { Box } from '../Box';
 import { OverflowGradient } from '../OverflowGradient';
+import { useTheme } from '../../hooks/useTheme';
 
 const BoxScreen = () => {
+  const theme = useTheme();
   return (
     <ExampleScreen>
       <Example title="Backgrounds">
@@ -218,7 +220,10 @@ const BoxScreen = () => {
         <Box
           GradientComponent={LinearGradient}
           borderRadius={200}
-          gradient={{ direction: 'to-r', colors: ['bgPrimary', 'bgPositive'] }}
+          gradient={{
+            direction: 'to-r',
+            colors: [`${theme.color.bgPrimary}`, `${theme.color.bgPositive}`],
+          }}
           padding={2}
         >
           <Text color="fgInverse" font="body">
@@ -229,7 +234,10 @@ const BoxScreen = () => {
         <Box
           GradientComponent={LinearGradient}
           borderRadius={200}
-          gradient={{ direction: 'to-b', colors: ['bgNegative', 'bgWarning'] }}
+          gradient={{
+            direction: 'to-b',
+            colors: [`${theme.color.bgNegative}`, `${theme.color.bgWarning}`],
+          }}
           padding={2}
         >
           <Text color="fgInverse" font="body">
@@ -240,7 +248,10 @@ const BoxScreen = () => {
         <Box
           GradientComponent={LinearGradient}
           borderRadius={200}
-          gradient={{ direction: 'to-br', colors: ['bgPrimary', 'accentBoldPurple'] }}
+          gradient={{
+            direction: 'to-br',
+            colors: [`${theme.color.bgPrimary}`, `${theme.color.accentBoldPurple}`],
+          }}
           padding={2}
         >
           <Text color="fgInverse" font="body">
@@ -251,7 +262,10 @@ const BoxScreen = () => {
         <Box
           GradientComponent={LinearGradient}
           borderRadius={200}
-          gradient={{ direction: 45, colors: ['bgPositive', 'bgPrimary'] }}
+          gradient={{
+            direction: 45,
+            colors: [`${theme.color.bgPositive}`, `${theme.color.bgPrimary}`],
+          }}
           padding={2}
         >
           <Text color="fgInverse" font="body">
@@ -264,7 +278,12 @@ const BoxScreen = () => {
           borderRadius={200}
           gradient={{
             direction: 'to-r',
-            colors: ['bgNegative', 'bgWarning', 'bgPositive', 'bgPrimary'],
+            colors: [
+              `${theme.color.bgNegative}`,
+              `${theme.color.bgWarning}`,
+              `${theme.color.bgPositive}`,
+              `${theme.color.bgPrimary}`,
+            ],
           }}
           padding={2}
         >
@@ -279,8 +298,8 @@ const BoxScreen = () => {
           gradient={{
             direction: 'to-b',
             colors: [
-              { color: 'bgPrimary', opacity: 1 },
-              { color: 'bgPrimary', opacity: 0 },
+              { color: `${theme.color.bgPrimary}`, opacity: 1 },
+              { color: `${theme.color.bgPrimary}`, opacity: 0 },
             ],
           }}
           padding={2}
