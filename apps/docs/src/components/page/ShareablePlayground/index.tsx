@@ -1,13 +1,14 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
-import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
+import { SandpackCodeEditor, SandpackProvider, useSandpack } from '@codesandbox/sandpack-react';
+import { LiveError, LivePreview } from 'react-live';
+import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
 import { Box } from '@coinbase/cds-web/layout';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { useToast } from '@coinbase/cds-web/overlays/useToast';
 import { Pressable } from '@coinbase/cds-web/system';
 import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
+import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
@@ -19,23 +20,14 @@ import * as typescriptPlugin from 'prettier/plugins/typescript.js';
 import { format } from 'prettier/standalone';
 
 import { usePlaygroundTheme } from '../../../theme/Layout/Provider/UnifiedThemeContext';
-import ReactLiveScope from '../../../theme/ReactLiveScope';
+import { CodeSandboxExportButton } from '../../../theme/Playground/CodeSandboxExport';
+import { SandpackBridge } from '../../../theme/Playground/SandpackBridge';
 
 import styles from './styles.module.css';
 
-const PlaygroundEditorHeader = memo(() => {
-  return (
-    <Box borderedBottom paddingBottom={0.5} paddingTop={0.75} paddingX={1} width="100%">
-      <Text alignItems="center" color="fgMuted" display="flex" font="label1" userSelect="none">
-        <Icon active color="fgMuted" name="pencil" paddingEnd={0.5} size="xs" /> Live Code
-      </Text>
-    </Box>
-  );
-});
-
 const renderErrorFallback = (params: any) => <ErrorBoundaryErrorMessageFallback {...params} />;
 
-const previewComponent = () => (
+const previewContent = () => (
   <>
     <ErrorBoundary fallback={renderErrorFallback}>
       <LivePreview />
@@ -77,54 +69,27 @@ const prettierOptions = {
   useTabs: false,
 } as const;
 
-type PlaygroundControlsProps = {
-  onClickCopy: () => void;
-  onClickShare: () => void;
-};
-
-const PlaygroundControls = memo(({ onClickCopy, onClickShare }: PlaygroundControlsProps) => {
+const PlaygroundEditorHeader = memo(function PlaygroundEditorHeader() {
   return (
-    <HStack alignItems="center" gap={2} paddingTop={0.5}>
-      <Pressable noScaleOnPress accessibilityLabel="Copy code" onClick={onClickCopy}>
-        <HStack alignItems="center">
-          <Icon name="copy" paddingEnd={0.5} size="xs" />
-          <Text color="fgPrimary" font="label1">
-            Copy code
-          </Text>
-        </HStack>
-      </Pressable>
-      <Pressable noScaleOnPress accessibilityLabel="Share code" onClick={onClickShare}>
-        <HStack alignItems="center">
-          <Icon name="share" paddingEnd={0.5} size="xs" />
-          <Text color="fgPrimary" font="label1">
-            Share code
-          </Text>
-        </HStack>
-      </Pressable>
-    </HStack>
+    <Box borderedBottom paddingBottom={0.5} paddingTop={0.75} paddingX={1} width="100%">
+      <Text alignItems="center" color="fgMuted" display="flex" font="label1" userSelect="none">
+        <Icon active color="fgMuted" name="pencil" paddingEnd={0.5} size="xs" /> Live Code
+      </Text>
+    </Box>
   );
 });
 
-type LiveProviderProps = React.ComponentProps<typeof LiveProvider>;
-
-type ShareablePlaygroundProps = Omit<LiveProviderProps, 'children' | 'code' | 'transformCode'> & {
-  /** The default initial code to display in the playground if no code was provided via the URL. */
+/** Controls: handles URL sync and Prettier formatting inside SandpackProvider. */
+const ShareablePlaygroundInner = memo(function ShareablePlaygroundInner({
+  defaultInitialCode,
+}: {
   defaultInitialCode: string;
-};
-
-export const ShareablePlayground = memo(function Playground({
-  defaultInitialCode: defaultInitialCodeProp = defaultCodeExample,
-  ...props
-}: ShareablePlaygroundProps): JSX.Element {
-  const defaultInitialCode = useMemo(
-    () => defaultInitialCodeProp.replace(/\n$/, ''),
-    [defaultInitialCodeProp],
-  );
-  const [code, setCode] = useState(() => getSharedCode() ?? defaultInitialCode);
-  const codeRef = useRef(code);
+}) {
   const toast = useToast();
-  const { colorScheme, theme, prismTheme } = usePlaygroundTheme();
+  const { sandpack } = useSandpack();
+  const codeRef = useRef(defaultInitialCode);
 
+  // Sync code changes to URL
   const handleUrlUpdate = useMemo(
     () =>
       debounce((code: string) => {
@@ -136,71 +101,125 @@ export const ShareablePlayground = memo(function Playground({
     [],
   );
 
-  const handleCodeChange = useCallback(
-    (code: string) => {
+  // Watch for Sandpack code changes and sync to URL
+  useEffect(() => {
+    const code = sandpack.files[sandpack.activeFile]?.code ?? '';
+    if (code !== codeRef.current) {
       codeRef.current = code;
       handleUrlUpdate(code);
-      setCode(code);
-    },
-    [handleUrlUpdate],
-  );
-
-  const handleCopyToClipboard = useCallback(() => {
-    navigator.clipboard
-      .writeText(codeRef.current)
-      .then(() => toast.show('Copied to clipboard'))
-      .catch(() => toast.show('Failed to copy to clipboard'));
-  }, [toast]);
-
-  const handleShareCode = useCallback(() => {
-    try {
-      const compressedCode = compressToEncodedURIComponent(codeRef.current);
-      const url = new URL(window.location.href);
-      // If the code has changed from the default value we include it in the URL
-      if (codeRef.current !== defaultInitialCode) url.searchParams.set('code', compressedCode);
-
-      navigator.clipboard
-        .writeText(url.toString())
-        .then(() => toast.show('Share link copied to clipboard'));
-    } catch (error) {
-      toast.show('Failed to copy share link');
     }
-  }, [defaultInitialCode, toast]);
+  }, [sandpack.files, sandpack.activeFile, handleUrlUpdate]);
 
+  // Prettier formatting (Cmd/Ctrl+S)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.code === 'KeyS' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
-        format(codeRef.current, prettierOptions).then(handleCodeChange);
+        const activeFile = sandpack.activeFile;
+        const code = sandpack.files[activeFile]?.code ?? '';
+        format(code, prettierOptions).then((formatted) => {
+          sandpack.updateFile(activeFile, formatted);
+        });
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleCodeChange]);
+  }, [sandpack]);
+
+  const handleCopyToClipboard = useCallback(() => {
+    const code = sandpack.files[sandpack.activeFile]?.code ?? '';
+    navigator.clipboard
+      .writeText(code)
+      .then(() => toast.show('Copied to clipboard'))
+      .catch(() => toast.show('Failed to copy to clipboard'));
+  }, [sandpack, toast]);
+
+  const handleShareCode = useCallback(() => {
+    try {
+      const code = sandpack.files[sandpack.activeFile]?.code ?? '';
+      const compressedCode = compressToEncodedURIComponent(code);
+      const url = new URL(window.location.href);
+      if (code !== defaultInitialCode) url.searchParams.set('code', compressedCode);
+
+      navigator.clipboard
+        .writeText(url.toString())
+        .then(() => toast.show('Share link copied to clipboard'));
+    } catch {
+      toast.show('Failed to copy share link');
+    }
+  }, [sandpack, defaultInitialCode, toast]);
+
+  return (
+    <>
+      {/* Preview */}
+      <SandpackBridge noInline>
+        <VStack background="bg" borderRadius={400} color="fg" font="body" padding={3}>
+          <BrowserOnly fallback={<div>Loading...</div>}>{previewContent}</BrowserOnly>
+        </VStack>
+      </SandpackBridge>
+
+      {/* Editor (always expanded for shareable playground) */}
+      <VStack paddingBottom={0.5} paddingTop={1}>
+        <VStack background="bg" borderRadius={400} overflow="hidden" width="100%">
+          <PlaygroundEditorHeader />
+          <SandpackCodeEditor
+            className={styles.sandpackEditor}
+            showLineNumbers={false}
+            showTabs={false}
+            wrapContent={false}
+          />
+        </VStack>
+      </VStack>
+
+      {/* Controls */}
+      <HStack alignItems="center" gap={2} paddingTop={0.5}>
+        <Pressable noScaleOnPress accessibilityLabel="Copy code" onClick={handleCopyToClipboard}>
+          <HStack alignItems="center">
+            <Icon name="copy" paddingEnd={0.5} size="xs" />
+            <Text color="fgPrimary" font="label1">
+              Copy code
+            </Text>
+          </HStack>
+        </Pressable>
+        <Pressable noScaleOnPress accessibilityLabel="Share code" onClick={handleShareCode}>
+          <HStack alignItems="center">
+            <Icon name="share" paddingEnd={0.5} size="xs" />
+            <Text color="fgPrimary" font="label1">
+              Share code
+            </Text>
+          </HStack>
+        </Pressable>
+        <CodeSandboxExportButton isMultiFile={false} />
+      </HStack>
+    </>
+  );
+});
+
+type ShareablePlaygroundProps = {
+  /** The default initial code to display in the playground if no code was provided via the URL. */
+  defaultInitialCode?: string;
+};
+
+export const ShareablePlayground = memo(function ShareablePlayground({
+  defaultInitialCode: defaultInitialCodeProp = defaultCodeExample,
+}: ShareablePlaygroundProps): JSX.Element {
+  const defaultInitialCode = useMemo(
+    () => defaultInitialCodeProp.replace(/\n$/, ''),
+    [defaultInitialCodeProp],
+  );
+  const initialCode = useMemo(() => getSharedCode() ?? defaultInitialCode, [defaultInitialCode]);
+  const { colorScheme, theme } = usePlaygroundTheme();
 
   return (
     <VStack paddingBottom={3}>
       <ThemeProvider activeColorScheme={colorScheme} theme={theme}>
-        <LiveProvider
-          enableTypeScript
-          code={code}
-          language="tsx"
-          noInline={true}
-          scope={ReactLiveScope}
-          theme={prismTheme}
-          {...props}
+        <SandpackProvider
+          files={{ '/App.tsx': initialCode }}
+          options={{ activeFile: '/App.tsx', visibleFiles: ['/App.tsx'] }}
+          theme={colorScheme === 'dark' ? 'dark' : 'light'}
         >
-          <VStack background="bg" borderRadius={400} color="fg" font="body" padding={3}>
-            <BrowserOnly fallback={<div>Loading...</div>}>{previewComponent}</BrowserOnly>
-          </VStack>
-          <VStack paddingBottom={0.5} paddingTop={1}>
-            <VStack background="bg" borderRadius={400} overflow="hidden" width="100%">
-              <PlaygroundEditorHeader />
-              <LiveEditor className={styles.playgroundEditor} onChange={handleCodeChange} />
-            </VStack>
-          </VStack>
-          <PlaygroundControls onClickCopy={handleCopyToClipboard} onClickShare={handleShareCode} />
-        </LiveProvider>
+          <ShareablePlaygroundInner defaultInitialCode={defaultInitialCode} />
+        </SandpackProvider>
       </ThemeProvider>
     </VStack>
   );

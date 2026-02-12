@@ -11,6 +11,8 @@ import webPackageJson from '../../packages/web/package.json';
 import webVisualizationPackageJson from '../../packages/web-visualization/package.json';
 
 import docgenConfig from './docgen.config';
+import remarkPlaygroundExamples from './src/remark/remarkPlaygroundExamples';
+import playgroundExamplesWatcherPlugin from './src/plugins/playgroundExamplesWatcherPlugin';
 
 if (
   !(
@@ -167,6 +169,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
+          remarkPlugins: [remarkPlaygroundExamples],
         },
         blog: {
           blogTitle: 'CDS Blog',
@@ -270,6 +273,7 @@ const config: Config = {
     ],
     ['@coinbase/docusaurus-plugin-docgen', docgenConfig],
     webpackPlugin,
+    playgroundExamplesWatcherPlugin,
     [
       '@coinbase/docusaurus-plugin-llm-dev-server',
       {

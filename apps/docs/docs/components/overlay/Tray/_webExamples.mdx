@@ -1,3 +1,5 @@
+import Playground from '@site/src/theme/Playground';
+
 ## Basics
 
 The recommended way to use a `Tray` is to add to dom when visible, and use onCloseComplete to remove it.
@@ -1051,59 +1053,7 @@ function MultiScreenTrayExample() {
 
 You can create a reusable responsive tray with a pictogram and title in the header.
 
-```jsx live
-function IllustrationTrayExample() {
-  function IllustrationTray({ pictogramName, title, children, ...props }) {
-    const titleId = useId();
-
-    return (
-      <Tray
-        {...props}
-        title={
-          <VStack gap={{ phone: 1.5, tablet: 2, desktop: 2 }}>
-            <Pictogram name={pictogramName} />
-            <Text id={titleId} font="title3">
-              {title}
-            </Text>
-          </VStack>
-        }
-        accessibilityLabelledBy={titleId}
-      >
-        {children}
-      </Tray>
-    );
-  }
-
-  function Example() {
-    const [visible, setVisible] = useState(false);
-    const { isPhone } = useBreakpoints();
-    const handleOpen = () => setVisible(true);
-    const handleClose = () => setVisible(false);
-
-    return (
-      <VStack gap={2}>
-        <Button onClick={handleOpen}>Open Illustration Tray</Button>
-        {visible && (
-          <IllustrationTray
-            pictogramName="addWallet"
-            title="Section header"
-            pin={isPhone ? 'bottom' : 'right'}
-            showHandleBar={isPhone}
-            onCloseComplete={handleClose}
-          >
-            <Text color="fgMuted" font="body" paddingBottom={2}>
-              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-              interdum lorem id, viverra.
-            </Text>
-          </IllustrationTray>
-        )}
-      </VStack>
-    );
-  }
-
-  return <Example />;
-}
-```
+<Playground example="./examples/IllustrationTray" />
 
 ### Responsive
 
