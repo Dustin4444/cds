@@ -11,10 +11,10 @@
   font-weight: var(--fontWeight-label2) !important;
 }
 
-/* Sandpack editor styles */
+/* Sandpack editor: override CSS variables and CodeMirror styles to match CDS design tokens */
 .sandpackEditor {
-  --sp-colors-surface1: var(--color-bg) !important;
-  --sp-colors-surface2: var(--color-bg) !important;
+  --sp-colors-surface1: transparent !important;
+  --sp-colors-surface2: transparent !important;
   --sp-colors-surface3: var(--color-line) !important;
   --sp-font-mono: var(--fontFamilyMono-label2) !important;
   --sp-font-size: var(--fontSize-label2) !important;
@@ -22,6 +22,7 @@
 
 .sandpackEditor .cm-editor {
   background-color: transparent !important;
+  font-size: var(--fontSize-label2) !important;
 }
 
 .sandpackEditor .cm-gutters {
@@ -30,44 +31,20 @@
 }
 
 .sandpackEditor .cm-content {
-  padding: var(--space-2) !important;
+  padding: var(--space-1) var(--space-2) !important;
   font-family: var(--fontFamilyMono-label2) !important;
   font-size: var(--fontSize-label2) !important;
   font-weight: var(--fontWeight-label2) !important;
+  line-height: var(--lineHeight-label2) !important;
+}
+
+.sandpackEditor .cm-line {
+  font-family: var(--fontFamilyMono-label2) !important;
+  font-size: var(--fontSize-label2) !important;
 }
 
 .sandpackEditor .cm-scroller {
   scrollbar-width: thin;
-}
-
-/* Collapsed code preview with gradient fade */
-.collapsedPreview {
-  position: relative;
-  max-height: 80px;
-  overflow: hidden;
-  padding: 0 var(--space-2);
-}
-
-.collapsedPreview::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, transparent, var(--color-bg));
-  pointer-events: none;
-}
-
-.collapsedPreviewCode {
-  margin: 0;
-  padding: var(--space-1) 0;
-  white-space: pre;
-  font-family: var(--fontFamilyMono-label2);
-  font-size: var(--fontSize-label2);
-  font-weight: var(--fontWeight-label2);
-  color: var(--color-fgMuted);
-  background: transparent;
-  border: none;
-  overflow: hidden;
+  max-height: 400px;
+  overflow: auto !important;
 }

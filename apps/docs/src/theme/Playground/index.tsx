@@ -5,7 +5,6 @@ import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { IconButton, type IconButtonProps } from '@coinbase/cds-web/buttons/IconButton';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { Box } from '@coinbase/cds-web/layout';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Tooltip } from '@coinbase/cds-web/overlays';
@@ -17,30 +16,28 @@ import { Text } from '@coinbase/cds-web/typography/Text';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { ErrorBoundaryErrorMessageFallback } from '@docusaurus/theme-common';
+import { AnimatePresence, m as motion } from 'framer-motion';
 import * as estreePlugin from 'prettier/plugins/estree.js';
 import * as typescriptPlugin from 'prettier/plugins/typescript.js';
 import { format } from 'prettier/standalone';
 
-import { generateImports } from '../importMap';
 import { usePlaygroundTheme } from '../Layout/Provider/UnifiedThemeContext';
 
+import {
+  type CodeDisplayMode,
+  extractSnippetFromCode,
+  getCodeDisplayInfo,
+  spliceSnippetIntoCode,
+} from './codeDisplayMode';
 import { useOpenInCodeSandbox } from './CodeSandboxExport';
-import { extractPreviewSnippet, hasPreviewMarkers } from './previewSnippet';
 import { SandpackBridge } from './SandpackBridge';
+import { sandpackGithubLight, sandpackNightOwl } from './sandpackTheme';
 import styles from './styles.module.css';
 
 // --- Utilities ---
 
-const isHeader = (element: HTMLElement): boolean => {
-  return (
-    element.tagName === 'H1' ||
-    element.tagName === 'H2' ||
-    element.tagName === 'H3' ||
-    element.tagName === 'H4' ||
-    element.tagName === 'H5' ||
-    element.tagName === 'H6'
-  );
-};
+const isHeader = (element: HTMLElement): boolean =>
+  ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(element.tagName);
 
 const useGetHeadingText = () => {
   const [headingText, setHeadingText] = useState('');
@@ -48,21 +45,18 @@ const useGetHeadingText = () => {
 
   useEffect(() => {
     if (!editorRef.current?.parentElement) return;
-
-    let currentElement = editorRef.current.parentElement;
-    if (isHeader(currentElement) && currentElement.classList.contains('anchor')) {
-      setHeadingText(currentElement.textContent?.toLowerCase() || '');
+    let el = editorRef.current.parentElement;
+    if (isHeader(el) && el.classList.contains('anchor')) {
+      setHeadingText(el.textContent?.toLowerCase() || '');
       return;
     }
-
-    while (currentElement.previousElementSibling) {
-      currentElement = currentElement.previousElementSibling as HTMLElement;
-      if (isHeader(currentElement) && currentElement.classList.contains('anchor')) {
-        setHeadingText(currentElement.textContent?.toLowerCase() || '');
+    while (el.previousElementSibling) {
+      el = el.previousElementSibling as HTMLElement;
+      if (isHeader(el) && el.classList.contains('anchor')) {
+        setHeadingText(el.textContent?.toLowerCase() || '');
         return;
       }
     }
-
     setHeadingText('');
   }, []);
 
@@ -94,16 +88,6 @@ const previewContent = () => (
   </>
 );
 
-/** Get a short snippet of code for the collapsed preview. */
-const getCollapsedSnippet = (code: string): string => {
-  if (hasPreviewMarkers(code)) {
-    const snippet = extractPreviewSnippet(code);
-    if (snippet) return snippet;
-  }
-  // Fall back to first ~5 lines
-  return code.split('\n').slice(0, 5).join('\n');
-};
-
 // --- Shared sub-components ---
 
 type ToolbarIconButtonProps = IconButtonProps<'button'> & {
@@ -114,7 +98,15 @@ export const ToolbarIconButton = memo(({ tooltip, ...props }: ToolbarIconButtonP
   if (tooltip) {
     return (
       <Tooltip content={tooltip}>
-        <ToolbarIconButton {...props} />
+        <IconButton
+          compact
+          transparent
+          height="auto"
+          padding={1}
+          variant="foregroundMuted"
+          width="auto"
+          {...props}
+        />
       </Tooltip>
     );
   }
@@ -133,7 +125,6 @@ export const ToolbarIconButton = memo(({ tooltip, ...props }: ToolbarIconButtonP
 
 // --- Sub-components inside SandpackProvider context ---
 
-// File tab component following the pattern from HookTabsContainer
 const FileTabComponent = ({ id, label }: TabValue) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = activeTab?.id === id;
@@ -142,7 +133,7 @@ const FileTabComponent = ({ id, label }: TabValue) => {
       color={isActive ? 'fgPrimary' : 'fgMuted'}
       font="label2"
       onClick={() => updateActiveTab(id)}
-      paddingBottom={0.5}
+      paddingBottom={0.25}
       paddingTop={0.25}
     >
       {label}
@@ -154,7 +145,6 @@ const FileTabsIndicator = (props: TabsActiveIndicatorProps) => {
   return <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />;
 };
 
-/** Renders CDS Tabs for switching between files in a multi-file example. */
 const FileTabBar = memo(function FileTabBar() {
   const { sandpack } = useSandpack();
 
@@ -190,66 +180,91 @@ const FileTabBar = memo(function FileTabBar() {
       activeBackground="bgPrimary"
       activeTab={activeTab}
       gap={2}
+      marginBottom={-0.5}
       onChange={handleChange}
       tabs={tabs}
     />
   );
 });
 
-// --- PlaygroundHeader: unified header between preview and code ---
+// --- PlaygroundHeader ---
 
 type PlaygroundHeaderProps = {
-  collapsed: boolean;
+  displayMode: CodeDisplayMode;
+  expanded: boolean;
   headingText: string;
-  onToggleCollapsed: () => void;
+  onToggle: () => void;
+  onRerender: () => void;
   isMultiFile: boolean;
+  /** Whether the snippet is clipped (i.e. not showing the full code). When false, no toggle needed. */
+  isClipped: boolean;
 };
 
 const PlaygroundHeader = memo(function PlaygroundHeader({
-  collapsed,
+  displayMode,
+  expanded,
   headingText,
-  onToggleCollapsed,
+  onToggle,
+  onRerender,
   isMultiFile,
+  isClipped,
 }: PlaygroundHeaderProps) {
   const toast = useToast();
   const { sandpack } = useSandpack();
   const handleOpenInCodeSandbox = useOpenInCodeSandbox(isMultiFile);
 
   const handleCopyToClipboard = useCallback(() => {
-    const activeFile = sandpack.activeFile;
-    const code = sandpack.files[activeFile]?.code ?? '';
-
-    if (collapsed && hasPreviewMarkers(code)) {
-      const snippet = extractPreviewSnippet(code);
-      if (snippet) {
-        const imports = generateImports(snippet);
-        const copyText = imports ? `${imports}\n\n${snippet}` : snippet;
-        navigator.clipboard
-          .writeText(copyText)
-          .then(() => toast.show('Copied to clipboard'))
-          .catch(() => toast.show('Failed to copy to clipboard'));
-        return;
-      }
-    }
-
+    const code = sandpack.files[sandpack.activeFile]?.code ?? '';
     navigator.clipboard
       .writeText(code)
       .then(() => toast.show('Copied to clipboard'))
       .catch(() => toast.show('Failed to copy to clipboard'));
-  }, [sandpack, toast, collapsed]);
-
-  const handleReset = useCallback(() => {
-    sandpack.resetAllFiles();
-    toast.show('Code reset');
   }, [sandpack, toast]);
+
+  /** Check if any file has been modified from its original state. */
+  const hasChanges = useCallback((): boolean => {
+    // Sandpack tracks original files internally; we compare current vs reset state
+    // A simple heuristic: check if resetAllFiles would change anything
+    // For now, always show confirmation since we can't easily diff
+    return true;
+  }, []);
+
+  const handleResetCode = useCallback(() => {
+    if (hasChanges() && !window.confirm('Discard all code changes and reset to original?')) {
+      return;
+    }
+    sandpack.resetAllFiles();
+    toast.show('Code reset to original');
+  }, [sandpack, toast, hasChanges]);
+
+  const handleFormat = useCallback(() => {
+    const activeFile = sandpack.activeFile;
+    const code = sandpack.files[activeFile]?.code ?? '';
+    format(code, prettierOptions).then((formatted) => {
+      sandpack.updateFile(activeFile, formatted);
+      toast.show('Code formatted');
+    });
+  }, [sandpack, toast]);
+
+  const toggleLabel = useMemo(() => {
+    // Snippet mode with no clipping: full code is already visible, no toggle needed
+    if (displayMode === 'snippet' && !isClipped && !expanded) return null;
+    if (displayMode === 'snippet') return expanded ? 'Collapse code' : 'Expand code';
+    return expanded ? 'Hide code' : 'Show code';
+  }, [displayMode, expanded, isClipped]);
+
+  const toggleIcon = expanded ? 'caretUp' : 'caretDown';
+
+  // Bottom border shown whenever code is visible below the header
+  const showBottomBorder = displayMode === 'snippet' || expanded;
 
   return (
     <HStack
-      borderedBottom
+      borderedBottom={showBottomBorder}
       borderedTop
       alignItems="center"
       justifyContent="space-between"
-      paddingX={1}
+      paddingX={1.5}
       paddingY={0.5}
     >
       {/* Left: file tabs (multi-file) or "Live Code" label (single-file) */}
@@ -264,74 +279,36 @@ const PlaygroundHeader = memo(function PlaygroundHeader({
         )}
       </HStack>
 
-      {/* Center: collapse/expand toggle (only when expanded) */}
-      {!collapsed && (
-        <Pressable
-          noScaleOnPress
-          accessibilityLabel={`Hide code${headingText ? ` for ${headingText} example` : ''}`}
-          onClick={onToggleCollapsed}
-        >
-          <HStack alignItems="center">
-            <Icon name="caretUp" paddingEnd={0.5} size="xs" />
-            <Text color="fgMuted" font="label1">
-              Hide code
-            </Text>
-          </HStack>
-        </Pressable>
-      )}
+      {/* Right: toggle + icon buttons */}
+      <HStack alignItems="center" gap={1}>
+        {toggleLabel && (
+          <Pressable
+            noScaleOnPress
+            accessibilityLabel={`${toggleLabel}${headingText ? ` for ${headingText} example` : ''}`}
+            onClick={onToggle}
+          >
+            <HStack alignItems="center">
+              <Icon color="fgMuted" name={toggleIcon} paddingEnd={0.5} size="xs" />
+              <Text color="fgMuted" font="label1">
+                {toggleLabel}
+              </Text>
+            </HStack>
+          </Pressable>
+        )}
 
-      {/* Right: icon buttons */}
-      <HStack alignItems="center" gap={0.5} justifyContent="flex-end">
-        <ToolbarIconButton name="copy" onClick={handleCopyToClipboard} tooltip="Copy code" />
-        <ToolbarIconButton name="refresh" onClick={handleReset} tooltip="Reset code" />
-        <ToolbarIconButton
-          name="pencil"
-          onClick={handleOpenInCodeSandbox}
-          tooltip="Open in CodeSandbox"
-        />
+        <HStack alignItems="center" gap={0.5}>
+          <ToolbarIconButton name="copy" onClick={handleCopyToClipboard} tooltip="Copy code" />
+          <ToolbarIconButton name="sparkle" onClick={handleFormat} tooltip="Format code" />
+          <ToolbarIconButton name="refresh" onClick={onRerender} tooltip="Reset demo" />
+          <ToolbarIconButton name="trashCan" onClick={handleResetCode} tooltip="Reset code" />
+          <ToolbarIconButton
+            name="pencil"
+            onClick={handleOpenInCodeSandbox}
+            tooltip="Open in CodeSandbox"
+          />
+        </HStack>
       </HStack>
     </HStack>
-  );
-});
-
-// --- CollapsedCodePreview: faded snippet with "Show code" button ---
-
-type CollapsedCodePreviewProps = {
-  headingText: string;
-  onExpand: () => void;
-};
-
-const CollapsedCodePreview = memo(function CollapsedCodePreview({
-  headingText,
-  onExpand,
-}: CollapsedCodePreviewProps) {
-  const { sandpack } = useSandpack();
-  const code = sandpack.files[sandpack.activeFile]?.code ?? '';
-  const snippet = useMemo(() => getCollapsedSnippet(code), [code]);
-
-  return (
-    <VStack>
-      {/* Faded code snippet */}
-      <div className={styles.collapsedPreview}>
-        <pre className={styles.collapsedPreviewCode}>{snippet}</pre>
-      </div>
-
-      {/* "Show code" button at the bottom */}
-      <Box borderedTop paddingY={0.5}>
-        <Pressable
-          noScaleOnPress
-          accessibilityLabel={`Show code${headingText ? ` for ${headingText} example` : ''}`}
-          onClick={onExpand}
-        >
-          <HStack alignItems="center" justifyContent="center">
-            <Icon name="caretDown" paddingEnd={0.5} size="xs" />
-            <Text color="fgPrimary" font="label1">
-              Show code
-            </Text>
-          </HStack>
-        </Pressable>
-      </Box>
-    </VStack>
   );
 });
 
@@ -356,6 +333,166 @@ const PrettierHandler = memo(function PrettierHandler() {
   }, [sandpack]);
 
   return null;
+});
+
+// --- CodeSection: manages display mode per-file ---
+
+type CodeSectionProps = {
+  headingText: string;
+  isMultiFile: boolean;
+  hideControls?: boolean;
+  editorStartsExpanded?: boolean;
+  onRerender: () => void;
+  /**
+   * Called to set the execution code override for the bridge.
+   * Pass a string when the editor is showing a snippet (bridge needs the full code).
+   * Pass undefined when the editor has the real code (bridge reads from Sandpack directly).
+   */
+  onFullCodeChange: (code: string | undefined) => void;
+};
+
+const CodeSection = memo(function CodeSection({
+  headingText,
+  isMultiFile,
+  hideControls,
+  editorStartsExpanded,
+  onRerender,
+  onFullCodeChange,
+}: CodeSectionProps) {
+  const { sandpack } = useSandpack();
+  const [expanded, setExpanded] = useState(editorStartsExpanded ?? false);
+
+  // Store the full code per file so we can restore it after showing a snippet.
+  // Key: file path, Value: full code
+  const fullCodeMap = useRef<Record<string, string>>({});
+
+  // Helper: get or initialize the full code for the active file
+  const getFullCode = useCallback(() => {
+    const file = sandpack.activeFile;
+    if (!fullCodeMap.current[file]) {
+      fullCodeMap.current[file] = sandpack.files[file]?.code ?? '';
+    }
+    return fullCodeMap.current[file];
+  }, [sandpack]);
+
+  // Helper: swap editor content to snippet, set override for bridge
+  const showSnippet = useCallback(() => {
+    const file = sandpack.activeFile;
+    const full = sandpack.files[file]?.code ?? '';
+    fullCodeMap.current[file] = full;
+    onFullCodeChange(full); // bridge uses this full code for execution
+    const snippet = extractSnippetFromCode(full);
+    if (snippet) {
+      sandpack.updateFile(file, snippet);
+    }
+  }, [sandpack, onFullCodeChange]);
+
+  // Helper: restore editor content to full code, clear override so bridge reads live
+  const showFullCode = useCallback(() => {
+    const file = sandpack.activeFile;
+    const full = fullCodeMap.current[file];
+    if (full) {
+      sandpack.updateFile(file, full);
+    }
+    onFullCodeChange(undefined); // bridge reads directly from Sandpack now
+  }, [sandpack, onFullCodeChange]);
+
+  // Compute display info from the FULL code (always)
+  const fullCode = getFullCode();
+  const displayInfo = useMemo(() => getCodeDisplayInfo(fullCode), [fullCode]);
+  const isSnippetMode = displayInfo.mode === 'snippet' && displayInfo.collapsedHeightPx != null;
+
+  // When expanded, keep fullCodeMap in sync with edits (for later collapse)
+  // and ensure bridge reads directly from Sandpack (no override)
+  useEffect(() => {
+    if (expanded) {
+      const code = sandpack.files[sandpack.activeFile]?.code ?? '';
+      fullCodeMap.current[sandpack.activeFile] = code;
+    }
+  }, [sandpack.files, sandpack.activeFile, expanded]);
+
+  // Initialize on mount: show snippet if applicable
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current) {
+      initialized.current = true;
+      if (!editorStartsExpanded && isSnippetMode) {
+        showSnippet();
+      } else {
+        onFullCodeChange(undefined); // no override needed, bridge reads from Sandpack
+      }
+    }
+  }); // intentionally no deps -- run once after first render
+
+  const handleToggle = useCallback(() => {
+    setExpanded((prev) => {
+      const next = !prev;
+      if (isSnippetMode) {
+        if (next) {
+          showFullCode();
+        } else {
+          showSnippet();
+        }
+      }
+      return next;
+    });
+  }, [isSnippetMode, showFullCode, showSnippet]);
+
+  // Editor visible: snippet (always), full (only when expanded)
+  const showEditor = displayInfo.mode === 'snippet' || expanded;
+
+  // When collapsed in snippet mode and user edits, splice edits back into full code
+  useEffect(() => {
+    if (isSnippetMode && !expanded) {
+      const editedSnippet = sandpack.files[sandpack.activeFile]?.code ?? '';
+      const full = fullCodeMap.current[sandpack.activeFile];
+      if (full) {
+        const updatedFull = spliceSnippetIntoCode(full, editedSnippet);
+        if (updatedFull !== full) {
+          fullCodeMap.current[sandpack.activeFile] = updatedFull;
+          onFullCodeChange(updatedFull);
+        }
+      }
+    }
+  }, [sandpack.files, sandpack.activeFile, isSnippetMode, expanded, onFullCodeChange]);
+
+  return (
+    <>
+      {/* Header bar */}
+      {!hideControls && (
+        <PlaygroundHeader
+          displayMode={displayInfo.mode}
+          expanded={expanded}
+          headingText={headingText}
+          isClipped={displayInfo.collapsedHeightPx != null}
+          isMultiFile={isMultiFile}
+          onRerender={onRerender}
+          onToggle={handleToggle}
+        />
+      )}
+
+      {/* Sandpack editor with animated expand/collapse */}
+      <AnimatePresence initial={false}>
+        {showEditor && (
+          <motion.div
+            key="editor"
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            style={{ overflow: 'hidden' }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+          >
+            <SandpackCodeEditor
+              className={styles.sandpackEditor}
+              showLineNumbers={false}
+              showTabs={false}
+              wrapContent={false}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
 });
 
 // --- Main Playground ---
@@ -405,10 +542,20 @@ const Playground = memo(function Playground({
     () => (codeProp ?? children ?? '').replace(/\n$/, ''),
     [codeProp, children],
   );
-  const [collapsed, setIsCollapsed] = useState(!editorStartsExpanded);
-  const toggleCollapsed = useCallback(() => setIsCollapsed((c) => !c), []);
   const { colorScheme, theme } = usePlaygroundTheme();
   const { editorRef, headingText } = useGetHeadingText();
+
+  // Rerender key: incrementing this unmounts and remounts the preview
+  const [rerenderKey, setRerenderKey] = useState(0);
+  const handleRerender = useCallback(() => setRerenderKey((k) => k + 1), []);
+
+  // Full code for execution: the bridge uses this instead of reading from Sandpack
+  // (because Sandpack's file might contain just the snippet when collapsed)
+  const [executionCode, setExecutionCode] = useState<string | undefined>(undefined);
+  const handleFullCodeChange = useCallback(
+    (code: string | undefined) => setExecutionCode(code),
+    [],
+  );
 
   const noInline = noInlineProp || metastring?.includes('noInline');
 
@@ -442,11 +589,10 @@ const Playground = memo(function Playground({
             activeFile,
             visibleFiles: isMultiFile ? Object.keys(sandpackFiles) : [activeFile],
           }}
-          theme={colorScheme === 'dark' ? 'dark' : 'light'}
+          theme={colorScheme === 'dark' ? sandpackNightOwl : sandpackGithubLight}
         >
           <PrettierHandler />
 
-          {/* Single unified card */}
           <VStack
             background="bg"
             borderRadius={400}
@@ -455,8 +601,14 @@ const Playground = memo(function Playground({
             maxWidth="100%"
             overflow="hidden"
           >
-            {/* Preview */}
-            <SandpackBridge isMultiFile={isMultiFile} noInline={noInline} scope={scope}>
+            {/* Preview (keyed for rerender/remount) */}
+            <SandpackBridge
+              key={rerenderKey}
+              executionCode={isMultiFile ? undefined : executionCode}
+              isMultiFile={isMultiFile}
+              noInline={noInline}
+              scope={scope}
+            >
               {!hidePreview && (
                 <VStack padding={3}>
                   <BrowserOnly fallback={<div>Loading...</div>}>{previewContent}</BrowserOnly>
@@ -464,30 +616,15 @@ const Playground = memo(function Playground({
               )}
             </SandpackBridge>
 
-            {/* Header bar (always visible) */}
-            {!hideControls && (
-              <PlaygroundHeader
-                collapsed={collapsed}
-                headingText={headingText}
-                isMultiFile={isMultiFile}
-                onToggleCollapsed={toggleCollapsed}
-              />
-            )}
-
-            {/* Expanded: full editor */}
-            {!collapsed && (
-              <SandpackCodeEditor
-                className={styles.sandpackEditor}
-                showLineNumbers={false}
-                showTabs={false}
-                wrapContent={false}
-              />
-            )}
-
-            {/* Collapsed: faded snippet + "Show code" */}
-            {collapsed && (
-              <CollapsedCodePreview headingText={headingText} onExpand={toggleCollapsed} />
-            )}
+            {/* Code section: header + editor */}
+            <CodeSection
+              editorStartsExpanded={editorStartsExpanded}
+              headingText={headingText}
+              hideControls={hideControls}
+              isMultiFile={isMultiFile}
+              onFullCodeChange={handleFullCodeChange}
+              onRerender={handleRerender}
+            />
           </VStack>
         </SandpackProvider>
       </ThemeProvider>

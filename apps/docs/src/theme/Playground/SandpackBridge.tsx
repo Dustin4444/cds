@@ -4,8 +4,6 @@ import { useSandpack } from '@codesandbox/sandpack-react';
 
 import ReactLiveScope from '../ReactLiveScope';
 
-import { stripPreviewMarkers } from './previewSnippet';
-
 /**
  * Strips import/export statements and type declarations from code so it can
  * be executed by react-live (which provides all identifiers via scope).
@@ -69,13 +67,19 @@ type SandpackBridgeProps = {
   scope?: Record<string, unknown>;
   /** When true, strips imports/exports and concatenates files for react-live. */
   isMultiFile?: boolean;
+  /**
+   * Override code for execution. When provided, this code is used for react-live
+   * instead of reading from Sandpack files. This allows the editor to show a
+   * snippet while react-live executes the full code.
+   */
+  executionCode?: string;
 };
 
 /**
  * Bridge component that reads code from Sandpack's context and passes it
  * to react-live's LiveProvider for inline execution/preview.
  *
- * For single-file examples (jsx live blocks): passes code directly from the active file.
+ * For single-file examples: uses executionCode if provided, otherwise reads from active file.
  * For multi-file examples: strips imports/exports, concatenates visible files
  * (supporting files first, Example.tsx last), and appends render(<Example />).
  *
@@ -86,16 +90,21 @@ export const SandpackBridge = memo(function SandpackBridge({
   noInline,
   scope = ReactLiveScope,
   isMultiFile = false,
+  executionCode,
 }: SandpackBridgeProps) {
   const { sandpack } = useSandpack();
 
   const code = useMemo(() => {
+    // If override code is provided, use it for execution
+    if (executionCode != null) {
+      return executionCode;
+    }
+
     const files = sandpack.files;
 
     if (!isMultiFile) {
-      // Single file: read from active file, strip preview markers only
-      const activeCode = files[sandpack.activeFile]?.code ?? '';
-      return stripPreviewMarkers(activeCode);
+      // Single file: read from the active file
+      return files[sandpack.activeFile]?.code ?? '';
     }
 
     // Multi-file: only process our visible files (not Sandpack template files)

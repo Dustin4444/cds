@@ -1,14 +1,14 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SandpackCodeEditor, SandpackProvider, useSandpack } from '@codesandbox/sandpack-react';
 import { LiveError, LivePreview } from 'react-live';
+import { SandpackCodeEditor, SandpackProvider, useSandpack } from '@codesandbox/sandpack-react';
 import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
+import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Box } from '@coinbase/cds-web/layout';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { useToast } from '@coinbase/cds-web/overlays/useToast';
 import { Pressable } from '@coinbase/cds-web/system';
 import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
@@ -20,9 +20,10 @@ import * as typescriptPlugin from 'prettier/plugins/typescript.js';
 import { format } from 'prettier/standalone';
 
 import { usePlaygroundTheme } from '../../../theme/Layout/Provider/UnifiedThemeContext';
-import { useOpenInCodeSandbox } from '../../../theme/Playground/CodeSandboxExport';
 import { ToolbarIconButton } from '../../../theme/Playground';
+import { useOpenInCodeSandbox } from '../../../theme/Playground/CodeSandboxExport';
 import { SandpackBridge } from '../../../theme/Playground/SandpackBridge';
+import { sandpackGithubLight, sandpackNightOwl } from '../../../theme/Playground/sandpackTheme';
 
 import styles from './styles.module.css';
 
@@ -166,7 +167,7 @@ const ShareablePlaygroundInner = memo(function ShareablePlaygroundInner({
           <PlaygroundEditorHeader />
           <SandpackCodeEditor
             className={styles.sandpackEditor}
-            showLineNumbers={false}
+            showLineNumbers
             showTabs={false}
             wrapContent={false}
           />
@@ -222,7 +223,7 @@ export const ShareablePlayground = memo(function ShareablePlayground({
         <SandpackProvider
           files={{ '/App.tsx': initialCode }}
           options={{ activeFile: '/App.tsx', visibleFiles: ['/App.tsx'] }}
-          theme={colorScheme === 'dark' ? 'dark' : 'light'}
+          theme={colorScheme === 'dark' ? sandpackNightOwl : sandpackGithubLight}
         >
           <ShareablePlaygroundInner defaultInitialCode={defaultInitialCode} />
         </SandpackProvider>

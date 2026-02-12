@@ -24,8 +24,8 @@ export default function Example() {
           onCloseComplete={handleClose}
         >
           <Text color="fgMuted" font="body" paddingBottom={2}>
-            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-            interdum lorem id, viverra.
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
           </Text>
         </IllustrationTray>
       )}
