@@ -46,7 +46,7 @@ export type BoxBaseProps = StyleProps &
     dangerouslySetBackground?: string;
     /**
      * Apply a gradient background to the box. Accepts a preset name or a gradient configuration object.
-     * This sets the CSS `background` property and will override `dangerouslySetBackground` if both are provided.
+     * This sets the CSS `background` property and will override `dangerouslySetBackground` and `background`.
      */
     gradient?: Gradient;
   };

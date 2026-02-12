@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import { type Animated, type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native';
 import type { ElevationLevels, ThemeVars } from '@coinbase/cds-common';
+import type { Gradient } from '@coinbase/cds-common/types/Gradient';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
@@ -18,7 +19,8 @@ import { getInteractableStyles } from '../styles/getInteractableStyles';
  *   blendStyles={{
  *     background: '#ffffff',
  *     pressedBackground: '#e0e0e0',
- *     borderColor: '#cccccc'
+ *     borderColor: '#cccccc',
+ *     pressedGradient: { direction: 'to-r', colors: ['#003cb8', '#5b1fb4'] },
  *   }}
  * />
  * ```
@@ -30,6 +32,12 @@ export type InteractableBlendStyles = {
   borderColor?: string;
   pressedBorderColor?: string;
   disabledBorderColor?: string;
+  /** Gradient background. */
+  backgroundGradient?: Gradient;
+  /** Gradient to use when the element is pressed. */
+  pressedBackgroundGradient?: Gradient;
+  /** Gradient to use when the element is disabled. */
+  disabledBackgroundGradient?: Gradient;
 };
 
 export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> & {
@@ -87,6 +95,7 @@ export const Interactable = memo(function Interactable({
   blendStyles,
   transparentWhileInactive,
   transparentWhilePressed,
+  gradient,
   ...props
 }: InteractableProps) {
   const theme = useTheme();
@@ -118,6 +127,34 @@ export const Interactable = memo(function Interactable({
     });
   }, [theme, background, isTransparent, isPressedAndTransparent, blendStyles, borderColor]);
 
+  // Resolve active gradient based on interaction state
+  // Priority: disabled > pressed > blendStyles.backgroundGradient > gradient prop
+  const activeGradient = useMemo(() => {
+    const baseGradient = blendStyles?.backgroundGradient ?? gradient;
+
+    // No gradient configured
+    if (!baseGradient) return undefined;
+
+    // Disabled state takes highest priority
+    if (disabled) {
+      return blendStyles?.disabledBackgroundGradient ?? baseGradient;
+    }
+
+    // Pressed state takes priority over base
+    if (pressed) {
+      return blendStyles?.pressedBackgroundGradient ?? baseGradient;
+    }
+
+    return baseGradient;
+  }, [
+    gradient,
+    disabled,
+    pressed,
+    blendStyles?.backgroundGradient,
+    blendStyles?.disabledBackgroundGradient,
+    blendStyles?.pressedBackgroundGradient,
+  ]);
+
   const mergedWrapperStyles = useMemo(
     () => [
       block && { flexGrow: 1 },
@@ -143,6 +180,7 @@ export const Interactable = memo(function Interactable({
       animated
       borderColor={borderColor}
       borderWidth={borderWidth}
+      gradient={activeGradient}
       style={mergedWrapperStyles}
       {...props}
     >

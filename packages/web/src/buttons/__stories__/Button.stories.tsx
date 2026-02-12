@@ -1,5 +1,4 @@
 import React from 'react';
-import { css } from '@linaria/core';
 
 import type { ThemeConfig } from '../../core/theme';
 import { useTheme } from '../../hooks/useTheme';
@@ -101,19 +100,6 @@ export const FlushProps = () => (
     </Button>
   </VStack>
 );
-
-const gradientCss = css`
-  &:hover {
-    background: linear-gradient(90deg, #0047e0 0%, #4c1d95 100%);
-  }
-  &:active,
-  &[aria-pressed='true'] {
-    background: linear-gradient(90deg, rgb(238, 137, 83) 0%, rgb(246, 244, 79) 100%);
-  }
-  &:disabled {
-    background: linear-gradient(90deg, #999999 0%, #333333 100%);
-  }
-`;
 
 /**
  * Custom theme with dramatically different gradient colors
@@ -265,7 +251,12 @@ function GradientButtonsContent() {
       {/* Interactive States (CSS overrides) */}
       <VStack alignItems="flex-start" gap={2}>
         <Button
-          className={gradientCss}
+          blendStyles={{
+            hoveredBackground: 'linear-gradient(90deg, #0047e0 0%, #4c1d95 100%)',
+            pressedBackground:
+              'linear-gradient(90deg, rgb(238, 137, 83) 0%, rgb(246, 244, 79) 100%)',
+            disabledBackground: 'linear-gradient(90deg, #999999 0%, #333333 100%)',
+          }}
           color="fgInverse"
           gradient={{
             direction: 'to-r',
@@ -277,7 +268,12 @@ function GradientButtonsContent() {
         </Button>
         <Button
           disabled
-          className={gradientCss}
+          blendStyles={{
+            hoveredBackground: 'linear-gradient(90deg, #0047e0 0%, #4c1d95 100%)',
+            pressedBackground:
+              'linear-gradient(90deg, rgb(238, 137, 83) 0%, rgb(246, 244, 79) 100%)',
+            disabledBackground: 'linear-gradient(90deg, #999999 0%, #333333 100%)',
+          }}
           color="fg"
           gradient={{
             direction: 45,
@@ -299,6 +295,85 @@ function GradientButtonsContent() {
           </Button>
         </VStack>
       </ThemeProvider>
+
+      {/* Radial and Conic Gradients (CSS overrides) */}
+      <VStack alignItems="flex-start" gap={2}>
+        <Button
+          variant="gradient"
+          blendStyles={{
+            background: 'radial-gradient(circle at center, #0052ff 0%, #7b3fe4 100%)',
+            hoveredBackground: 'radial-gradient(circle at center, #0047e0 0%, #5b2fb4 100%)',
+            pressedBackground: 'radial-gradient(circle at center, #003cb8 0%, #4b1fa4 100%)',
+            disabledBackground: 'radial-gradient(circle at center, #999999 0%, #333333 100%)',
+          }}
+          color="fgInverse"
+          onClick={onClickConsole}
+        >
+          Radial Gradient (Circle)
+        </Button>
+        <Button
+          variant="gradient"
+          color="fgInverse"
+          onClick={onClickConsole}
+          blendStyles={{
+            background: 'radial-gradient(ellipse at top, #05b169 0%, #0052ff 50%, #7b3fe4 100%)',
+            hoveredBackground:
+              'radial-gradient(ellipse at top, #04a159 0%, #0047e0 50%, #5b2fb4 100%)',
+            pressedBackground:
+              'radial-gradient(ellipse at top, #039149 0%, #003cb8 50%, #4b1fa4 100%)',
+            disabledBackground: 'radial-gradient(ellipse at top, #999999 0%, #333333 100%)',
+          }}
+        >
+          Radial Gradient (Ellipse)
+        </Button>
+        <Button
+          blendStyles={{
+            background:
+              'radial-gradient(circle at top right, #7b3fe4 0%, #0052ff 50%, #05b169 100%)',
+            hoveredBackground:
+              'radial-gradient(circle at top right, #5b2fb4 0%, #0047e0 50%, #04a159 100%)',
+            pressedBackground:
+              'radial-gradient(circle at top right, #4b1fa4 0%, #003cb8 50%, #039149 100%)',
+            disabledBackground: 'radial-gradient(circle at top right, #999999 0%, #333333 100%)',
+          }}
+          variant="gradient"
+          color="fgInverse"
+          onClick={onClickConsole}
+        >
+          Radial Gradient (Corner)
+        </Button>
+        <Button
+          blendStyles={{
+            background: 'conic-gradient(from 0deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
+            hoveredBackground: 'conic-gradient(from 45deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
+            pressedBackground: 'conic-gradient(from 90deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
+            disabledBackground: 'conic-gradient(from 135deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
+          }}
+          variant="gradient"
+          color="fgInverse"
+          onClick={onClickConsole}
+        >
+          Conic Gradient (Color Wheel)
+        </Button>
+        <Button
+          block
+          blendStyles={{
+            background:
+              'conic-gradient(from 0deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
+            hoveredBackground:
+              'conic-gradient(from 45deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
+            pressedBackground:
+              'conic-gradient(from 90deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
+            disabledBackground:
+              'conic-gradient(from 135deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
+          }}
+          variant="gradient"
+          color="fgInverse"
+          onClick={onClickConsole}
+        >
+          Conic Gradient (Hard Stops)
+        </Button>
+      </VStack>
     </VStack>
   );
 }

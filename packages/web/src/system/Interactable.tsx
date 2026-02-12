@@ -28,16 +28,18 @@ import {
   interactablePressedOpacity,
 } from './interactableCSSProperties';
 
+import { gradientToCSS } from '../utils/gradient';
+
 const COMPONENT_STATIC_CLASSNAME = 'cds-Interactable';
 
-// TODO: Interactable uses `background-color` which blocks CSS gradient backgrounds in blendStyles.
+// TODO: This updates `background-color` to `background`. This is a breaking change for consumers overriding background colors using `background-color`.
 // Migrating to `background` would be a breaking change for consumers overriding background colors.
 const baseCss = css`
   appearance: none;
   cursor: pointer;
   user-select: none;
   text-decoration: none;
-  background-color: var(${interactableBackground});
+  background: var(${interactableBackground});
   border-color: var(${interactableBorderColor});
 
   /* Removes weird bonus padding in Firefox */
@@ -48,7 +50,7 @@ const baseCss = css`
   }
 
   &:hover {
-    background-color: var(${interactableHoveredBackground});
+    background: var(${interactableHoveredBackground});
     border-color: var(${interactableHoveredBorderColor});
     > * {
       opacity: var(${interactableHoveredOpacity});
@@ -57,7 +59,7 @@ const baseCss = css`
 
   &:active,
   &[aria-pressed='true'] {
-    background-color: var(${interactablePressedBackground});
+    background: var(${interactablePressedBackground});
     border-color: var(${interactablePressedBorderColor});
     > * {
       opacity: var(${interactablePressedOpacity});
@@ -70,7 +72,7 @@ const baseCss = css`
     cursor: default;
     pointer-events: none;
     touch-action: none;
-    background-color: var(${interactableDisabledBackground});
+    background: var(${interactableDisabledBackground});
     border-color: var(${interactableDisabledBorderColor});
   }
 
@@ -93,17 +95,17 @@ const blockCss = css`
 
 const transparentActiveCss = css`
   &:active {
-    background-color: var(--color-transparent);
+    background: var(--color-transparent);
     border-color: var(--color-transparent);
   }
 `;
 
 const transparentWhileInactiveCss = css`
-  background-color: var(--color-transparent);
+  background: var(--color-transparent);
   border-color: var(--color-transparent);
   &:disabled,
   &[aria-disabled='true'] {
-    background-color: var(--color-transparent);
+    background: var(--color-transparent);
     border-color: var(--color-transparent);
   }
 `;
@@ -219,6 +221,7 @@ export const Interactable: InteractableComponent = forwardRef<
       blendStyles,
       transparentWhileInactive,
       transparentWhilePressed,
+      gradient,
       ...props
     }: Polymorphic.Props<AsComponent, InteractableBaseProps>,
     ref: Polymorphic.Ref<AsComponent>,
@@ -226,6 +229,7 @@ export const Interactable: InteractableComponent = forwardRef<
     const Component = (as ?? interactableDefaultElement) satisfies React.ElementType;
     const theme = useTheme();
 
+    const gradientBackground = gradient ? gradientToCSS(gradient, theme.gradient) : undefined;
     const interactableStyle = useMemo(
       () => ({
         ...getInteractableStyles({
@@ -233,6 +237,7 @@ export const Interactable: InteractableComponent = forwardRef<
           background,
           blendStyles,
           borderColor,
+          gradientBackground,
         }),
         ...style,
       }),
@@ -269,20 +274,23 @@ export const getInteractableStyles = ({
   background = 'transparent',
   borderColor = background,
   blendStyles,
+  gradientBackground,
 }: {
   theme: Theme;
   background?: ThemeVars.Color;
   borderColor?: ThemeVars.Color;
   blendStyles?: InteractableBlendStyles;
+  gradientBackground?: string;
 }) => {
-  const backgroundColor = blendStyles?.background ?? theme.color[background];
+  const backgroundColor = blendStyles?.background ?? gradientBackground ?? theme.color[background];
   const borderColorValue = blendStyles?.borderColor ?? theme.color[borderColor];
   const hoveredOpacity = blendStyles?.hoveredOpacity ?? opacityHovered;
   const pressedOpacity = blendStyles?.pressedOpacity ?? opacityPressed;
   const disabledOpacity = blendStyles?.disabledOpacity ?? opacityDisabled;
 
   return {
-    [interactableBackground]: blendStyles?.background ?? `var(--color-${background})`,
+    [interactableBackground]:
+      blendStyles?.background ?? gradientBackground ?? `var(--color-${background})`,
     [interactableBorderColor]: blendStyles?.borderColor ?? `var(--color-${borderColor})`,
     /**
      * Apply an interactive background style. Blend the color with the background or backgroundInverse values

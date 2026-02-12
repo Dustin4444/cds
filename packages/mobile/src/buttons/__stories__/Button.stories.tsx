@@ -127,7 +127,7 @@ const ButtonScreen = () => {
             color="fgInverse"
             gradient={{
               direction: 'to-r',
-              colors: [`${theme.color.bgPositive}`, `${theme.color.bgPrimary}`],
+              colors: [theme.color.bgPositive, theme.color.bgPrimary],
             }}
             onPress={() => {}}
           >
@@ -139,7 +139,7 @@ const ButtonScreen = () => {
             color="fgInverse"
             gradient={{
               direction: 'to-r',
-              colors: [`${theme.color.bgNegative}`, `${theme.color.bgWarning}`],
+              colors: [theme.color.bgNegative, theme.color.bgWarning],
             }}
             onPress={() => {}}
           >
@@ -160,7 +160,7 @@ const ButtonScreen = () => {
             color="fgInverse"
             gradient={{
               direction: 45,
-              colors: [`${theme.color.accentBoldBlue}`, `${theme.color.accentBoldPurple}`],
+              colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
             }}
             onPress={() => {}}
           >
@@ -173,9 +173,9 @@ const ButtonScreen = () => {
             gradient={{
               direction: 'to-r',
               colors: [
-                { color: `${theme.color.accentBoldBlue}`, offset: 0 },
-                { color: `${theme.color.accentBoldPurple}`, offset: 0.5 },
-                { color: `${theme.color.accentBoldRed}`, offset: 1 },
+                { color: theme.color.accentBoldBlue, offset: 0 },
+                { color: theme.color.accentBoldPurple, offset: 0.5 },
+                { color: theme.color.accentBoldRed, offset: 1 },
               ],
             }}
             onPress={() => {}}
@@ -201,7 +201,7 @@ const ButtonScreen = () => {
             color="fgInverse"
             gradient={{
               direction: 'to-r',
-              colors: [`${theme.color.accentBoldPurple}`, `${theme.color.transparent}`],
+              colors: [theme.color.accentBoldPurple, theme.color.transparent],
             }}
             onPress={() => {}}
           >
@@ -217,6 +217,49 @@ const ButtonScreen = () => {
             startIcon="checkmark"
           >
             Gradient with Icon
+          </Button>
+        </Example>
+        <Example title="Gradient Button Blend Styles">
+          <Button
+            variant="gradient"
+            GradientComponent={LinearGradient}
+            blendStyles={{
+              backgroundGradient: {
+                direction: 'to-r',
+                colors: [theme.color.accentBoldYellow, theme.color.accentBoldPurple],
+              },
+              pressedBackgroundGradient: {
+                direction: 'to-r',
+                colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
+              },
+              disabledBackgroundGradient: {
+                direction: 'to-r',
+                colors: [theme.color.fgMuted, theme.color.transparent],
+              },
+            }}
+          >
+            Blend Styles
+          </Button>
+          <Button
+            disabled
+            variant="gradient"
+            GradientComponent={LinearGradient}
+            blendStyles={{
+              backgroundGradient: {
+                direction: 'to-r',
+                colors: [theme.color.accentBoldYellow, theme.color.accentBoldPurple],
+              },
+              pressedBackgroundGradient: {
+                direction: 'to-r',
+                colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
+              },
+              disabledBackgroundGradient: {
+                direction: 'to-r',
+                colors: [theme.color.fgMuted, theme.color.transparent],
+              },
+            }}
+          >
+            Disabled Blend Styles
           </Button>
         </Example>
       </ThemeProvider>
