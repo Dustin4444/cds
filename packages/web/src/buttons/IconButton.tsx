@@ -85,13 +85,13 @@ export const IconButton: IconButtonComponent = memo(
         background,
         color,
         borderColor,
-        borderRadius = 1000,
+        borderRadius = compact ? 700 : 900,
         borderWidth = 100,
         alignItems = 'center',
         justifyContent = 'center',
-        // TO DO: fix this when removing interactableHeight
-        height = compact ? 40 : 56,
-        width = compact ? 40 : 56,
+        padding,
+        height,
+        width,
         className,
         name,
         active,
@@ -148,6 +148,7 @@ export const IconButton: IconButtonComponent = memo(
           height={height}
           justifyContent={justifyContent}
           loading={loading}
+          padding={padding ?? (compact ? 1.5 : 2)}
           transparentWhileInactive={transparent}
           width={width}
           {...props}

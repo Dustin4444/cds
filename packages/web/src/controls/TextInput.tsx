@@ -19,9 +19,9 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
-import { mergeComponentProps } from '../utils/mergeComponentProps';
 import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';
+import { mergeComponentProps } from '../utils/mergeComponentProps';
 
 import { TextInputFocusVariantContext } from './context';
 import { HelperText } from './HelperText';
@@ -29,6 +29,8 @@ import { InputLabel } from './InputLabel';
 import type { InputStackBaseProps } from './InputStack';
 import { InputStack } from './InputStack';
 import { NativeInput } from './NativeInput';
+
+const COMPONENT_STATIC_CLASSNAME = 'cds-TextInput';
 
 /**
  * In normal circumstances, padding horizontal should be 2 (16px).
@@ -161,10 +163,7 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
 };
 
 export const TextInput = memo(
-  forwardRef(function TextInput(
-    _props: TextInputProps,
-    ref: React.ForwardedRef<HTMLInputElement>,
-  ) {
+  forwardRef(function TextInput(_props: TextInputProps, ref: React.ForwardedRef<HTMLInputElement>) {
     const { components } = useTheme();
     const mergedProps = mergeComponentProps(
       components?.TextInput,
@@ -307,6 +306,7 @@ export const TextInput = memo(
         <InputStack
           borderRadius={borderRadius}
           borderWidth={bordered ? 100 : 0}
+          className={COMPONENT_STATIC_CLASSNAME}
           // If bordered is true, we want disableFocusedStyle = false
           // If bordered is false, we want disableFocusedStyle = true
           disableFocusedStyle={!bordered}

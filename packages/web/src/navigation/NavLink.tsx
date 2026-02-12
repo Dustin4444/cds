@@ -2,7 +2,9 @@ import React, { memo } from 'react';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useTheme } from '../hooks/useTheme';
 import { Link, type LinkDefaultElement, type LinkProps } from '../typography/Link';
+import { mergeComponentProps } from '../utils/mergeComponentProps';
 
 export type NavLinkProps = {
   /** Boolean to indicate if the Link represents the current route. */
@@ -37,7 +39,15 @@ const navLinkCss = css`
   }
 `;
 
-export const NavLink = memo(({ active, className: customClassName, ...props }: NavLinkProps) => {
+export const NavLink = memo((_props: NavLinkProps) => {
+  const { components } = useTheme();
+  const mergedProps = mergeComponentProps(
+    components?.NavLink,
+    _props,
+    components?.mergeClassNameAndStyle,
+  );
+  const { active, className: customClassName, ...props } = mergedProps;
+
   return (
     <Link
       className={cx(navLinkCss, customClassName)}

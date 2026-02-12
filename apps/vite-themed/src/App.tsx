@@ -3,7 +3,7 @@ import type { ColorScheme } from '@coinbase/cds-common';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { ThemeProvider } from '@coinbase/cds-web';
 import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
-import type { ThemeConfig } from '@coinbase/cds-web/core/theme';
+import type { ComponentsConfig, ThemeConfig } from '@coinbase/cds-web/core/theme';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { NavigationBar } from '@coinbase/cds-web/navigation/NavigationBar';
 import { MediaQueryProvider } from '@coinbase/cds-web/system';
@@ -13,12 +13,18 @@ import { Text } from '@coinbase/cds-web/typography/Text';
 
 import { StickerSheet } from './components/StickerSheet';
 import { advancedTheme } from './themes/advanced';
+import { advancedComponents } from './themes/advancedComponents';
 
 type ThemeOption = 'default' | 'advanced';
 
 const themes: Record<ThemeOption, ThemeConfig> = {
   default: defaultTheme,
   advanced: advancedTheme,
+};
+
+const themeComponents: Record<ThemeOption, ComponentsConfig | undefined> = {
+  default: undefined,
+  advanced: advancedComponents,
 };
 
 const themeTabs = [
@@ -30,14 +36,16 @@ export const App = () => {
   const [activeColorScheme, setActiveColorScheme] = useState<ColorScheme>('dark');
   const [activeThemeTab, setActiveThemeTab] = useState<TabValue | null>(themeTabs[0]);
 
-  const themeConfig = themes[(activeThemeTab?.id ?? 'coinbase') as ThemeOption];
+  const activeThemeId = (activeThemeTab?.id ?? 'default') as ThemeOption;
+  const themeConfig = themes[activeThemeId];
+  const components = themeComponents[activeThemeId];
 
   const toggleColorScheme = () =>
     setActiveColorScheme((scheme) => (scheme === 'dark' ? 'light' : 'dark'));
 
   return (
     <MediaQueryProvider>
-      <ThemeProvider activeColorScheme={activeColorScheme} theme={themeConfig}>
+      <ThemeProvider activeColorScheme={activeColorScheme} components={components} theme={themeConfig}>
         <VStack background="bg" minHeight="100vh">
           {/* Sticky Navigation Bar */}
           <Box background="bgSecondary" style={{ position: 'sticky', top: 0, zIndex: 100 }}>

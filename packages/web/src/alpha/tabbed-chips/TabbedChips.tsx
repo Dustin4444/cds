@@ -8,6 +8,7 @@ import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { cx } from '../../cx';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
+import { useTheme } from '../../hooks/useTheme';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout';
 import {
   Paddle,
@@ -16,6 +17,7 @@ import {
   type TabsBaseProps,
   type TabsProps,
 } from '../../tabs';
+import { mergeComponentProps } from '../../utils/mergeComponentProps';
 
 const containerCss = css`
   isolation: isolate;
@@ -144,7 +146,16 @@ type TabbedChipsFC = <TabId extends string = string>(
 
 const TabbedChipsComponent = memo(
   forwardRef(function TabbedChips<TabId extends string = string>(
-    {
+    _props: TabbedChipsProps<TabId>,
+    ref: React.ForwardedRef<HTMLElement | null>,
+  ) {
+    const { components } = useTheme();
+    const mergedProps = mergeComponentProps(
+      components?.TabbedChips,
+      _props,
+      components?.mergeClassNameAndStyle,
+    );
+    const {
       tabs,
       activeTab,
       onChange,
@@ -162,9 +173,7 @@ const TabbedChipsComponent = memo(
       classNames,
       autoScrollOffset = 50,
       ...accessibilityProps
-    }: TabbedChipsProps<TabId>,
-    ref: React.ForwardedRef<HTMLElement | null>,
-  ) {
+    } = mergedProps;
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
     const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
       useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });

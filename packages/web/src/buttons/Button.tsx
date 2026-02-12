@@ -29,8 +29,6 @@ const baseCss = css`
   text-align: center;
   vertical-align: middle;
   align-items: center;
-  justify-content: center;
-  font-weight: 600;
   position: relative;
   white-space: nowrap;
   appearance: none;
@@ -60,9 +58,7 @@ const startNodeCss = css`
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex-grow: 1;
   flex-shrink: 0;
-  justify-content: flex-start;
   margin-inline-end: var(--space-1);
 `;
 
@@ -70,14 +66,8 @@ const endNodeCss = css`
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex-grow: 1;
   flex-shrink: 0;
-  justify-content: flex-end;
   margin-inline-start: var(--space-1);
-`;
-
-const iconCss = css`
-  justify-content: space-between;
 `;
 
 const unsetNoWrapCss = css`
@@ -107,8 +97,8 @@ const flushEndCss = css`
 `;
 
 const spinnerStyle = {
-  width: '24px',
-  height: '24px',
+  width: '1lh',
+  height: '1lh',
   border: '2px solid',
   borderTopColor: 'var(--color-transparent)',
   borderRightColor: 'var(--color-transparent)',
@@ -185,11 +175,11 @@ export const Button: ButtonComponent = memo(
       _props: ButtonProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
-      const { components } = useTheme();
+      const theme = useTheme();
       const mergedProps = mergeComponentProps(
-        components?.Button,
+        theme?.components?.Button,
         _props,
-        components?.mergeClassNameAndStyle,
+        theme?.components?.mergeClassNameAndStyle,
       );
       const {
         as,
@@ -211,21 +201,27 @@ export const Button: ButtonComponent = memo(
         background,
         color,
         className,
-        // TO DO: get rid of this height and interactableHeight (mobile and web both)
-        height = compact ? 40 : 56,
+        font = 'headline',
+        height,
         borderColor,
-        borderWidth = 100,
+        borderWidth = 0,
         borderRadius = compact ? 700 : 900,
         accessibilityLabel,
         padding,
         paddingX = padding ?? (compact ? 2 : 4),
+        paddingY = padding ?? (compact ? 1 : 2),
+        justifyContent: justifyContentProp,
         margin = 0,
         minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
         ...props
       } = mergedProps;
+
       const Component = (as ?? buttonDefaultElement) satisfies React.ElementType;
       const iconSize = compact ? 's' : 'm';
-      const hasIcon = Boolean(startIcon ?? endIcon);
+      const hasStart = Boolean(start ?? startIcon);
+      const hasEnd = Boolean(end ?? endIcon);
+      const hasStartOrEnd = hasStart || hasEnd;
+      const justifyContent = justifyContentProp ?? (hasStartOrEnd ? 'space-between' : 'center');
 
       const variantMap = transparent ? transparentVariants : variants;
       const variantStyle = variantMap[variant];
@@ -233,6 +229,7 @@ export const Button: ButtonComponent = memo(
       const colorValue = color ?? variantStyle.color;
       const backgroundValue = background ?? variantStyle.background;
       const borderColorValue = borderColor ?? variantStyle.borderColor;
+
       return (
         <Pressable
           ref={ref}
@@ -246,7 +243,6 @@ export const Button: ButtonComponent = memo(
             COMPONENT_STATIC_CLASSNAME,
             baseCss,
             numberOfLines && unsetNoWrapCss,
-            hasIcon && iconCss,
             block && blockCss,
             flush && flushSpaceCss,
             flush === 'start' && flushStartCss,
@@ -259,13 +255,16 @@ export const Button: ButtonComponent = memo(
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
+          font={font}
           height={height}
+          justifyContent={justifyContent}
           loading={loading}
           margin={margin}
           minWidth={minWidth}
           noScaleOnPress={noScaleOnPress}
           padding={padding}
           paddingX={paddingX}
+          paddingY={paddingY}
           transparentWhileInactive={transparent}
           {...props}
         >
@@ -288,12 +287,7 @@ export const Button: ButtonComponent = memo(
                 <Spinner color="currentColor" size={spinnerHeight} style={spinnerStyle} />
               </span>
             )}
-            <Text
-              color="currentColor"
-              display="inline"
-              font="headline"
-              numberOfLines={numberOfLines}
-            >
+            <Text color="currentColor" display="inline" numberOfLines={numberOfLines}>
               <span className={cx(loading && hiddenCss)}>{children}</span>
             </Text>
           </span>
@@ -304,6 +298,8 @@ export const Button: ButtonComponent = memo(
             <span className={endNodeCss}>
               <Icon active={endIconActive} color="currentColor" name={endIcon} size={iconSize} />
             </span>
+          ) : justifyContent === 'space-between' ? (
+            <span />
           ) : null}
         </Pressable>
       );

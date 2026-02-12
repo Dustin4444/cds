@@ -1,31 +1,33 @@
 import { memo } from "react";
-import { Button } from "@coinbase/cds-web/buttons/Button";
-import { IconButton } from "@coinbase/cds-web/buttons/IconButton";
-import { Box } from "@coinbase/cds-web/layout/Box";
-import { HStack } from "@coinbase/cds-web/layout/HStack";
-import { VStack } from "@coinbase/cds-web/layout/VStack";
-import { Tag } from "@coinbase/cds-web/tag/Tag";
-import { Icon } from "@coinbase/cds-web/icons/Icon";
-import { Text } from "@coinbase/cds-web/typography/Text";
-import { Link } from "@coinbase/cds-web/typography/Link";
-import { useTheme } from "@coinbase/cds-web/hooks/useTheme";
 import type { ThemeVars } from "@coinbase/cds-common/core/theme";
-import { Avatar } from "@coinbase/cds-web/media/Avatar";
-import { Banner } from "@coinbase/cds-web/banner/Banner";
-import { InputChip } from "@coinbase/cds-web/chips/InputChip";
-import { RemoteImage } from "@coinbase/cds-web/media/RemoteImage";
 import { assets } from "@coinbase/cds-common/internal/data/assets";
-import { Spinner } from "@coinbase/cds-web/loaders/Spinner";
 import { Accordion } from "@coinbase/cds-web/accordion/Accordion";
 import { AccordionItem } from "@coinbase/cds-web/accordion/AccordionItem";
-import { Pictogram } from "@coinbase/cds-web/illustrations/Pictogram";
-import { NudgeCard } from "@coinbase/cds-web/cards/NudgeCard";
+import { Banner } from "@coinbase/cds-web/banner/Banner";
+import { Button } from "@coinbase/cds-web/buttons/Button";
+import { IconButton } from "@coinbase/cds-web/buttons/IconButton";
 import {
   FloatingAssetCard,
   type FloatingAssetCardProps,
 } from "@coinbase/cds-web/cards/FloatingAssetCard";
-import { ThemeProvider } from "@coinbase/cds-web/system/ThemeProvider";
+import { NudgeCard } from "@coinbase/cds-web/cards/NudgeCard";
+import { InputChip } from "@coinbase/cds-web/chips/InputChip";
 import type { ThemeConfig } from "@coinbase/cds-web/core/theme";
+import { useTheme } from "@coinbase/cds-web/hooks/useTheme";
+import { Icon } from "@coinbase/cds-web/icons/Icon";
+import { Pictogram } from "@coinbase/cds-web/illustrations/Pictogram";
+import { Box } from "@coinbase/cds-web/layout/Box";
+import { HStack } from "@coinbase/cds-web/layout/HStack";
+import { VStack } from "@coinbase/cds-web/layout/VStack";
+import { Spinner } from "@coinbase/cds-web/loaders/Spinner";
+import { Avatar } from "@coinbase/cds-web/media/Avatar";
+import { RemoteImage } from "@coinbase/cds-web/media/RemoteImage";
+import { Tooltip } from "@coinbase/cds-web/overlays";
+import { ThemeProvider } from "@coinbase/cds-web/system/ThemeProvider";
+import { Tag } from "@coinbase/cds-web/tag/Tag";
+import { Link } from "@coinbase/cds-web/typography/Link";
+import { Text } from "@coinbase/cds-web/typography/Text";
+
 import {
   avatarSizes,
   bannerVariants,
@@ -38,20 +40,21 @@ import {
   spectrumHueSteps,
   tagColorSchemes,
 } from "../../themeVars";
-import { StepperHorizontalBasicExample } from "./examples/StepperHorizontal";
+
+import { ControlsExample } from "./examples/Controls";
+import { DatePickerExample } from "./examples/DatePicker";
 import { LineChartBasicExample } from "./examples/LineChart";
-import { StepperVerticalCustomExample } from "./examples/StepperVertical";
-import { RollingNumberExample } from "./examples/RollingNumber";
 import { PaginationExample } from "./examples/Pagination";
+import { RollingNumberExample } from "./examples/RollingNumber";
+import { SearchExample } from "./examples/Search";
+import { SegmentedTabsExample } from "./examples/SegmentedTabs";
 import { SelectExample } from "./examples/Select";
 import { SelectChipExample } from "./examples/SelectChip";
-import { ControlsExample } from "./examples/Controls";
-import { SearchExample } from "./examples/Search";
+import { StepperHorizontalBasicExample } from "./examples/StepperHorizontal";
+import { StepperVerticalCustomExample } from "./examples/StepperVertical";
 import { TextInputExample } from "./examples/TextInput";
-import { DatePickerExample } from "./examples/DatePicker";
-import { SegmentedTabsExample } from "./examples/SegmentedTabs";
-import { Container } from "./Container";
 import { BodyText } from "./BodyText";
+import { Container } from "./Container";
 
 const SHOW_DEBUG_BG_COLORS = false;
 
@@ -59,7 +62,7 @@ const floatingAssetCards: FloatingAssetCardProps[] = [
   {
     title: "#7560",
     description: (
-      <Text font="label2" as="p" color="fgPositive" numberOfLines={2}>
+      <Text as="p" color="fgPositive" font="label2" numberOfLines={2}>
         &#x2197;14.42%
       </Text>
     ),
@@ -67,8 +70,8 @@ const floatingAssetCards: FloatingAssetCardProps[] = [
     onClick: () => {},
     media: (
       <RemoteImage
-        source="/nft_boredape2.png"
         height={"100%"}
+        source="/nft_boredape2.png"
         style={{ objectFit: "cover", cursor: "pointer" }}
         width="100%"
       />
@@ -77,7 +80,7 @@ const floatingAssetCards: FloatingAssetCardProps[] = [
   {
     title: "#2015",
     description: (
-      <Text font="label2" as="p" color="fgNegative" numberOfLines={2}>
+      <Text as="p" color="fgNegative" font="label2" numberOfLines={2}>
         &#x2198;6.37%
       </Text>
     ),
@@ -85,8 +88,8 @@ const floatingAssetCards: FloatingAssetCardProps[] = [
     onClick: () => {},
     media: (
       <RemoteImage
-        source="/nft_penguin.png"
         height={"100%"}
+        source="/nft_penguin.png"
         style={{ objectFit: "cover", cursor: "pointer" }}
         width="100%"
       />
@@ -142,10 +145,10 @@ export const StickerSheet = memo(
 
     return (
       <ThemeProvider
-        theme={themeConfig}
         activeColorScheme={appTheme.activeColorScheme}
+        theme={themeConfig}
       >
-        <VStack style={rootStyle} background="bgAlternate">
+        <VStack background="bgAlternate" style={rootStyle}>
           {showComponents && (
             <HStack style={{ gap: 16 }}>
               <VStack
@@ -170,7 +173,7 @@ export const StickerSheet = memo(
 
                   <Container width={124}>
                     <Spinner size={2} />
-                    <Spinner size={4} color="bgPrimary" />
+                    <Spinner color="bgPrimary" size={4} />
                   </Container>
                 </HStack>
 
@@ -184,14 +187,14 @@ export const StickerSheet = memo(
                       <SelectChipExample />
                       <InputChip
                         onClick={() => console.log("Remove ETH")}
-                        value="ETH"
                         start={
                           <RemoteImage
+                            height={16}
                             source={assets.eth.imageUrl}
                             width={16}
-                            height={16}
                           />
                         }
+                        value="ETH"
                       />
                     </HStack>
                   </Container>
@@ -213,9 +216,9 @@ export const StickerSheet = memo(
                   <Accordion>
                     <AccordionItem
                       itemKey="1"
-                      title="Accordion item"
-                      subtitle="This is an example subtitle"
                       media={<Pictogram name="addToWatchlist" />}
+                      subtitle="This is an example subtitle"
+                      title="Accordion item"
                     >
                       <Text font="body">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -223,9 +226,9 @@ export const StickerSheet = memo(
                     </AccordionItem>
                     <AccordionItem
                       itemKey="2"
-                      title="Accordion item"
-                      subtitle="This is an example subtitle"
                       media={<Pictogram name="calendar" />}
+                      subtitle="This is an example subtitle"
+                      title="Accordion item"
                     >
                       <Text font="body">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -236,19 +239,24 @@ export const StickerSheet = memo(
 
                 <Container>
                   <NudgeCard
-                    title="Earn more crypto"
-                    description="You’ve got unstaked crypto. Stake it now to earn more."
-                    pictogram="key"
                     action="Start earning"
+                    description="You’ve got unstaked crypto. Stake it now to earn more."
                     onActionPress={() => {}}
                     onDismissPress={() => {}}
+                    pictogram="key"
+                    title="Earn more crypto"
                   />
                 </Container>
 
                 <Container>
                   <HStack style={{ gap: 24 }}>
                     {floatingAssetCards.map((card, index) => (
-                      <FloatingAssetCard key={index} {...card} />
+                      <Tooltip
+                        key={index}
+                        content={`View details for ${card.subtitle}`}
+                      >
+                        <FloatingAssetCard {...card} />
+                      </Tooltip>
                     ))}
                   </HStack>
                 </Container>
@@ -268,10 +276,10 @@ export const StickerSheet = memo(
                   </VStack>
                   {tagColorSchemes.map((colorScheme) => (
                     <VStack key={colorScheme} style={{ gap: 16 }}>
-                      <Tag intent="informational" colorScheme={colorScheme}>
+                      <Tag colorScheme={colorScheme} intent="informational">
                         {colorScheme}
                       </Tag>
-                      <Tag intent="promotional" colorScheme={colorScheme}>
+                      <Tag colorScheme={colorScheme} intent="promotional">
                         {colorScheme}
                       </Tag>
                     </VStack>
@@ -307,8 +315,8 @@ export const StickerSheet = memo(
                           </Button>
                           <IconButton
                             compact={false}
-                            variant={variant}
                             name="add"
+                            variant={variant}
                           />
                         </HStack>
                       ))}
@@ -320,8 +328,8 @@ export const StickerSheet = memo(
                             Button
                           </Button>
                           <IconButton
-                            compact={false}
                             loading
+                            compact={false}
                             name="add"
                           />
                         </HStack>
@@ -331,40 +339,40 @@ export const StickerSheet = memo(
                   <VStack style={{ gap: 16 }}>
                     <Container width={344}>
                       <Avatar
-                        name="Avatar"
                         colorScheme="red"
-                        size="m"
+                        name="Avatar"
                         shape="circle"
+                        size="m"
                       />
                       <Avatar
-                        name="Avatar"
                         colorScheme="orange"
-                        size="l"
+                        name="Avatar"
                         shape="circle"
+                        size="l"
                       />
                       <Avatar
-                        name="Avatar"
                         colorScheme="yellow"
-                        size="xl"
+                        name="Avatar"
                         shape="circle"
-                      />
-                      <Avatar
-                        name="Avatar"
-                        colorScheme="green"
-                        size="m"
-                        shape="square"
-                      />
-                      <Avatar
-                        name="Avatar"
-                        colorScheme="blue"
-                        size="l"
-                        shape="square"
-                      />
-                      <Avatar
-                        name="Avatar"
-                        colorScheme="purple"
                         size="xl"
+                      />
+                      <Avatar
+                        colorScheme="green"
+                        name="Avatar"
                         shape="square"
+                        size="m"
+                      />
+                      <Avatar
+                        colorScheme="blue"
+                        name="Avatar"
+                        shape="square"
+                        size="l"
+                      />
+                      <Avatar
+                        colorScheme="purple"
+                        name="Avatar"
+                        shape="square"
+                        size="xl"
                       />
                     </Container>
 
@@ -379,7 +387,7 @@ export const StickerSheet = memo(
                 </HStack>
 
                 <HStack style={{ gap: 16 }}>
-                  <Container width={240} alignSelf="stretch">
+                  <Container alignSelf="stretch" width={240}>
                     <VStack style={{ gap: 8 }}>
                       {buttonVariants.map((variant) => (
                         <HStack
@@ -390,7 +398,7 @@ export const StickerSheet = memo(
                           <Button compact variant={variant} width={160}>
                             Button
                           </Button>
-                          <IconButton compact variant={variant} name="add" />
+                          <IconButton compact name="add" variant={variant} />
                         </HStack>
                       ))}
                        <HStack
@@ -418,15 +426,15 @@ export const StickerSheet = memo(
                   {bannerVariants.map((variant, index) => (
                     <Banner
                       key={variant}
-                      title="Global banner"
-                      label="Message last updated today at 3:24pm"
-                      styleVariant="global"
-                      startIcon="info"
                       startIconActive
-                      variant={variant}
                       id={`banner-${index}`}
+                      label="Message last updated today at 3:24pm"
                       primaryAction={<Link href="#">Primary</Link>}
                       secondaryAction={<Link href="#">Secondary</Link>}
+                      startIcon="info"
+                      styleVariant="global"
+                      title="Global banner"
+                      variant={variant}
                     >
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     </Banner>
@@ -437,22 +445,22 @@ export const StickerSheet = memo(
           )}
 
           <VStack
-            width={1040}
             style={{
               gap: 16,
               background: SHOW_DEBUG_BG_COLORS ? "orange" : undefined,
             }}
+            width={1040}
           >
-            <Container width={1040} title="Spectrum">
+            <Container title="Spectrum" width={1040}>
               <VStack flexWrap="wrap" style={{ gap: 8 }}>
                 <HStack>
                   <Box width={94} />
                   {spectrumHueSteps.map((spectrumHueStep) => (
                     <Box
                       key={spectrumHueStep}
-                      width={45}
                       height={20}
                       justifyContent="center"
+                      width={45}
                     >
                       <BodyText>{spectrumHueStep}</BodyText>
                     </Box>
@@ -465,20 +473,20 @@ export const StickerSheet = memo(
                   return (
                     <HStack key={spectrumHue} alignItems="center">
                       <BodyText
-                        width={94}
-                        textAlign="end"
                         style={{ padding: 12 }}
+                        textAlign="end"
+                        width={94}
                       >
                         {spectrumHue}
                       </BodyText>
                       {hueColors.map(([colorName, colorValue]) => (
                         <Box
                           key={colorName}
-                          width={45}
                           height={45}
                           style={{
                             backgroundColor: `rgb(${colorValue})`,
                           }}
+                          width={45}
                         />
                       ))}
                     </HStack>
@@ -491,14 +499,14 @@ export const StickerSheet = memo(
               <HStack flexWrap="wrap" style={{ gap: 8 }}>
                 {fgColors.map((colorName) => (
                   <VStack key={colorName}>
-                    <BodyText width={140} style={{ paddingBottom: 4 }}>
+                    <BodyText style={{ paddingBottom: 4 }} width={140}>
                       {colorName}
                     </BodyText>
                     <Box
-                      width={45}
-                      height={45}
                       background={colorName}
+                      height={45}
                       style={borderedStyle}
+                      width={45}
                     />
                   </VStack>
                 ))}
@@ -509,14 +517,14 @@ export const StickerSheet = memo(
               <HStack flexWrap="wrap" style={{ gap: 8 }}>
                 {bgColors.map((colorName) => (
                   <VStack key={colorName}>
-                    <BodyText width={140} style={{ paddingBottom: 4 }}>
+                    <BodyText style={{ paddingBottom: 4 }} width={140}>
                       {colorName}
                     </BodyText>
                     <Box
-                      width={45}
-                      height={45}
                       background={colorName}
+                      height={45}
                       style={borderedStyle}
+                      width={45}
                     />
                   </VStack>
                 ))}
@@ -527,14 +535,14 @@ export const StickerSheet = memo(
               <HStack flexWrap="wrap" style={{ gap: 8 }}>
                 {accentColors.map((colorName) => (
                   <VStack key={colorName}>
-                    <BodyText width={140} style={{ paddingBottom: 4 }}>
+                    <BodyText style={{ paddingBottom: 4 }} width={140}>
                       {colorName}
                     </BodyText>
                     <Box
-                      width={45}
-                      height={45}
                       background={colorName}
+                      height={45}
                       style={borderedStyle}
+                      width={45}
                     />
                   </VStack>
                 ))}
@@ -542,8 +550,8 @@ export const StickerSheet = memo(
             </Container>
 
             <HStack style={{ gap: 16 }}>
-              <Container width={672} title="Space">
-                <HStack style={{ gap: 8 }} alignItems="baseline">
+              <Container title="Space" width={672}>
+                <HStack alignItems="baseline" style={{ gap: 8 }}>
                   {space.map((space) => (
                     <VStack key={space} alignItems="center">
                       <Box
@@ -620,13 +628,13 @@ export const StickerSheet = memo(
                     <HStack
                       key={color}
                       alignItems="center"
-                      style={{ gap: 8, padding: 8, borderRadius: 12 }}
                       background={
                         color === "fgInverse" ? "bgInverse" : undefined
                       }
+                      style={{ gap: 8, padding: 8, borderRadius: 12 }}
                     >
                       <Icon color={color} name="search" size="s" />
-                      <Text font="title4" color={color}>
+                      <Text color={color} font="title4">
                         Lorem ipsum dolor sit amet
                       </Text>
                     </HStack>
@@ -642,14 +650,14 @@ export const StickerSheet = memo(
               width={rightColumnWidth}
             >
               <Container title="Avatar Sizes">
-                <HStack style={{ gap: 24 }} alignItems="baseline">
+                <HStack alignItems="baseline" style={{ gap: 24 }}>
                   {avatarSizes.map((avatarSize) => (
                     <VStack
                       key={avatarSize}
                       alignItems="center"
                       alignSelf="baseline"
                     >
-                      <Avatar size={avatarSize} name="Avatar" />
+                      <Avatar name="Avatar" size={avatarSize} />
                       <BodyText style={{ padding: 8 }}>{avatarSize}</BodyText>
                       <BodyText style={{ color: textColor }}>
                         {themeConfig.avatarSize[avatarSize]}
@@ -660,7 +668,7 @@ export const StickerSheet = memo(
               </Container>
 
               <HStack style={{ gap: 16 }}>
-                <Container width={324} title="Border Radius">
+                <Container title="Border Radius" width={324}>
                   <VStack style={{ gap: 12, padding: 12 }}>
                     {borderRadii.map((borderRadius) => (
                       <HStack
@@ -669,29 +677,29 @@ export const StickerSheet = memo(
                         style={{ gap: 8 }}
                       >
                         <VStack>
-                          <BodyText width={60} textAlign="end">
+                          <BodyText textAlign="end" width={60}>
                             {borderRadius}
                           </BodyText>
                           <BodyText
-                            textAlign="end"
                             style={{ color: textColor }}
+                            textAlign="end"
                           >
                             {themeConfig.borderRadius[borderRadius]}
                           </BodyText>
                         </VStack>
                         <Box
-                          width={60}
-                          height={60}
-                          borderRadius={borderRadius}
                           bordered
                           borderColor="bgLineHeavy"
+                          borderRadius={borderRadius}
+                          height={60}
+                          width={60}
                         />
                         <Box
-                          width={120}
-                          height={60}
-                          borderRadius={borderRadius}
                           bordered
                           borderColor="bgLineHeavy"
+                          borderRadius={borderRadius}
+                          height={60}
+                          width={120}
                         />
                       </HStack>
                     ))}
@@ -708,21 +716,21 @@ export const StickerSheet = memo(
                           style={{ gap: 8 }}
                         >
                           <VStack>
-                            <BodyText width={30} textAlign="end">
+                            <BodyText textAlign="end" width={30}>
                               {borderWidth}
                             </BodyText>
                             <BodyText
-                              textAlign="end"
                               style={{ color: textColor }}
+                              textAlign="end"
                             >
                               {themeConfig.borderWidth[borderWidth]}
                             </BodyText>
                           </VStack>
                           <Box
-                            width={120}
-                            height={60}
-                            borderWidth={borderWidth}
                             borderColor="bgLineHeavy"
+                            borderWidth={borderWidth}
+                            height={60}
+                            width={120}
                           />
                         </HStack>
                       ))}
@@ -732,20 +740,20 @@ export const StickerSheet = memo(
                   <Container title="Elevation" width={260}>
                     <VStack style={{ gap: 40, padding: 12 }}>
                       <Box
-                        width={120}
-                        height={120}
-                        elevation={1}
                         alignItems="center"
+                        elevation={1}
+                        height={120}
                         justifyContent="center"
+                        width={120}
                       >
                         <BodyText>Elevation 1</BodyText>
                       </Box>
                       <Box
-                        width={120}
-                        height={120}
-                        elevation={2}
                         alignItems="center"
+                        elevation={2}
+                        height={120}
                         justifyContent="center"
+                        width={120}
                       >
                         <BodyText>Elevation 2</BodyText>
                       </Box>

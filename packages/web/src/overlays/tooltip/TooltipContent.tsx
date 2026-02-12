@@ -13,9 +13,11 @@ import { zIndex as zIndexTokens } from '@coinbase/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { useMotionProps } from '../../motion/useMotionProps';
 import { Text } from '../../typography/Text';
+import { mergeComponentProps } from '../../utils/mergeComponentProps';
 
 import type { PopperTooltipProps } from './TooltipProps';
 
@@ -36,9 +38,30 @@ const textCss = css`
 export const TooltipContent = memo(
   forwardRef(
     (
-      { content, elevation, gap, testID, zIndex, tooltipId, placement = 'top' }: PopperTooltipProps,
+      _props: PopperTooltipProps,
       ref: React.ForwardedRef<HTMLDivElement>,
     ) => {
+      const { components } = useTheme();
+      const mergedProps = mergeComponentProps(
+        components?.TooltipContent,
+        _props,
+        components?.mergeClassNameAndStyle,
+      );
+      const {
+        content,
+        elevation,
+        gap,
+        testID,
+        zIndex,
+        tooltipId,
+        placement = 'top',
+        background = 'bg',
+        borderRadius = 200,
+        maxWidth = tooltipMaxWidth,
+        paddingX = tooltipPaddingX,
+        paddingY = tooltipPaddingY,
+      } = mergedProps;
+
       const outerStyle = useMemo(
         () => ({
           padding: `var(--space-${gap})`,
@@ -61,13 +84,13 @@ export const TooltipContent = memo(
         <motion.div {...motionProps} data-testid={`${testID}-motion`}>
           <Box
             ref={ref}
-            background="bg"
-            borderRadius={200}
+            background={background}
+            borderRadius={borderRadius}
             data-testid={testID}
             elevation={elevation}
-            maxWidth={tooltipMaxWidth}
-            paddingX={tooltipPaddingX}
-            paddingY={tooltipPaddingY}
+            maxWidth={maxWidth}
+            paddingX={paddingX}
+            paddingY={paddingY}
           >
             {typeof content === 'string' ? (
               <Text className={textCss} color="fg" font="label2" id={tooltipId}>

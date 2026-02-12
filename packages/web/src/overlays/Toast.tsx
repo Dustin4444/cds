@@ -28,8 +28,8 @@ import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { ColorSurge } from '../motion/ColorSurge';
 import { useMotionProps } from '../motion/useMotionProps';
-import { mergeComponentProps } from '../utils/mergeComponentProps';
 import { Text } from '../typography/Text';
+import { mergeComponentProps } from '../utils/mergeComponentProps';
 
 import type { ModalProps } from './modal/Modal';
 import { Portal } from './Portal';
@@ -71,124 +71,119 @@ const toastCss = css`
 export const toastTestId = 'cds-toast';
 
 export const Toast = memo(
-  forwardRef<ToastRefHandle, ToastProps>(
-    (
-      _props: ToastProps,
+  forwardRef<ToastRefHandle, ToastProps>((_props: ToastProps, ref) => {
+    const { components } = useTheme();
+    const mergedProps = mergeComponentProps(
+      components?.Toast,
+      _props,
+      components?.mergeClassNameAndStyle,
+    );
+    const {
+      text,
+      action,
+      onWillHide,
+      onDidHide,
+      disablePortal = false,
+      hideCloseButton = false,
+      testID = toastTestId,
+      bottomOffset = 'var(--space-4)',
+      closeButtonAccessibilityProps = closeButtonAccessibilityDefaults,
+      variant,
+      ...props
+    } = mergedProps;
+    const { pauseTimer, resumeTimer } = useContext(ToastContext);
+    const animationControls = useAnimation();
+
+    const motionProps = useMotionProps({
+      enterConfigs: [animateInOpacityConfig, animateInBottomConfig],
+      exitConfigs: [animateOutOpacityConfig, animateOutBottomConfig],
+      animate: animationControls,
+      style: { bottom: bottomOffset },
+    });
+
+    useEffect(() => {
+      void animationControls.start('enter');
+    }, [animationControls]);
+
+    const handleClose = useCallback(async (): Promise<boolean> => {
+      onWillHide?.();
+      await animationControls.start('exit');
+      onDidHide?.();
+      return true;
+    }, [onWillHide, onDidHide, animationControls]);
+
+    useImperativeHandle(
       ref,
-    ) => {
-      const { components } = useTheme();
-      const mergedProps = mergeComponentProps(
-        components?.Toast,
-        _props,
-        components?.mergeClassNameAndStyle,
-      );
-      const {
-        text,
-        action,
-        onWillHide,
-        onDidHide,
-        disablePortal = false,
-        hideCloseButton = false,
-        testID = toastTestId,
-        bottomOffset = 'var(--space-4)',
-        closeButtonAccessibilityProps = closeButtonAccessibilityDefaults,
-        variant,
-        ...props
-      } = mergedProps;
-      const { pauseTimer, resumeTimer } = useContext(ToastContext);
-      const animationControls = useAnimation();
+      () => ({
+        hide: handleClose,
+      }),
+      [handleClose],
+    );
 
-      const motionProps = useMotionProps({
-        enterConfigs: [animateInOpacityConfig, animateInBottomConfig],
-        exitConfigs: [animateOutOpacityConfig, animateOutBottomConfig],
-        animate: animationControls,
-        style: { bottom: bottomOffset },
-      });
+    const handleActionPress = useCallback(() => {
+      action?.onPress();
+      void handleClose();
+    }, [action, handleClose]);
 
-      useEffect(() => {
-        void animationControls.start('enter');
-      }, [animationControls]);
-
-      const handleClose = useCallback(async (): Promise<boolean> => {
-        onWillHide?.();
-        await animationControls.start('exit');
-        onDidHide?.();
-        return true;
-      }, [onWillHide, onDidHide, animationControls]);
-
-      useImperativeHandle(
-        ref,
-        () => ({
-          hide: handleClose,
-        }),
-        [handleClose],
-      );
-
-      const handleActionPress = useCallback(() => {
-        action?.onPress();
-        void handleClose();
-      }, [action, handleClose]);
-
-      return (
-        <Portal containerId={toastContainerId} disablePortal={disablePortal}>
-          <motion.div {...motionProps} className={baseCss} data-testid={`${testID}-motion`}>
-            <Box
-              justifyContent="center"
-              onMouseEnter={pauseTimer} // persist toast when hovering
-              onMouseLeave={resumeTimer}
-              padding={2}
-              role="alert"
-              testID={testID}
-              width="100%"
-              {...props}
+    return (
+      <Portal containerId={toastContainerId} disablePortal={disablePortal}>
+        <motion.div {...motionProps} className={baseCss} data-testid={`${testID}-motion`}>
+          <Box
+            justifyContent="center"
+            onMouseEnter={pauseTimer} // persist toast when hovering
+            onMouseLeave={resumeTimer}
+            padding={2}
+            role="alert"
+            testID={testID}
+            width="100%"
+            {...props}
+          >
+            <HStack
+              alignItems="center"
+              background="bgAlternate"
+              borderRadius={200}
+              className={toastCss}
+              elevation={2}
+              maxWidth={550}
+              overflow="hidden"
+              paddingEnd={1}
+              paddingStart={3}
+              paddingY={1}
+              position="relative"
             >
-              <HStack
-                alignItems="center"
-                background="bgAlternate"
-                borderRadius={200}
-                className={toastCss}
-                elevation={2}
-                maxWidth={550}
-                overflow="hidden"
-                paddingEnd={1}
-                paddingStart={3}
-                paddingY={1}
-                position="relative"
-              >
-                {/* avoid pushing contents off screen */}
-                <Box flexShrink={1} paddingEnd={2} paddingY={1}>
-                  <Text as="p" display="block" font="headline" tabIndex={0}>
-                    {text}
-                  </Text>
-                </Box>
-                <ColorSurge background={variant} />
-                <HStack>
-                  {!!action && (
-                    <Button
-                      compact
-                      transparent
-                      onClick={handleActionPress}
-                      testID={action.testID ?? 'toast-action'}
-                    >
-                      {action.label}
-                    </Button>
-                  )}
-                  {!hideCloseButton && (
-                    <IconButton
-                      transparent
-                      name="close"
-                      onClick={handleClose}
-                      testID={`${testID}-close-button`}
-                      variant="foregroundMuted"
-                      {...closeButtonAccessibilityProps}
-                    />
-                  )}
-                </HStack>
+              {/* avoid pushing contents off screen */}
+              <Box flexShrink={1} paddingEnd={2} paddingY={1}>
+                <Text as="p" display="block" font="headline" tabIndex={0}>
+                  {text}
+                </Text>
+              </Box>
+              <ColorSurge background={variant} />
+              <HStack>
+                {!!action && (
+                  <Button
+                    compact
+                    transparent
+                    onClick={handleActionPress}
+                    testID={action.testID ?? 'toast-action'}
+                  >
+                    {action.label}
+                  </Button>
+                )}
+                {!hideCloseButton && (
+                  <IconButton
+                    transparent
+                    name="close"
+                    onClick={handleClose}
+                    testID={`${testID}-close-button`}
+                    variant="foregroundMuted"
+                    {...closeButtonAccessibilityProps}
+                  />
+                )}
               </HStack>
-            </Box>
-          </motion.div>
-        </Portal>
-      );
-    },
-  ),
+            </HStack>
+          </Box>
+        </motion.div>
+      </Portal>
+    );
+  }),
 );

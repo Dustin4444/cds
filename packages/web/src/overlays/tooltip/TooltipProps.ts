@@ -3,6 +3,7 @@ import type { BaseTooltipPlacement, ElevationProps, SharedProps } from '@coinbas
 import type { PositionStyles } from '@coinbase/cds-common/types/BoxBaseProps';
 
 import type { PopoverProps } from '../popover/PopoverProps';
+import type { StyleProps } from '../../styles/styleProps';
 
 export type TooltipBaseProps = SharedProps &
   ElevationProps &
@@ -54,7 +55,12 @@ export type TooltipBaseProps = SharedProps &
 
 export type TooltipProps = TooltipBaseProps;
 
-export type PopperTooltipProps = {
+export type TooltipContentBaseProps = Pick<
+  StyleProps,
+  'background' | 'borderRadius' | 'paddingX' | 'paddingY' | 'maxWidth'
+>;
+
+export type PopperTooltipProps = TooltipContentBaseProps & {
   gap: ThemeVars.Space;
   /**
    * A unique ID used to ensure tooltips are accessible

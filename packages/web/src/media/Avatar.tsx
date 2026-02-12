@@ -5,8 +5,10 @@ import type { AvatarFallbackColor, AvatarShape, SharedProps } from '@coinbase/cd
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
+import { mergeComponentProps } from '../utils/mergeComponentProps';
 
 import { hexagonAvatarClipId, HexagonBorder } from './Hexagon';
 import { RemoteImage } from './RemoteImage';
@@ -141,8 +143,14 @@ export type AvatarBaseProps = SharedProps & {
 
 export type AvatarProps = AvatarBaseProps & BoxProps<BoxDefaultElement>;
 
-export const Avatar = memo(
-  ({
+export const Avatar = memo((_props: AvatarProps) => {
+  const { components } = useTheme();
+  const mergedProps = mergeComponentProps(
+    components?.Avatar,
+    _props,
+    components?.mergeClassNameAndStyle,
+  );
+  const {
     src,
     shape = 'circle',
     size = 'l',
@@ -156,7 +164,8 @@ export const Avatar = memo(
     className,
     style,
     ...props
-  }: AvatarProps) => {
+  } = mergedProps;
+
     const avatarSize = `var(--avatarSize-${size})`;
     const userProvidedSize = style?.width ?? style?.height ?? dangerouslySetSize;
     const computedSize = userProvidedSize ?? avatarSize;

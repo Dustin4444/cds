@@ -2,6 +2,8 @@ import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Property } from 'csstype';
 
 import type { SelectBaseProps as AlphaSelectBaseProps } from '../alpha/select/types';
+import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
+import type { AvatarButtonBaseProps } from '../buttons/AvatarButton';
 import type { ButtonBaseProps } from '../buttons/Button';
 import type { IconButtonBaseProps } from '../buttons/IconButton';
 import type { NudgeCardBaseProps } from '../cards/NudgeCard';
@@ -10,18 +12,23 @@ import type { ListCellBaseProps } from '../cells/ListCell';
 import type { ChipBaseProps } from '../chips/ChipProps';
 import type { CoachmarkBaseProps } from '../coachmark/Coachmark';
 import type { CheckboxProps } from '../controls/Checkbox';
+import type { CheckboxCellBaseProps } from '../controls/CheckboxCell';
 import type { InputIconButtonProps } from '../controls/InputIconButton';
+import type { NativeTextAreaBaseProp } from '../controls/NativeTextArea';
 import type { RadioProps } from '../controls/Radio';
+import type { RadioCellBaseProps } from '../controls/RadioCell';
 import type { SearchInputBaseProps } from '../controls/SearchInput';
 import type { SwitchProps } from '../controls/Switch';
 import type { TextInputBaseProps } from '../controls/TextInput';
 import type { DatePickerProps } from '../dates/DatePicker';
 import type { DotCountBaseProps } from '../dots/DotCount';
 import type { DropdownProps } from '../dropdown/DropdownProps';
+import type { AvatarBaseProps } from '../media/Avatar';
+import type { NavLinkProps } from '../navigation/NavLink';
 import type { AlertBaseProps } from '../overlays/Alert';
 import type { ModalBaseProps } from '../overlays/modal/Modal';
 import type { ToastBaseProps } from '../overlays/Toast';
-import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
+import type { TooltipBaseProps, TooltipContentBaseProps } from '../overlays/tooltip/TooltipProps';
 import type { TableCellProps } from '../tables/TableCell';
 import type { TableHeaderProps } from '../tables/TableHeader';
 import type { TabsBaseProps } from '../tabs/Tabs';
@@ -38,15 +45,20 @@ export type ComponentTheme = {
   // Buttons
   Button: Partial<ButtonBaseProps>;
   IconButton: Partial<IconButtonBaseProps>;
+  AvatarButton: Partial<AvatarButtonBaseProps>;
   // Controls
   TextInput: Partial<TextInputBaseProps>;
   InputIconButton: Partial<InputIconButtonProps>;
   SearchInput: Partial<SearchInputBaseProps>;
   Checkbox: Partial<CheckboxProps<string>>;
+  CheckboxCell: Partial<CheckboxCellBaseProps<string>>;
   Radio: Partial<RadioProps<string>>;
+  RadioCell: Partial<RadioCellBaseProps<string>>;
   Switch: Partial<SwitchProps>;
+  NativeTextArea: Partial<NativeTextAreaBaseProp>;
   // Chips
   Chip: Partial<ChipBaseProps>;
+  TabbedChips: Partial<TabbedChipsBaseProps>;
   // Select (alpha)
   Select: Partial<AlphaSelectBaseProps>;
   // Dropdown
@@ -56,8 +68,13 @@ export type ComponentTheme = {
   Alert: Partial<AlertBaseProps>;
   Toast: Partial<ToastBaseProps>;
   Tooltip: Partial<TooltipBaseProps>;
+  TooltipContent: Partial<TooltipContentBaseProps>;
   // Cells
   ListCell: Partial<ListCellBaseProps>;
+  // Media
+  Avatar: Partial<AvatarBaseProps>;
+  // Navigation
+  NavLink: Partial<NavLinkProps>;
   // Dots
   DotCount: Partial<DotCountBaseProps>;
   // Tag

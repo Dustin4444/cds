@@ -3,10 +3,12 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useTheme } from '../hooks/useTheme';
 import { Box, HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
 import { Pressable, type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { mergeComponentProps } from '../utils/mergeComponentProps';
 
 import { Checkbox } from './Checkbox';
 import type { ControlBaseProps } from './Control';
@@ -68,7 +70,16 @@ const baseCss = css`
 `;
 
 const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue extends string>(
-  {
+  _props: CheckboxCellProps<CheckboxValue>,
+  ref: React.ForwardedRef<HTMLLabelElement>,
+) {
+  const { components } = useTheme();
+  const mergedProps = mergeComponentProps(
+    components?.CheckboxCell,
+    _props,
+    components?.mergeClassNameAndStyle,
+  );
+  const {
     title,
     description,
     checked,
@@ -91,9 +102,8 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     classNames,
     styles,
     ...props
-  }: CheckboxCellProps<CheckboxValue>,
-  ref: React.ForwardedRef<HTMLLabelElement>,
-) {
+  } = mergedProps;
+
   const generatedTitleId = useId();
   const generatedDescriptionId = useId();
 
