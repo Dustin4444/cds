@@ -794,6 +794,77 @@ const WithHelperText = () => (
   </>
 );
 
+const BorderCustomization = () => {
+  const [isCondensed, setIsCondensed] = useState(true);
+  const spacingVariant = isCondensed ? 'condensed' : 'normal';
+
+  return (
+    <VStack gap={2} padding={2}>
+      <Switch
+        checked={isCondensed}
+        onChange={(_, nextChecked) => setIsCondensed(Boolean(nextChecked))}
+      >
+        Spacing variant: {spacingVariant}
+      </Switch>
+      <ListCell
+        bordered
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="bordered"
+      />
+      <ListCell
+        borderedTop
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedTop"
+      />
+      <ListCell
+        borderedHorizontal
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedHorizontal"
+      />
+      <ListCell
+        bordered
+        borderColor="accentBoldPurple"
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderColor"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderTopWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderRadius={200}
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderRadius"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderTopLeftRadius={300}
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopLeftRadius"
+      />
+    </VStack>
+  );
+};
+
 const CustomSpacing = () => (
   <>
     <ListCell
@@ -1212,6 +1283,9 @@ const ListCellScreen = () => {
       </Example>
       <Example inline title="WithHelperText" titlePadding={titlePadding}>
         <WithHelperText />
+      </Example>
+      <Example inline title="BorderCustomization" titlePadding={titlePadding}>
+        <BorderCustomization />
       </Example>
       <Example inline title="CustomSpacing" titlePadding={titlePadding}>
         <CustomSpacing />
