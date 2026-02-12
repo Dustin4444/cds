@@ -22,6 +22,7 @@ export type IconSheetScreenProps = NativeStackScreenProps<
 
 declare global {
   namespace ReactNavigation {
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-empty-object-type
     interface RootParamList extends PlaygroundStackParamList {}
   }
 }
