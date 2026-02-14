@@ -4,6 +4,8 @@ import { SandpackCodeEditor, SandpackProvider, useSandpack } from '@codesandbox/
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { IconButton, type IconButtonProps } from '@coinbase/cds-web/buttons/IconButton';
+import { Dropdown } from '@coinbase/cds-web/dropdown/Dropdown';
+import { MenuItem } from '@coinbase/cds-web/dropdown/MenuItem';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
@@ -133,8 +135,7 @@ const FileTabComponent = ({ id, label }: TabValue) => {
       color={isActive ? 'fgPrimary' : 'fgMuted'}
       font="label2"
       onClick={() => updateActiveTab(id)}
-      paddingBottom={0.25}
-      paddingTop={0.25}
+      paddingY={1}
     >
       {label}
     </Pressable>
@@ -179,12 +180,39 @@ const FileTabBar = memo(function FileTabBar() {
       TabsActiveIndicatorComponent={FileTabsIndicator}
       activeBackground="bgPrimary"
       activeTab={activeTab}
-      gap={2}
-      height={30}
-      marginBottom={-1.5}
+      gap={1}
       onChange={handleChange}
       tabs={tabs}
     />
+  );
+});
+
+// --- MoreMenu (Format Code / Reset Code) ---
+
+const MoreMenuContent = memo(function MoreMenuContent({
+  onFormat,
+  onResetCode,
+}: {
+  onFormat: () => void;
+  onResetCode: () => void;
+}) {
+  return (
+    <VStack gap={0} paddingY={0.5}>
+      <MenuItem onClick={onFormat} paddingX={2} paddingY={1} value="format">
+        <HStack alignItems="center" gap={1}>
+          <Icon color="fgMuted" name="sparkle" size="s" />
+          <Text font="body">Format code</Text>
+        </HStack>
+      </MenuItem>
+      <MenuItem onClick={onResetCode} paddingX={2} paddingY={1} value="reset">
+        <HStack alignItems="center" gap={1}>
+          <Icon color="fgNegative" name="trashCan" size="s" />
+          <Text color="fgNegative" font="body">
+            Reset code
+          </Text>
+        </HStack>
+      </MenuItem>
+    </VStack>
   );
 });
 
@@ -222,21 +250,10 @@ const PlaygroundHeader = memo(function PlaygroundHeader({
       .catch(() => toast.show('Failed to copy to clipboard'));
   }, [sandpack, toast]);
 
-  /** Check if any file has been modified from its original state. */
-  const hasChanges = useCallback((): boolean => {
-    // Sandpack tracks original files internally; we compare current vs reset state
-    // A simple heuristic: check if resetAllFiles would change anything
-    // For now, always show confirmation since we can't easily diff
-    return true;
-  }, []);
-
   const handleResetCode = useCallback(() => {
-    if (hasChanges() && !window.confirm('Discard all code changes and reset to original?')) {
-      return;
-    }
     sandpack.resetAllFiles();
     toast.show('Code reset to original');
-  }, [sandpack, toast, hasChanges]);
+  }, [sandpack, toast]);
 
   const handleFormat = useCallback(() => {
     const activeFile = sandpack.activeFile;
@@ -256,60 +273,73 @@ const PlaygroundHeader = memo(function PlaygroundHeader({
 
   const toggleIcon = expanded ? 'caretUp' : 'caretDown';
 
-  // Bottom border shown whenever code is visible below the header
-  const showBottomBorder = displayMode === 'snippet' || expanded;
+  const moreMenuContent = useMemo(
+    () => <MoreMenuContent onFormat={handleFormat} onResetCode={handleResetCode} />,
+    [handleFormat, handleResetCode],
+  );
 
   return (
-    <HStack
-      borderedTop
-      alignItems="center"
-      borderedBottom={showBottomBorder}
-      justifyContent="space-between"
-      paddingX={1.5}
-      paddingY={0.5}
-    >
-      {/* Left: file tabs (multi-file) or "Live Code" label (single-file) */}
-      <HStack alignItems="center" minWidth={0}>
-        {isMultiFile ? (
-          <FileTabBar />
-        ) : (
+    <VStack>
+      {/* Main toolbar row */}
+      <HStack
+        borderedTop
+        alignItems="center"
+        borderedBottom={displayMode === 'snippet' || expanded}
+        justifyContent="space-between"
+        paddingX={1.5}
+        paddingY={0.5}
+      >
+        {/* Left: always show "Live Code" label */}
+        <HStack alignItems="center" minWidth={0}>
           <Text alignItems="center" color="fgMuted" display="flex" font="label1" userSelect="none">
             <Icon active color="fgMuted" name="pencil" paddingEnd={0.5} size="xs" />
             Live Code
           </Text>
-        )}
-      </HStack>
+        </HStack>
 
-      {/* Right: toggle + icon buttons */}
-      <HStack alignItems="center" gap={1}>
-        {toggleLabel && (
-          <Pressable
-            noScaleOnPress
-            accessibilityLabel={`${toggleLabel}${headingText ? ` for ${headingText} example` : ''}`}
-            onClick={onToggle}
-          >
-            <HStack alignItems="center">
-              <Icon color="fgMuted" name={toggleIcon} paddingEnd={0.5} size="xs" />
-              <Text color="fgMuted" font="label1">
-                {toggleLabel}
-              </Text>
-            </HStack>
-          </Pressable>
-        )}
+        {/* Right: toggle + icon buttons */}
+        <HStack alignItems="center" gap={1}>
+          {toggleLabel && (
+            <Pressable
+              noScaleOnPress
+              accessibilityLabel={`${toggleLabel}${headingText ? ` for ${headingText} example` : ''}`}
+              onClick={onToggle}
+            >
+              <HStack alignItems="center">
+                <Icon color="fgMuted" name={toggleIcon} paddingEnd={0.5} size="xs" />
+                <Text color="fgMuted" font="label1">
+                  {toggleLabel}
+                </Text>
+              </HStack>
+            </Pressable>
+          )}
 
-        <HStack alignItems="center" gap={0.5}>
-          <ToolbarIconButton name="copy" onClick={handleCopyToClipboard} tooltip="Copy code" />
-          <ToolbarIconButton name="sparkle" onClick={handleFormat} tooltip="Format code" />
-          <ToolbarIconButton name="refresh" onClick={onRerender} tooltip="Reset demo" />
-          <ToolbarIconButton name="trashCan" onClick={handleResetCode} tooltip="Reset code" />
-          <ToolbarIconButton
-            name="pencil"
-            onClick={handleOpenInCodeSandbox}
-            tooltip="Open in StackBlitz"
-          />
+          <HStack alignItems="center" gap={0.5}>
+            <ToolbarIconButton name="copy" onClick={handleCopyToClipboard} tooltip="Copy code" />
+            <ToolbarIconButton name="refresh" onClick={onRerender} tooltip="Reset demo" />
+            <ToolbarIconButton
+              name="pencil"
+              onClick={handleOpenInCodeSandbox}
+              tooltip="Open in StackBlitz"
+            />
+            <Dropdown
+              content={moreMenuContent}
+              contentPosition={{ placement: 'bottom-end' }}
+              width="auto"
+            >
+              <ToolbarIconButton accessibilityLabel="More actions" name="more" tooltip="More" />
+            </Dropdown>
+          </HStack>
         </HStack>
       </HStack>
-    </HStack>
+
+      {/* File tabs row — only shown for multi-file examples when code is expanded */}
+      {isMultiFile && expanded && (
+        <HStack borderedBottom alignItems="center" paddingX={1.5}>
+          <FileTabBar />
+        </HStack>
+      )}
+    </VStack>
   );
 });
 
