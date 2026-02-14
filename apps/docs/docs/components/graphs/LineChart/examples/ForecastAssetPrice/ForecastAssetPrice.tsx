@@ -1,17 +1,17 @@
 import { memo, useCallback } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import type { DottedLineProps,SolidLineProps } from '@coinbase/cds-web-visualization/chart';
 import {
   CartesianChart,
-  XAxis,
+  DefaultScrubberBeacon,
+  DottedLine,
   Line,
   Scrubber,
-  DefaultScrubberBeacon,
   SolidLine,
-  DottedLine,
   useCartesianChartContext,
   useScrubberContext,
+  XAxis,
 } from '@coinbase/cds-web-visualization/chart';
-import type { SolidLineProps, DottedLineProps } from '@coinbase/cds-web-visualization/chart';
 import { m } from 'framer-motion';
 
 const startYear = 2020;

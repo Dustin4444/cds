@@ -17,11 +17,11 @@ export default function Example() {
       <Button onClick={handleOpen}>Open Illustration Tray</Button>
       {visible && (
         <IllustrationTray
+          onCloseComplete={handleClose}
           pictogramName="addWallet"
-          title="Section header"
           pin={isPhone ? 'bottom' : 'right'}
           showHandleBar={isPhone}
-          onCloseComplete={handleClose}
+          title="Section header"
         >
           <Text color="fgMuted" font="body" paddingBottom={2}>
             Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum

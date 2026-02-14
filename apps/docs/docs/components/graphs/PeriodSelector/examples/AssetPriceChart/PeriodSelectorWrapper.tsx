@@ -68,8 +68,8 @@ export const PeriodSelectorWrapper = memo(function PeriodSelectorWrapper({
         flexShrink={0}
         height={36}
         name="settings"
-        variant="secondary"
         onClick={onClickSettings}
+        variant="secondary"
       />
     </HStack>
   );

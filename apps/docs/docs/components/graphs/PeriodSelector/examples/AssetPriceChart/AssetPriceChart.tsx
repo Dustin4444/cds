@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
-import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { Switch } from '@coinbase/cds-web/controls';
 import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box } from '@coinbase/cds-web/layout';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { RollingNumber } from '@coinbase/cds-web/numbers';
@@ -10,31 +10,35 @@ import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
 
+import type { DataPoint, PeriodId, TabItem } from './data';
 import { PeriodSelectorWrapper } from './PeriodSelectorWrapper';
 
-const tabs = [
-  { id: 'hour', label: '1H' },
-  { id: 'day', label: '1D' },
-  { id: 'week', label: '1W' },
-  { id: 'month', label: '1M' },
-  { id: 'year', label: '1Y' },
-  { id: 'all', label: 'All' },
-];
+type AssetPriceChartProps = {
+  activeTab: TabItem;
+  currentPrice: number;
+  data: DataPoint[];
+  formatTimestamp: (date: Date) => string;
+  isLoading?: boolean;
+  onTimeChange?: (date: Date | undefined, price: number | undefined) => void;
+  setActiveTab: (tab: TabItem) => void;
+  tabs: TabItem[];
+};
 
-export function AssetPriceChart() {
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+export const AssetPriceChart = memo(function AssetPriceChart({
+  activeTab,
+  currentPrice,
+  data,
+  formatTimestamp,
+  isLoading,
+  onTimeChange,
+  setActiveTab,
+  tabs,
+}: AssetPriceChartProps) {
   const [showSettings, setShowSettings] = useState(false);
   const [showYAxis, setShowYAxis] = useState(true);
   const [showXAxis, setShowXAxis] = useState(true);
-  const [scrubIndex, setScrubIndex] = useState();
+  const [scrubIndex, setScrubIndex] = useState<number | undefined>();
   const breakpoints = useBreakpoints();
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
 
   const formatYAxisPrice = useCallback(
     (price: number) => {
@@ -59,78 +63,80 @@ export function AssetPriceChart() {
   const toggleShowYAxis = useCallback(() => setShowYAxis((show) => !show), []);
   const toggleShowXAxis = useCallback(() => setShowXAxis((show) => !show), []);
 
-  const data = useMemo(() => sparklineInteractiveData[activeTab.id], [activeTab.id]);
-  const currentPrice = useMemo(
-    () => sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value,
-    [],
+  const handleSetActiveTab = useCallback(
+    (tab: { id: string; label: string }) => {
+      setActiveTab(tab as TabItem);
+    },
+    [setActiveTab],
   );
+
   const currentTimePrice = useMemo(() => {
-    if (scrubIndex !== undefined) {
+    if (scrubIndex !== undefined && data[scrubIndex]) {
       return data[scrubIndex].value;
     }
     return currentPrice;
   }, [data, scrubIndex, currentPrice]);
 
-  const formatDate = useCallback((date) => {
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
-    const monthDay = date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-    const time = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-    return `${dayOfWeek}, ${monthDay}, ${time}`;
-  }, []);
+  const handleScrubberPositionChange = useCallback(
+    (index: number | undefined) => {
+      setScrubIndex(index);
+      if (onTimeChange) {
+        if (index !== undefined && data[index]) {
+          onTimeChange(data[index].date, data[index].value);
+        } else {
+          onTimeChange(undefined, undefined);
+        }
+      }
+    },
+    [data, onTimeChange],
+  );
 
   const scrubberLabel = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    return formatDate(data[scrubIndex].date);
-  }, [scrubIndex, data, formatDate]);
+    if (scrubIndex === undefined || !data[scrubIndex]) return;
+    return formatTimestamp(data[scrubIndex].date);
+  }, [scrubIndex, data, formatTimestamp]);
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === undefined) return;
+    if (scrubIndex === undefined || !data[scrubIndex]) return;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(data[scrubIndex].value);
-    const date = formatDate(data[scrubIndex].date);
+    const date = formatTimestamp(data[scrubIndex].date);
     return `Asset price: ${price} USD on ${date}`;
-  }, [scrubIndex, data, formatDate]);
+  }, [scrubIndex, data, formatTimestamp]);
 
   const onClickSettings = useCallback(() => setShowSettings(!showSettings), [showSettings]);
 
   const seriesData = useMemo(() => [{ id: 'price', data: data.map((d) => d.value) }], [data]);
 
-  const getFormattingConfigForPeriod = useCallback((period) => {
+  const getFormattingConfigForPeriod = useCallback((period: PeriodId) => {
     switch (period) {
       case 'hour':
       case 'day':
         return {
-          hour: 'numeric',
-          minute: 'numeric',
+          hour: 'numeric' as const,
+          minute: 'numeric' as const,
         };
 
       case 'week':
       case 'month':
         return {
-          month: 'numeric',
-          day: 'numeric',
+          month: 'numeric' as const,
+          day: 'numeric' as const,
         };
 
       case 'year':
       case 'all':
         return {
-          month: 'numeric',
-          year: 'numeric',
+          month: 'numeric' as const,
+          year: 'numeric' as const,
         };
     }
   }, []);
 
   const formatXAxisDate = useCallback(
-    (index) => {
+    (index: number) => {
       if (!data[index]) return '';
       const date = data[index].date;
       const formatConfig = getFormattingConfigForPeriod(activeTab.id);
@@ -149,13 +155,11 @@ export function AssetPriceChart() {
   return (
     <VStack gap={2}>
       <SectionHeader
-        padding={0}
-        title={<Text font="label1">Asset Price</Text>}
         balance={
           <RollingNumber
-            format={{ style: 'currency', currency: 'USD' }}
-            font="display3"
             color="fgMuted"
+            font="display3"
+            format={{ style: 'currency', currency: 'USD' }}
             value={currentTimePrice}
           />
         }
@@ -164,54 +168,58 @@ export function AssetPriceChart() {
             <HStack alignItems="center">
               <PeriodSelectorWrapper
                 activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                tabs={tabs}
                 onClickSettings={onClickSettings}
+                setActiveTab={handleSetActiveTab}
+                tabs={tabs}
               />
             </HStack>
           )
         }
+        padding={0}
+        title={<Text font="label1">Asset Price</Text>}
       />
-      <LineChart
-        enableScrubbing
-        height={{ base: 200, tablet: 250, desktop: 300 }}
-        onScrubberPositionChange={setScrubIndex}
-        series={seriesData}
-        yAxis={{
-          domainLimit: 'strict',
-          showGrid: true,
-          tickLabelFormatter: formatYAxisPrice,
-          width: breakpoints.isPhone ? 50 : 80,
-        }}
-        xAxis={{
-          tickLabelFormatter: formatXAxisDate,
-        }}
-        showYAxis={showYAxis}
-        showXAxis={showXAxis}
-        accessibilityLabel={accessibilityLabel}
-      >
-        <Scrubber label={scrubberLabel} />
-      </LineChart>
+      <Box style={{ opacity: isLoading ? 0.4 : 1, transition: 'opacity 0.2s ease' }}>
+        <LineChart
+          accessibilityLabel={accessibilityLabel}
+          enableScrubbing={!isLoading}
+          height={{ base: 200, tablet: 250, desktop: 300 }}
+          onScrubberPositionChange={handleScrubberPositionChange}
+          series={seriesData}
+          showXAxis={showXAxis}
+          showYAxis={showYAxis}
+          xAxis={{
+            tickLabelFormatter: formatXAxisDate,
+          }}
+          yAxis={{
+            domainLimit: 'strict',
+            showGrid: true,
+            tickLabelFormatter: formatYAxisPrice,
+            width: breakpoints.isPhone ? 50 : 80,
+          }}
+        >
+          <Scrubber label={scrubberLabel} />
+        </LineChart>
+      </Box>
       {isMobile && (
         <HStack alignItems="center">
           <PeriodSelectorWrapper
             activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            tabs={tabs}
             onClickSettings={onClickSettings}
+            setActiveTab={handleSetActiveTab}
+            tabs={tabs}
           />
         </HStack>
       )}
       {showSettings && (
-        <Tray title="Chart Settings" onCloseComplete={() => setShowSettings(false)}>
+        <Tray onCloseComplete={() => setShowSettings(false)} title="Chart Settings">
           {({ handleClose }) => (
-            <VStack gap={2} paddingX={3} paddingBottom={3}>
-              <HStack justifyContent="space-between" alignItems="center">
+            <VStack gap={2} paddingBottom={3} paddingX={3}>
+              <HStack alignItems="center" justifyContent="space-between">
                 <Text font="label1">Show Y-Axis</Text>
                 <Switch checked={showYAxis} onChange={toggleShowYAxis} />
               </HStack>
 
-              <HStack justifyContent="space-between" alignItems="center">
+              <HStack alignItems="center" justifyContent="space-between">
                 <Text font="label1">Show X-Axis</Text>
                 <Switch checked={showXAxis} onChange={toggleShowXAxis} />
               </HStack>
@@ -221,4 +229,4 @@ export function AssetPriceChart() {
       )}
     </VStack>
   );
-}
+});

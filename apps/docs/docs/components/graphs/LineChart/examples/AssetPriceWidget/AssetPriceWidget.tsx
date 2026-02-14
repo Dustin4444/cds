@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
-import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
 import { Box } from '@coinbase/cds-web/layout/Box';
 import { HStack } from '@coinbase/cds-web/layout/HStack';

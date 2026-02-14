@@ -1,20 +1,17 @@
-import React, { memo, forwardRef, useState, useMemo, useCallback } from 'react';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import type { TabsActiveIndicatorProps } from '@coinbase/cds-web/tabs';
-import type { SegmentedTabProps, TabComponent } from '@coinbase/cds-web/tabs';
-import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import React, { forwardRef, memo, useCallback,useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
-import { Text } from '@coinbase/cds-web/typography/Text';
 import { RemoteImage } from '@coinbase/cds-web/media/RemoteImage';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
+import type { SegmentedTabProps, TabComponent,TabsActiveIndicatorProps  } from '@coinbase/cds-web/tabs';
 import { SegmentedTab } from '@coinbase/cds-web/tabs';
-import { LineChart } from '@coinbase/cds-web-visualization/chart';
-import { Scrubber } from '@coinbase/cds-web-visualization/chart';
-import {
-  PeriodSelector,
+import { Text } from '@coinbase/cds-web/typography/Text';
+import { LineChart ,   PeriodSelector,
   PeriodSelectorActiveIndicator,
+Scrubber ,
 } from '@coinbase/cds-web-visualization/chart';
 
 const BTCTab: TabComponent = memo(
@@ -180,6 +177,7 @@ export function AssetPriceDottedArea() {
         accessibilityLabel={chartAccessibilityLabel}
         areaType="dotted"
         height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 60 }}
         series={[
           {
             id: 'btc',
@@ -188,13 +186,12 @@ export function AssetPriceDottedArea() {
           },
         ]}
         style={{ outlineColor: assets.btc.color }}
-        inset={{ top: 60 }}
       >
         <Scrubber
           idlePulse
+          labelElevated
           accessibilityLabel={scrubberAccessibilityLabel}
           label={scrubberLabel}
-          labelElevated
         />
       </LineChart>
       <PeriodSelector

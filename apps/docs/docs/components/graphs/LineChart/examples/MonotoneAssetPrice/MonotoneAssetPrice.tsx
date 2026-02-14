@@ -1,10 +1,9 @@
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useCallback,useMemo } from 'react';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { LineChart } from '@coinbase/cds-web-visualization/chart';
-import {
-  Scrubber,
+import {   DefaultAxisTickLabel,
   DefaultScrubberBeacon,
-  DefaultAxisTickLabel,
+LineChart ,
+  Scrubber,
   SolidLine,
 } from '@coinbase/cds-web-visualization/chart';
 
@@ -82,9 +81,9 @@ export const MonotoneAssetPrice = memo(function MonotoneAssetPrice() {
     () => (props) => (
       <DefaultScrubberBeacon
         {...props}
-        stroke="var(--color-fg)"
         color="var(--color-bg)"
         radius={5}
+        stroke="var(--color-fg)"
         strokeWidth={3}
       />
     ),
@@ -125,10 +124,10 @@ export const MonotoneAssetPrice = memo(function MonotoneAssetPrice() {
     >
       <Scrubber
         hideOverlay
+        labelElevated
         BeaconComponent={InvertedBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelElevated
       />
     </LineChart>
   );

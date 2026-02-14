@@ -1,9 +1,8 @@
 import Playground from '@site/src/theme/Playground';
 
-
 ## Basic Example
 
-```jsx live
+```jsx live noInline
 function BasicExample() {
   const tabs = [
     { id: '1H', label: '1H' },
@@ -23,13 +22,14 @@ function BasicExample() {
     </Box>
   );
 }
+render(<BasicExample />);
 ```
 
 ## Minimum Width
 
 You can set the `width` prop to `fit-content` to make the period selector as small as possible.
 
-```jsx live
+```jsx live noInline
 function MinimumWidthExample() {
   const tabs = [
     { id: '1W', label: '1W' },
@@ -49,11 +49,12 @@ function MinimumWidthExample() {
     />
   );
 }
+render(<MinimumWidthExample />);
 ```
 
 ## Many Periods with Overflow
 
-```jsx live
+```jsx live noInline
 function ManyPeriodsExample() {
   const tabs = useMemo(
     () => [
@@ -126,11 +127,12 @@ function ManyPeriodsExample() {
     </HStack>
   );
 }
+render(<ManyPeriodsExample />);
 ```
 
 ## Live Indicator
 
-```jsx live
+```jsx live noInline
 function LiveExample() {
   const tabs = useMemo(
     () => [
@@ -161,14 +163,15 @@ function LiveExample() {
     </Box>
   );
 }
+render(<LiveExample />);
 ```
 
 ## Customization
 
 ### Custom Colors
 
-```jsx live
-function LiveExample() {
+```jsx live noInline
+function CustomColorsExample() {
   const tabs = useMemo(
     () => [
       { id: '1H', label: '1H' },
@@ -197,11 +200,12 @@ function LiveExample() {
     </Box>
   );
 }
+render(<CustomColorsExample />);
 ```
 
 ### Color Shifting
 
-```jsx live
+```jsx live noInline
 function ColorShiftingExample() {
   const TabLabel = memo(({ label }) => (
     <Text font="label1" style={{ color: 'var(--chartActiveColor)' }}>
@@ -274,6 +278,7 @@ function ColorShiftingExample() {
     </VStack>
   );
 }
+render(<ColorShiftingExample />);
 ```
 
 ### Asset Price Chart

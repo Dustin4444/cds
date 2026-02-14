@@ -1,10 +1,10 @@
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useCallback,useMemo } from 'react';
 import {
   CartesianChart,
-  XAxis,
-  YAxis,
   Line,
   Scrubber,
+  XAxis,
+  YAxis,
 } from '@coinbase/cds-web-visualization/chart';
 
 export const ServiceAvailability = memo(function ServiceAvailability() {

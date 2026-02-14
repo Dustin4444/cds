@@ -1,15 +1,15 @@
 import { memo, useMemo } from 'react';
-import { Box } from '@coinbase/cds-web/layout/Box';
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { Box } from '@coinbase/cds-web/layout/Box';
+import type { ChartTextChildren,ScrubberBeaconLabelProps } from '@coinbase/cds-web-visualization/chart';
 import {
+  DefaultScrubberBeaconLabel,
+  getLineData,
   LineChart,
   Scrubber,
-  DefaultScrubberBeaconLabel,
   useCartesianChartContext,
   useScrubberContext,
-  getLineData,
 } from '@coinbase/cds-web-visualization/chart';
-import type { ScrubberBeaconLabelProps, ChartTextChildren } from '@coinbase/cds-web-visualization/chart';
 
 const PercentageScrubberBeaconLabel = memo(
   ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
@@ -55,11 +55,11 @@ export function PercentageBeaconLabelChart({ background, scrubberLineStroke, ...
     <Box borderRadius={300} padding={2} style={{ background }}>
       <LineChart {...props}>
         <Scrubber
-          idlePulse
           hideOverlay
-          lineStroke={scrubberLineStroke}
-          beaconStroke={background}
+          idlePulse
           BeaconLabelComponent={PercentageScrubberBeaconLabel}
+          beaconStroke={background}
+          lineStroke={scrubberLineStroke}
         />
       </LineChart>
     </Box>
@@ -78,7 +78,10 @@ export function PercentageBeaconLabels() {
       enableScrubbing
       showArea
       areaType="dotted"
+      background={background}
       height={250}
+      inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
+      scrubberLineStroke={scrubberLineStroke}
       series={[
         {
           id: 'prices2',
@@ -93,12 +96,9 @@ export function PercentageBeaconLabels() {
           label: 'NYC',
         },
       ]}
-      inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
       xAxis={{
         range: ({ min, max }) => ({ min, max: max - 92 }),
       }}
-      background={background}
-      scrubberLineStroke={scrubberLineStroke}
     />
   );
 }
