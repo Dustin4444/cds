@@ -16,18 +16,39 @@ import { generateImports } from '../importMap';
  */
 
 /**
- * Detect if code is a bare JSX expression (not wrapped in a function/component).
- * If so, wrap it in an export default function with a return statement.
+ * Ensure the code has an `export default` so the generated index.tsx can
+ * import it. Handles three cases:
+ *
+ * 1. Already has `export default` → leave as-is
+ * 2. Has a named function/const/class but no default export → add one
+ * 3. Bare JSX expression → wrap in `export default function App()`
  */
-const wrapCodeIfNeeded = (code: string): string => {
+export const ensureDefaultExport = (code: string): string => {
   const trimmed = code.trim();
 
-  // Already has a function declaration or component definition -- leave as-is
-  if (/^(function\s|const\s|let\s|var\s|export\s|class\s|import\s)/.test(trimmed)) {
+  // Already has a default export — nothing to do
+  if (/\bexport\s+default\b/.test(trimmed)) {
     return code;
   }
 
-  // Bare JSX or expression -- wrap in an App component
+  // Named function declaration: `function Foo(` → `export default function Foo(`
+  const funcMatch = trimmed.match(/^function\s+([A-Z]\w*)\s*\(/);
+  if (funcMatch) {
+    return code.replace(/^(\s*)function\s+/, '$1export default function ');
+  }
+
+  // Named const/let/var component: `const Foo = ...` → append `export default Foo;`
+  const constMatch = trimmed.match(/^(?:const|let|var)\s+([A-Z]\w*)\b/);
+  if (constMatch) {
+    return `${code}\n\nexport default ${constMatch[1]};`;
+  }
+
+  // Has other declarations (import, class, etc.) — leave as-is
+  if (/^(export\s|class\s|import\s)/.test(trimmed)) {
+    return code;
+  }
+
+  // Bare JSX or expression — wrap in an App component
   return `export default function App() {\n  return (\n    ${trimmed}\n  );\n}`;
 };
 
@@ -50,6 +71,7 @@ import '@coinbase/cds-web/defaultFontStyles';
 import '@coinbase/cds-web/globalStyles';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import Example from './Example';
@@ -59,7 +81,9 @@ root.render(
   <React.StrictMode>
     <MediaQueryProvider>
       <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-        <Example />
+        <VStack padding={3}>
+          <Example />
+        </VStack>
       </ThemeProvider>
     </MediaQueryProvider>
   </React.StrictMode>
@@ -70,13 +94,14 @@ root.render(
       Object.keys(sandpackFiles).find((f) => f.includes('App')) ?? Object.keys(sandpackFiles)[0];
     const rawCode = sandpackFiles[activeFile]?.code ?? '';
     const imports = generateImports(rawCode);
-    const wrappedCode = wrapCodeIfNeeded(rawCode);
+    const wrappedCode = ensureDefaultExport(rawCode);
     files['src/App.tsx'] = `${imports ? imports + '\n\n' : ''}${wrappedCode}`;
     files['src/index.tsx'] = `import '@coinbase/cds-icons/fonts/web/icon-font.css';
 import '@coinbase/cds-web/defaultFontStyles';
 import '@coinbase/cds-web/globalStyles';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import App from './App';
@@ -86,7 +111,9 @@ root.render(
   <React.StrictMode>
     <MediaQueryProvider>
       <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-        <App />
+        <VStack padding={3}>
+          <App />
+        </VStack>
       </ThemeProvider>
     </MediaQueryProvider>
   </React.StrictMode>

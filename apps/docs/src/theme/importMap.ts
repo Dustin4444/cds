@@ -15,6 +15,8 @@ type ImportEntry = {
   source: string;
   /** Whether this is a default export */
   isDefault?: boolean;
+  /** The original export name when this identifier is an alias (e.g. `candles` for `btcCandles`) */
+  exportedAs?: string;
 };
 
 export const importMap: Record<string, ImportEntry> = {
@@ -37,6 +39,7 @@ export const importMap: Record<string, ImportEntry> = {
   accounts: { source: '@coinbase/cds-common/internal/data/accounts' },
   assets: { source: '@coinbase/cds-common/internal/data/assets' },
   ethBackground: { source: '@coinbase/cds-common/internal/data/assets' },
+  btcCandles: { source: '@coinbase/cds-common/internal/data/candles', exportedAs: 'candles' },
   candles: { source: '@coinbase/cds-common/internal/data/candles' },
   loremIpsum: { source: '@coinbase/cds-common/internal/data/loremIpsum' },
   prices: { source: '@coinbase/cds-common/internal/data/prices' },
@@ -298,33 +301,52 @@ export const importMap: Record<string, ImportEntry> = {
 };
 
 /**
+ * Check if an identifier is declared locally in the code (as a variable,
+ * function, parameter, destructured binding, etc.). If so, we should skip
+ * auto-importing it since the local declaration would shadow the import.
+ */
+export const isDeclaredLocally = (name: string, code: string): boolean => {
+  const patterns = [
+    // const/let/var declarations: `const prices`, `let prices`, `var prices`
+    new RegExp(`\\b(?:const|let|var)\\s+${name}\\b`),
+    // Function declarations: `function prices(`
+    new RegExp(`\\bfunction\\s+${name}\\b`),
+    // Destructuring in declarations: `const { prices }`, `let { prices, foo }`
+    new RegExp(`\\b(?:const|let|var)\\s*\\{[^}]*\\b${name}\\b[^}]*\\}`),
+    // Destructuring in function params: `({ prices })`, `({ prices, foo })`
+    new RegExp(`\\(\\s*\\{[^}]*\\b${name}\\b[^}]*\\}`),
+  ];
+  return patterns.some((p) => p.test(code));
+};
+
+/**
  * Given a code snippet, detect used identifiers and generate import statements.
- * Only generates imports for identifiers found in the importMap.
+ * Only generates imports for identifiers found in the importMap that are not
+ * already declared locally in the code.
  */
 export const generateImports = (code: string): string => {
-  // Group imports by source package
+  // Group imports by source package. Each entry is the import specifier
+  // string, e.g. "Button" or "candles as btcCandles".
   const importsBySource: Record<string, string[]> = {};
 
   for (const [name, entry] of Object.entries(importMap)) {
-    // Simple heuristic: check if the identifier appears as a word boundary in the code
+    // Check if the identifier appears as a word boundary in the code
     const regex = new RegExp(`\\b${name}\\b`);
-    if (regex.test(code)) {
+    if (regex.test(code) && !isDeclaredLocally(name, code)) {
       if (!importsBySource[entry.source]) {
         importsBySource[entry.source] = [];
       }
-      importsBySource[entry.source].push(name);
+      // Support aliased imports: `import { candles as btcCandles } from '...'`
+      const specifier = entry.exportedAs ? `${entry.exportedAs} as ${name}` : name;
+      importsBySource[entry.source].push(specifier);
     }
   }
 
   // Build import statements
   const imports: string[] = [];
-  for (const [source, names] of Object.entries(importsBySource)) {
-    const sortedNames = names.sort();
-    if (sortedNames.length === 1) {
-      imports.push(`import { ${sortedNames[0]} } from '${source}';`);
-    } else {
-      imports.push(`import { ${sortedNames.join(', ')} } from '${source}';`);
-    }
+  for (const [source, specifiers] of Object.entries(importsBySource)) {
+    const sorted = specifiers.sort();
+    imports.push(`import { ${sorted.join(', ')} } from '${source}';`);
   }
 
   return imports.sort().join('\n');
