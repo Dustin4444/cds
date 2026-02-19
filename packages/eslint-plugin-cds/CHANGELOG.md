@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.3.0 (2/19/2026 PST)
+
+#### 🚀 Updates
+
+- Add lint rule to avoid dangerouslySetBackground on Interactable. [[#405](https://github.com/coinbase/cds/pull/405)]
+
 ## 3.2.1 (10/1/2025 PST)
 
 #### 🐞 Fixes

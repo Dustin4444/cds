@@ -199,7 +199,15 @@ This rule also checks for other required a11y labels that need to be enforced ou
 
 ### Current CDS Best Practices Rules
 
-TBD
+#### no-dangerously-set-background (Web & Mobile)
+
+**Rule Description**:
+
+The `no-dangerously-set-background` rule warns when the `dangerouslySetBackground` prop is used on **Interactable**, **Pressable**, or **Card components** (MessagingCard, MediaCard, DataCard) when the card is interactive. For those card components, the rule only runs when `renderAsPressable` is explicitly set to `true` (or the shorthand `renderAsPressable`). Cards without `renderAsPressable` or with `renderAsPressable={false}` are ignored. Other components (e.g. Box, UpsellCard, CardRoot) are ignored.
+
+**Why**: Background color applied via `dangerouslySetBackground` is not picked up by the color blending logic. As a result, the interactable does not display the correct background in its hovered, pressed, and disabled states. Use `blendStyles.background` so the blending logic applies and these states render correctly.
+
+The rule is enabled by default in both `configs.web` and `configs.mobile` (and legacy configs) as `warn`.
 
 ## Development
 

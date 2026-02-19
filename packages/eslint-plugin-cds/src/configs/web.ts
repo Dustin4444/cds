@@ -22,6 +22,7 @@ export function buildWebConfig(plugin: Record<string, unknown>) {
     },
     rules: {
       '@coinbase/cds/control-has-associated-label-extended': 'warn',
+      '@coinbase/cds/no-dangerously-set-background': 'warn',
       '@coinbase/cds/no-v7-imports': 'warn',
       'jsx-a11y/control-has-associated-label': [
         'warn',
@@ -48,6 +49,7 @@ export const legacyWebConfig = {
   plugins: ['jsx-a11y'],
   rules: {
     '@coinbase/cds/control-has-associated-label-extended': 'warn',
+    '@coinbase/cds/no-dangerously-set-background': 'warn',
     '@coinbase/cds/no-v7-imports': 'warn',
   },
   overrides: [

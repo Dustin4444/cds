@@ -14,6 +14,7 @@ import eslintReactNativeA11y from 'eslint-plugin-react-native-a11y';
 import eslintReactNative from 'eslint-plugin-react-native';
 import eslintCodegen from 'eslint-plugin-codegen';
 import internalPlugin from '@coinbase/eslint-plugin-internal';
+import cdsPlugin from '@coinbase/eslint-plugin-cds';
 
 const ignores = [
   '*.md',
@@ -284,6 +285,16 @@ export default tseslint.config(
       ...sharedRules,
       ...typescriptRules,
       ...packageProductionRules,
+    },
+  },
+  // CDS rule for docs app (no-dangerously-set-background)
+  {
+    files: ['apps/docs/**/*.{ts,tsx}'],
+    plugins: {
+      '@coinbase/cds': cdsPlugin,
+    },
+    rules: {
+      '@coinbase/cds/no-dangerously-set-background': 'warn',
     },
   },
   {
