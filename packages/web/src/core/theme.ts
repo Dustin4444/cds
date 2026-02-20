@@ -1,5 +1,5 @@
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { GradientPreset, LinearGradientConfig } from '@coinbase/cds-common/types/Gradient';
+import type { GradientPreset } from '@coinbase/cds-common/types/Gradient';
 import type { Property } from 'csstype';
 
 export type ThemeConfig = {
@@ -40,9 +40,9 @@ export type ThemeConfig = {
   /** The control size values. */
   controlSize: { [key in ThemeVars.ControlSize]: number };
   /** Custom gradient presets for light mode. Merged with default presets. */
-  lightGradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
+  lightGradient?: Partial<Record<ThemeVars.Gradient, Property.Background>>;
   /** Custom gradient presets for dark mode. Merged with default presets. */
-  darkGradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
+  darkGradient?: Partial<Record<ThemeVars.Gradient, Property.Background>>;
 };
 
 export type Theme = ThemeConfig & {
@@ -53,7 +53,7 @@ export type Theme = ThemeConfig & {
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: Property.Color };
   /** The light or dark gradient presets, as appropriate based on the activeColorScheme. */
-  gradient?: Partial<Record<GradientPreset, LinearGradientConfig>>;
+  gradient?: Partial<Record<ThemeVars.Gradient, Property.Background>>;
 };
 
 // TO DO: consider if we should include the lightGradient and darkGradient in the styleVarPrefixes
@@ -78,10 +78,10 @@ export const styleVarPrefixes = {
   textTransform: 'textTransform',
   shadow: 'shadow',
   controlSize: 'controlSize',
-} as const satisfies Record<
-  Exclude<keyof Theme, 'id' | 'activeColorScheme' | 'lightGradient' | 'darkGradient' | 'gradient'>,
-  string
->;
+  lightGradient: 'lightGradient',
+  darkGradient: 'darkGradient',
+  gradient: 'gradient',
+} as const satisfies Record<Exclude<keyof Theme, 'id' | 'activeColorScheme'>, string>;
 
 /** Used to generate intellisense via ThemeCSSVars below. */
 type ThemeObjectCssVars = {
@@ -126,6 +126,9 @@ type ThemeObjectCssVars = {
   };
   controlSize: {
     [key in ThemeVars.ControlSize as `--${typeof styleVarPrefixes.controlSize}-${key}`]: Property.Width;
+  };
+  gradient: {
+    [key in ThemeVars.Gradient as `--${typeof styleVarPrefixes.gradient}-${key}`]: Property.Background;
   };
 };
 

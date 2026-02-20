@@ -183,7 +183,8 @@ export const Button: ButtonComponent = memo(
       {
         as,
         gradient,
-        variant = gradient ? 'gradient' : 'primary',
+        dangerouslySetGradient,
+        variant = gradient || dangerouslySetGradient ? 'gradient' : 'primary',
         loading,
         transparent,
         block,
@@ -209,7 +210,7 @@ export const Button: ButtonComponent = memo(
         // TO DO: get rid of this height and interactableHeight (mobile and web both)
         height = compact ? 40 : 56,
         borderColor,
-        borderWidth = gradient ? 0 : 100,
+        borderWidth = variant === 'gradient' ? 0 : 100,
         borderRadius = compact ? 700 : 900,
         accessibilityLabel,
         padding,
@@ -252,11 +253,13 @@ export const Button: ButtonComponent = memo(
             className,
           )}
           color={colorValue}
+          dangerouslySetGradient={dangerouslySetGradient}
           data-block={block}
           data-compact={compact}
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
+          gradient={gradient}
           height={height}
           loading={loading}
           margin={margin}
@@ -265,7 +268,6 @@ export const Button: ButtonComponent = memo(
           padding={padding}
           paddingX={paddingX}
           transparentWhileInactive={transparent}
-          gradient={gradient}
           {...props}
         >
           {start ? (

@@ -49,6 +49,7 @@ const stylePropThemeVarMap = {
   fontFamily: 'FontFamily',
   fontSize: 'FontSize',
   fontWeight: 'FontWeight',
+  gradient: 'Gradient',
   lineHeight: 'LineHeight',
   gap: 'Space',
   columnGap: 'Space',

@@ -1,24 +1,19 @@
 import React, { forwardRef, memo, useContext, useMemo } from 'react';
 import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
-import type { Gradient } from '@coinbase/cds-common/types/Gradient';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
-import { borderStyle, gradientCss, pinStyle } from '../styles/booleanStyles';
-import { gradientToCSS } from '../utils/gradient';
+import { borderStyle, pinStyle } from '../styles/booleanStyles';
 import type { fontFamily } from '../styles/responsive/base';
 import { getStyles, type ResponsiveProp, type StyleProps } from '../styles/styleProps';
-import { ThemeContext } from '../system/ThemeProvider';
-
-import { gradientBackground } from './BoxCSSProperties';
 
 export const boxDefaultElement = 'div';
 
 export type BoxDefaultElement = typeof boxDefaultElement;
 
-export type BoxBaseProps = StyleProps &
+export type BoxBaseProps = Omit<StyleProps, 'gradient'> &
   SharedProps &
   Pick<
     SharedAccessibilityProps,
@@ -44,11 +39,6 @@ export type BoxBaseProps = StyleProps &
     borderedVertical?: boolean;
     /** @danger This is a migration escape hatch. It is not intended to be used normally. */
     dangerouslySetBackground?: string;
-    /**
-     * Apply a gradient background to the box. Accepts a preset name or a gradient configuration object.
-     * This sets the CSS `background` property and will override `dangerouslySetBackground` and `background`.
-     */
-    gradient?: Gradient;
   };
 
 export type BoxProps<AsComponent extends React.ElementType> = Polymorphic.Props<
@@ -83,7 +73,6 @@ export const Box: BoxComponent = memo(
         borderedHorizontal,
         borderedVertical,
         dangerouslySetBackground,
-        gradient,
         // Begin className style props
         display = 'flex',
         position,
@@ -173,16 +162,13 @@ export const Box: BoxComponent = memo(
       ref: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = as ?? boxDefaultElement;
-      const theme = useContext(ThemeContext);
 
       const inlineStyle = useMemo(
         () => ({
           backgroundColor: dangerouslySetBackground,
-          ...(gradient &&
-            theme && { [gradientBackground]: gradientToCSS(gradient, theme.gradient) }),
           ...style,
         }),
-        [dangerouslySetBackground, gradient, theme, style],
+        [dangerouslySetBackground, style],
       );
 
       const styles = useMemo(
@@ -375,7 +361,6 @@ export const Box: BoxComponent = memo(
             borderedEnd && borderStyle.borderedEnd,
             borderedHorizontal && borderStyle.borderedHorizontal,
             borderedVertical && borderStyle.borderedVertical,
-            gradient && gradientCss,
             className,
           )}
           data-testid={testID}

@@ -2,9 +2,10 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Defs, LinearGradient as Lg, Rect, Stop, Svg } from 'react-native-svg';
 
-import { Box, type BoxBaseProps, type BoxProps } from './Box';
+import { Box, type BoxProps } from './Box';
 
 const defaultStops = [0, 1];
+const defaultAngle = 180;
 
 function getAlpha(color: string) {
   const match = color.includes('rgba') && color.match(/,\s?([\d.]*)\)$/);
@@ -48,9 +49,9 @@ export type LinearGradientProps = {
   angle?: number;
 };
 
-export type GradientBoxBaseProps = BoxBaseProps & LinearGradientProps;
+export type GradientBoxBaseProps = LinearGradientProps;
 
-export type GradientBoxProps = GradientBoxBaseProps & Omit<BoxProps, keyof GradientBoxBaseProps>;
+export type GradientBoxProps = GradientBoxBaseProps & BoxProps;
 
 export const GradientBox = memo(
   forwardRef<View, GradientBoxProps>(
@@ -61,7 +62,7 @@ export const GradientBox = memo(
         stops = defaultStops,
         colors,
         elevated,
-        angle = 180,
+        angle = defaultAngle,
         children,
         overflow = 'hidden',
         ...boxProps

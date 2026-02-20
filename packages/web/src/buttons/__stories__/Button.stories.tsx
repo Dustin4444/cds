@@ -1,14 +1,13 @@
 import React from 'react';
 
-import type { ThemeConfig } from '../../core/theme';
 import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '../../icons/Icon';
 import { VStack } from '../../layout';
 import { ThemeProvider } from '../../system/ThemeProvider';
-import { defaultTheme } from '../../themes/defaultTheme';
+import { defaultGradientTheme } from '../../themes/gradients/defaultGradientTheme';
+import { Text } from '../../typography/Text';
 import { Button, type ButtonBaseProps } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
-import { defaultGradientTheme } from '../../themes/gradients/defaultGradientPresets';
 
 export default {
   component: Button,
@@ -101,59 +100,6 @@ export const FlushProps = () => (
   </VStack>
 );
 
-/**
- * Custom theme with dramatically different gradient colors
- * to demonstrate theme customization.
- * - brand: orange → yellow (warm, instead of default blue → purple)
- * - premium: red → orange → yellow (warm gradient)
- * - positive: uses warning color for contrast
- */
-const customTheme: ThemeConfig = {
-  ...defaultTheme,
-  lightGradient: {
-    brand: {
-      direction: 'to-r',
-      colors: [defaultTheme.lightColor.bgWarning, defaultTheme.lightColor.accentBoldYellow],
-    },
-    premium: {
-      direction: 135,
-      colors: [
-        defaultTheme.lightColor.accentBoldRed,
-        defaultTheme.lightColor.bgWarning,
-        defaultTheme.lightColor.accentBoldYellow,
-      ],
-    },
-    positive: {
-      direction: 'to-b',
-      colors: [
-        defaultTheme.lightColor.bgWarning,
-        { color: defaultTheme.lightColor.bgWarning, opacity: 0.7 },
-      ],
-    },
-  },
-  darkGradient: {
-    brand: {
-      direction: 'to-r',
-      colors: [defaultTheme.darkColor.bgWarning, defaultTheme.darkColor.accentBoldYellow],
-    },
-    premium: {
-      direction: 135,
-      colors: [
-        defaultTheme.darkColor.accentBoldRed,
-        defaultTheme.darkColor.bgWarning,
-        defaultTheme.darkColor.accentBoldYellow,
-      ],
-    },
-    positive: {
-      direction: 'to-b',
-      colors: [
-        defaultTheme.darkColor.bgWarning,
-        { color: defaultTheme.darkColor.bgWarning, opacity: 0.7 },
-      ],
-    },
-  },
-};
-
 export const GradientButtons = () => {
   const { activeColorScheme } = useTheme();
 
@@ -169,209 +115,103 @@ function GradientButtonsContent() {
 
   return (
     <VStack alignItems="flex-start" gap={4}>
-      {/* Preset Gradients */}
-      <VStack alignItems="flex-start" gap={2}>
-        <Button color="fgInverse" gradient="brand" onClick={onClickConsole}>
-          Brand Gradient (Preset)
-        </Button>
-        <Button color="fgInverse" gradient="premium" onClick={onClickConsole}>
-          Premium Gradient (Preset)
-        </Button>
-        <Button
-          block
-          color="fgInverse"
-          gradient="positive"
-          onClick={onClickConsole}
-          startIcon="checkmark"
-        >
-          Positive Gradient with Icon
-        </Button>
+      {/* Theme Gradient Presets */}
+      <VStack gap={1}>
+        <Text as="h2" display="block" font="title3">
+          Theme Gradient Presets (gradient)
+        </Text>
+        <VStack alignItems="flex-start" gap={2}>
+          {(['primary', 'brand', 'positive', 'negative', 'premium'] as const).map((preset) => (
+            <Button color="fgInverse" gradient={preset} onClick={onClickConsole}>
+              Preset: {preset}
+            </Button>
+          ))}
+        </VStack>
       </VStack>
 
-      {/* Custom Inline Gradients */}
+      {/* Custom Gradients using dangerouslySetGradient */}
       <VStack alignItems="flex-start" gap={2}>
+        <Text as="h2" display="block" font="title3">
+          Custom Gradients (dangerouslySetGradient)
+        </Text>
         <Button
           color="fgInverse"
-          gradient={{
-            direction: 'to-r',
-            colors: [theme.color.bgPositive, theme.color.bgPrimary],
-          }}
+          dangerouslySetGradient={`linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`}
           onClick={onClickConsole}
         >
-          Custom: Positive to Primary
+          Custom: Blue to Purple
         </Button>
         <Button
           color="fgInverse"
-          gradient={{
-            direction: 45,
-            colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
-          }}
+          dangerouslySetGradient={`linear-gradient(45deg, ${theme.color.bgPositive}, ${theme.color.accentBoldBlue})`}
           onClick={onClickConsole}
         >
           Custom: 45° Angle
         </Button>
         <Button
-          color="fgInverse"
-          gradient={{
-            direction: 'to-r',
-            colors: [
-              { color: theme.color.accentBoldBlue, offset: 0 },
-              { color: theme.color.accentBoldPurple, offset: 0.5 },
-              { color: theme.color.accentBoldYellow, offset: 1 },
-            ],
-          }}
-          onClick={onClickConsole}
-        >
-          Custom: Color Stops
-        </Button>
-      </VStack>
-
-      {/* Block Gradients */}
-      <VStack gap={2}>
-        <Button block color="fgInverse" gradient="brand" onClick={onClickConsole}>
-          Full Width Gradient
-        </Button>
-        <Button
           block
           color="fgInverse"
-          gradient={{
-            direction: 'to-r',
-            colors: [
-              theme.color.accentBoldBlue,
-              theme.color.accentBoldPurple,
-              theme.color.accentBoldYellow,
-            ],
-          }}
+          dangerouslySetGradient={`linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple}, ${theme.color.accentBoldYellow})`}
           onClick={onClickConsole}
         >
           Multi-Color Block Gradient
         </Button>
       </VStack>
 
-      {/* Interactive States (CSS overrides) */}
+      {/* Different Gradient Styles */}
       <VStack alignItems="flex-start" gap={2}>
+        <Text as="h2" display="block" font="title3">
+          Different Gradient Styles
+        </Text>
+        <Button
+          color="fgInverse"
+          dangerouslySetGradient={`radial-gradient(circle, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`}
+          onClick={onClickConsole}
+        >
+          Radial Gradient
+        </Button>
+        <Button
+          color="fgInverse"
+          dangerouslySetGradient={`conic-gradient(from 0deg, ${theme.color.bgNegative}, ${theme.color.bgWarning}, ${theme.color.bgPositive}, ${theme.color.accentBoldBlue}, ${theme.color.bgNegative})`}
+          onClick={onClickConsole}
+        >
+          Conic Gradient
+        </Button>
+        <Button
+          color="fgInverse"
+          dangerouslySetGradient={`repeating-linear-gradient(45deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldBlue} 10px, ${theme.color.accentBoldPurple} 10px, ${theme.color.accentBoldPurple} 20px)`}
+          onClick={onClickConsole}
+        >
+          Repeating Linear Gradient
+        </Button>
+        <Button
+          block
+          color="fgInverse"
+          dangerouslySetGradient={`linear-gradient(90deg, ${theme.color.bgNegative}, ${theme.color.bgWarning}, ${theme.color.bgPositive}, ${theme.color.accentBoldBlue})`}
+          onClick={onClickConsole}
+        >
+          Rainbow Gradient
+        </Button>
+      </VStack>
+
+      {/* Gradient with Interactive States */}
+      <VStack alignItems="flex-start" gap={2}>
+        <Text as="h2" display="block" font="title3">
+          Gradient with Hover/Active States
+        </Text>
         <Button
           blendStyles={{
-            hoveredBackground: 'linear-gradient(90deg, #0047e0 0%, #4c1d95 100%)',
-            pressedBackground:
-              'linear-gradient(90deg, rgb(238, 137, 83) 0%, rgb(246, 244, 79) 100%)',
-            disabledBackground: 'linear-gradient(90deg, #999999 0%, #333333 100%)',
+            hoveredBackground: `linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
+            pressedBackground: `linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
           }}
           color="fgInverse"
-          gradient={{
-            direction: 'to-r',
-            colors: [theme.color.bgPositive, theme.color.bgPrimary],
-          }}
+          dangerouslySetGradient={`linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`}
           onClick={onClickConsole}
         >
           Gradient with Hover/Active States
         </Button>
-        <Button
-          disabled
-          blendStyles={{
-            hoveredBackground: 'linear-gradient(90deg, #0047e0 0%, #4c1d95 100%)',
-            pressedBackground:
-              'linear-gradient(90deg, rgb(238, 137, 83) 0%, rgb(246, 244, 79) 100%)',
-            disabledBackground: 'linear-gradient(90deg, #999999 0%, #333333 100%)',
-          }}
-          color="fg"
-          gradient={{
-            direction: 45,
-            colors: [theme.color.accentBoldBlue, theme.color.accentBoldYellow],
-          }}
-          onClick={onClickConsole}
-        >
+        <Button disabled color="fg" gradient="brand" onClick={onClickConsole}>
           Disabled Gradient
-        </Button>
-      </VStack>
-      {/* Custom theme gradient */}
-      <ThemeProvider activeColorScheme={theme.activeColorScheme} theme={customTheme}>
-        <VStack alignItems="flex-start" gap={2}>
-          <Button color="fgInverse" gradient="brand" onClick={onClickConsole}>
-            Custom Brand Gradient
-          </Button>
-          <Button color="fgInverse" gradient="premium" onClick={onClickConsole}>
-            Custom Premium Gradient
-          </Button>
-        </VStack>
-      </ThemeProvider>
-
-      {/* Radial and Conic Gradients (CSS overrides) */}
-      <VStack alignItems="flex-start" gap={2}>
-        <Button
-          variant="gradient"
-          blendStyles={{
-            background: 'radial-gradient(circle at center, #0052ff 0%, #7b3fe4 100%)',
-            hoveredBackground: 'radial-gradient(circle at center, #0047e0 0%, #5b2fb4 100%)',
-            pressedBackground: 'radial-gradient(circle at center, #003cb8 0%, #4b1fa4 100%)',
-            disabledBackground: 'radial-gradient(circle at center, #999999 0%, #333333 100%)',
-          }}
-          color="fgInverse"
-          onClick={onClickConsole}
-        >
-          Radial Gradient (Circle)
-        </Button>
-        <Button
-          variant="gradient"
-          color="fgInverse"
-          onClick={onClickConsole}
-          blendStyles={{
-            background: 'radial-gradient(ellipse at top, #05b169 0%, #0052ff 50%, #7b3fe4 100%)',
-            hoveredBackground:
-              'radial-gradient(ellipse at top, #04a159 0%, #0047e0 50%, #5b2fb4 100%)',
-            pressedBackground:
-              'radial-gradient(ellipse at top, #039149 0%, #003cb8 50%, #4b1fa4 100%)',
-            disabledBackground: 'radial-gradient(ellipse at top, #999999 0%, #333333 100%)',
-          }}
-        >
-          Radial Gradient (Ellipse)
-        </Button>
-        <Button
-          blendStyles={{
-            background:
-              'radial-gradient(circle at top right, #7b3fe4 0%, #0052ff 50%, #05b169 100%)',
-            hoveredBackground:
-              'radial-gradient(circle at top right, #5b2fb4 0%, #0047e0 50%, #04a159 100%)',
-            pressedBackground:
-              'radial-gradient(circle at top right, #4b1fa4 0%, #003cb8 50%, #039149 100%)',
-            disabledBackground: 'radial-gradient(circle at top right, #999999 0%, #333333 100%)',
-          }}
-          variant="gradient"
-          color="fgInverse"
-          onClick={onClickConsole}
-        >
-          Radial Gradient (Corner)
-        </Button>
-        <Button
-          blendStyles={{
-            background: 'conic-gradient(from 0deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
-            hoveredBackground: 'conic-gradient(from 45deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
-            pressedBackground: 'conic-gradient(from 90deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
-            disabledBackground: 'conic-gradient(from 135deg, #0052ff, #7b3fe4, #05b169, #0052ff)',
-          }}
-          variant="gradient"
-          color="fgInverse"
-          onClick={onClickConsole}
-        >
-          Conic Gradient (Color Wheel)
-        </Button>
-        <Button
-          block
-          blendStyles={{
-            background:
-              'conic-gradient(from 0deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
-            hoveredBackground:
-              'conic-gradient(from 45deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
-            pressedBackground:
-              'conic-gradient(from 90deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
-            disabledBackground:
-              'conic-gradient(from 135deg, #0052ff 0deg 90deg, #7b3fe4 90deg 180deg, #05b169 180deg 270deg, #cf4700 270deg 360deg)',
-          }}
-          variant="gradient"
-          color="fgInverse"
-          onClick={onClickConsole}
-        >
-          Conic Gradient (Hard Stops)
         </Button>
       </VStack>
     </VStack>

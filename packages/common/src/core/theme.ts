@@ -219,6 +219,14 @@ export namespace ThemeVarsDefault {
     1: void;
     2: void;
   }
+
+  export interface Gradient {
+    primary: void;
+    positive: void;
+    negative: void;
+    brand: void;
+    premium: void;
+  }
 }
 
 declare module '@coinbase/cds-common/core/theme' {
@@ -251,6 +259,7 @@ declare module '@coinbase/cds-common/core/theme' {
     export interface Shadow {}
     export interface ControlSize {}
     export interface Elevation {}
+    export interface Gradient {}
   }
 }
 
@@ -327,5 +336,9 @@ export namespace ThemeVars {
 
   export type Elevation = Prettify<
     keyof ThemeVarsDefault.Elevation | keyof ThemeVarsExtended.Elevation
+  >;
+
+  export type Gradient = Prettify<
+    keyof ThemeVarsDefault.Gradient | keyof ThemeVarsExtended.Gradient
   >;
 }

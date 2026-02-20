@@ -399,6 +399,24 @@ export const background: Record<ThemeVars.Color, LinariaClassName> = {
   `,
 } as const;
 
+export const gradient: Record<ThemeVars.Gradient, LinariaClassName> = {
+  primary: css`
+    background-image: var(--gradient-primary);
+  `,
+  positive: css`
+    background-image: var(--gradient-positive);
+  `,
+  negative: css`
+    background-image: var(--gradient-negative);
+  `,
+  brand: css`
+    background-image: var(--gradient-brand);
+  `,
+  premium: css`
+    background-image: var(--gradient-premium);
+  `,
+} as const;
+
 export const borderColor: Record<ThemeVars.Color, LinariaClassName> = {
   // Text
   fg: css`

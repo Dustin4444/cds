@@ -640,6 +640,34 @@ export const background: Record<ThemeVars.Color, LinariaClassName> = {
   `,
 } as const;
 
+export const backgroundImage: Record<ThemeVars.Gradient, LinariaClassName> = {
+  primary: css`
+    @media ${media.tablet} {
+      background-image: var(--gradient-primary);
+    }
+  `,
+  positive: css`
+    @media ${media.tablet} {
+      background-image: var(--gradient-positive);
+    }
+  `,
+  negative: css`
+    @media ${media.tablet} {
+      background-image: var(--gradient-negative);
+    }
+  `,
+  brand: css`
+    @media ${media.tablet} {
+      background-image: var(--gradient-brand);
+    }
+  `,
+  premium: css`
+    @media ${media.tablet} {
+      background-image: var(--gradient-premium);
+    }
+  `,
+} as const;
+
 export const borderColor: Record<ThemeVars.Color, LinariaClassName> = {
   // Text
   fg: css`

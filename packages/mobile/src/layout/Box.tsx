@@ -16,18 +16,6 @@ import { useTheme } from '../hooks/useTheme';
 import { pinStyles } from '../styles/pinStyles';
 import { getStyles, type StyleProps } from '../styles/styleProps';
 
-/**
- * Props expected by the GradientComponent when injected into Box.
- * Use this type when providing a custom gradient component.
- */
-export type GradientComponentProps = {
-  colors: string[];
-  stops?: number[];
-  angle?: number;
-  style?: StyleProp<ViewStyle>;
-  children?: React.ReactNode;
-};
-
 export type BoxBaseProps = StyleProps & {
   children?: React.ReactNode;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
