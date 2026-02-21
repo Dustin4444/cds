@@ -12,7 +12,6 @@ export * from './CellBaseProps';
 export * from './Chart';
 export * from './CollapsibleBaseProps';
 export * from './Color';
-export * from './Gradient';
 export * from './ComponentEventHandlerProps';
 export * from './DimensionStyles';
 export * from './Display';

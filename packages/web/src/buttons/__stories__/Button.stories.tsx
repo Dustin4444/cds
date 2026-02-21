@@ -201,16 +201,25 @@ function GradientButtonsContent() {
         </Text>
         <Button
           blendStyles={{
-            hoveredBackground: `linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
-            pressedBackground: `linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
+            backgroundGradient: `linear-gradient(90deg, ${theme.color.bgPositive}, ${theme.color.accentBoldBlue})`,
+            hoveredBackgroundGradient: `linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
+            pressedBackgroundGradient: `linear-gradient(90deg, ${theme.color.bgWarning}, ${theme.color.accentBoldPurple})`,
           }}
           color="fgInverse"
-          dangerouslySetGradient={`linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`}
           onClick={onClickConsole}
+          variant="gradient"
         >
           Gradient with Hover/Active States
         </Button>
-        <Button disabled color="fg" gradient="brand" onClick={onClickConsole}>
+        <Button
+          disabled
+          blendStyles={{
+            disabledBackgroundGradient: `linear-gradient(90deg, ${theme.color.bgSecondary}, ${theme.color.bgOverlay})`,
+          }}
+          color="fg"
+          onClick={onClickConsole}
+          variant="gradient"
+        >
           Disabled Gradient
         </Button>
       </VStack>

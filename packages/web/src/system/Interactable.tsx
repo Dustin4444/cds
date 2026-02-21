@@ -18,13 +18,17 @@ import { GradientBox, type GradientBoxBaseProps } from '../layout/GradientBox';
 
 import {
   interactableBackground,
+  interactableBackgroundGradient,
   interactableBorderColor,
   interactableDisabledBackground,
+  interactableDisabledBackgroundGradient,
   interactableDisabledBorderColor,
   interactableHoveredBackground,
+  interactableHoveredBackgroundGradient,
   interactableHoveredBorderColor,
   interactableHoveredOpacity,
   interactablePressedBackground,
+  interactablePressedBackgroundGradient,
   interactablePressedBorderColor,
   interactablePressedOpacity,
 } from './interactableCSSProperties';
@@ -85,6 +89,30 @@ const baseCss = css`
   }
 `;
 
+const backgroundGradientCss = css`
+  background-image: var(${interactableBackgroundGradient});
+`;
+
+const hoveredBackgroundGradientCss = css`
+  &:hover {
+    background-image: var(${interactableHoveredBackgroundGradient});
+  }
+`;
+
+const pressedBackgroundGradientCss = css`
+  &:active,
+  &[aria-pressed='true'] {
+    background-image: var(${interactablePressedBackgroundGradient});
+  }
+`;
+
+const disabledBackgroundGradientCss = css`
+  &:disabled,
+  &[aria-disabled='true'] {
+    background-image: var(${interactableDisabledBackgroundGradient});
+  }
+`;
+
 const blockCss = css`
   display: block;
   width: 100%;
@@ -124,7 +152,8 @@ export type InteractableDefaultElement = typeof interactableDefaultElement;
  *     background: '#ffffff',
  *     hoveredBackground: '#f5f5f5',
  *     pressedBackground: '#e0e0e0',
- *     borderColor: '#cccccc'
+ *     borderColor: '#cccccc',
+ *     backgroundGradient: 'linear-gradient(90deg, #ff0000, #0000ff)',
  *   }}
  * />
  * ```
@@ -153,6 +182,14 @@ export type InteractableBlendStyles = {
    * @default 0.75
    */
   disabledOpacity?: number;
+  /** CSS gradient string for the background. */
+  backgroundGradient?: string;
+  /** CSS gradient string for the background when pressed. */
+  pressedBackgroundGradient?: string;
+  /** CSS gradient string for the background when disabled. */
+  disabledBackgroundGradient?: string;
+  /** CSS gradient string for the background when hovered. */
+  hoveredBackgroundGradient?: string;
 };
 
 export type InteractableBaseProps = Polymorphic.ExtendableProps<
@@ -237,35 +274,45 @@ export const Interactable: InteractableComponent = forwardRef<
         }),
         ...style,
       }),
-      [style, background, theme, blendStyles, borderColor],
+      [theme, background, blendStyles, borderColor, style],
     );
 
-    const Wrapper = gradient || dangerouslySetGradient ? GradientBox : Box;
+    const sharedProps = {
+      ref,
+      'aria-busy': loading,
+      'aria-disabled': loading || disabled || undefined,
+      'aria-pressed': pressed,
+      as: Component,
+      borderWidth,
+      className: cx(
+        COMPONENT_STATIC_CLASSNAME,
+        baseCss,
+        block && blockCss,
+        transparentWhileInactive && transparentWhileInactiveCss,
+        transparentWhilePressed && transparentActiveCss,
+        blendStyles?.backgroundGradient && backgroundGradientCss,
+        blendStyles?.hoveredBackgroundGradient && hoveredBackgroundGradientCss,
+        blendStyles?.pressedBackgroundGradient && pressedBackgroundGradientCss,
+        blendStyles?.disabledBackgroundGradient && disabledBackgroundGradientCss,
+        className,
+      ),
+      'data-disabled': disabled,
+      disabled,
+      style: interactableStyle,
+      ...props,
+    };
 
-    return (
-      <Wrapper
-        ref={ref}
-        aria-busy={loading}
-        aria-disabled={loading || disabled || undefined}
-        aria-pressed={pressed}
-        as={Component}
-        borderWidth={borderWidth}
-        className={cx(
-          COMPONENT_STATIC_CLASSNAME,
-          baseCss,
-          block && blockCss,
-          transparentWhileInactive && transparentWhileInactiveCss,
-          transparentWhilePressed && transparentActiveCss,
-          className,
-        )}
-        dangerouslySetGradient={dangerouslySetGradient}
-        data-disabled={disabled}
-        disabled={disabled}
-        gradient={gradient}
-        style={interactableStyle}
-        {...props}
-      />
-    );
+    if (gradient || dangerouslySetGradient) {
+      return (
+        <GradientBox
+          {...sharedProps}
+          dangerouslySetGradient={dangerouslySetGradient}
+          gradient={gradient}
+        />
+      );
+    }
+
+    return <Box {...sharedProps} />;
   },
 );
 
@@ -285,6 +332,10 @@ export const getInteractableStyles = ({
   const hoveredOpacity = blendStyles?.hoveredOpacity ?? opacityHovered;
   const pressedOpacity = blendStyles?.pressedOpacity ?? opacityPressed;
   const disabledOpacity = blendStyles?.disabledOpacity ?? opacityDisabled;
+  const backgroundGradient = blendStyles?.backgroundGradient;
+  const hoveredGradient = blendStyles?.hoveredBackgroundGradient;
+  const pressedGradient = blendStyles?.pressedBackgroundGradient;
+  const disabledGradient = blendStyles?.disabledBackgroundGradient;
 
   return {
     [interactableBackground]: blendStyles?.background ?? `var(--color-${background})`,
@@ -329,5 +380,9 @@ export const getInteractableStyles = ({
       colorScheme: theme.activeColorScheme,
       skipContrastOptimization: true,
     }),
+    ...(backgroundGradient && { [interactableBackgroundGradient]: backgroundGradient }),
+    ...(hoveredGradient && { [interactableHoveredBackgroundGradient]: hoveredGradient }),
+    ...(pressedGradient && { [interactablePressedBackgroundGradient]: pressedGradient }),
+    ...(disabledGradient && { [interactableDisabledBackgroundGradient]: disabledGradient }),
   };
 };

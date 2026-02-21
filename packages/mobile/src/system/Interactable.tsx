@@ -4,7 +4,11 @@ import type { ElevationLevels, ThemeVars } from '@coinbase/cds-common';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
-import { GradientBox, type LinearGradientProps } from '../layout/GradientBox';
+import {
+  GradientBox,
+  type GradientBoxBaseProps,
+  type LinearGradientProps,
+} from '../layout/GradientBox';
 import { getInteractableStyles } from '../styles/getInteractableStyles';
 
 /**
@@ -40,45 +44,45 @@ export type InteractableBlendStyles = {
   disabledBackgroundGradient?: LinearGradientProps;
 };
 
-export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> & {
-  /** Apply animated styles to the outer container. */
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>[];
-  /** Background color of the overlay (element being interacted with). */
-  background?: ThemeVars.Color;
-  /** Set element to block and expand to 100% width. */
-  block?: boolean;
-  /** Is the element currently disabled. */
-  disabled?: boolean;
-  /** Is the element elevated. */
-  elevation?: ElevationLevels;
-  /**
-   * Is the element currenty loading.
-   * When set to true, will disable element from press and keyboard events
-   */
-  loading?: boolean;
-  /** Is the element being pressed. Primarily a mobile feature, but can be used on the web. */
-  pressed?: boolean;
-  /**
-   * Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc).
-   * Must be used in conjunction with the "pressed" prop
-   * */
-  transparentWhileInactive?: boolean;
-  /**
-   * Mark the background and border as transparent even while element is interacted with (elevation underlay issue).
-   * Must be used in conjunction with the "pressed" prop
-   * */
-  transparentWhilePressed?: boolean;
-  blendStyles?: InteractableBlendStyles;
-  /** Apply animated styles to the inner container. */
-  contentStyle?: StyleProp<ViewStyle>;
-  /** Apply styles to the outer container. */
-  wrapperStyles?: {
-    base?: StyleProp<ViewStyle>;
-    pressed?: StyleProp<ViewStyle>;
-    disabled?: StyleProp<ViewStyle>;
+export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> &
+  Pick<GradientBoxBaseProps, 'gradient' | 'dangerouslySetGradient'> & {
+    /** Apply animated styles to the outer container. */
+    style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>[];
+    /** Background color of the overlay (element being interacted with). */
+    background?: ThemeVars.Color;
+    /** Set element to block and expand to 100% width. */
+    block?: boolean;
+    /** Is the element currently disabled. */
+    disabled?: boolean;
+    /** Is the element elevated. */
+    elevation?: ElevationLevels;
+    /**
+     * Is the element currenty loading.
+     * When set to true, will disable element from press and keyboard events
+     */
+    loading?: boolean;
+    /** Is the element being pressed. Primarily a mobile feature, but can be used on the web. */
+    pressed?: boolean;
+    /**
+     * Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc).
+     * Must be used in conjunction with the "pressed" prop
+     * */
+    transparentWhileInactive?: boolean;
+    /**
+     * Mark the background and border as transparent even while element is interacted with (elevation underlay issue).
+     * Must be used in conjunction with the "pressed" prop
+     * */
+    transparentWhilePressed?: boolean;
+    blendStyles?: InteractableBlendStyles;
+    /** Apply animated styles to the inner container. */
+    contentStyle?: StyleProp<ViewStyle>;
+    /** Apply styles to the outer container. */
+    wrapperStyles?: {
+      base?: StyleProp<ViewStyle>;
+      pressed?: StyleProp<ViewStyle>;
+      disabled?: StyleProp<ViewStyle>;
+    };
   };
-  gradientProps?: LinearGradientProps;
-};
 
 export type InteractableProps = InteractableBaseProps & Omit<ViewProps, 'style'>;
 
@@ -96,7 +100,8 @@ export const Interactable = memo(function Interactable({
   blendStyles,
   transparentWhileInactive,
   transparentWhilePressed,
-  gradientProps,
+  gradient,
+  dangerouslySetGradient,
   ...props
 }: InteractableProps) {
   const theme = useTheme();
@@ -129,9 +134,12 @@ export const Interactable = memo(function Interactable({
   }, [theme, background, isTransparent, isPressedAndTransparent, blendStyles, borderColor]);
 
   // Resolve active gradient based on interaction state
-  // Priority: disabled > pressed > blendStyles.backgroundGradient > gradient prop
+  // Priority: disabled > pressed > blendStyles.backgroundGradient > dangerouslySetGradient > gradient
   const activeGradientProps = useMemo(() => {
-    const baseGradientProps = blendStyles?.backgroundGradient ?? gradientProps;
+    const baseGradientProps =
+      blendStyles?.backgroundGradient ??
+      dangerouslySetGradient ??
+      (gradient ? theme.gradient?.[gradient] : undefined);
 
     // Disabled state takes highest priority
     if (disabled && blendStyles?.disabledBackgroundGradient) {
@@ -146,12 +154,14 @@ export const Interactable = memo(function Interactable({
     // Fall back to base gradient
     return baseGradientProps;
   }, [
-    gradientProps,
-    disabled,
-    pressed,
     blendStyles?.backgroundGradient,
     blendStyles?.disabledBackgroundGradient,
     blendStyles?.pressedBackgroundGradient,
+    dangerouslySetGradient,
+    gradient,
+    theme.gradient,
+    disabled,
+    pressed,
   ]);
 
   const mergedWrapperStyles = useMemo(
@@ -176,30 +186,18 @@ export const Interactable = memo(function Interactable({
 
   const content = <View style={mergedContentStyles}>{children}</View>;
 
-  if (activeGradientProps) {
-    return (
-      <GradientBox
-        animated
-        borderColor={borderColor}
-        borderWidth={borderWidth}
-        style={mergedWrapperStyles}
-        {...activeGradientProps}
-        {...props}
-      >
-        {content}
-      </GradientBox>
-    );
-  }
+  const Wrapper = activeGradientProps ? GradientBox : Box;
 
   return (
-    <Box
+    <Wrapper
       animated
       borderColor={borderColor}
       borderWidth={borderWidth}
+      dangerouslySetGradient={activeGradientProps}
       style={mergedWrapperStyles}
       {...props}
     >
       {content}
-    </Box>
+    </Wrapper>
   );
 });

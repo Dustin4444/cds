@@ -91,8 +91,9 @@ export type ButtonProps = ButtonBaseProps;
 export const Button = memo(
   forwardRef(function Button(
     {
-      gradientProps,
-      variant = gradientProps ? 'gradient' : 'primary',
+      gradient,
+      dangerouslySetGradient,
+      variant = gradient || dangerouslySetGradient ? 'gradient' : 'primary',
       loading,
       transparent,
       block,
@@ -192,8 +193,9 @@ export const Button = memo(
         borderColor={borderColorValue}
         borderRadius={borderRadius}
         borderWidth={borderWidth}
+        dangerouslySetGradient={dangerouslySetGradient}
         feedback={feedback}
-        gradientProps={gradientProps}
+        gradient={gradient}
         loading={loading}
         marginEnd={marginEnd}
         marginStart={marginStart}

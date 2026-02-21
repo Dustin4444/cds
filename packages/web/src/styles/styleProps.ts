@@ -49,7 +49,6 @@ const stylePropThemeVarMap = {
   fontFamily: 'FontFamily',
   fontSize: 'FontSize',
   fontWeight: 'FontWeight',
-  gradient: 'Gradient',
   lineHeight: 'LineHeight',
   gap: 'Space',
   columnGap: 'Space',
@@ -69,6 +68,7 @@ const stylePropThemeVarMap = {
   marginEnd: 'Space',
   marginStart: 'Space',
   elevation: 'Elevation',
+  gradient: 'Gradient',
 } as const satisfies Partial<Record<keyof StaticStyleProps, string>>;
 
 /**

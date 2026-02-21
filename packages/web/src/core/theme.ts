@@ -1,5 +1,4 @@
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { GradientPreset } from '@coinbase/cds-common/types/Gradient';
 import type { Property } from 'csstype';
 
 export type ThemeConfig = {
@@ -40,9 +39,9 @@ export type ThemeConfig = {
   /** The control size values. */
   controlSize: { [key in ThemeVars.ControlSize]: number };
   /** Custom gradient presets for light mode. Merged with default presets. */
-  lightGradient?: Partial<Record<ThemeVars.Gradient, Property.Background>>;
+  lightGradient?: Partial<Record<ThemeVars.Gradient, Property.BackgroundImage>>;
   /** Custom gradient presets for dark mode. Merged with default presets. */
-  darkGradient?: Partial<Record<ThemeVars.Gradient, Property.Background>>;
+  darkGradient?: Partial<Record<ThemeVars.Gradient, Property.BackgroundImage>>;
 };
 
 export type Theme = ThemeConfig & {
@@ -53,7 +52,7 @@ export type Theme = ThemeConfig & {
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: Property.Color };
   /** The light or dark gradient presets, as appropriate based on the activeColorScheme. */
-  gradient?: Partial<Record<ThemeVars.Gradient, Property.Background>>;
+  gradient?: Partial<Record<ThemeVars.Gradient, Property.BackgroundImage>>;
 };
 
 // TO DO: consider if we should include the lightGradient and darkGradient in the styleVarPrefixes
@@ -128,7 +127,7 @@ type ThemeObjectCssVars = {
     [key in ThemeVars.ControlSize as `--${typeof styleVarPrefixes.controlSize}-${key}`]: Property.Width;
   };
   gradient: {
-    [key in ThemeVars.Gradient as `--${typeof styleVarPrefixes.gradient}-${key}`]: Property.Background;
+    [key in ThemeVars.Gradient as `--${typeof styleVarPrefixes.gradient}-${key}`]: Property.BackgroundImage;
   };
 };
 

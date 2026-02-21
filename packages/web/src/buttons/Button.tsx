@@ -123,6 +123,12 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
     Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
       /**
        * Toggle design and visual variants.
+       *
+       * When using `variant="gradient"`, you must specify gradient styles via one of:
+       * - `gradient` prop (predefined gradient name)
+       * - `dangerouslySetGradient` prop (custom CSS gradient string)
+       * - `blendStyles.backgroundGradient` (and optionally hover/pressed/disabled gradient variants)
+       *
        * @default primary
        */
       variant?: ButtonVariant;

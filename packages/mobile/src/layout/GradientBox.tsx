@@ -1,11 +1,14 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Defs, LinearGradient as Lg, Rect, Stop, Svg } from 'react-native-svg';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+
+import { useTheme } from '../hooks/useTheme';
 
 import { Box, type BoxProps } from './Box';
 
-const defaultStops = [0, 1];
-const defaultAngle = 180;
+const DEFAULT_STOPS = [0, 1];
+const DEFAULT_ANGLE = 180;
 
 function getAlpha(color: string) {
   const match = color.includes('rgba') && color.match(/,\s?([\d.]*)\)$/);
@@ -36,12 +39,7 @@ export type LinearGradientProps = {
   /**
    * Colors to be distributed between start and end.
    */
-  colors?: NonNullable<string>[];
-  /**
-   * @default false
-   * Linear gradient will overlay the children content when true
-   */
-  elevated?: boolean;
+  colors: NonNullable<string>[];
   /**
    * Sets gradient angle.
    * @default 180
@@ -49,26 +47,39 @@ export type LinearGradientProps = {
   angle?: number;
 };
 
-export type GradientBoxBaseProps = LinearGradientProps;
+export type GradientBoxBaseProps = {
+  /**
+   * Theme gradient preset to apply as the background.
+   * @example "brand" | "primary" | "positive" | "negative" | "premium"
+   */
+  gradient?: ThemeVars.Gradient;
+  /**
+   * @danger Escape hatch for applying a custom linear gradient configuration.
+   * Use this for gradients not defined in the theme.
+   * @example { colors: ['#0052FF', '#7B3FE4'], angle: 90 }
+   */
+  dangerouslySetGradient?: LinearGradientProps;
+  /**
+   * @default false
+   * Linear gradient will overlay the children content when true
+   */
+  elevated?: boolean;
+};
 
 export type GradientBoxProps = GradientBoxBaseProps & BoxProps;
 
 export const GradientBox = memo(
   forwardRef<View, GradientBoxProps>(
     (
-      {
-        start,
-        end,
-        stops = defaultStops,
-        colors,
-        elevated,
-        angle = defaultAngle,
-        children,
-        overflow = 'hidden',
-        ...boxProps
-      },
+      { elevated, children, gradient, dangerouslySetGradient, overflow = 'hidden', ...props },
       ref,
     ) => {
+      const theme = useTheme();
+
+      const gradientConfig: Partial<LinearGradientProps> =
+        dangerouslySetGradient ?? (gradient ? theme.gradient?.[gradient] : undefined) ?? {};
+
+      const { start, end, stops = DEFAULT_STOPS, colors, angle = DEFAULT_ANGLE } = gradientConfig;
       const svg = useMemo(() => {
         const anglePI = (-angle * Math.PI) / 180;
         const x1 = start?.x ?? Math.round(50 + Math.sin(anglePI) * 50) / 100;
@@ -100,7 +111,7 @@ export const GradientBox = memo(
       const items = elevated ? [children, svg] : [svg, children];
 
       return (
-        <Box ref={ref} overflow={overflow} {...boxProps}>
+        <Box ref={ref} overflow={overflow} {...props}>
           {items}
         </Box>
       );

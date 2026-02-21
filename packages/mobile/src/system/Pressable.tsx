@@ -145,7 +145,8 @@ export const Pressable = memo(
       flexShrink,
       flexGrow,
       opacity,
-      gradientProps,
+      gradient,
+      dangerouslySetGradient,
       // Pressable
       disableDebounce,
       feedback = 'none',
@@ -268,6 +269,7 @@ export const Pressable = memo(
           columnGap={columnGap}
           contentStyle={contentStyle}
           dangerouslySetBackground={dangerouslySetBackground}
+          dangerouslySetGradient={dangerouslySetGradient}
           disabled={disabled}
           display={display}
           elevation={elevation}
@@ -281,7 +283,7 @@ export const Pressable = memo(
           fontSize={fontSize}
           fontWeight={fontWeight}
           gap={gap}
-          gradientProps={gradientProps}
+          gradient={gradient}
           height={height}
           justifyContent={justifyContent}
           left={left}

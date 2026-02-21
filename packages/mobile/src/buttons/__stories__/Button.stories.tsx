@@ -20,41 +20,41 @@ const GradientButtonExamples = () => {
 
   return (
     <>
-      <Example title="Gradient Presets (from defaultGradientTheme)">
-        <Button color="fgInverse" gradientProps={theme.gradient?.brand} onPress={() => {}}>
+      <Example title="Theme Gradient Presets">
+        <Button color="fgInverse" gradient="brand" onPress={() => {}}>
           Brand Preset
         </Button>
 
-        <Button color="fgInverse" gradientProps={theme.gradient?.premium} onPress={() => {}}>
+        <Button color="fgInverse" gradient="premium" onPress={() => {}}>
           Premium Preset
         </Button>
 
-        <Button color="fgInverse" gradientProps={theme.gradient?.positive} onPress={() => {}}>
+        <Button color="fgInverse" gradient="positive" onPress={() => {}}>
           Positive Preset
         </Button>
 
-        <Button color="fgInverse" gradientProps={theme.gradient?.negative} onPress={() => {}}>
+        <Button color="fgInverse" gradient="negative" onPress={() => {}}>
           Negative Preset
         </Button>
 
-        <Button color="fgInverse" gradientProps={theme.gradient?.primary} onPress={() => {}}>
+        <Button color="fgInverse" gradient="primary" onPress={() => {}}>
           Primary Preset
         </Button>
       </Example>
 
-      <Example title="Gradient Preset Buttons (Block)">
-        <Button block color="fgInverse" gradientProps={theme.gradient?.brand} onPress={() => {}}>
+      <Example title="Theme Gradient Presets (Block)">
+        <Button block color="fgInverse" gradient="brand" onPress={() => {}}>
           Full Width Brand Gradient
         </Button>
 
-        <Button block color="fgInverse" gradientProps={theme.gradient?.premium} onPress={() => {}}>
+        <Button block color="fgInverse" gradient="premium" onPress={() => {}}>
           Full Width Premium Gradient
         </Button>
 
         <Button
           block
           color="fgInverse"
-          gradientProps={theme.gradient?.positive}
+          gradient="positive"
           onPress={() => {}}
           startIcon="checkmark"
         >
@@ -62,10 +62,10 @@ const GradientButtonExamples = () => {
         </Button>
       </Example>
 
-      <Example title="Custom Gradient (inline colors)">
+      <Example title="Custom Gradients (dangerouslySetGradient)">
         <Button
           color="fgInverse"
-          gradientProps={{
+          dangerouslySetGradient={{
             colors: [theme.color.bgNegative, theme.color.bgWarning],
             angle: 90,
           }}
@@ -76,7 +76,7 @@ const GradientButtonExamples = () => {
 
         <Button
           color="fgInverse"
-          gradientProps={{
+          dangerouslySetGradient={{
             colors: [
               theme.color.accentBoldPurple,
               theme.color.accentBoldBlue,
@@ -135,10 +135,7 @@ const GradientButtonExamples = () => {
         <Button
           blendStyles={{
             backgroundGradient: theme.gradient?.premium,
-            pressedBackgroundGradient: {
-              colors: [theme.color.accentBoldPurple, theme.color.bgPrimary],
-              angle: 180,
-            },
+            pressedBackgroundGradient: theme.gradient?.brand,
           }}
           color="fgInverse"
           onPress={() => {}}
