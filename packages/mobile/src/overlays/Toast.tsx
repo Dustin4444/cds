@@ -1,10 +1,10 @@
 import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type {
   ToastBaseProps as CommonToastBaseProps,
   ToastRefHandle,
 } from '@coinbase/cds-common/overlays/ToastProvider';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '../buttons';
 import { useA11y } from '../hooks/useA11y';
