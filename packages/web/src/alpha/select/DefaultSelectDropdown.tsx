@@ -269,7 +269,7 @@ const DefaultSelectDropdownComponent = memo(
       useEffect(() => {
         if (!controlRef.current) return;
         const resizeObserver = new ResizeObserver((entries) => {
-          setContainerWidth(entries[0].contentRect.width);
+          setContainerWidth(entries[0].target.getBoundingClientRect().width);
         });
         resizeObserver.observe(controlRef.current);
         return () => resizeObserver.disconnect();
