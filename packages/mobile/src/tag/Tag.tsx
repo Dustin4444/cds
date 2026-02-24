@@ -15,6 +15,7 @@ import type {
   TagIntent,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout';
 import { Text } from '../typography/Text';
@@ -50,50 +51,47 @@ export type TagProps = TagBaseProps &
   Omit<BoxProps, 'color' | 'background' | 'children' | 'maxWidth'>;
 
 export const Tag = memo(
-  forwardRef(
-    (
-      {
-        children,
-        intent = 'informational',
-        emphasis = intent === 'informational' ? 'low' : 'high',
-        colorScheme = 'blue',
-        background: customBackground,
-        color: customColor,
-        alignItems = 'center',
-        justifyContent = 'center',
-        testID = 'cds-tag',
-        ...props
-      }: TagProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      const theme = useTheme();
-      const { background, foreground } = tagEmphasisColorMap[emphasis][colorScheme];
-      const backgroundColor = `rgb(${theme.spectrum[customBackground ?? background]})`;
-      const color = `rgb(${theme.spectrum[customColor ?? foreground]})`;
+  forwardRef((_props: TagProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('Tag', _props);
+    const {
+      children,
+      intent = 'informational',
+      emphasis = intent === 'informational' ? 'low' : 'high',
+      colorScheme = 'blue',
+      background: customBackground,
+      color: customColor,
+      alignItems = 'center',
+      justifyContent = 'center',
+      testID = 'cds-tag',
+      ...props
+    } = mergedProps;
+    const theme = useTheme();
+    const { background, foreground } = tagEmphasisColorMap[emphasis][colorScheme];
+    const backgroundColor = `rgb(${theme.spectrum[customBackground ?? background]})`;
+    const color = `rgb(${theme.spectrum[customColor ?? foreground]})`;
 
-      return (
-        <Box
-          ref={forwardedRef}
-          alignItems={alignItems}
-          background="bg"
-          borderRadius={tagBorderRadiusMap[intent]}
-          dangerouslySetBackground={backgroundColor}
-          justifyContent={justifyContent}
-          paddingX={tagHorizontalSpacing[intent]}
-          paddingY={0.25}
-          testID={testID}
-          {...props}
+    return (
+      <Box
+        ref={forwardedRef}
+        alignItems={alignItems}
+        background="bg"
+        borderRadius={tagBorderRadiusMap[intent]}
+        dangerouslySetBackground={backgroundColor}
+        justifyContent={justifyContent}
+        paddingX={tagHorizontalSpacing[intent]}
+        paddingY={0.25}
+        testID={testID}
+        {...props}
+      >
+        <Text
+          dangerouslySetColor={color}
+          font={tagFontMap[intent]}
+          numberOfLines={1}
+          testID={`${testID}--text`}
         >
-          <Text
-            dangerouslySetColor={color}
-            font={tagFontMap[intent]}
-            numberOfLines={1}
-            testID={`${testID}--text`}
-          >
-            {children}
-          </Text>
-        </Box>
-      );
-    },
-  ),
+          {children}
+        </Text>
+      </Box>
+    );
+  }),
 );

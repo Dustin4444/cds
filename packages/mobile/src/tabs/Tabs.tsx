@@ -18,6 +18,7 @@ import {
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { BoxProps, HStackProps } from '../layout';
 import { Box, HStack } from '../layout';
 
@@ -73,85 +74,82 @@ type TabsFC = <TabId extends string = string>(
 ) => React.ReactElement;
 
 const TabsComponent = memo(
-  forwardRef(
-    <TabId extends string>(
-      {
-        tabs,
-        TabComponent,
-        TabsActiveIndicatorComponent,
-        activeBackground,
-        activeTab,
-        disabled,
-        onChange,
-        role = 'tablist',
-        position = 'relative',
-        alignSelf = 'flex-start',
-        opacity,
-        onActiveTabElementChange,
-        ...props
-      }: TabsProps<TabId>,
-      ref: React.ForwardedRef<View>,
-    ) => {
-      const tabsContainerRef = useRef<View>(null);
-      useImperativeHandle(ref, () => tabsContainerRef.current as View, []); // merge internal ref to forwarded ref
+  forwardRef(<TabId extends string>(_props: TabsProps<TabId>, ref: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('Tabs', _props);
+    const {
+      tabs,
+      TabComponent,
+      TabsActiveIndicatorComponent,
+      activeBackground,
+      activeTab,
+      disabled,
+      onChange,
+      role = 'tablist',
+      position = 'relative',
+      alignSelf = 'flex-start',
+      opacity,
+      onActiveTabElementChange,
+      ...props
+    } = mergedProps;
+    const tabsContainerRef = useRef<View>(null);
+    useImperativeHandle(ref, () => tabsContainerRef.current as View, []); // merge internal ref to forwarded ref
 
-      const refMap = useRefMap<View>();
-      const api = useTabs<TabId>({ tabs, activeTab, disabled, onChange });
+    const refMap = useRefMap<View>();
+    const api = useTabs<TabId>({ tabs, activeTab, disabled, onChange });
 
-      const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
-      const previousActiveRef = useRef(activeTab);
+    const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
+    const previousActiveRef = useRef(activeTab);
 
-      const updateActiveTabRect = useCallback(() => {
-        const activeTabRef = activeTab ? refMap.getRef(activeTab.id) : null;
-        if (!activeTabRef || !tabsContainerRef.current) return;
-        activeTabRef.measureLayout(tabsContainerRef.current, (x, y, width, height) =>
-          setActiveTabRect({ x, y, width, height }),
-        );
-      }, [activeTab, refMap]);
-
-      const registerRef = useCallback(
-        (tabId: string, ref: View) => {
-          refMap.registerRef(tabId, ref);
-          if (activeTab?.id === tabId) {
-            onActiveTabElementChange?.(ref);
-          }
-        },
-        [activeTab, onActiveTabElementChange, refMap],
+    const updateActiveTabRect = useCallback(() => {
+      const activeTabRef = activeTab ? refMap.getRef(activeTab.id) : null;
+      if (!activeTabRef || !tabsContainerRef.current) return;
+      activeTabRef.measureLayout(tabsContainerRef.current, (x, y, width, height) =>
+        setActiveTabRect({ x, y, width, height }),
       );
+    }, [activeTab, refMap]);
 
-      if (previousActiveRef.current !== activeTab) {
-        previousActiveRef.current = activeTab;
-        updateActiveTabRect();
-      }
+    const registerRef = useCallback(
+      (tabId: string, ref: View) => {
+        refMap.registerRef(tabId, ref);
+        if (activeTab?.id === tabId) {
+          onActiveTabElementChange?.(ref);
+        }
+      },
+      [activeTab, onActiveTabElementChange, refMap],
+    );
 
-      return (
-        <HStack
-          ref={tabsContainerRef}
-          alignSelf={alignSelf}
-          onLayout={updateActiveTabRect}
-          opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
-          position={position}
-          role={role}
-          {...props}
-        >
-          <TabsContext.Provider value={api as TabsApi<string>}>
-            <TabsActiveIndicatorComponent
-              activeTabRect={activeTabRect}
-              background={activeBackground}
-            />
-            {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
-              const RenderedTab = CustomTabComponent ?? TabComponent;
-              return (
-                <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab disabled={tabDisabled} id={id} {...props} />
-                </TabContainer>
-              );
-            })}
-          </TabsContext.Provider>
-        </HStack>
-      );
-    },
-  ),
+    if (previousActiveRef.current !== activeTab) {
+      previousActiveRef.current = activeTab;
+      updateActiveTabRect();
+    }
+
+    return (
+      <HStack
+        ref={tabsContainerRef}
+        alignSelf={alignSelf}
+        onLayout={updateActiveTabRect}
+        opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
+        position={position}
+        role={role}
+        {...props}
+      >
+        <TabsContext.Provider value={api as TabsApi<string>}>
+          <TabsActiveIndicatorComponent
+            activeTabRect={activeTabRect}
+            background={activeBackground}
+          />
+          {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
+            const RenderedTab = CustomTabComponent ?? TabComponent;
+            return (
+              <TabContainer key={id} id={id} registerRef={registerRef}>
+                <RenderedTab disabled={tabDisabled} id={id} {...props} />
+              </TabContainer>
+            );
+          })}
+        </TabsContext.Provider>
+      </HStack>
+    );
+  }),
 );
 
 TabsComponent.displayName = 'Tabs';

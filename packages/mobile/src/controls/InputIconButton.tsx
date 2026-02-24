@@ -2,6 +2,7 @@ import React, { memo, useContext } from 'react';
 import type { IconButtonVariant, InputVariant } from '@coinbase/cds-common/types';
 
 import { IconButton, type IconButtonProps } from '../buttons/IconButton';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { TextInputFocusVariantContext } from './context';
@@ -23,14 +24,16 @@ export type InputIconButtonProps = IconButtonProps & {
   disableInheritFocusStyle?: boolean;
 };
 
-export const InputIconButton = memo(function InputIconButton({
-  disableInheritFocusStyle = false,
-  testID,
-  variant = 'primary',
-  accessibilityLabel,
-  accessibilityHint,
-  ...props
-}: InputIconButtonProps) {
+export const InputIconButton = memo(function InputIconButton(_props: InputIconButtonProps) {
+  const mergedProps = useComponentConfig('InputIconButton', _props);
+  const {
+    disableInheritFocusStyle = false,
+    testID,
+    variant = 'primary',
+    accessibilityLabel,
+    accessibilityHint,
+    ...props
+  } = mergedProps;
   const contextVariant = useContext(TextInputFocusVariantContext);
   const transformedVariant = contextVariant ? variantTransformMap[contextVariant] : variant;
 

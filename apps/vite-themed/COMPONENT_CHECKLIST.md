@@ -84,6 +84,7 @@ Already handled
 **Configured in `advancedComponents.ts`:** Functional config handles checked/unchecked color swap, `controlColor`, and `borderWidth`.
 
 **PR needed:** Add `styles`/`classNames` support to Checkbox (and ideally to the shared `Control` component). This unblocks:
+
 1. **Border radius 2px** — no token exists for 2px; `styles` lets Advanced set `borderRadius: 2` directly.
 2. **Label font** — `Control.tsx` hardcodes `font="body"` on the label `<Text>` (line 206). A `classNames.label` or `styles.label` slot would allow overriding the font without adding a new prop. Since `Control` is shared, this also benefits Radio and Switch.
 
@@ -95,21 +96,24 @@ Switched vite-themed example to use `@coinbase/cds-web/alpha/select-chip/SelectC
 
 ##### Advanced theme differences (vs Standard)
 
-| Property | Standard | Advanced | Configurable today? |
-|---|---|---|---|
-| Padding (all) | default chip padding | `2` (16px) | **No** — `useComponentConfig` not wired up; padding props exist in `SelectChipBaseProps` but aren't forwarded through the wrapper to `MediaChip` |
-| Border radius | default chip radius | `200` (8px) | **No** — `borderRadius` not in `SelectChipBaseProps` |
-| Unselected background | `bgSecondary` | `bgAlternate` | **No** — hardcoded in `SelectChipControl.tsx` line 150 |
+| Property              | Standard             | Advanced      | Configurable today?                                                                                                                              |
+| --------------------- | -------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Padding (all)         | default chip padding | `2` (16px)    | **No** — `useComponentConfig` not wired up; padding props exist in `SelectChipBaseProps` but aren't forwarded through the wrapper to `MediaChip` |
+| Border radius         | default chip radius  | `200` (8px)   | **No** — `borderRadius` not in `SelectChipBaseProps`                                                                                             |
+| Unselected background | `bgSecondary`        | `bgAlternate` | **No** — hardcoded in `SelectChipControl.tsx` line 150                                                                                           |
 
 **Done:**
+
 - Registered `SelectChip` in `ComponentTheme` on both web (`packages/web/src/core/theme.ts`) and mobile (`packages/mobile/src/core/theme.ts`).
 
 **PRs needed for SelectChip:**
+
 1. **Wire up `useComponentConfig('SelectChip', _props)`** in `SelectChip.tsx` — currently missing, so no config values are read.
 2. **Forward padding props** through `createSelectChipControlWrapper` → `SelectChipControl` → `MediaChip`. The props exist in the type but are never plumbed through.
 3. **Add `borderRadius` and `background` to `SelectChipBaseProps`** and forward them to `MediaChip`. Currently `background` is hardcoded to `hasValue ? 'bgInverse' : 'bgSecondary'` in `SelectChipControl.tsx` — needs to accept an override for the unselected state.
 
 Once those changes land, `advancedComponents.ts` would be:
+
 ```ts
 SelectChip: {
   padding: 2,

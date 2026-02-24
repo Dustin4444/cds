@@ -4,6 +4,7 @@ import type { ChipBaseProps } from '../../chips/ChipProps';
 import { Select, type SelectRef } from '../select/Select';
 import type { SelectControlProps, SelectProps, SelectType } from '../select/types';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { SelectChipControl } from './SelectChipControl';
 
 export type SelectChipBaseProps = Pick<
@@ -34,15 +35,11 @@ export type SelectChipProps<
 const SelectChipComponent = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
-        invertColorScheme,
-        numberOfLines,
-        maxWidth,
-        displayValue,
-        ...props
-      }: SelectChipProps<Type, SelectOptionValue>,
+      _props: SelectChipProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
+      const mergedProps = useComponentConfig('SelectChip', _props);
+      const { invertColorScheme, numberOfLines, maxWidth, displayValue, ...props } = mergedProps;
       const SelectChipControlComponent = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => {
           return (
