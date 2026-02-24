@@ -35,46 +35,21 @@ Components that need theme-level prop configuration support in the vite-themed a
 
 Space token reference: `0.5`=4px, `1`=8px, `1.5`=12px, `2`=16px, `3`=24px, `4`=32px
 
+**General approach:** Prefer adding `styles`/`classNames` support to components over adding new tokens or one-off props. This limits the scope of CDS changes and gives themes maximum flexibility. No new tokens will be added.
+
 ### Alert
 
 Figma sources:
+
 - Standard: [CDS Components](https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=35-698&m=dev)
 - Advanced: [Advanced Product Library](https://www.figma.com/design/5jlcPo8JjEehlGkva1e6y2/Advanced-Product-Library?node-id=5991-53452&m=dev)
-
-#### Content area (pictogram + title + body)
-
-| Property | Standard | Advanced | Web | Mobile |
-|---|---|---|---|---|
-| `paddingTop` | `3` (24px) | `3` (24px) | `3` (24px) | `3` (24px) |
-| `paddingX` | `3` (24px) | `3` (24px) | `3` (24px) | `3` (24px) |
-| `paddingBottom` | `1` (8px) | **`2` (16px)** | `1` (8px) | `1` (8px) |
-
-#### Actions area (buttons)
-
-| Property | Standard | Advanced | Web | Mobile |
-|---|---|---|---|---|
-| `paddingTop` | `2` (16px) | `2` (16px) | **`3` (24px)** | `2` (16px) |
-| `paddingBottom` | `3` (24px) | `3` (24px) | `3` (24px) | **`2` (16px)** |
-| `paddingX` | `3` (24px) | `3` (24px) | **`2` (16px)** | `3` (24px) |
-| Button gap | 8px | 8px | **`gap={2}` (16px)** | **`gap={2}` (16px)** |
-
-#### Bugs (shared across themes)
-
-**Web (`packages/web/src/overlays/Alert.tsx`):**
-- Line 193: `gap={2}` → `gap={1}`
-- Line 194: `paddingX={2}` → `paddingX={3}`
-- Line 195: `paddingY={3}` → split to `paddingTop={2}` + `paddingBottom={3}`
-
-**Mobile (`packages/mobile/src/overlays/Alert.tsx`):**
-- Line 194: `gap={2}` → `gap={1}`
-- Line 196: `paddingY={2}` → split to `paddingTop={2}` + `paddingBottom={3}`
 
 #### Advanced theme differences (vs Standard)
 
 The Advanced Alert is structurally identical to Standard except for one value:
 
-| Property | Standard | Advanced |
-|---|---|---|
+| Property                | Standard  | Advanced   |
+| ----------------------- | --------- | ---------- |
 | Content `paddingBottom` | `1` (8px) | `2` (16px) |
 
 Button appearance differences are already handled by the global `Button` config in `advancedComponents.ts`.
@@ -91,9 +66,57 @@ Alert: {
 
 ### Button (Priority)
 
+Already handled
+
 ### Checkbox (Priority)
 
+#### Advanced theme differences (vs Standard)
+
+| Property             | Standard    | Advanced      | Configurable today?                                      |
+| -------------------- | ----------- | ------------- | -------------------------------------------------------- |
+| Checked background   | `bgPrimary` | `bgSecondary` | **Yes** — functional config with `props.checked`         |
+| Checked border color | `bgPrimary` | `bgSecondary` | **Yes** — functional config with `props.checked`         |
+| Check icon color     | `fgInverse` | `fg`          | **Yes** — `controlColor` prop                            |
+| Border width         | `100` (1px) | `200` (2px)   | **Yes** — `borderWidth` prop                             |
+| Border radius        | `100` (4px) | 2px           | **No** — smallest token `100` = 4px, no 2px token exists |
+| Label font           | `body`      | `label2`      | **No** — hardcoded to `"body"` in `Control.tsx` line 206 |
+
+**Configured in `advancedComponents.ts`:** Functional config handles checked/unchecked color swap, `controlColor`, and `borderWidth`.
+
+**PR needed:** Add `styles`/`classNames` support to Checkbox (and ideally to the shared `Control` component). This unblocks:
+1. **Border radius 2px** — no token exists for 2px; `styles` lets Advanced set `borderRadius: 2` directly.
+2. **Label font** — `Control.tsx` hardcodes `font="body"` on the label `<Text>` (line 206). A `classNames.label` or `styles.label` slot would allow overriding the font without adding a new prop. Since `Control` is shared, this also benefits Radio and Switch.
+
 ### Chips (Priority)
+
+#### SelectChip (alpha)
+
+Switched vite-themed example to use `@coinbase/cds-web/alpha/select-chip/SelectChip`. Added `SelectChip` to `ComponentTheme` in both web and mobile `core/theme.ts`.
+
+##### Advanced theme differences (vs Standard)
+
+| Property | Standard | Advanced | Configurable today? |
+|---|---|---|---|
+| Padding (all) | default chip padding | `2` (16px) | **No** — `useComponentConfig` not wired up; padding props exist in `SelectChipBaseProps` but aren't forwarded through the wrapper to `MediaChip` |
+| Border radius | default chip radius | `200` (8px) | **No** — `borderRadius` not in `SelectChipBaseProps` |
+| Unselected background | `bgSecondary` | `bgAlternate` | **No** — hardcoded in `SelectChipControl.tsx` line 150 |
+
+**Done:**
+- Registered `SelectChip` in `ComponentTheme` on both web (`packages/web/src/core/theme.ts`) and mobile (`packages/mobile/src/core/theme.ts`).
+
+**PRs needed for SelectChip:**
+1. **Wire up `useComponentConfig('SelectChip', _props)`** in `SelectChip.tsx` — currently missing, so no config values are read.
+2. **Forward padding props** through `createSelectChipControlWrapper` → `SelectChipControl` → `MediaChip`. The props exist in the type but are never plumbed through.
+3. **Add `borderRadius` and `background` to `SelectChipBaseProps`** and forward them to `MediaChip`. Currently `background` is hardcoded to `hasValue ? 'bgInverse' : 'bgSecondary'` in `SelectChipControl.tsx` — needs to accept an override for the unselected state.
+
+Once those changes land, `advancedComponents.ts` would be:
+```ts
+SelectChip: {
+  padding: 2,
+  borderRadius: 200,
+  background: 'bgAlternate', // unselected state
+},
+```
 
 ### Coachmark
 

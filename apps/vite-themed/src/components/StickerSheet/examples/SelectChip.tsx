@@ -1,24 +1,22 @@
 import { memo, useState } from 'react';
-import { SelectChip } from '@coinbase/cds-web/chips/SelectChip';
-import { SelectOption } from '@coinbase/cds-web/controls/SelectOption';
-import { VStack } from '@coinbase/cds-web/layout/VStack';
+import { SelectChip } from '@coinbase/cds-web/alpha/select-chip/SelectChip';
 
-const selectChipOptions = ['USD', 'CAD', 'GBP', 'JPY'];
+const selectChipOptions = [
+  { value: 'USD', label: 'USD' },
+  { value: 'CAD', label: 'CAD' },
+  { value: 'GBP', label: 'GBP' },
+  { value: 'JPY', label: 'JPY' },
+];
 
 export const SelectChipExample = memo(() => {
-  const [selectChipValue, setSelectChipValue] = useState<string | undefined>('USD');
+  const [value, setValue] = useState<string | null>(null);
   return (
     <SelectChip
-      content={
-        <VStack>
-          {selectChipOptions.map((option) => (
-            <SelectOption key={option} title={option} value={option} />
-          ))}
-        </VStack>
-      }
-      onChange={setSelectChipValue}
-      placeholder="Select a currency"
-      value={selectChipValue}
+      accessibilityLabel="Select a currency"
+      onChange={setValue}
+      options={selectChipOptions}
+      placeholder="Currency"
+      value={value}
     />
   );
 });

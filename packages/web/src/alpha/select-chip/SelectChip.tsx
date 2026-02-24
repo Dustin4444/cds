@@ -9,7 +9,16 @@ import { SelectChipControl } from './SelectChipControl';
 
 export type SelectChipBaseProps = Pick<
   ChipBaseProps,
-  'invertColorScheme' | 'numberOfLines' | 'maxWidth'
+  | 'invertColorScheme'
+  | 'numberOfLines'
+  | 'maxWidth'
+  | 'padding'
+  | 'paddingX'
+  | 'paddingY'
+  | 'paddingTop'
+  | 'paddingBottom'
+  | 'paddingStart'
+  | 'paddingEnd' // we should add as many props as possible, maybe supporting all of ChipBaseProps
 > & {
   /**
    * Override the displayed value in the chip control.

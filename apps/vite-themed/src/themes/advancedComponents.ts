@@ -38,4 +38,12 @@ export const advancedComponents: ComponentsConfig = {
   TooltipContent: {
     background: 'bgSecondary',
   },
+  // todo: also want to set font to label2 here
+  Checkbox: (props) => ({
+    borderRadius: 100, // 4px — need 2px but need styles/classNames first
+    borderWidth: 200,
+    controlColor: 'fg',
+    background: props.checked || props.indeterminate ? 'bgSecondary' : 'bg',
+    borderColor: props.checked || props.indeterminate ? 'bgSecondary' : 'bgLinePrimarySubtle',
+  }),
 };

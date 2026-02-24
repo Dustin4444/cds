@@ -1,8 +1,33 @@
 import type { TextStyle, ViewStyle } from 'react-native';
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
 
+import type { SelectBaseProps as AlphaSelectBaseProps } from '../alpha/select/types';
+import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
+import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
 import type { ButtonBaseProps } from '../buttons/Button';
 import type { IconButtonBaseProps } from '../buttons/IconButton';
+import type { NudgeCardBaseProps } from '../cards/NudgeCard';
+import type { UpsellCardBaseProps } from '../cards/UpsellCard';
+import type { ListCellBaseProps } from '../cells/ListCell';
+import type { ChipBaseProps } from '../chips/ChipProps';
+import type { CoachmarkBaseProps } from '../coachmark/Coachmark';
+import type { CheckboxProps } from '../controls/Checkbox';
+import type { CheckboxCellBaseProps } from '../controls/CheckboxCell';
+import type { InputIconButtonProps } from '../controls/InputIconButton';
+import type { RadioProps } from '../controls/Radio';
+import type { RadioCellBaseProps } from '../controls/RadioCell';
+import type { SearchInputBaseProps } from '../controls/SearchInput';
+import type { SwitchProps } from '../controls/Switch';
+import type { TextInputBaseProps } from '../controls/TextInput';
+import type { DatePickerProps } from '../dates/DatePicker';
+import type { DotCountBaseProps } from '../dots/DotCount';
+import type { AvatarBaseProps } from '../media/Avatar';
+import type { AlertBaseProps } from '../overlays/Alert';
+import type { ModalBaseProps } from '../overlays/modal/Modal';
+import type { ToastBaseProps } from '../overlays/Toast';
+import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
+import type { TabsBaseProps } from '../tabs/Tabs';
+import type { TagBaseProps } from '../tag/Tag';
 
 type Shadow = {
   shadowColor?: ViewStyle['shadowColor'];
@@ -15,8 +40,46 @@ type Shadow = {
 export type ConfigResolver<P> = Partial<P> | ((props: P) => Partial<P>);
 
 export type ComponentTheme = {
+  // Buttons
   Button: ConfigResolver<ButtonBaseProps>;
   IconButton: ConfigResolver<IconButtonBaseProps>;
+  // Controls
+  TextInput: ConfigResolver<TextInputBaseProps>;
+  InputIconButton: ConfigResolver<InputIconButtonProps>;
+  SearchInput: ConfigResolver<SearchInputBaseProps>;
+  Checkbox: ConfigResolver<CheckboxProps<string>>;
+  CheckboxCell: ConfigResolver<CheckboxCellBaseProps<string>>;
+  Radio: ConfigResolver<RadioProps<string>>;
+  RadioCell: ConfigResolver<RadioCellBaseProps<string>>;
+  Switch: ConfigResolver<SwitchProps<string>>;
+  // Chips
+  Chip: ConfigResolver<ChipBaseProps>;
+  TabbedChips: ConfigResolver<TabbedChipsBaseProps>;
+  // Select (alpha)
+  Select: ConfigResolver<AlphaSelectBaseProps>;
+  SelectChip: ConfigResolver<SelectChipBaseProps>;
+  // Overlays
+  Modal: ConfigResolver<ModalBaseProps>;
+  Alert: ConfigResolver<AlertBaseProps>;
+  Toast: ConfigResolver<ToastBaseProps>;
+  Tooltip: ConfigResolver<TooltipBaseProps>;
+  // Cells
+  ListCell: ConfigResolver<ListCellBaseProps>;
+  // Media
+  Avatar: ConfigResolver<AvatarBaseProps>;
+  // Dots
+  DotCount: ConfigResolver<DotCountBaseProps>;
+  // Tag
+  Tag: ConfigResolver<TagBaseProps>;
+  // Tabs
+  Tabs: ConfigResolver<TabsBaseProps>;
+  // Dates
+  DatePicker: ConfigResolver<DatePickerProps>;
+  // Cards
+  NudgeCard: ConfigResolver<NudgeCardBaseProps>;
+  UpsellCard: ConfigResolver<UpsellCardBaseProps>;
+  // Coachmark
+  Coachmark: ConfigResolver<CoachmarkBaseProps>;
 };
 export type ComponentsConfig<Components = ComponentTheme> = {
   [Key in keyof Components]?: Components[Key];

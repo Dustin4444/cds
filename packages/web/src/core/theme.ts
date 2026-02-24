@@ -2,6 +2,7 @@ import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Property } from 'csstype';
 
 import type { SelectBaseProps as AlphaSelectBaseProps } from '../alpha/select/types';
+import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
 import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
 import type { AvatarButtonBaseProps } from '../buttons/AvatarButton';
 import type { ButtonBaseProps } from '../buttons/Button';
@@ -57,6 +58,7 @@ export type ComponentTheme = {
   TabbedChips: ConfigResolver<TabbedChipsBaseProps>;
   // Select (alpha)
   Select: ConfigResolver<AlphaSelectBaseProps>;
+  SelectChip: ConfigResolver<SelectChipBaseProps>;
   // Dropdown
   Dropdown: ConfigResolver<DropdownProps>;
   // Overlays
