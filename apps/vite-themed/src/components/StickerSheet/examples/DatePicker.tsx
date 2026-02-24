@@ -1,7 +1,7 @@
-import { DatePicker } from '@coinbase/cds-web/dates/DatePicker';
-import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
-import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { memo, useState } from 'react';
+import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import { DatePicker } from '@coinbase/cds-web/dates/DatePicker';
+import { VStack } from '@coinbase/cds-web/layout/VStack';
 
 export const DatePickerExample = memo(() => {
   const [date, setDate] = useState<Date | null>(new Date());
@@ -11,25 +11,25 @@ export const DatePickerExample = memo(() => {
       <DatePicker
         compact
         date={date}
-        onChangeDate={setDate}
         error={dateError}
-        onErrorDate={setDateError}
         label="Birthdate"
+        onChangeDate={setDate}
+        onErrorDate={setDateError}
       />
       <DatePicker
+        date={date}
+        error={dateError}
+        label="Birthdate"
         labelVariant="inside"
-        date={date}
         onChangeDate={setDate}
-        error={dateError}
         onErrorDate={setDateError}
-        label="Birthdate"
       />
       <DatePicker
         date={date}
-        onChangeDate={setDate}
         error={dateError}
-        onErrorDate={setDateError}
         label="Birthdate"
+        onChangeDate={setDate}
+        onErrorDate={setDateError}
       />
     </VStack>
   );

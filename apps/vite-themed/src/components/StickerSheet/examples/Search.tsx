@@ -7,11 +7,11 @@ export const SearchExample = memo(() => {
     <>
       <SearchInput
         compact
-        value={searchValue}
         onChangeText={setSearchValue}
         placeholder="Search..."
+        value={searchValue}
       />
-      <SearchInput value={searchValue} onChangeText={setSearchValue} placeholder="Search..." />
+      <SearchInput onChangeText={setSearchValue} placeholder="Search..." value={searchValue} />
     </>
   );
 });

@@ -1,4 +1,4 @@
-import { useMemo, useState, memo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { LineChart, Scrubber } from '@coinbase/cds-web-visualization';
 
 export const LineChartBasicExample = memo(() => {
@@ -15,6 +15,14 @@ export const LineChartBasicExample = memo(() => {
   return (
     <LineChart
       enableScrubbing
+      points
+      showArea
+      showXAxis
+      showYAxis
+      accessibilityLabel={accessibilityLabel}
+      curve="natural"
+      height={150}
+      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       onScrubberPositionChange={setScrubIndex}
       series={[
         {
@@ -22,18 +30,12 @@ export const LineChartBasicExample = memo(() => {
           data: yData,
         },
       ]}
-      height={150}
-      showArea
-      points
-      curve="natural"
-      showXAxis
       xAxis={{
         data: xData,
         showLine: true,
         showTickMarks: true,
         showGrid: true,
       }}
-      showYAxis
       yAxis={{
         domain: { min: 0 },
         position: 'left',
@@ -41,8 +43,6 @@ export const LineChartBasicExample = memo(() => {
         showTickMarks: true,
         showGrid: true,
       }}
-      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      accessibilityLabel={accessibilityLabel}
     >
       <Scrubber hideOverlay />
     </LineChart>

@@ -1,6 +1,6 @@
 import { memo, useState } from 'react';
-import { SegmentedTabs } from '@coinbase/cds-web/tabs/SegmentedTabs';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { SegmentedTabs } from '@coinbase/cds-web/tabs/SegmentedTabs';
 
 const tabs = [
   { id: 'buy', label: 'Buy' },

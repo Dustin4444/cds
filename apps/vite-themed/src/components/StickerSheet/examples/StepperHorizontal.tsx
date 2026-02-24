@@ -1,9 +1,9 @@
-import { useState, memo } from 'react';
+import { memo, useState } from 'react';
 import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
-import { VStack, HStack } from '@coinbase/cds-web/layout';
-import { Stepper, type StepperValue } from '@coinbase/cds-web/stepper/Stepper';
 import { Button } from '@coinbase/cds-web/buttons/Button';
 import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Stepper, type StepperValue } from '@coinbase/cds-web/stepper/Stepper';
 
 const steps = [
   { id: '1', label: 'Account' },
@@ -37,14 +37,14 @@ export const StepperHorizontalBasicExample = memo(() => {
   return (
     <VStack gap={2} width="100%">
       <Stepper
-        direction="horizontal"
         activeStepId={stepperState.activeStepId}
-        steps={steps}
         complete={complete}
+        direction="horizontal"
+        steps={steps}
       />
-      <HStack gap={1} alignSelf="center">
-        <IconButton active variant="secondary" name="arrowLeft" onClick={handlePrevious} />
-        <IconButton active variant="secondary" name="arrowRight" compact onClick={handleNext} />
+      <HStack alignSelf="center" gap={1}>
+        <IconButton active name="arrowLeft" onClick={handlePrevious} variant="secondary" />
+        <IconButton active compact name="arrowRight" onClick={handleNext} variant="secondary" />
         {/* {complete && <Button onClick={handleReset}>Reset</Button>} */}
       </HStack>
     </VStack>

@@ -1,5 +1,5 @@
-import { Select } from '@coinbase/cds-web/alpha/select';
 import { memo, useState } from 'react';
+import { Select } from '@coinbase/cds-web/alpha/select';
 
 const selectOptions = [
   { value: 'option1', label: 'Option 1', description: 'Description' },
@@ -16,31 +16,31 @@ export const SelectExample = memo(() => {
   return (
     <>
       <Select
-        label="Label"
         compact
-        value={selectValue}
+        label="Label"
+        labelVariant="inside"
         onChange={setSelectValue}
         options={selectOptions}
         placeholder="Select an option"
-        labelVariant="inside"
         style={{ flexGrow: 1 }}
+        value={selectValue}
       />
       <Select
         label="Label"
-        value={selectValue}
+        labelVariant="inside"
         onChange={setSelectValue}
         options={selectOptions}
         placeholder="Select an option"
-        labelVariant="inside"
         style={{ flexGrow: 1 }}
+        value={selectValue}
       />
       <Select
         label="Label"
-        value={selectValue}
         onChange={setSelectValue}
         options={selectOptions}
         placeholder="Select an option"
         style={{ flexGrow: 1 }}
+        value={selectValue}
       />
     </>
   );

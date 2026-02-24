@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { memo, useState } from 'react';
 import { Checkbox } from '@coinbase/cds-web/controls/Checkbox';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
 import { Switch } from '@coinbase/cds-web/controls/Switch';
@@ -24,9 +24,9 @@ export const ControlsExample = memo(() => {
 
       <VStack style={{ gap: 16 }}>
         <Radio
-          value="option1"
           checked={radioValue === 'option1'}
           onChange={() => setRadioValue((s) => (s === 'option1' ? '' : 'option1'))}
+          value="option1"
         >
           Radio
         </Radio>

@@ -1,11 +1,11 @@
-import { Box, HStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 import { useState } from 'react';
 import { SelectOption } from '@coinbase/cds-web/controls';
 import { Dropdown } from '@coinbase/cds-web/dropdown';
 import { Pictogram } from '@coinbase/cds-web/illustrations';
-import { Pressable } from '@coinbase/cds-web/system';
+import { Box, HStack } from '@coinbase/cds-web/layout';
 import { Avatar } from '@coinbase/cds-web/media';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
 
 const userMenuOptions = [
   {

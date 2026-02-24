@@ -11,8 +11,14 @@ import {
   type FloatingAssetCardProps,
 } from '@coinbase/cds-web/cards/FloatingAssetCard';
 import { NudgeCard } from '@coinbase/cds-web/cards/NudgeCard';
+import { UpsellCard } from '@coinbase/cds-web/cards/UpsellCard';
+import { ListCell } from '@coinbase/cds-web/cells/ListCell';
+import { Chip } from '@coinbase/cds-web/chips/Chip';
 import { InputChip } from '@coinbase/cds-web/chips/InputChip';
+import { MediaChip } from '@coinbase/cds-web/chips/MediaChip';
+import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
 import type { ThemeConfig } from '@coinbase/cds-web/core/theme';
+import { DotCount } from '@coinbase/cds-web/dots/DotCount';
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Pictogram } from '@coinbase/cds-web/illustrations/Pictogram';
@@ -41,9 +47,12 @@ import {
   tagColorSchemes,
 } from '../../themeVars';
 
+import { AlertExample } from './examples/AlertExample';
 import { ControlsExample } from './examples/Controls';
 import { DatePickerExample } from './examples/DatePicker';
+import { DropdownExample } from './examples/DropdownExample';
 import { LineChartBasicExample } from './examples/LineChart';
+import { ModalExample } from './examples/ModalExample';
 import { PaginationExample } from './examples/Pagination';
 import { RollingNumberExample } from './examples/RollingNumber';
 import { SearchExample } from './examples/Search';
@@ -52,7 +61,10 @@ import { SelectExample } from './examples/Select';
 import { SelectChipExample } from './examples/SelectChip';
 import { StepperHorizontalBasicExample } from './examples/StepperHorizontal';
 import { StepperVerticalCustomExample } from './examples/StepperVertical';
+import { TableExample } from './examples/TableExample';
+import { TabsExample } from './examples/Tabs';
 import { TextInputExample } from './examples/TextInput';
+import { ToastExample } from './examples/ToastExample';
 import { BodyText } from './BodyText';
 import { Container } from './Container';
 
@@ -237,6 +249,32 @@ export const StickerSheet = memo(({ themeConfig, showComponents }: StickerSheetP
               </Container>
 
               <Container>
+                <UpsellCard
+                  action="Learn more"
+                  description="Zero trading fees, boosted staking rewards, and more."
+                  onActionPress={() => {}}
+                  onDismissPress={() => {}}
+                  title="Upgrade to Coinbase One"
+                />
+              </Container>
+
+              <Container>
+                <TabsExample />
+              </Container>
+
+              <Container>
+                <HStack style={{ gap: 8 }}>
+                  <DropdownExample />
+                  <ModalExample />
+                  <AlertExample />
+                </HStack>
+              </Container>
+
+              <Container>
+                <ToastExample />
+              </Container>
+
+              <Container>
                 <HStack style={{ gap: 24 }}>
                   {floatingAssetCards.map((card, index) => (
                     <Tooltip key={index} content={`View details for ${card.subtitle}`}>
@@ -301,7 +339,7 @@ export const StickerSheet = memo(({ themeConfig, showComponents }: StickerSheetP
                       <Button loading width={160}>
                         Button
                       </Button>
-                      <IconButton loading compact={false} name="add" />
+                      <IconButton loading compact={false} name="add" variant="primary" />
                     </HStack>
                   </VStack>
                 </Container>
@@ -341,7 +379,7 @@ export const StickerSheet = memo(({ themeConfig, showComponents }: StickerSheetP
                       <Button compact loading width={160}>
                         Button
                       </Button>
-                      <IconButton compact loading name="add" />
+                      <IconButton compact loading name="add" variant="primary" />
                     </HStack>
                   </VStack>
                 </Container>
@@ -372,6 +410,89 @@ export const StickerSheet = memo(({ themeConfig, showComponents }: StickerSheetP
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   </Banner>
                 ))}
+              </Container>
+
+              <Container>
+                <HStack alignItems="center" style={{ gap: 24 }}>
+                  <DotCount count={3}>
+                    <Icon name="bell" size="l" />
+                  </DotCount>
+                  <DotCount count={12}>
+                    <Icon name="bell" size="l" />
+                  </DotCount>
+                  <DotCount count={100} max={99}>
+                    <Icon name="bell" size="l" />
+                  </DotCount>
+                </HStack>
+              </Container>
+
+              <Container>
+                <HStack style={{ gap: 8, flexWrap: 'wrap' }}>
+                  <Chip onClick={() => {}}>Chip</Chip>
+                  <MediaChip start={<Icon name="account" size="s" />}>User</MediaChip>
+                  <InputChip
+                    onClick={() => {}}
+                    start={<RemoteImage height={16} source={assets.btc.imageUrl} width={16} />}
+                    value="BTC"
+                  />
+                </HStack>
+              </Container>
+
+              <Container>
+                <Coachmark
+                  action={
+                    <Button compact variant="secondary">
+                      Got it
+                    </Button>
+                  }
+                  content="You can now trade directly from your portfolio page."
+                  onClose={() => {}}
+                  title="New feature"
+                />
+              </Container>
+
+              <Container>
+                <VStack style={{ gap: 0 }}>
+                  <ListCell
+                    description="$64,231.00"
+                    media={
+                      <RemoteImage
+                        height={36}
+                        source={assets.btc.imageUrl}
+                        style={{ borderRadius: 18 }}
+                        width={36}
+                      />
+                    }
+                    onClick={() => {}}
+                    subtitle="BTC"
+                    title="Bitcoin"
+                  />
+                  <ListCell
+                    description="$3,421.50"
+                    media={
+                      <RemoteImage
+                        height={36}
+                        source={assets.eth.imageUrl}
+                        style={{ borderRadius: 18 }}
+                        width={36}
+                      />
+                    }
+                    onClick={() => {}}
+                    subtitle="ETH"
+                    title="Ethereum"
+                  />
+                  <ListCell
+                    description="$142.30"
+                    media={<Avatar colorScheme="purple" name="SOL" size="s" />}
+                    onClick={() => {}}
+                    subtitle="SOL"
+                    title="Solana"
+                  />
+                </VStack>
+              </Container>
+
+              <Container>
+                <TableExample />
               </Container>
             </VStack>
           </HStack>

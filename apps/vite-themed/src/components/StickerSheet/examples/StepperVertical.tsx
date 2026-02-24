@@ -1,10 +1,10 @@
+import { memo, useState } from 'react';
 import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
 import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
 import { ListCell } from '@coinbase/cds-web/cells/ListCell';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Stepper, type StepperValue } from '@coinbase/cds-web/stepper/Stepper';
-import { useState, memo } from 'react';
 
 const steps = [
   {
@@ -45,20 +45,20 @@ const CustomBookingLabel = memo(({ step, active }: any) => {
 
   return (
     <ListCell
-      title={label}
       description={metadata.name}
       detail={metadata.date}
-      subdetail={metadata.time}
-      width={280}
-      priority="end"
       innerSpacing={{ paddingStart: 1.5, paddingTop: 0, paddingBottom: 0 }}
+      minHeight={undefined}
       outerSpacing={{
         paddingTop: 0,
         paddingBottom: 4,
         paddingStart: 0,
         paddingEnd: 0,
       }}
-      minHeight={undefined}
+      priority="end"
+      subdetail={metadata.time}
+      title={label}
+      width={280}
     />
   );
 });
@@ -88,15 +88,15 @@ export const StepperVerticalCustomExample = memo(() => {
   return (
     <VStack>
       <Stepper
-        direction="vertical"
-        activeStepId={stepperState.activeStepId}
-        steps={steps}
-        complete={complete}
         StepperLabelComponent={CustomBookingLabel}
+        activeStepId={stepperState.activeStepId}
+        complete={complete}
+        direction="vertical"
+        steps={steps}
       />
-      <HStack style={{ gap: 8 }} alignSelf="center">
-        <IconButton active variant="primary" name="arrowLeft" compact onClick={handlePrevious} />
-        <IconButton active variant="primary" name="arrowRight" compact onClick={handleNext} />
+      <HStack alignSelf="center" style={{ gap: 8 }}>
+        <IconButton active compact name="arrowLeft" onClick={handlePrevious} variant="primary" />
+        <IconButton active compact name="arrowRight" onClick={handleNext} variant="primary" />
         {/* {complete && <Button onClick={handleReset}>Reset</Button>} */}
       </HStack>
     </VStack>

@@ -1,6 +1,6 @@
+import { memo, useCallback, useEffect, useState } from 'react';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { RollingNumber } from '@coinbase/cds-web/numbers/RollingNumber';
-import { useCallback, useState, useEffect, memo } from 'react';
 
 export const RollingNumberExample = memo(() => {
   const [{ price, difference }, setPriceState] = useState({

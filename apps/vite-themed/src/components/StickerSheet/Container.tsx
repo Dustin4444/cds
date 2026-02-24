@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { type BoxProps, type BoxDefaultElement, Box } from '@coinbase/cds-web/layout/Box';
 import { useTheme } from '@coinbase/cds-web';
+import { Box, type BoxDefaultElement, type BoxProps } from '@coinbase/cds-web/layout/Box';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Text } from '@coinbase/cds-web/typography/Text';
 
@@ -23,13 +23,13 @@ export const Container = memo(
     const borderColor = isDarkMode ? '#2f2f2f' : '#e1e1e1';
     return (
       <VStack
+        alignSelf={alignSelf}
         background={background}
         flexGrow={flexGrow}
         flexShrink={flexShrink}
-        alignSelf={alignSelf}
         justifyContent={justifyContent}
-        width={width}
         style={{ borderRadius: 8, position: 'relative' }}
+        width={width}
       >
         {title && (
           <Box
@@ -54,19 +54,19 @@ export const Container = memo(
           </Box>
         )}
         <Box
-          alignSelf={alignSelf}
           alignItems={alignItems}
-          justifyContent={justifyContent}
-          flexWrap={flexWrap}
+          alignSelf={alignSelf}
           flexGrow={flexGrow}
           flexShrink={flexShrink}
-          width={width}
+          flexWrap={flexWrap}
+          justifyContent={justifyContent}
           style={{
             marginTop: title ? 36 : 0,
             gap: 16,
             padding: 16,
             ...style,
           }}
+          width={width}
           {...props}
         />
       </VStack>

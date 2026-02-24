@@ -1,5 +1,5 @@
-import { type TextDefaultElement, type TextProps, Text } from '@coinbase/cds-web/typography/Text';
 import { memo } from 'react';
+import { Text, type TextDefaultElement, type TextProps } from '@coinbase/cds-web/typography/Text';
 
 export const BodyText = memo(({ style, ...props }: TextProps<TextDefaultElement>) => (
   <Text

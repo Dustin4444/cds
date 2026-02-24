@@ -1,10 +1,11 @@
 'use client';
+import { useTheme } from '@coinbase/cds-web';
+import { IconButton } from '@coinbase/cds-web/buttons';
 import { Box, HStack } from '@coinbase/cds-web/layout';
 import { NavigationBar, NavigationTitle } from '@coinbase/cds-web/navigation';
+
 import { MoreMenu } from './MoreMenu';
 import { UserMenu } from './UserMenu';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { useTheme } from '@coinbase/cds-web';
 
 export const Navbar = ({
   title,
@@ -20,13 +21,13 @@ export const Navbar = ({
       end={
         <HStack alignItems="center" gap={1}>
           <MoreMenu />
-          <IconButton onClick={toggleColorScheme} name={isDark ? 'moon' : 'light'} />
+          <IconButton name={isDark ? 'moon' : 'light'} onClick={toggleColorScheme} />
           <UserMenu />
         </HStack>
       }
     >
-      <Box width="100%" flexGrow={1}>
-        <NavigationTitle width="100%" flexGrow={1}>
+      <Box flexGrow={1} width="100%">
+        <NavigationTitle flexGrow={1} width="100%">
           {title}
         </NavigationTitle>
       </Box>

@@ -1,9 +1,9 @@
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { Box } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 import { useState } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons';
 import { SelectOption } from '@coinbase/cds-web/controls';
 import { Dropdown } from '@coinbase/cds-web/dropdown';
+import { Box } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
 
 const moreMenuOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
 
@@ -13,7 +13,7 @@ export const MoreMenu = () => {
   const moreMenuContent = (
     <>
       <Box padding={2}>
-        <Text as="h2" font="caption" color="fgMuted">
+        <Text as="h2" color="fgMuted" font="caption">
           More menu
         </Text>
       </Box>

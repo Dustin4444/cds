@@ -1,24 +1,24 @@
 import { Button } from '@coinbase/cds-web/buttons';
 import { UpsellCard } from '@coinbase/cds-web/cards';
-import { Box } from '@coinbase/cds-web/layout';
 import { Pictogram } from '@coinbase/cds-web/illustrations';
+import { Box } from '@coinbase/cds-web/layout';
 
 export const RecurringBuyCard = () => {
   return (
     <UpsellCard
-      title="Recurring Buy"
-      description="Want to add funds to your card every week or month?"
       action={
         <Button compact flush="start">
           Get started
         </Button>
       }
+      description="Want to add funds to your card every week or month?"
       media={
-        <Box position="relative" bottom={6} right={24}>
+        <Box bottom={6} position="relative" right={24}>
           <Pictogram dimension="64x64" name="recurringPurchases" />
         </Box>
       }
       onDismissPress={() => {}}
+      title="Recurring Buy"
     />
   );
 };
