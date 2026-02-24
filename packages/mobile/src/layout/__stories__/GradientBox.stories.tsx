@@ -162,18 +162,13 @@ const GradientBoxScreen = () => {
             padding={2}
           >
             <Text color="fgInverse" font="body">
-              Centered radial gradient
+              Default radial gradient
             </Text>
           </GradientBox>
 
           <GradientBox
             GradientComponent={
-              <RadialGradientFill
-                colors={[theme.color.bgPositive, theme.color.bgNegative]}
-                cx={0}
-                cy={0}
-                r={1}
-              />
+              <RadialGradientFill colors={[theme.color.bgPositive, theme.color.bgNegative]} />
             }
             height={120}
             padding={2}
