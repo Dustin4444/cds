@@ -1,9 +1,11 @@
 import React from 'react';
 import { type GestureResponderEvent } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 
 import { IconButton } from '../../buttons';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, HStack } from '../../layout';
 import { Text } from '../../typography/Text';
 
@@ -12,6 +14,10 @@ export type ModalHeaderBaseProps = SharedProps & {
   onBackButtonClick?: (event: GestureResponderEvent) => void;
   /** Title of the Modal */
   title?: string;
+  /** Horizontal padding for the header */
+  paddingX?: ThemeVars.Space;
+  /** Vertical padding for the header */
+  paddingY?: ThemeVars.Space;
   /**
    * Sets an accessible label for the back button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
@@ -50,23 +56,27 @@ export type ModalHeaderBaseProps = SharedProps & {
 
 export type ModalHeaderProps = ModalHeaderBaseProps;
 
-export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = ({
-  title,
-  onBackButtonClick,
-  backAccessibilityLabel,
-  backAccessibilityHint,
-  closeAccessibilityLabel,
-  closeAccessibilityHint,
-  testID,
-}) => {
+export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = (_props) => {
+  const mergedProps = useComponentConfig('ModalHeader', _props);
+  const {
+    title,
+    onBackButtonClick,
+    paddingX = 3,
+    paddingY = 2,
+    backAccessibilityLabel,
+    backAccessibilityHint,
+    closeAccessibilityLabel,
+    closeAccessibilityHint,
+    testID,
+  } = mergedProps;
   const { onRequestClose, hideCloseButton, hideDividers } = useModalContext();
 
   return (
     <HStack
       alignItems="center"
       borderedBottom={!hideDividers}
-      paddingX={3}
-      paddingY={2}
+      paddingX={paddingX}
+      paddingY={paddingY}
       testID={testID}
     >
       <Box flexBasis={0} flexGrow={1}>

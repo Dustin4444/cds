@@ -13,6 +13,7 @@ import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
 import { Text, type TextBaseProps } from '../typography/Text';
@@ -27,6 +28,11 @@ export type SegmentedTabProps<TabId extends string = string> = TabValue<TabId> &
      * @default negativeForeground
      */
     activeColor?: ThemeVars.Color;
+    /**
+     * Border radius token for the tab.
+     * @default 1000
+     */
+    borderRadius?: ThemeVars.BorderRadius;
     /**
      * Text color when the SegmentedTab is inactive.
      * @default foreground
@@ -46,13 +52,18 @@ type SegmentedTabFC = <TabId extends string = string>(
 const SegmentedTabComponent = memo(
   forwardRef(
     <TabId extends string = string>(
-      {
+      _props: SegmentedTabProps<TabId>,
+      ref: React.ForwardedRef<View>,
+    ) => {
+      const mergedProps = useComponentConfig('SegmentedTab', _props);
+      const {
         id,
         label,
         disabled: disabledProp,
         onPress,
         color = 'fg',
         activeColor = 'fgInverse',
+        borderRadius = 1000,
         style,
         'aria-selected': ariaSelected,
         accessibilityRole = 'button',
@@ -63,9 +74,7 @@ const SegmentedTabComponent = memo(
         fontWeight,
         lineHeight,
         ...props
-      }: SegmentedTabProps<TabId>,
-      ref: React.ForwardedRef<View>,
-    ) => {
+      } = mergedProps;
       const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
       const isActive = activeTab?.id === id;
       const isDisabled = disabledProp || allTabsDisabled;
@@ -97,10 +106,10 @@ const SegmentedTabComponent = memo(
 
       const pressableStyle = useMemo(
         () => ({
-          borderRadius: theme.borderRadius[1000],
+          borderRadius: theme.borderRadius[borderRadius],
           opacity: disabledProp && !allTabsDisabled ? accessibleOpacityDisabled : undefined,
         }),
-        [theme.borderRadius, disabledProp, allTabsDisabled],
+        [theme.borderRadius, borderRadius, disabledProp, allTabsDisabled],
       );
 
       return (

@@ -24,8 +24,12 @@ import type { DotCountBaseProps } from '../dots/DotCount';
 import type { AvatarBaseProps } from '../media/Avatar';
 import type { AlertBaseProps } from '../overlays/Alert';
 import type { ModalBaseProps } from '../overlays/modal/Modal';
+import type { ModalFooterProps } from '../overlays/modal/ModalFooter';
+import type { ModalHeaderBaseProps } from '../overlays/modal/ModalHeader';
 import type { ToastBaseProps } from '../overlays/Toast';
 import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
+import type { SegmentedTabProps } from '../tabs/SegmentedTab';
+import type { SegmentedTabsProps } from '../tabs/SegmentedTabs';
 import type { TabsBaseProps } from '../tabs/Tabs';
 import type { TagBaseProps } from '../tag/Tag';
 
@@ -60,6 +64,8 @@ export type ComponentTheme = {
   SelectChip: ConfigResolver<SelectChipBaseProps>;
   // Overlays
   Modal: ConfigResolver<ModalBaseProps>;
+  ModalHeader: ConfigResolver<ModalHeaderBaseProps>;
+  ModalFooter: ConfigResolver<ModalFooterProps>;
   Alert: ConfigResolver<AlertBaseProps>;
   Toast: ConfigResolver<ToastBaseProps>;
   Tooltip: ConfigResolver<TooltipBaseProps>;
@@ -73,6 +79,8 @@ export type ComponentTheme = {
   Tag: ConfigResolver<TagBaseProps>;
   // Tabs
   Tabs: ConfigResolver<TabsBaseProps>;
+  SegmentedTab: ConfigResolver<SegmentedTabProps>;
+  SegmentedTabs: ConfigResolver<SegmentedTabsProps>;
   // Dates
   DatePicker: ConfigResolver<DatePickerProps>;
   // Cards

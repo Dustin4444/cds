@@ -4,6 +4,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useIsBrowser } from '../hooks/useIsBrowser';
 
 import { useTableSectionTag } from './hooks/useTable';
@@ -84,8 +85,9 @@ const tableRowHoverCss = css`
   }
 `;
 
-export const TableRow = memo(
-  ({
+export const TableRow = memo((_props: TableRowProps) => {
+  const mergedProps = useComponentConfig('TableRow', _props);
+  const {
     fullWidth,
     disableHoverIndicator,
     children,
@@ -96,52 +98,51 @@ export const TableRow = memo(
     outerSpacing,
     innerSpacing,
     ...props
-  }: TableRowProps) => {
-    const isBrowser = useIsBrowser();
-    const tableSectionType = useTableSectionTag();
-    const isCellInBody = tableSectionType === 'tbody';
-    const shouldIndicateHover = isCellInBody && !disableHoverIndicator;
+  } = mergedProps;
+  const isBrowser = useIsBrowser();
+  const tableSectionType = useTableSectionTag();
+  const isCellInBody = tableSectionType === 'tbody';
+  const shouldIndicateHover = isCellInBody && !disableHoverIndicator;
 
-    // Listen for keyboard events
-    const rowRef: TableRowRef = useRef(null);
-    useTableRowListener(rowRef, onClick as () => void);
+  // Listen for keyboard events
+  const rowRef: TableRowRef = useRef(null);
+  useTableRowListener(rowRef, onClick as () => void);
 
-    const inlineStyles = useMemo(() => {
-      return {
-        color: color && `var(--color-${color})`,
-        backgroundColor: backgroundColor && `var(--color-${backgroundColor})`,
-        cursor: onClick ? 'pointer' : 'default',
-      };
-    }, [backgroundColor, color, onClick]);
+  const inlineStyles = useMemo(() => {
+    return {
+      color: color && `var(--color-${color})`,
+      backgroundColor: backgroundColor && `var(--color-${backgroundColor})`,
+      cursor: onClick ? 'pointer' : 'default',
+    };
+  }, [backgroundColor, color, onClick]);
 
-    // @link https://nextjs.org/docs/messages/react-hydration-error
-    const innerChildren = useMemo(() => (isBrowser ? children : ''), [children, isBrowser]);
+  // @link https://nextjs.org/docs/messages/react-hydration-error
+  const innerChildren = useMemo(() => (isBrowser ? children : ''), [children, isBrowser]);
 
-    return (
-      <tr
-        ref={rowRef} // click/event support
-        className={cx(tableRowCss, shouldIndicateHover && tableRowHoverCss)}
-        data-testid={testID}
-        onClick={onClick}
-        style={inlineStyles}
-        tabIndex={onClick && 0}
-        {...props}
-      >
-        {fullWidth ? (
-          <TableCell
-            colSpan={1000}
-            direction="horizontal"
-            innerSpacing={innerSpacing}
-            outerSpacing={outerSpacing}
-          >
-            {innerChildren}
-          </TableCell>
-        ) : (
-          children
-        )}
-      </tr>
-    );
-  },
-);
+  return (
+    <tr
+      ref={rowRef} // click/event support
+      className={cx(tableRowCss, shouldIndicateHover && tableRowHoverCss)}
+      data-testid={testID}
+      onClick={onClick}
+      style={inlineStyles}
+      tabIndex={onClick && 0}
+      {...props}
+    >
+      {fullWidth ? (
+        <TableCell
+          colSpan={1000}
+          direction="horizontal"
+          innerSpacing={innerSpacing}
+          outerSpacing={outerSpacing}
+        >
+          {innerChildren}
+        </TableCell>
+      ) : (
+        children
+      )}
+    </tr>
+  );
+});
 
 TableRow.displayName = 'TableRow';

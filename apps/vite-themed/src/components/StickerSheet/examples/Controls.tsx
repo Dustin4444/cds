@@ -25,10 +25,17 @@ export const ControlsExample = memo(() => {
       <VStack style={{ gap: 16 }}>
         <Radio
           checked={radioValue === 'option1'}
-          onChange={() => setRadioValue((s) => (s === 'option1' ? '' : 'option1'))}
+          onChange={() => setRadioValue('option1')}
           value="option1"
         >
-          Radio
+          Option 1
+        </Radio>
+        <Radio
+          checked={radioValue === 'option2'}
+          onChange={() => setRadioValue('option2')}
+          value="option2"
+        >
+          Option 2
         </Radio>
       </VStack>
     </>

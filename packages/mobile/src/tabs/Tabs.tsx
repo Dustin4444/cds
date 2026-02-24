@@ -62,6 +62,8 @@ export type TabsBaseProps<TabId extends string = string> = {
   TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
   /** Background color passed to the TabsActiveIndicatorComponent. */
   activeBackground?: ThemeVars.Color;
+  /** Border radius passed to the TabsActiveIndicatorComponent. */
+  activeBorderRadius?: ThemeVars.BorderRadius;
   /** Optional callback to receive the active tab element. */
   onActiveTabElementChange?: (element: View | null) => void;
 } & Omit<TabsOptions<TabId>, 'tabs'>;
@@ -81,6 +83,7 @@ const TabsComponent = memo(
       TabComponent,
       TabsActiveIndicatorComponent,
       activeBackground,
+      activeBorderRadius,
       activeTab,
       disabled,
       onChange,
@@ -137,6 +140,7 @@ const TabsComponent = memo(
           <TabsActiveIndicatorComponent
             activeTabRect={activeTabRect}
             background={activeBackground}
+            borderRadius={activeBorderRadius}
           />
           {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
             const RenderedTab = CustomTabComponent ?? TabComponent;

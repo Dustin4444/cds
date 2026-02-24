@@ -27,9 +27,10 @@ export const advancedComponents: ComponentsConfig = {
     bordered: false,
   },
 
-  Switch: {
-    background: 'bgTertiary',
-  },
+  Switch: (props) => ({
+    background: props.checked ? 'bgPrimary' : 'bgTertiary',
+    ...(props.checked && { controlColor: 'bgAlternate' }),
+  }),
 
   Tooltip: {
     invertColorScheme: false,
@@ -38,7 +39,11 @@ export const advancedComponents: ComponentsConfig = {
   TooltipContent: {
     background: 'bgSecondary',
   },
-  // todo: also want to set font to label2 here
+  Radio: (props) => ({
+    borderColor: props.checked ? 'bgPrimary' : 'bgLinePrimarySubtle',
+    // todo: borderWidth: 200 — needs PR, Radio doesn't forward borderWidth to inner Box like Checkbox does
+  }),
+
   Checkbox: (props) => ({
     borderRadius: 100, // 4px — need 2px but need styles/classNames first
     borderWidth: 200,
@@ -46,4 +51,29 @@ export const advancedComponents: ComponentsConfig = {
     background: props.checked || props.indeterminate ? 'bgSecondary' : 'bg',
     borderColor: props.checked || props.indeterminate ? 'bgSecondary' : 'bgLinePrimarySubtle',
   }),
+
+  ModalHeader: {
+    paddingX: 4,
+    paddingY: 3,
+  },
+
+  ModalFooter: {
+    paddingX: 4,
+    paddingY: 4,
+  },
+
+  Table: {
+    variant: 'default',
+  },
+
+  SegmentedTabs: {
+    activeBackground: 'bgSecondary',
+    background: 'bgAlternate',
+    borderRadius: 200,
+  },
+
+  SegmentedTab: {
+    activeColor: 'fg',
+    borderRadius: 200,
+  },
 };

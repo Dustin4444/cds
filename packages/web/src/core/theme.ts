@@ -28,10 +28,16 @@ import type { AvatarBaseProps } from '../media/Avatar';
 import type { NavLinkProps } from '../navigation/NavLink';
 import type { AlertBaseProps } from '../overlays/Alert';
 import type { ModalBaseProps } from '../overlays/modal/Modal';
+import type { ModalFooterProps } from '../overlays/modal/ModalFooter';
+import type { ModalHeaderProps } from '../overlays/modal/ModalHeader';
 import type { ToastBaseProps } from '../overlays/Toast';
 import type { TooltipBaseProps, TooltipContentBaseProps } from '../overlays/tooltip/TooltipProps';
+import type { TableProps } from '../tables/Table';
 import type { TableCellProps } from '../tables/TableCell';
 import type { TableHeaderProps } from '../tables/TableHeader';
+import type { TableRowProps } from '../tables/TableRow';
+import type { SegmentedTabProps } from '../tabs/SegmentedTab';
+import type { SegmentedTabsProps } from '../tabs/SegmentedTabs';
 import type { TabsBaseProps } from '../tabs/Tabs';
 import type { TagBaseProps } from '../tag/Tag';
 
@@ -63,6 +69,8 @@ export type ComponentTheme = {
   Dropdown: ConfigResolver<DropdownProps>;
   // Overlays
   Modal: ConfigResolver<ModalBaseProps>;
+  ModalHeader: ConfigResolver<ModalHeaderProps>;
+  ModalFooter: ConfigResolver<ModalFooterProps>;
   Alert: ConfigResolver<AlertBaseProps>;
   Toast: ConfigResolver<ToastBaseProps>;
   Tooltip: ConfigResolver<TooltipBaseProps>;
@@ -79,14 +87,18 @@ export type ComponentTheme = {
   Tag: ConfigResolver<TagBaseProps>;
   // Tabs
   Tabs: ConfigResolver<TabsBaseProps>;
+  SegmentedTab: ConfigResolver<SegmentedTabProps>;
+  SegmentedTabs: ConfigResolver<SegmentedTabsProps>;
   // Dates
   DatePicker: ConfigResolver<DatePickerProps>;
   // Cards
   NudgeCard: ConfigResolver<NudgeCardBaseProps>;
   UpsellCard: ConfigResolver<UpsellCardBaseProps>;
   // Tables
+  Table: ConfigResolver<TableProps>;
   TableCell: ConfigResolver<TableCellProps>;
   TableHeader: ConfigResolver<TableHeaderProps>;
+  TableRow: ConfigResolver<TableRowProps>;
   // Coachmark
   Coachmark: ConfigResolver<CoachmarkBaseProps>;
 };

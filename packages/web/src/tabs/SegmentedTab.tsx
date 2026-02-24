@@ -7,6 +7,7 @@ import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
@@ -69,13 +70,18 @@ type SegmentedTabComponent = <TabId extends string = string>(
 const SegmentedTabComponent = memo(
   forwardRef(
     <TabId extends string>(
-      {
+      _props: SegmentedTabProps<TabId>,
+      ref: React.ForwardedRef<HTMLButtonElement>,
+    ) => {
+      const mergedProps = useComponentConfig('SegmentedTab', _props);
+      const {
         id,
         label,
         disabled: disabledProp,
         onClick,
         color = 'fg',
         activeColor = 'fgInverse',
+        borderRadius = 1000,
         className,
         testID,
         font = 'headline',
@@ -86,9 +92,7 @@ const SegmentedTabComponent = memo(
         textAlign,
         textTransform,
         ...props
-      }: SegmentedTabProps<TabId>,
-      ref: React.ForwardedRef<HTMLButtonElement>,
-    ) => {
+      } = mergedProps;
       const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
       const isActive = activeTab?.id === id;
       const isDisabled = disabledProp || allTabsDisabled;
@@ -114,6 +118,7 @@ const SegmentedTabComponent = memo(
         <Pressable
           ref={ref}
           aria-selected={isActive}
+          borderRadius={borderRadius}
           className={cx(
             insetFocusRingCss,
             buttonCss,
