@@ -5,7 +5,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultGradientTheme } from '../../themes/gradients/defaultGradientTheme';
 import { Text } from '../../typography/Text';
-import { GradientBox } from '../GradientBox';
+import { GradientBox, RadialGradientFill } from '../GradientBox';
 
 const BasicGradient = () => (
   <Example title="Theme Gradient Presets">
@@ -144,6 +144,64 @@ const GradientBoxScreen = () => {
           >
             <Text color="fgInverse" font="body">
               With border and elevation
+            </Text>
+          </GradientBox>
+        </Example>
+
+        <Example title="Radial Gradient (GradientComponent)">
+          <GradientBox
+            GradientComponent={
+              <RadialGradientFill
+                colors={[theme.color.bgPrimary, theme.color.accentBoldPurple]}
+                cx={0.5}
+                cy={0.5}
+                r={0.5}
+              />
+            }
+            height={120}
+            padding={2}
+          >
+            <Text color="fgInverse" font="body">
+              Centered radial gradient
+            </Text>
+          </GradientBox>
+
+          <GradientBox
+            GradientComponent={
+              <RadialGradientFill
+                colors={[theme.color.bgPositive, theme.color.bgNegative]}
+                cx={0}
+                cy={0}
+                r={1}
+              />
+            }
+            height={120}
+            padding={2}
+          >
+            <Text color="fgInverse" font="body">
+              Top-left radial gradient
+            </Text>
+          </GradientBox>
+
+          <GradientBox
+            GradientComponent={
+              <RadialGradientFill
+                colors={[
+                  theme.color.bgWarning,
+                  theme.color.bgPrimary,
+                  theme.color.accentBoldPurple,
+                ]}
+                cx={0.5}
+                cy={0.5}
+                r={0.7}
+                stops={[0, 0.5, 1]}
+              />
+            }
+            height={120}
+            padding={2}
+          >
+            <Text color="fgInverse" font="body">
+              Multi-color radial gradient
             </Text>
           </GradientBox>
         </Example>

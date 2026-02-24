@@ -2,7 +2,7 @@ import type { TextStyle, ViewStyle } from 'react-native';
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
 
 // TO DO: this is anti-pattern, we need to find a better way to handle this
-import type { LinearGradientProps } from '../layout/GradientBox';
+import type { LinearGradientFillProps } from '../gradients/LinearGradientFill';
 
 type Shadow = {
   shadowColor?: ViewStyle['shadowColor'];
@@ -49,9 +49,9 @@ export type ThemeConfig = {
   /** The control size values. */
   controlSize: { [key in ThemeVars.ControlSize]: number };
   /** Custom gradient presets for light mode. Merged with default presets. */
-  lightGradient?: Partial<Record<ThemeVars.Gradient, LinearGradientProps>>;
+  lightGradient?: Partial<Record<ThemeVars.Gradient, LinearGradientFillProps>>;
   /** Custom gradient presets for dark mode. Merged with default presets. */
-  darkGradient?: Partial<Record<ThemeVars.Gradient, LinearGradientProps>>;
+  darkGradient?: Partial<Record<ThemeVars.Gradient, LinearGradientFillProps>>;
 };
 
 export type Theme = ThemeConfig & {
@@ -61,6 +61,7 @@ export type Theme = ThemeConfig & {
   spectrum: { [key in ThemeVars.SpectrumColor]: string };
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: string };
+  // TO DO: This is temporarily set to LinearGradientFillProps, and subject to change based on design decisions.
   /** The light or dark gradient presets, as appropriate based on the activeColorScheme. */
-  gradient?: Partial<Record<ThemeVars.Gradient, LinearGradientProps>>;
+  gradient?: Partial<Record<ThemeVars.Gradient, LinearGradientFillProps>>;
 };
