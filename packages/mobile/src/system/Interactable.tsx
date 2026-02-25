@@ -7,7 +7,7 @@ import { Box, type BoxBaseProps } from '../layout/Box';
 import {
   GradientBox,
   type GradientBoxBaseProps,
-  type LinearGradientProps,
+  type LinearGradientFillProps,
 } from '../layout/GradientBox';
 import { getInteractableStyles } from '../styles/getInteractableStyles';
 
@@ -37,11 +37,11 @@ export type InteractableBlendStyles = {
   pressedBorderColor?: string;
   disabledBorderColor?: string;
   /** Gradient background. */
-  backgroundGradient?: LinearGradientProps;
+  backgroundGradient?: LinearGradientFillProps;
   /** Gradient to use when the element is pressed. */
-  pressedBackgroundGradient?: LinearGradientProps;
+  pressedBackgroundGradient?: LinearGradientFillProps;
   /** Gradient to use when the element is disabled. */
-  disabledBackgroundGradient?: LinearGradientProps;
+  disabledBackgroundGradient?: LinearGradientFillProps;
 };
 
 export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> &
