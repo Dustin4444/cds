@@ -36,6 +36,15 @@ export type HighlightContextValue = {
    */
   setHighlight: (items: HighlightedItem[]) => void;
   /**
+   * Merge a partial update into a specific pointer's highlight entry.
+   * Only updates the fields provided, leaving other fields untouched.
+   */
+  updatePointerHighlight: (pointerId: number, partial: Partial<HighlightedItem>) => void;
+  /**
+   * Remove a specific pointer's entry from highlight state.
+   */
+  removePointer: (pointerId: number) => void;
+  /**
    * Register a bar element for hit testing.
    */
   registerBar: (bounds: BarBounds) => void;
@@ -45,7 +54,7 @@ export type HighlightContextValue = {
   unregisterBar: (seriesId: string, dataIndex: number) => void;
 };
 
-const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
+export const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
 
 /**
  * Hook to access the highlight context.
@@ -104,8 +113,17 @@ export type HighlightProviderProps = HighlightProps & {
   accessibilityChunkCount?: number;
 };
 
+const DEFAULT_ITEM: HighlightedItem = { dataIndex: null, seriesId: null };
+
+/**
+ * Sentinel pointer ID used in onStart (before real touch IDs are available from onTouchesMove).
+ * Cleared once onTouchesMove fires with real IDs.
+ */
+const INITIAL_TOUCH_ID = -1;
+
 /**
  * HighlightProvider manages chart highlighting state and gesture handling for mobile.
+ * Uses per-pointer state tracking for multi-touch support.
  */
 export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   children,
@@ -134,7 +152,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [scopeProp],
   );
 
-  // Bar registry for hit testing (use ref to avoid re-renders)
+  // Bar registry for hit testing
   const barsRef = useRef<BarBounds[]>([]);
 
   const registerBar = useCallback((bounds: BarBounds) => {
@@ -147,7 +165,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     );
   }, []);
 
-  // Find bar at touch point (iterates in reverse for correct z-order)
   const findBarAtPoint = useCallback((touchX: number, touchY: number): BarBounds | null => {
     const bars = barsRef.current;
     for (let i = bars.length - 1; i >= 0; i--) {
@@ -164,22 +181,26 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     return null;
   }, []);
 
-  // Determine if we're in controlled mode
   const isControlled = controlledHighlight !== undefined;
 
-  // Use SharedValue for UI thread performance
+  // Per-pointer state. Ref is used because updates come from gesture worklets via runOnJS.
+  // The derived SharedValue (internalHighlight) drives Skia rendering reactively.
+  const pointerMapRef = useRef<Record<number, HighlightedItem>>({});
   const internalHighlight = useSharedValue<HighlightedItem[]>([]);
 
-  // The exposed highlight SharedValue - returns controlled value or internal value
+  const syncInternalHighlight = useCallback(() => {
+    internalHighlight.value = Object.values(pointerMapRef.current);
+  }, [internalHighlight]);
+
+  // The exposed highlight SharedValue
   const highlight: SharedValue<HighlightedItem[]> = useMemo(() => {
     if (isControlled) {
-      // Create a proxy that returns the controlled value but doesn't update internal state
       return {
         get value() {
           return controlledHighlight ?? [];
         },
         set value(_newValue: HighlightedItem[]) {
-          // In controlled mode, don't update - the gesture handlers will call onHighlightChange directly
+          // In controlled mode, don't update internal state
         },
         addListener: internalHighlight.addListener.bind(internalHighlight),
         removeListener: internalHighlight.removeListener.bind(internalHighlight),
@@ -217,7 +238,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         }
         return closestIndex;
       } else {
-        // For numeric scales with axis data, find the nearest data point
         const axisData = xAxis.data;
         if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
           const numericData = axisData as number[];
@@ -247,12 +267,12 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [xAxis, xScale],
   );
 
-  // Haptic feedback handlers
+  // Haptic feedback
   const handleStartEndHaptics = useCallback(() => {
     void Haptics.lightImpact();
   }, []);
 
-  // Handle JS thread callback when highlight changes
+  // Fire onHighlightChange when highlight SharedValue changes
   const handleHighlightChangeJS = useCallback(
     (items: HighlightedItem[]) => {
       onHighlightChange?.(items);
@@ -260,7 +280,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [onHighlightChange],
   );
 
-  // React to highlight changes and call JS callback
   useAnimatedReaction(
     () => highlight.value,
     (currentValue, previousValue) => {
@@ -271,108 +290,143 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [handleHighlightChangeJS],
   );
 
-  // Setter function for context - always fires callback, only updates internal state when uncontrolled
+  // Full replacement of highlight state (keyboard, accessibility, external)
   const setHighlight = useCallback(
     (newItems: HighlightedItem[]) => {
+      const newMap: Record<number, HighlightedItem> = {};
+      newItems.forEach((item, i) => {
+        newMap[i] = item;
+      });
+      pointerMapRef.current = newMap;
       if (!isControlled) {
-        internalHighlight.value = newItems;
+        syncInternalHighlight();
       }
       onHighlightChange?.(newItems);
     },
-    [isControlled, internalHighlight, onHighlightChange],
+    [isControlled, syncInternalHighlight, onHighlightChange],
   );
 
-  // Helper to create highlighted item with optional series hit testing
-  const createHighlightedItem = useCallback(
-    (x: number, y: number, dataIndex: number | null): HighlightedItem => {
-      let seriesId: string | null = null;
-      if (scope.series) {
-        const hitBar = findBarAtPoint(x, y);
-        if (hitBar) {
-          seriesId = hitBar.seriesId;
-        }
+  // Partial merge into one pointer's entry
+  const updatePointerHighlight = useCallback(
+    (pointerId: number, partial: Partial<HighlightedItem>) => {
+      const current = pointerMapRef.current[pointerId] ?? DEFAULT_ITEM;
+      const updated = { ...current, ...partial };
+      if (current.dataIndex === updated.dataIndex && current.seriesId === updated.seriesId) return;
+      pointerMapRef.current[pointerId] = updated;
+      if (!isControlled) {
+        syncInternalHighlight();
       }
-      return { dataIndex, seriesId };
     },
-    [scope.series, findBarAtPoint],
+    [isControlled, syncInternalHighlight],
   );
 
-  // Create the long press pan gesture for single touch
-  const singleTouchGesture = useMemo(
+  // Remove a pointer
+  const removePointer = useCallback(
+    (pointerId: number) => {
+      if (!(pointerId in pointerMapRef.current)) return;
+      delete pointerMapRef.current[pointerId];
+      if (!isControlled) {
+        syncInternalHighlight();
+      }
+    },
+    [isControlled, syncInternalHighlight],
+  );
+
+  // Per-touch highlight handler (called from gesture worklets via runOnJS)
+  const handleTouchHighlight = useCallback(
+    (touchId: number, x: number, y: number, dataIndex: number | null) => {
+      const seriesId = scope.series ? (findBarAtPoint(x, y)?.seriesId ?? null) : null;
+      updatePointerHighlight(touchId, { dataIndex, seriesId });
+    },
+    [scope.series, findBarAtPoint, updatePointerHighlight],
+  );
+
+  const handleTouchRemove = useCallback(
+    (touchId: number) => {
+      removePointer(touchId);
+    },
+    [removePointer],
+  );
+
+  const handleGestureEnd = useCallback(() => {
+    pointerMapRef.current = {};
+    if (!isControlled) {
+      internalHighlight.value = [];
+    }
+    onHighlightChange?.([]);
+  }, [internalHighlight, isControlled, onHighlightChange]);
+
+  const handleClearInitialTouch = useCallback(() => {
+    if (INITIAL_TOUCH_ID in pointerMapRef.current) {
+      removePointer(INITIAL_TOUCH_ID);
+    }
+  }, [removePointer]);
+
+  // Gesture: Pan with activateAfterLongPress for the activation gate,
+  // plus touch callbacks for per-pointer tracking.
+  const isGestureActive = useSharedValue(false);
+
+  const gesture = useMemo(
     () =>
       Gesture.Pan()
         .activateAfterLongPress(110)
         .shouldCancelWhenOutside(!allowOverflowGestures)
         .onStart(function onStart(event) {
+          isGestureActive.value = true;
           runOnJS(handleStartEndHaptics)();
 
-          // Android does not trigger onUpdate when the gesture starts
-          if (Platform.OS === 'android') {
-            const dataIndex = scope.dataIndex ? getDataIndexFromX(event.x) : null;
-            runOnJS((x: number, y: number, di: number | null) => {
-              const newItem = createHighlightedItem(x, y, di);
-              const currentItems = internalHighlight.value;
-              const currentItem = currentItems[0];
-              if (
-                newItem.dataIndex !== currentItem?.dataIndex ||
-                newItem.seriesId !== currentItem?.seriesId
-              ) {
-                if (!isControlled) {
-                  internalHighlight.value = [newItem];
-                }
-                onHighlightChange?.([newItem]);
-              }
-            })(event.x, event.y, dataIndex);
+          // Process initial position with sentinel ID.
+          // onTouchesDown already fired but was skipped (gesture wasn't active yet).
+          // This entry will be replaced once onTouchesMove fires with real IDs.
+          const dataIndex = scope.dataIndex ? getDataIndexFromX(event.x) : null;
+          runOnJS(handleTouchHighlight)(INITIAL_TOUCH_ID, event.x, event.y, dataIndex);
+        })
+        .onTouchesDown(function onTouchesDown(event) {
+          if (!isGestureActive.value) return;
+          for (let i = 0; i < event.changedTouches.length; i++) {
+            const touch = event.changedTouches[i];
+            const dataIndex = scope.dataIndex ? getDataIndexFromX(touch.x) : null;
+            runOnJS(handleTouchHighlight)(touch.id, touch.x, touch.y, dataIndex);
           }
         })
-        .onUpdate(function onUpdate(event) {
-          const dataIndex = scope.dataIndex ? getDataIndexFromX(event.x) : null;
-          runOnJS((x: number, y: number, di: number | null) => {
-            const newItem = createHighlightedItem(x, y, di);
-            const currentItems = internalHighlight.value;
-            const currentItem = currentItems[0];
-            if (
-              newItem.dataIndex !== currentItem?.dataIndex ||
-              newItem.seriesId !== currentItem?.seriesId
-            ) {
-              if (!isControlled) {
-                internalHighlight.value = [newItem];
-              }
-              onHighlightChange?.([newItem]);
-            }
-          })(event.x, event.y, dataIndex);
+        .onTouchesMove(function onTouchesMove(event) {
+          if (!isGestureActive.value) return;
+          // Clear the sentinel entry from onStart on first move
+          runOnJS(handleClearInitialTouch)();
+          for (let i = 0; i < event.allTouches.length; i++) {
+            const touch = event.allTouches[i];
+            const dataIndex = scope.dataIndex ? getDataIndexFromX(touch.x) : null;
+            runOnJS(handleTouchHighlight)(touch.id, touch.x, touch.y, dataIndex);
+          }
+        })
+        .onTouchesUp(function onTouchesUp(event) {
+          if (!isGestureActive.value) return;
+          for (let i = 0; i < event.changedTouches.length; i++) {
+            const touch = event.changedTouches[i];
+            runOnJS(handleTouchRemove)(touch.id);
+          }
         })
         .onEnd(function onEnd() {
-          if (enableHighlighting) {
-            runOnJS(handleStartEndHaptics)();
-            if (!isControlled) {
-              internalHighlight.value = [];
-            }
-            runOnJS(onHighlightChange ?? (() => {}))([]);
-          }
+          isGestureActive.value = false;
+          runOnJS(handleStartEndHaptics)();
+          runOnJS(handleGestureEnd)();
         })
         .onTouchesCancelled(function onTouchesCancelled() {
-          if (enableHighlighting) {
-            if (!isControlled) {
-              internalHighlight.value = [];
-            }
-            runOnJS(onHighlightChange ?? (() => {}))([]);
-          }
+          isGestureActive.value = false;
+          runOnJS(handleGestureEnd)();
         }),
     [
       allowOverflowGestures,
+      isGestureActive,
       handleStartEndHaptics,
       getDataIndexFromX,
       scope.dataIndex,
-      createHighlightedItem,
-      internalHighlight,
-      enableHighlighting,
-      isControlled,
-      onHighlightChange,
+      handleTouchHighlight,
+      handleTouchRemove,
+      handleClearInitialTouch,
+      handleGestureEnd,
     ],
   );
-
-  const gesture = singleTouchGesture;
 
   const contextValue: HighlightContextValue = useMemo(
     () => ({
@@ -380,20 +434,30 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
       scope,
       highlight,
       setHighlight,
+      updatePointerHighlight,
+      removePointer,
       registerBar,
       unregisterBar,
     }),
-    [enableHighlighting, scope, highlight, setHighlight, registerBar, unregisterBar],
+    [
+      enableHighlighting,
+      scope,
+      highlight,
+      setHighlight,
+      updatePointerHighlight,
+      removePointer,
+      registerBar,
+      unregisterBar,
+    ],
   );
 
-  // Derive scrubberPosition from internal highlight for backwards compatibility
+  // ScrubberContext bridge for backwards compatibility
   const scrubberPosition = useDerivedValue<number | undefined>(() => {
     const items = internalHighlight.value;
     if (!items || items.length === 0) return undefined;
     return items[0]?.dataIndex ?? undefined;
   }, [internalHighlight]);
 
-  // Provide ScrubberContext for backwards compatibility
   const scrubberContextValue: ScrubberContextValue = useMemo(
     () => ({
       enableScrubbing: enableHighlighting,
@@ -402,7 +466,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [enableHighlighting, scrubberPosition],
   );
 
-  // Helper to get label from accessibilityLabel (string or function)
+  // Accessibility
   const getAccessibilityLabelForItem = useCallback(
     (item: HighlightedItem): string => {
       if (typeof accessibilityLabel === 'string') {
@@ -416,10 +480,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [accessibilityLabel],
   );
 
-  // Generate accessibility regions based on mode
   const accessibilityRegions = useMemo(() => {
-    // Only generate regions if we have a function label (for dynamic per-item labels)
-    // Static string labels don't need regions
     if (!enableHighlighting || !accessibilityLabel || typeof accessibilityLabel === 'string') {
       return null;
     }
@@ -432,7 +493,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     }> = [];
 
     if (accessibilityMode === 'chunked') {
-      // Divide into chunks
       const chunkSize = Math.ceil(dataLength / accessibilityChunkCount);
       for (let i = 0; i < accessibilityChunkCount && i * chunkSize < dataLength; i++) {
         const startIndex = i * chunkSize;
@@ -448,7 +508,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         });
       }
     } else if (accessibilityMode === 'item') {
-      // Each data point is a region
       for (let i = 0; i < dataLength; i++) {
         const item: HighlightedItem = { dataIndex: i, seriesId: null };
         regions.push({
@@ -483,17 +542,9 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
                 accessibilityLabel={region.label}
                 accessibilityRole="button"
                 onAccessibilityTap={() => {
-                  // Always fire callback, only update internal state when not controlled
-                  if (!isControlled) {
-                    internalHighlight.value = [region.highlightedItem];
-                  }
-                  onHighlightChange?.([region.highlightedItem]);
-                  // Clear after a short delay
+                  setHighlight([region.highlightedItem]);
                   setTimeout(() => {
-                    if (!isControlled) {
-                      internalHighlight.value = [];
-                    }
-                    onHighlightChange?.([]);
+                    setHighlight([]);
                   }, 100);
                 }}
                 style={{ flex: region.flex }}
@@ -505,7 +556,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     </HighlightContext.Provider>
   );
 
-  // Wrap with gesture handler only if highlighting is enabled
   if (enableHighlighting) {
     return <GestureDetector gesture={gesture}>{content}</GestureDetector>;
   }

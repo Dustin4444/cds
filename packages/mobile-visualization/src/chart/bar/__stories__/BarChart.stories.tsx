@@ -1,4 +1,5 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -6,6 +7,7 @@ import { VStack } from '@coinbase/cds-mobile/layout';
 
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
+import type { HighlightedItem } from '../../utils/highlight';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
@@ -612,9 +614,191 @@ const BandGridPositionExample = ({
   </CartesianChart>
 );
 
+const BasicHighlighting = () => {
+  const theme = useTheme();
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const data = [45, 80, 120, 95, 150, 110, 85];
+  const [info, setInfo] = useState('Long press and drag to highlight');
+
+  const handleHighlightChange = useCallback(
+    (items: HighlightedItem[]) => {
+      const item = items[0];
+      if (item?.dataIndex !== null && item?.dataIndex !== undefined) {
+        setInfo(`${days[item.dataIndex]}: ${data[item.dataIndex]} visits`);
+      } else {
+        setInfo('Long press and drag to highlight');
+      }
+    },
+    [days, data],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text>{info}</Text>
+      <BarChart
+        enableHighlighting
+        showXAxis
+        showYAxis
+        height={defaultChartHeight}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onHighlightChange={handleHighlightChange}
+        series={[
+          {
+            id: 'visits',
+            data,
+            color: theme.color.accentBoldBlue,
+          },
+        ]}
+        xAxis={{ data: days }}
+        yAxis={{ showGrid: true }}
+      />
+    </VStack>
+  );
+};
+
+const FadeOnHighlight = () => {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <BarChart
+      enableHighlighting
+      fadeOnHighlight
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'revenue',
+          data: [455, 520, 380, 455, 285, 235],
+          color: theme.color.accentBoldGreen,
+        },
+        {
+          id: 'cost',
+          data: [270, 425, 190, 380, 210, 150],
+          color: theme.color.accentBoldPurple,
+        },
+      ]}
+      xAxis={{ data: months }}
+      yAxis={{ showGrid: true }}
+    />
+  );
+};
+
+const FadeWithSeriesScope = () => {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const [info, setInfo] = useState('Long press a bar to highlight');
+
+  const handleHighlightChange = useCallback(
+    (items: HighlightedItem[]) => {
+      const item = items[0];
+      if (item?.dataIndex !== null && item?.dataIndex !== undefined) {
+        const series = item.seriesId ?? 'all';
+        setInfo(`${months[item.dataIndex]} — Series: ${series}`);
+      } else {
+        setInfo('Long press a bar to highlight');
+      }
+    },
+    [months],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text>{info}</Text>
+      <BarChart
+        enableHighlighting
+        fadeOnHighlight
+        showXAxis
+        showYAxis
+        height={defaultChartHeight}
+        highlightScope={{ dataIndex: true, series: true }}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onHighlightChange={handleHighlightChange}
+        series={[
+          {
+            id: 'revenue',
+            data: [455, 520, 380, 455, 285, 235],
+            color: theme.color.accentBoldGreen,
+          },
+          {
+            id: 'cost',
+            data: [270, 425, 190, 380, 210, 150],
+            color: theme.color.accentBoldPurple,
+          },
+        ]}
+        xAxis={{ data: months }}
+        yAxis={{ showGrid: true }}
+      />
+    </VStack>
+  );
+};
+
+const FadeOnHighlightStacked = () => {
+  const theme = useTheme();
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  return (
+    <BarChart
+      enableHighlighting
+      fadeOnHighlight
+      showXAxis
+      showYAxis
+      stacked
+      height={defaultChartHeight}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'btc',
+          data: [345, 510, 280, 720, 655, 410, 580, 815, 740, 910, 975, 620],
+          color: theme.color.accentBoldYellow,
+        },
+        {
+          id: 'eth',
+          data: [270, 425, 190, 680, 610, 350, 440, 780, 705, 840, 920, 550],
+          color: theme.color.accentBoldBlue,
+        },
+        {
+          id: 'ltc',
+          data: [170, 340, 305, 225, 250, 130, 115, 195, 210, 60, 120, 85],
+          color: theme.color.accentBoldGreen,
+        },
+      ]}
+      xAxis={{ data: months }}
+      yAxis={{ showGrid: true, GridLineComponent: ThinSolidLine }}
+    />
+  );
+};
+
 const BarChartStories = () => {
   return (
     <ExampleScreen>
+      <Example title="Basic Highlighting">
+        <BasicHighlighting />
+      </Example>
+      <Example title="Fade on Highlight">
+        <FadeOnHighlight />
+      </Example>
+      <Example title="Fade with Series Scope">
+        <FadeWithSeriesScope />
+      </Example>
+      <Example title="Fade on Highlight (Stacked)">
+        <FadeOnHighlightStacked />
+      </Example>
       <Example title="Basic">
         <UpdatingChartValues />
       </Example>

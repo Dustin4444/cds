@@ -1,11 +1,18 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { m as motion } from 'framer-motion';
+import { css } from '@linaria/core';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { useHighlightContext } from '../HighlightProvider';
 import { getBarPath } from '../utils';
 
 import type { BarComponentProps } from './Bar';
+
+const fadeTransitionCss = css`
+  transition: fill-opacity 250ms ease-in-out;
+`;
+
+const FADED_OPACITY_FACTOR = 0.3;
 
 export type DefaultBarProps = BarComponentProps & {
   /**
@@ -20,7 +27,8 @@ export type DefaultBarProps = BarComponentProps & {
 
 /**
  * Default bar component that renders a solid bar with animation.
- * Automatically tracks series highlighting when `highlightScope.series` is enabled.
+ * Uses pointer events to report series identity to the highlight system
+ * when `highlightScope.series` is enabled.
  */
 export const DefaultBar = memo<DefaultBarProps>(
   ({
@@ -37,72 +45,101 @@ export const DefaultBar = memo<DefaultBarProps>(
     dataY,
     seriesId,
     transition,
+    fadeOnHighlight,
     ...props
   }) => {
     const { animate } = useCartesianChartContext();
     const highlightContext = useHighlightContext();
+    const { highlight, scope } = highlightContext;
 
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
-      // Need a minimum height to allow for animation
       const minHeight = 1;
       const initialY = (originY ?? 0) - minHeight;
       return getBarPath(x, initialY, width, minHeight, borderRadius, !!roundTop, !!roundBottom);
     }, [animate, x, originY, width, borderRadius, roundTop, roundBottom]);
 
-    // Get the data index as a number for highlighting
     const dataIndex = typeof dataX === 'number' ? dataX : null;
 
-    const handleMouseEnter = useCallback(() => {
-      if (!highlightContext.enabled || !highlightContext.scope.series) return;
-
-      highlightContext.setHighlight([
-        {
-          dataIndex,
-          seriesId: seriesId ?? null,
-        },
-      ]);
-    }, [highlightContext, dataIndex, seriesId]);
-
-    const handleMouseLeave = useCallback(() => {
-      if (!highlightContext.enabled || !highlightContext.scope.series) return;
-
-      // Reset to just dataIndex (keep dataIndex tracking, clear series)
-      if (highlightContext.scope.dataIndex) {
-        highlightContext.setHighlight([
-          {
-            dataIndex,
-            seriesId: null,
-          },
-        ]);
-      } else {
-        highlightContext.setHighlight([]);
+    // Determine effective opacity based on highlight state
+    const effectiveOpacity = useMemo(() => {
+      if (!fadeOnHighlight || !highlightContext.enabled || highlight.length === 0) {
+        return fillOpacity;
       }
-    }, [highlightContext, dataIndex, seriesId]);
 
-    // Only add event handlers when series scope is enabled
-    const eventHandlers = highlightContext.scope.series
+      const isHighlighted = highlight.some((item) => {
+        const indexMatch = !scope.dataIndex || item.dataIndex === dataIndex;
+        // When seriesId is null (pointer between bars), all series at this index match.
+        // Only narrow to a specific series when one is identified.
+        const seriesMatch = !scope.series || item.seriesId === null || item.seriesId === seriesId;
+        return indexMatch && seriesMatch;
+      });
+
+      return isHighlighted ? fillOpacity : fillOpacity * FADED_OPACITY_FACTOR;
+    }, [
+      fadeOnHighlight,
+      highlightContext.enabled,
+      highlight,
+      scope,
+      dataIndex,
+      seriesId,
+      fillOpacity,
+    ]);
+
+    const handlePointerEnter = useCallback(
+      (event: React.PointerEvent) => {
+        if (!highlightContext.enabled || !highlightContext.scope.series) return;
+        highlightContext.updatePointerHighlight(event.pointerId, {
+          seriesId: seriesId ?? null,
+        });
+      },
+      [highlightContext, seriesId],
+    );
+
+    const handlePointerLeave = useCallback(
+      (event: React.PointerEvent) => {
+        if (!highlightContext.enabled || !highlightContext.scope.series) return;
+        highlightContext.updatePointerHighlight(event.pointerId, {
+          seriesId: null,
+        });
+      },
+      [highlightContext],
+    );
+
+    const pointerHandlers = highlightContext.scope.series
       ? {
-          onMouseEnter: handleMouseEnter,
-          onMouseLeave: handleMouseLeave,
+          onPointerEnter: handlePointerEnter,
+          onPointerLeave: handlePointerLeave,
           style: { cursor: 'pointer' },
         }
       : {};
+
+    const className = fadeOnHighlight ? fadeTransitionCss : undefined;
 
     if (animate && initialPath) {
       return (
         <motion.path
           {...props}
-          {...eventHandlers}
+          {...pointerHandlers}
           animate={{ d }}
+          className={className}
           fill={fill}
-          fillOpacity={fillOpacity}
+          fillOpacity={effectiveOpacity}
           initial={{ d: initialPath }}
           transition={transition}
         />
       );
     }
 
-    return <path {...props} {...eventHandlers} d={d} fill={fill} fillOpacity={fillOpacity} />;
+    return (
+      <path
+        {...props}
+        {...pointerHandlers}
+        className={className}
+        d={d}
+        fill={fill}
+        fillOpacity={effectiveOpacity}
+      />
+    );
   },
 );

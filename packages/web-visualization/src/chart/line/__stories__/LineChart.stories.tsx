@@ -24,7 +24,6 @@ import { m } from 'framer-motion';
 
 import {
   type AxisBounds,
-  DefaultScrubberBeacon,
   defaultTransition,
   type HighlightedItem,
   PeriodSelector,
@@ -35,7 +34,6 @@ import {
   type ScrubberBeaconProps,
   type ScrubberRef,
   useCartesianChartContext,
-  useScrubberContext,
 } from '../..';
 import { Area, DottedArea, type DottedAreaProps, GradientArea } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
@@ -1368,40 +1366,47 @@ function ForecastAssetPrice() {
     );
   });
 
-  const CustomScrubber = memo(() => {
-    const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
-    // We need a fade in animation for the Scrubber
+  const Example = memo(() => {
+    const defaultHighlight: HighlightedItem[] = useMemo(
+      () => [{ dataIndex: currentIndex, seriesId: null }],
+      [],
+    );
+    const [highlight, setHighlight] = useState(defaultHighlight);
+    const [isScrubbing, setIsScrubbing] = useState(false);
+
+    const handleHighlightChange = useCallback(
+      (items: HighlightedItem[]) => {
+        const isActive = items.length > 0;
+        setIsScrubbing(isActive);
+        setHighlight(isActive ? items : defaultHighlight);
+      },
+      [defaultHighlight],
+    );
+
     return (
-      <m.g
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.15, delay: 0.35 }}
+      <CartesianChart
+        enableHighlighting
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        highlight={highlight}
+        maxWidth={512}
+        onHighlightChange={handleHighlightChange}
+        series={[{ id: 'price', data, color: assets.btc.color }]}
+        style={{ margin: '0 auto' }}
       >
-        <g style={{ opacity: isScrubbing ? 1 : 0 }}>
-          <Scrubber hideOverlay />
-        </g>
-        <g style={{ opacity: isScrubbing ? 0 : 1 }}>
-          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
-        </g>
-      </m.g>
+        <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
+        <Line
+          LineComponent={ForecastLineComponent}
+          curve="monotone"
+          seriesId="price"
+          type="dotted"
+        />
+        <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
+        <Scrubber hideOverlay hideLine={!isScrubbing} />
+      </CartesianChart>
     );
   });
 
-  return (
-    <CartesianChart
-      enableScrubbing
-      height={{ base: 200, tablet: 225, desktop: 250 }}
-      maxWidth={512}
-      series={[{ id: 'price', data, color: assets.btc.color }]}
-      style={{ margin: '0 auto' }}
-    >
-      <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
-      <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
-      <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
-      <CustomScrubber />
-    </CartesianChart>
-  );
+  return <Example />;
 }
 
 function MonotoneAssetPrice() {
@@ -1605,13 +1610,14 @@ function HighlightLineSegments() {
 
   return (
     <LineChart
+      enableHighlighting
       animate={false}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       onHighlightChange={handleHighlightChange}
       series={[{ id: 'btc', data: prices, gradient }]}
       style={{ outlineColor: assets.btc.color }}
     >
-      <Scrubber hideOverlay />
+      <Scrubber hideOverlay seriesIds={[]} />
     </LineChart>
   );
 }
@@ -1650,57 +1656,28 @@ function AdaptiveDetail() {
     />
   ));
 
-  // Sample data using a moving average for smoother results
-  const sampleData = useCallback((data: number[], targetPoints: number) => {
-    if (data.length <= targetPoints) return data;
-
-    // First, apply a moving average to smooth the data
-    const windowSize = Math.max(3, Math.floor(data.length / targetPoints));
-    const smoothed: number[] = [];
-
-    for (let i = 0; i < data.length; i++) {
-      const halfWindow = Math.floor(windowSize / 2);
-      const start = Math.max(0, i - halfWindow);
-      const end = Math.min(data.length, i + halfWindow + 1);
-      const window = data.slice(start, end);
-      const avg = window.reduce((sum, val) => sum + val, 0) / window.length;
-      smoothed.push(avg);
-    }
-
-    // Then sample from the smoothed data
-    const step = smoothed.length / targetPoints;
-    const sampled: number[] = [];
-
-    for (let i = 0; i < targetPoints; i++) {
-      const idx = Math.floor(i * step);
-      sampled.push(smoothed[idx]);
-    }
-
-    // Always include the last point for accuracy
-    sampled[sampled.length - 1] = data[data.length - 1];
-
-    return sampled;
-  }, []);
-
   // Memoized chart component - only re-renders when data or isScrubbing changes
   type MemoizedChartProps = {
-    highlight: HighlightedItem[] | undefined;
+    highlight: HighlightedItem[];
     data: number[];
     isScrubbing: boolean;
     onHighlightChange: (items: HighlightedItem[]) => void;
     scrubberLabel: (index: number) => string;
   };
 
+  const chartTransition = useMemo(() => ({ duration: 0.15 }), []);
+  const chartYAxis = useMemo(
+    () => ({
+      range: ({ min, max }: { min: number; max: number }) => ({ min: min + 8, max: max - 8 }),
+    }),
+    [],
+  );
+
   const MemoizedChart = memo(
     ({ highlight, data, isScrubbing, onHighlightChange, scrubberLabel }: MemoizedChartProps) => {
-      console.log('[MemoizedChart] Rendering with:', {
-        highlight,
-        dataLength: data.length,
-        isScrubbing,
-        strokeWidth: isScrubbing ? 2 : 4,
-      });
       return (
         <LineChart
+          enableHighlighting
           height={{ base: 200, tablet: 250, desktop: 300 }}
           highlight={highlight}
           onHighlightChange={onHighlightChange}
@@ -1713,8 +1690,8 @@ function AdaptiveDetail() {
           ]}
           strokeWidth={isScrubbing ? 2 : 4}
           style={{ outlineColor: assets.btc.color }}
-          transition={{ duration: 0.15 }}
-          yAxis={{ range: ({ min, max }) => ({ min: min + 8, max: max - 8 }) }}
+          transition={chartTransition}
+          yAxis={chartYAxis}
         >
           <Scrubber label={scrubberLabel} seriesIds={[]} />
         </LineChart>
@@ -1723,7 +1700,6 @@ function AdaptiveDetail() {
   );
 
   const AdaptiveDetailChart = memo(() => {
-    console.log('[AdaptiveDetailChart] Rendering');
     const tabs = useMemo(
       () => [
         { id: 'hour', label: '1H' },
@@ -1736,41 +1712,21 @@ function AdaptiveDetail() {
       [],
     );
     const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
-    // Store selected timestamp instead of dataIndex - this persists across dataset changes
-    const [selectedTimestamp, setSelectedTimestamp] = useState<Date | null>(null);
-    // Track if we're actively scrubbing (separate from selectedTimestamp to handle exit delay)
+    // Always controlled: [] = nothing highlighted, [{dataIndex}] = highlight shown
+    const [highlight, setHighlight] = useState<HighlightedItem[]>([]);
     const [isInteracting, setIsInteracting] = useState(false);
-    // Timeout ref for delayed exit - prevents race condition when data switches while mouse is still over chart
-    const exitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isScrubbing = isInteracting;
 
-    // Cleanup timeout on unmount
-    useEffect(() => {
-      return () => {
-        if (exitTimeoutRef.current) {
-          clearTimeout(exitTimeoutRef.current);
-        }
-      };
-    }, []);
-
-    // Debug: log state changes
-    useEffect(() => {
-      console.log('[AdaptiveDetail] State changed:', {
-        isInteracting,
-        isScrubbing,
-        selectedTimestamp: selectedTimestamp?.toISOString() ?? null,
-      });
-    }, [isInteracting, isScrubbing, selectedTimestamp]);
-
+    // Full data for current period
     const sparklineTimePeriodData = useMemo(() => {
       return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
     }, [timePeriod]);
 
-    const sparklineTimePeriodDataValues = useMemo(() => {
+    const fullDataValues = useMemo(() => {
       return sparklineTimePeriodData.map((d) => d.value);
     }, [sparklineTimePeriodData]);
 
-    const sparklineTimePeriodDataTimestamps = useMemo(() => {
+    const fullDataTimestamps = useMemo(() => {
       return sparklineTimePeriodData.map((d) => d.date);
     }, [sparklineTimePeriodData]);
 
@@ -1793,8 +1749,8 @@ function AdaptiveDetail() {
 
     // Create sampled data with corresponding timestamps for index mapping
     const sampledDataWithTimestamps = useMemo(() => {
-      const values = sparklineTimePeriodDataValues;
-      const timestamps = sparklineTimePeriodDataTimestamps;
+      const values = fullDataValues;
+      const timestamps = fullDataTimestamps;
 
       if (values.length <= samplePointCount) {
         return { values, timestamps };
@@ -1815,109 +1771,66 @@ function AdaptiveDetail() {
       sampledTimestamps[sampledTimestamps.length - 1] = timestamps[timestamps.length - 1];
 
       return { values: sampledValues, timestamps: sampledTimestamps };
-    }, [sparklineTimePeriodDataValues, sparklineTimePeriodDataTimestamps, samplePointCount]);
+    }, [fullDataValues, fullDataTimestamps, samplePointCount]);
 
-    // Use sampled data for display when idle, full data when scrubbing
+    // Show full data when scrubbing, sampled when idle
     const displayData = useMemo(() => {
-      const data = isScrubbing ? sparklineTimePeriodDataValues : sampledDataWithTimestamps.values;
-      console.log('[AdaptiveDetail] displayData computed:', {
-        isScrubbing,
-        dataLength: data.length,
-        fullDataLength: sparklineTimePeriodDataValues.length,
-        sampledDataLength: sampledDataWithTimestamps.values.length,
-      });
-      return data;
-    }, [isScrubbing, sparklineTimePeriodDataValues, sampledDataWithTimestamps.values]);
+      return isScrubbing ? fullDataValues : sampledDataWithTimestamps.values;
+    }, [isScrubbing, fullDataValues, sampledDataWithTimestamps.values]);
 
-    // Get timestamps for current display data
     const displayTimestamps = useMemo(() => {
-      return isScrubbing ? sparklineTimePeriodDataTimestamps : sampledDataWithTimestamps.timestamps;
-    }, [isScrubbing, sparklineTimePeriodDataTimestamps, sampledDataWithTimestamps.timestamps]);
+      return isScrubbing ? fullDataTimestamps : sampledDataWithTimestamps.timestamps;
+    }, [isScrubbing, fullDataTimestamps, sampledDataWithTimestamps.timestamps]);
 
-    // Use ref to avoid stale closure in handleInteractionChange
-    // This ensures we always access the latest timestamps when the callback fires
-    const displayTimestampsRef = useRef(displayTimestamps);
-    displayTimestampsRef.current = displayTimestamps;
+    // Refs for stable callback - avoids stale closures in handleHighlightChange
+    const isInteractingRef = useRef(isInteracting);
+    isInteractingRef.current = isInteracting;
+    const sampledCountRef = useRef(sampledDataWithTimestamps.values.length);
+    sampledCountRef.current = sampledDataWithTimestamps.values.length;
+    const fullCountRef = useRef(fullDataValues.length);
+    fullCountRef.current = fullDataValues.length;
 
-    // Find the closest index in the current display data for the selected timestamp
-    const findClosestIndex = useCallback((timestamp: Date, timestamps: Date[]) => {
-      const targetTime = timestamp.getTime();
-      let closestIdx = 0;
-      let closestDiff = Math.abs(timestamps[0].getTime() - targetTime);
+    const handleHighlightChange = useCallback((items: HighlightedItem[]) => {
+      const item = items[0];
+      if (item?.dataIndex !== null && item?.dataIndex !== undefined) {
+        if (!isInteractingRef.current) {
+          // Entering scrubbing: dataIndex is relative to sampled data.
+          // Use proportional mapping so the pixel position stays the same
+          // after switching from sampled to full data.
+          const sampledCount = sampledCountRef.current;
+          const fullCount = fullCountRef.current;
+          const proportion = item.dataIndex / (sampledCount - 1);
+          const fullIndex = Math.round(proportion * (fullCount - 1));
 
-      for (let i = 1; i < timestamps.length; i++) {
-        const diff = Math.abs(timestamps[i].getTime() - targetTime);
-        if (diff < closestDiff) {
-          closestDiff = diff;
-          closestIdx = i;
+          console.log('[AdaptiveDetail] Entering scrubbing:', {
+            sampledIndex: item.dataIndex,
+            sampledCount,
+            fullCount,
+            proportion: `${(proportion * 100).toFixed(1)}%`,
+            fullIndex,
+          });
+
+          setIsInteracting(true);
+          setHighlight([{ dataIndex: fullIndex, seriesId: null }]);
+        } else {
+          // Already scrubbing: index is relative to full data, use directly
+          setHighlight(items);
         }
+      } else {
+        // User stopped interacting
+        setIsInteracting(false);
+        setHighlight([]);
       }
-
-      return closestIdx;
     }, []);
-
-    // Compute controlled highlight based on selected timestamp and current display data
-    // Return undefined when not interacting to allow uncontrolled user input
-    // Return HighlightedItem[] when interacting to control position across dataset changes
-    const highlight = useMemo<HighlightedItem[] | undefined>(() => {
-      if (selectedTimestamp === null) {
-        console.log('[AdaptiveDetail] highlight: undefined (no timestamp)');
-        return undefined;
-      }
-
-      const dataIndex = findClosestIndex(selectedTimestamp, displayTimestamps);
-      console.log('[AdaptiveDetail] highlight computed:', {
-        selectedTimestamp: selectedTimestamp.toISOString(),
-        dataIndex,
-        displayTimestampsLength: displayTimestamps.length,
-      });
-      return [{ dataIndex, seriesId: null }];
-    }, [selectedTimestamp, displayTimestamps, findClosestIndex]);
 
     const onPeriodChange = useCallback(
       (period: TabValue | null) => {
         setTimePeriod(period || tabs[0]);
+        setIsInteracting(false);
+        setHighlight([]);
       },
       [tabs],
     );
-
-    // Store the timestamp when highlight changes, not the dataIndex
-    // Uses ref to always get latest displayTimestamps, avoiding stale closure issues
-    const handleHighlightChange = useCallback((items: HighlightedItem[]) => {
-      const item = items[0];
-      console.log('[AdaptiveDetail] handleHighlightChange called:', {
-        item,
-        displayTimestampsRefLength: displayTimestampsRef.current.length,
-      });
-
-      if (item?.dataIndex !== null && item?.dataIndex !== undefined) {
-        // User is interacting - cancel any pending exit timeout
-        if (exitTimeoutRef.current) {
-          console.log('[AdaptiveDetail] Cancelling exit timeout');
-          clearTimeout(exitTimeoutRef.current);
-          exitTimeoutRef.current = null;
-        }
-        const timestamp = displayTimestampsRef.current[item.dataIndex];
-        console.log('[AdaptiveDetail] Setting highlight:', {
-          dataIndex: item.dataIndex,
-          timestamp: timestamp?.toISOString(),
-        });
-        setIsInteracting(true);
-        // Use ref to get the current displayTimestamps (avoids stale closure)
-        setSelectedTimestamp(timestamp ?? null);
-      } else {
-        // User stopped interacting - delay before switching back to sampled data
-        // This prevents the race condition where switching data while mouse is still
-        // over the chart causes an immediate re-highlight
-        console.log('[AdaptiveDetail] Starting exit timeout (50ms)');
-        exitTimeoutRef.current = setTimeout(() => {
-          console.log('[AdaptiveDetail] Exit timeout fired - clearing highlight');
-          setIsInteracting(false);
-          setSelectedTimestamp(null);
-          exitTimeoutRef.current = null;
-        }, 50);
-      }
-    }, []);
 
     const priceFormatter = useMemo(
       () =>
@@ -1966,7 +1879,6 @@ function AdaptiveDetail() {
       }
     }, []);
 
-    // Scrubber label now uses displayTimestamps which matches displayData
     const scrubberLabel = useCallback(
       (index: number) => {
         return formatDate(displayTimestamps[index], timePeriod.id);
@@ -1974,21 +1886,15 @@ function AdaptiveDetail() {
       [displayTimestamps, formatDate, timePeriod.id],
     );
 
-    // Calculate price change - use selected timestamp to find price in FULL data
-    const startPrice = sparklineTimePeriodDataValues[0];
+    // Price display: when scrubbing, look up directly in full data by index
+    const highlightedIndex = highlight[0]?.dataIndex;
+    const startPrice = fullDataValues[0];
     const displayPrice = useMemo(() => {
-      if (selectedTimestamp === null) {
-        return sparklineTimePeriodDataValues[sparklineTimePeriodDataValues.length - 1];
+      if (isScrubbing && highlightedIndex !== null && highlightedIndex !== undefined) {
+        return fullDataValues[highlightedIndex];
       }
-      // Find the index in full data for the selected timestamp
-      const fullDataIndex = findClosestIndex(selectedTimestamp, sparklineTimePeriodDataTimestamps);
-      return sparklineTimePeriodDataValues[fullDataIndex];
-    }, [
-      selectedTimestamp,
-      sparklineTimePeriodDataValues,
-      sparklineTimePeriodDataTimestamps,
-      findClosestIndex,
-    ]);
+      return fullDataValues[fullDataValues.length - 1];
+    }, [isScrubbing, highlightedIndex, fullDataValues]);
 
     const difference = displayPrice - startPrice;
     const percentChange = (difference / startPrice) * 100;
@@ -2244,6 +2150,9 @@ export const All = () => {
     </VStack>
   );
 };
+
+export const AdaptiveDetailStory = () => <AdaptiveDetail />;
+AdaptiveDetailStory.storyName = 'Adaptive Detail';
 
 export const Transitions = () => {
   const dataCount = 20;

@@ -10,6 +10,7 @@ import { ThemeContext } from '@coinbase/cds-mobile/system/ThemeProvider';
 
 import { ScrubberContext } from './utils/context';
 import { CartesianChartContext } from './ChartProvider';
+import { HighlightContext } from './HighlightProvider';
 
 /**
  * Whitelist of contexts that should be bridged to the Skia canvas.
@@ -20,6 +21,7 @@ const BRIDGED_CONTEXTS: React.Context<any>[] = [
   ThemeContext,
   CartesianChartContext,
   ScrubberContext,
+  HighlightContext,
 ];
 
 /**

@@ -131,6 +131,12 @@ export const usePathTransition = ({
     return () => {
       if (animationRef.current) {
         animationRef.current.cancel();
+        // Snap to target so the visual state stays consistent.
+        // Without this, a cancelled mid-flight animation leaves
+        // the path stuck at an intermediate interpolated value.
+        progress.set(1);
+        previousPathRef.current = targetPathRef.current;
+        animationRef.current = null;
       }
     };
   }, [currentPath, transition, progress, interpolatedPath]);

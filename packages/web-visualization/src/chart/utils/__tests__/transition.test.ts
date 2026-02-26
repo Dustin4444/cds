@@ -4,6 +4,8 @@ import { defaultTransition, usePathTransition } from '../transition';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => {
+  const { useRef } = require('react');
+
   const mockMotionValue = (initial: any) => {
     let value = initial;
     const listeners: Array<(v: any) => void> = [];
@@ -24,7 +26,14 @@ jest.mock('framer-motion', () => {
   };
 
   return {
-    useMotionValue: jest.fn((initial) => mockMotionValue(initial)),
+    // Return a stable reference across re-renders (like real useMotionValue)
+    useMotionValue: jest.fn((initial: any) => {
+      const ref = useRef(null);
+      if (ref.current === null) {
+        ref.current = mockMotionValue(initial);
+      }
+      return ref.current;
+    }),
     useTransform: jest.fn((source, transformer) => {
       const result = mockMotionValue(transformer(source.get()));
       source.onChange((v: any) => {
@@ -32,9 +41,8 @@ jest.mock('framer-motion', () => {
       });
       return result;
     }),
-    animate: jest.fn((value, target, config) => {
-      // Immediately set to target for testing
-      value.set(target);
+    animate: jest.fn((_from, _to, config) => {
+      // Immediately complete animation for testing
       if (config?.onComplete) {
         config.onComplete();
       }
@@ -289,6 +297,41 @@ describe('usePathTransition', () => {
 
     // Should have called animate again
     expect(animate.mock.calls.length).toBeGreaterThan(animateCallCount);
+  });
+
+  it('should snap to target path when animation is cancelled by cleanup', () => {
+    const { animate } = require('framer-motion');
+    const cancelMock = jest.fn();
+
+    // Override animate to NOT immediately complete - keeps animation "in progress"
+    animate.mockImplementation(() => ({
+      cancel: cancelMock,
+      stop: jest.fn(),
+    }));
+
+    const path1 = 'M0,0L10,10';
+    const path2 = 'M0,0L20,20';
+
+    const { result, unmount, rerender } = renderHook(
+      ({ path }) =>
+        usePathTransition({
+          currentPath: path,
+        }),
+      {
+        initialProps: { path: path1 },
+      },
+    );
+
+    // Start animation by changing path (animation stays "in progress")
+    rerender({ path: path2 });
+
+    // Unmount triggers cleanup which cancels the animation
+    unmount();
+
+    expect(cancelMock).toHaveBeenCalled();
+    // After cancellation, animatedPath should have snapped to the target (path2)
+    // rather than being stuck at an intermediate interpolated value
+    expect(result.current.get()).toBe(path2);
   });
 
   it('should cleanup animation on unmount', () => {

@@ -1882,39 +1882,419 @@ function ForecastAssetPrice() {
     );
   });
 
-  const CustomScrubber = memo(() => {
-    const { highlight } = useHighlightContext();
-    const isHighlighting = highlight.length > 0 && highlight[0]?.dataIndex !== null;
-    // We need a fade in animation for the Scrubber
+  const Example = memo(() => {
+    const defaultHighlight = useMemo(
+      () => [{ dataIndex: currentIndex, seriesId: null }],
+      [currentIndex],
+    );
+    const [highlight, setHighlight] = useState(defaultHighlight);
+    const [isScrubbing, setIsScrubbing] = useState(false);
+
+    const handleHighlightChange = useCallback(
+      (items) => {
+        const isActive = items.length > 0;
+        setIsScrubbing(isActive);
+        setHighlight(isActive ? items : defaultHighlight);
+      },
+      [defaultHighlight],
+    );
+
     return (
-      <m.g
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.15, delay: 0.35 }}
+      <CartesianChart
+        enableHighlighting
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        highlight={highlight}
+        maxWidth={512}
+        onHighlightChange={handleHighlightChange}
+        series={[{ id: 'price', data, color: assets.btc.color }]}
+        style={{ margin: '0 auto' }}
       >
-        <g style={{ opacity: isHighlighting ? 1 : 0 }}>
-          <Scrubber hideOverlay />
-        </g>
-        <g style={{ opacity: isHighlighting ? 0 : 1 }}>
-          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
-        </g>
-      </m.g>
+        <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
+        <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
+        <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
+        <Scrubber hideLine={!isScrubbing} hideOverlay />
+      </CartesianChart>
     );
   });
 
-  return (
-    <CartesianChart
-      enableHighlighting
-      height={{ base: 200, tablet: 225, desktop: 250 }}
-      maxWidth={512}
-      series={[{ id: 'price', data, color: assets.btc.color }]}
-      style={{ margin: '0 auto' }}
-    >
-      <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
-      <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
-      <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
-      <CustomScrubber />
-    </CartesianChart>
+  return <Example />;
+}
+```
+
+### Highlighted Line Segments
+
+You can use `gradient` with dynamic stops to highlight specific segments of a line based on scrubber position.
+
+```jsx live
+function HighlightLineSegments() {
+  const prices = useMemo(
+    () => [...btcCandles].reverse().map((candle) => parseFloat(candle.close)),
+    [],
   );
+
+  const [scrubberPosition, setScrubberPosition] = useState(undefined);
+
+  const handleHighlightChange = useCallback((items) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
+  // Calculate which month (~30-day segment) the scrubber is in
+  const dataPointsPerMonth = 30;
+  const currentMonth =
+    scrubberPosition !== undefined ? Math.floor(scrubberPosition / dataPointsPerMonth) : undefined;
+
+  const monthStart = currentMonth !== undefined ? currentMonth * dataPointsPerMonth : undefined;
+  const monthEnd =
+    currentMonth !== undefined
+      ? Math.min((currentMonth + 1) * dataPointsPerMonth - 1, prices.length - 1)
+      : undefined;
+
+  // Create gradient to highlight the current month
+  const gradient = useMemo(() => {
+    const color = assets.btc.color;
+
+    if (monthStart === undefined || monthEnd === undefined) {
+      return {
+        axis: 'x',
+        stops: [
+          { offset: 0, color, opacity: 1 },
+          { offset: prices.length - 1, color, opacity: 1 },
+        ],
+      };
+    }
+
+    const stops = [];
+    if (monthStart > 0) {
+      stops.push({ offset: 0, color, opacity: 0.25 });
+      stops.push({ offset: monthStart, color, opacity: 0.25 });
+    }
+    stops.push({ offset: monthStart, color, opacity: 1 });
+    stops.push({ offset: monthEnd, color, opacity: 1 });
+    if (monthEnd < prices.length - 1) {
+      stops.push({ offset: monthEnd, color, opacity: 0.25 });
+      stops.push({ offset: prices.length - 1, color, opacity: 0.25 });
+    }
+
+    return { axis: 'x', stops };
+  }, [monthStart, monthEnd, prices.length]);
+
+  return (
+    <LineChart
+      enableHighlighting
+      animate={false}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      onHighlightChange={handleHighlightChange}
+      series={[{ id: 'btc', data: prices, gradient }]}
+      style={{ outlineColor: assets.btc.color }}
+    >
+      <Scrubber hideOverlay seriesIds={[]} />
+    </LineChart>
+  );
+}
+```
+
+### Adaptive Detail
+
+You can show sampled data at rest for performance and switch to full-resolution data when the user begins scrubbing, providing an adaptive level of detail.
+
+```jsx live
+function AdaptiveDetail() {
+  const BTCTab: TabComponent = memo(
+    forwardRef(
+      ({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
+        const { activeTab } = useTabsContext();
+        const isActive = activeTab?.id === props.id;
+
+        return (
+          <SegmentedTab
+            ref={ref}
+            label={
+              <Text
+                font="label1"
+                style={{
+                  transition: 'color 0.2s ease',
+                  color: isActive ? assets.btc.color : undefined,
+                }}
+              >
+                {label}
+              </Text>
+            }
+            {...props}
+          />
+        );
+      },
+    ),
+  );
+
+  const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
+    <PeriodSelectorActiveIndicator
+      {...props}
+      style={{ ...style, backgroundColor: `${assets.btc.color}1A` }}
+    />
+  ));
+
+  type MemoizedChartProps = {
+    highlight: HighlightedItem[];
+    data: number[];
+    isScrubbing: boolean;
+    onHighlightChange: (items: HighlightedItem[]) => void;
+    scrubberLabel: (index: number) => string;
+  };
+
+  const chartTransition = useMemo(() => ({ duration: 0.15 }), []);
+  const chartYAxis = useMemo(
+    () => ({
+      range: ({ min, max }) => ({ min: min + 8, max: max - 8 }),
+    }),
+    [],
+  );
+
+  const MemoizedChart = memo(
+    ({ highlight, data, isScrubbing, onHighlightChange, scrubberLabel }: MemoizedChartProps) => {
+      return (
+        <LineChart
+          enableHighlighting
+          height={{ base: 200, tablet: 250, desktop: 300 }}
+          highlight={highlight}
+          onHighlightChange={onHighlightChange}
+          series={[
+            {
+              id: 'btc',
+              data: data,
+              color: assets.btc.color,
+            },
+          ]}
+          strokeWidth={isScrubbing ? 2 : 4}
+          style={{ outlineColor: assets.btc.color }}
+          transition={chartTransition}
+          yAxis={chartYAxis}
+        >
+          <Scrubber label={scrubberLabel} seriesIds={[]} />
+        </LineChart>
+      );
+    },
+  );
+
+  const AdaptiveDetailChart = memo(() => {
+    const tabs = useMemo(
+      () => [
+        { id: 'hour', label: '1H' },
+        { id: 'day', label: '1D' },
+        { id: 'week', label: '1W' },
+        { id: 'month', label: '1M' },
+        { id: 'year', label: '1Y' },
+        { id: 'all', label: 'All' },
+      ],
+      [],
+    );
+    const [timePeriod, setTimePeriod] = useState(tabs[0]);
+    const [highlight, setHighlight] = useState([]);
+    const [isInteracting, setIsInteracting] = useState(false);
+    const isScrubbing = isInteracting;
+
+    const sparklineTimePeriodData = useMemo(() => {
+      return sparklineInteractiveData[timePeriod.id];
+    }, [timePeriod]);
+
+    const fullDataValues = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.value);
+    }, [sparklineTimePeriodData]);
+
+    const fullDataTimestamps = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.date);
+    }, [sparklineTimePeriodData]);
+
+    const samplePointCount = useMemo(() => {
+      switch (timePeriod.id) {
+        case 'hour':
+        case 'day':
+          return 24;
+        case 'week':
+          return 32;
+        case 'month':
+          return 40;
+        case 'year':
+        case 'all':
+        default:
+          return 48;
+      }
+    }, [timePeriod.id]);
+
+    const sampledDataWithTimestamps = useMemo(() => {
+      const values = fullDataValues;
+      const timestamps = fullDataTimestamps;
+
+      if (values.length <= samplePointCount) {
+        return { values, timestamps };
+      }
+
+      const step = values.length / samplePointCount;
+      const sampledValues = [];
+      const sampledTimestamps = [];
+
+      for (let i = 0; i < samplePointCount; i++) {
+        const idx = Math.floor(i * step);
+        sampledValues.push(values[idx]);
+        sampledTimestamps.push(timestamps[idx]);
+      }
+
+      sampledValues[sampledValues.length - 1] = values[values.length - 1];
+      sampledTimestamps[sampledTimestamps.length - 1] = timestamps[timestamps.length - 1];
+
+      return { values: sampledValues, timestamps: sampledTimestamps };
+    }, [fullDataValues, fullDataTimestamps, samplePointCount]);
+
+    const displayData = useMemo(() => {
+      return isScrubbing ? fullDataValues : sampledDataWithTimestamps.values;
+    }, [isScrubbing, fullDataValues, sampledDataWithTimestamps.values]);
+
+    const displayTimestamps = useMemo(() => {
+      return isScrubbing ? fullDataTimestamps : sampledDataWithTimestamps.timestamps;
+    }, [isScrubbing, fullDataTimestamps, sampledDataWithTimestamps.timestamps]);
+
+    const isInteractingRef = useRef(isInteracting);
+    isInteractingRef.current = isInteracting;
+    const sampledCountRef = useRef(sampledDataWithTimestamps.values.length);
+    sampledCountRef.current = sampledDataWithTimestamps.values.length;
+    const fullCountRef = useRef(fullDataValues.length);
+    fullCountRef.current = fullDataValues.length;
+
+    const handleHighlightChange = useCallback((items) => {
+      const item = items[0];
+      if (item?.dataIndex !== null && item?.dataIndex !== undefined) {
+        if (!isInteractingRef.current) {
+          const sampledCount = sampledCountRef.current;
+          const fullCount = fullCountRef.current;
+          const proportion = item.dataIndex / (sampledCount - 1);
+          const fullIndex = Math.round(proportion * (fullCount - 1));
+
+          setIsInteracting(true);
+          setHighlight([{ dataIndex: fullIndex, seriesId: null }]);
+        } else {
+          setHighlight(items);
+        }
+      } else {
+        setIsInteracting(false);
+        setHighlight([]);
+      }
+    }, []);
+
+    const onPeriodChange = useCallback(
+      (period) => {
+        setTimePeriod(period || tabs[0]);
+        setIsInteracting(false);
+        setHighlight([]);
+      },
+      [tabs],
+    );
+
+    const priceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }),
+      [],
+    );
+
+    const formatPrice = useCallback(
+      (price) => {
+        return priceFormatter.format(price);
+      },
+      [priceFormatter],
+    );
+
+    const formatDate = useCallback((date, periodId) => {
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      switch (periodId) {
+        case 'hour':
+        case 'day':
+          return time;
+        case 'week': {
+          const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+          return `${dayOfWeek} ${time}`;
+        }
+        case 'month':
+        case 'year':
+          return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+          });
+        case 'all':
+        default:
+          return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          });
+      }
+    }, []);
+
+    const scrubberLabel = useCallback(
+      (index) => {
+        return formatDate(displayTimestamps[index], timePeriod.id);
+      },
+      [displayTimestamps, formatDate, timePeriod.id],
+    );
+
+    const highlightedIndex = highlight[0]?.dataIndex;
+    const startPrice = fullDataValues[0];
+    const displayPrice = useMemo(() => {
+      if (isScrubbing && highlightedIndex !== null && highlightedIndex !== undefined) {
+        return fullDataValues[highlightedIndex];
+      }
+      return fullDataValues[fullDataValues.length - 1];
+    }, [isScrubbing, highlightedIndex, fullDataValues]);
+
+    const difference = displayPrice - startPrice;
+    const percentChange = (difference / startPrice) * 100;
+    const trendColor = difference >= 0 ? 'fgPositive' : 'fgNegative';
+
+    return (
+      <VStack gap={2}>
+        <HStack alignItems="center" gap={2}>
+          <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+          <VStack gap={0.5}>
+            <Text font="title3">Bitcoin</Text>
+            <HStack alignItems="center" gap={1}>
+              <Text font="title2">{formatPrice(displayPrice)}</Text>
+              <HStack alignItems="center" gap={0.5}>
+                <Icon
+                  color={trendColor}
+                  name="diagonalUpArrow"
+                  size="xs"
+                  style={{ transform: difference >= 0 ? 'rotate(0deg)' : 'rotate(90deg)' }}
+                />
+                <Text color={trendColor} font="body">
+                  {formatPrice(Math.abs(difference))} ({Math.abs(percentChange).toFixed(2)}%)
+                </Text>
+              </HStack>
+            </HStack>
+          </VStack>
+        </HStack>
+        <MemoizedChart
+          data={displayData}
+          highlight={highlight}
+          isScrubbing={isScrubbing}
+          onHighlightChange={handleHighlightChange}
+          scrubberLabel={scrubberLabel}
+        />
+        <PeriodSelector
+          TabComponent={BTCTab}
+          TabsActiveIndicatorComponent={BTCActiveIndicator}
+          activeTab={timePeriod}
+          onChange={onPeriodChange}
+          tabs={tabs}
+        />
+      </VStack>
+    );
+  });
+
+  return <AdaptiveDetailChart />;
 }
 ```

@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useCartesianChartContext } from './ChartProvider';
 import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from './utils';
@@ -21,9 +29,21 @@ export type HighlightContextValue = {
    */
   highlight: HighlightedItem[];
   /**
-   * Callback to update the highlight state.
+   * Callback to replace the entire highlight state.
+   * Used by keyboard navigation and external consumers.
    */
   setHighlight: (items: HighlightedItem[]) => void;
+  /**
+   * Merge a partial update into a specific pointer's highlight entry.
+   * Only updates the fields provided, leaving other fields untouched.
+   * Used by bar elements to set/clear seriesId on pointer enter/leave.
+   */
+  updatePointerHighlight: (pointerId: number, partial: Partial<HighlightedItem>) => void;
+  /**
+   * Remove a specific pointer's entry from highlight state.
+   * Used when a pointer leaves the chart or is released.
+   */
+  removePointer: (pointerId: number) => void;
 };
 
 const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
@@ -77,9 +97,11 @@ export type HighlightProviderProps = HighlightProps & {
   accessibilityLabel?: string | ((item: HighlightedItem) => string);
 };
 
+const DEFAULT_ITEM: HighlightedItem = { dataIndex: null, seriesId: null };
+
 /**
  * HighlightProvider manages chart highlight state and input handling.
- * It supports multi-touch interactions with configurable scope.
+ * Uses Pointer Events for unified mouse/touch interaction with per-pointer state tracking.
  */
 export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   children,
@@ -108,14 +130,17 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [scopeProp],
   );
 
-  // Determine if we're in controlled mode
-  // [] means "controlled with no highlights" - distinct from undefined (uncontrolled)
   const isControlled = controlledHighlight !== undefined;
 
-  // Internal state for uncontrolled mode
-  const [internalHighlight, setInternalHighlight] = useState<HighlightedItem[]>([]);
+  // Per-pointer state keyed by pointerId.
+  // Each pointer event (mouse or touch) independently tracks its own HighlightedItem entry.
+  // The functional updater bails out (returns prev) when nothing changed, so React
+  // skips re-renders for redundant pointermove events within the same data index.
+  const [pointerMap, setPointerMap] = useState<Record<number, HighlightedItem>>({});
 
-  // Get the current highlight state (controlled or uncontrolled)
+  // Derived array from per-pointer map
+  const internalHighlight = useMemo(() => Object.values(pointerMap), [pointerMap]);
+
   const highlight: HighlightedItem[] = useMemo(() => {
     if (isControlled) {
       return controlledHighlight;
@@ -123,16 +148,50 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     return internalHighlight;
   }, [isControlled, controlledHighlight, internalHighlight]);
 
-  // Update highlight state
-  const setHighlight = useCallback(
-    (newHighlight: HighlightedItem[]) => {
-      if (!isControlled) {
-        setInternalHighlight(newHighlight);
-      }
-      onHighlightChange?.(newHighlight);
+  // Fire onHighlightChange when internal highlight state changes.
+  // Uses ref comparison to skip the initial render and avoid firing when
+  // onHighlightChange itself changes.
+  const prevInternalHighlightRef = useRef(internalHighlight);
+  useEffect(() => {
+    if (prevInternalHighlightRef.current === internalHighlight) return;
+    prevInternalHighlightRef.current = internalHighlight;
+    onHighlightChange?.(internalHighlight);
+  }, [internalHighlight, onHighlightChange]);
+
+  // Full replacement of highlight state.
+  // Used by keyboard navigation, ScrubberContext bridge, and external consumers.
+  const setHighlight = useCallback((items: HighlightedItem[]) => {
+    const newMap: Record<number, HighlightedItem> = {};
+    items.forEach((item, i) => {
+      newMap[i] = item;
+    });
+    setPointerMap(newMap);
+  }, []);
+
+  // Partial merge into a specific pointer's entry.
+  // Only re-renders when the values actually change for that pointer.
+  const updatePointerHighlight = useCallback(
+    (pointerId: number, partial: Partial<HighlightedItem>) => {
+      setPointerMap((prev) => {
+        const current = prev[pointerId] ?? DEFAULT_ITEM;
+        const updated = { ...current, ...partial };
+        if (current.dataIndex === updated.dataIndex && current.seriesId === updated.seriesId) {
+          return prev;
+        }
+        return { ...prev, [pointerId]: updated };
+      });
     },
-    [isControlled, onHighlightChange],
+    [],
   );
+
+  // Remove a pointer entirely from highlight state.
+  const removePointer = useCallback((pointerId: number) => {
+    setPointerMap((prev) => {
+      if (!(pointerId in prev)) return prev;
+      const { [pointerId]: _, ...rest } = prev;
+      return rest;
+    });
+  }, []);
 
   // Convert X coordinate to data index
   const getDataIndexFromX = useCallback(
@@ -159,7 +218,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         }
         return closestIndex;
       } else {
-        // For numeric scales with axis data, find the nearest data point
         const axisData = xAxis.data;
         if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
           const numericData = axisData as number[];
@@ -189,149 +247,54 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     [getXScale, getXAxis],
   );
 
-  // Find series at a given point (for series scope)
-  const getSeriesIdFromPoint = useCallback(
-    (_mouseX: number, _mouseY: number): string | null => {
-      // TODO: Implement series detection based on proximity to data points
-      // For now, return null (series scope not fully implemented)
-      if (!scope.series) return null;
-      return null;
-    },
-    [scope.series],
-  );
+  // --- Pointer Event handlers ---
 
-  // Convert pointer position to HighlightedItem
-  const getHighlightedItemFromPointer = useCallback(
-    (clientX: number, clientY: number, target: SVGSVGElement): HighlightedItem => {
-      const rect = target.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-
-      const dataIndex = scope.dataIndex ? getDataIndexFromX(x) : null;
-      const seriesId = scope.series ? getSeriesIdFromPoint(x, y) : null;
-
-      return { dataIndex, seriesId };
-    },
-    [scope.dataIndex, scope.series, getDataIndexFromX, getSeriesIdFromPoint],
-  );
-
-  // Track active pointers for multi-touch
-  const activePointersRef = React.useRef<Map<number, { clientX: number; clientY: number }>>(
-    new Map(),
-  );
-
-  // Handle pointer move (mouse - single pointer)
-  const handlePointerMove = useCallback(
-    (clientX: number, clientY: number, target: SVGSVGElement) => {
-      if (!enabled || !series || series.length === 0) return;
-
-      const newItem = getHighlightedItemFromPointer(clientX, clientY, target);
-
-      // When series scope is enabled, preserve the existing seriesId
-      const currentSeriesId = scope.series ? highlight[0]?.seriesId : null;
-      const effectiveItem = {
-        ...newItem,
-        seriesId: currentSeriesId ?? newItem.seriesId,
-      };
-
-      if (
-        highlight.length !== 1 ||
-        highlight[0]?.dataIndex !== effectiveItem.dataIndex ||
-        highlight[0]?.seriesId !== effectiveItem.seriesId
-      ) {
-        setHighlight([effectiveItem]);
-      }
-    },
-    [enabled, series, scope.series, getHighlightedItemFromPointer, highlight, setHighlight],
-  );
-
-  // Handle multi-pointer update (touch)
-  const updateMultiPointerState = useCallback(
-    (target: SVGSVGElement) => {
-      const items: HighlightedItem[] = Array.from(activePointersRef.current.values()).map(
-        (pointer) => getHighlightedItemFromPointer(pointer.clientX, pointer.clientY, target),
-      );
-
-      setHighlight(items);
-    },
-    [getHighlightedItemFromPointer, setHighlight],
-  );
-
-  // Mouse event handlers
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      const target = event.currentTarget as SVGSVGElement;
-      handlePointerMove(event.clientX, event.clientY, target);
-    },
-    [handlePointerMove],
-  );
-
-  const handleMouseLeave = useCallback(() => {
-    if (!enabled) return;
-    setHighlight([]);
-  }, [enabled, setHighlight]);
-
-  // Touch event handlers
-  const handleTouchStart = useCallback(
-    (event: TouchEvent) => {
-      if (!enabled || !event.touches.length) return;
-
-      const target = event.currentTarget as SVGSVGElement;
-
-      // Track all touches
-      for (let i = 0; i < event.touches.length; i++) {
-        const touch = event.touches[i];
-        activePointersRef.current.set(touch.identifier, {
-          clientX: touch.clientX,
-          clientY: touch.clientY,
-        });
-      }
-      updateMultiPointerState(target);
-    },
-    [enabled, updateMultiPointerState],
-  );
-
-  const handleTouchMove = useCallback(
-    (event: TouchEvent) => {
-      if (!enabled || !event.touches.length) return;
-      event.preventDefault(); // Prevent scrolling while interacting
-
-      const target = event.currentTarget as SVGSVGElement;
-
-      // Update all touches
-      for (let i = 0; i < event.touches.length; i++) {
-        const touch = event.touches[i];
-        activePointersRef.current.set(touch.identifier, {
-          clientX: touch.clientX,
-          clientY: touch.clientY,
-        });
-      }
-      updateMultiPointerState(target);
-    },
-    [enabled, updateMultiPointerState],
-  );
-
-  const handleTouchEnd = useCallback(
-    (event: TouchEvent) => {
+  const handlePointerDown = useCallback(
+    (event: PointerEvent) => {
       if (!enabled) return;
-
-      // Remove ended touches
-      for (let i = 0; i < event.changedTouches.length; i++) {
-        const touch = event.changedTouches[i];
-        activePointersRef.current.delete(touch.identifier);
-      }
-
-      if (activePointersRef.current.size === 0) {
-        setHighlight([]);
-      } else {
-        const target = event.currentTarget as SVGSVGElement;
-        updateMultiPointerState(target);
+      // Release pointer capture so pointerenter/pointerleave fire on bar elements
+      // as the touch drags across them (same technique used by MUI X Charts).
+      if (event.target instanceof Element) {
+        try {
+          event.target.releasePointerCapture(event.pointerId);
+        } catch {
+          // releasePointerCapture throws if the element doesn't have capture — safe to ignore
+        }
       }
     },
-    [enabled, setHighlight, updateMultiPointerState],
+    [enabled],
   );
 
-  // Keyboard navigation handler
+  const handlePointerMove = useCallback(
+    (event: PointerEvent) => {
+      if (!enabled || !series || series.length === 0) return;
+      const svg = event.currentTarget as SVGSVGElement;
+      const rect = svg.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const dataIndex = scope.dataIndex ? getDataIndexFromX(x) : null;
+      updatePointerHighlight(event.pointerId, { dataIndex });
+    },
+    [enabled, series, scope.dataIndex, getDataIndexFromX, updatePointerHighlight],
+  );
+
+  const handlePointerUp = useCallback(
+    (event: PointerEvent) => {
+      if (!enabled) return;
+      removePointer(event.pointerId);
+    },
+    [enabled, removePointer],
+  );
+
+  const handlePointerLeave = useCallback(
+    (event: PointerEvent) => {
+      if (!enabled) return;
+      removePointer(event.pointerId);
+    },
+    [enabled, removePointer],
+  );
+
+  // --- Keyboard navigation ---
+
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (!enabled) return;
@@ -343,7 +306,6 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
 
       const isBand = isCategoricalScale(xScale);
 
-      // Determine navigation bounds
       let minIndex: number;
       let maxIndex: number;
 
@@ -363,11 +325,10 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         }
       }
 
-      const currentItem = highlight[0] ?? { dataIndex: null, seriesId: null };
+      const currentItem = highlight[0] ?? DEFAULT_ITEM;
       const currentIndex = currentItem.dataIndex ?? minIndex;
       const dataRange = maxIndex - minIndex;
 
-      // Multi-step jump when shift is held (10% of data range, minimum 1, maximum 10)
       const multiSkip = event.shiftKey;
       const stepSize = multiSkip ? Math.min(10, Math.max(1, Math.floor(dataRange * 0.1))) : 1;
 
@@ -414,56 +375,53 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     setHighlight([]);
   }, [enabled, highlight, setHighlight]);
 
-  // Attach event listeners to SVG element
+  // --- Attach event listeners ---
+
   useEffect(() => {
     if (!svgRef?.current || !enabled) return;
 
     const svg = svgRef.current;
 
-    svg.addEventListener('mousemove', handleMouseMove);
-    svg.addEventListener('mouseleave', handleMouseLeave);
-    svg.addEventListener('touchstart', handleTouchStart, { passive: false });
-    svg.addEventListener('touchmove', handleTouchMove, { passive: false });
-    svg.addEventListener('touchend', handleTouchEnd);
-    svg.addEventListener('touchcancel', handleTouchEnd);
+    svg.addEventListener('pointerdown', handlePointerDown);
+    svg.addEventListener('pointermove', handlePointerMove);
+    svg.addEventListener('pointerup', handlePointerUp);
+    svg.addEventListener('pointercancel', handlePointerUp);
+    svg.addEventListener('pointerleave', handlePointerLeave);
     svg.addEventListener('keydown', handleKeyDown);
     svg.addEventListener('blur', handleBlur);
 
     return () => {
-      svg.removeEventListener('mousemove', handleMouseMove);
-      svg.removeEventListener('mouseleave', handleMouseLeave);
-      svg.removeEventListener('touchstart', handleTouchStart);
-      svg.removeEventListener('touchmove', handleTouchMove);
-      svg.removeEventListener('touchend', handleTouchEnd);
-      svg.removeEventListener('touchcancel', handleTouchEnd);
+      svg.removeEventListener('pointerdown', handlePointerDown);
+      svg.removeEventListener('pointermove', handlePointerMove);
+      svg.removeEventListener('pointerup', handlePointerUp);
+      svg.removeEventListener('pointercancel', handlePointerUp);
+      svg.removeEventListener('pointerleave', handlePointerLeave);
       svg.removeEventListener('keydown', handleKeyDown);
       svg.removeEventListener('blur', handleBlur);
     };
   }, [
     svgRef,
     enabled,
-    handleMouseMove,
-    handleMouseLeave,
-    handleTouchStart,
-    handleTouchMove,
-    handleTouchEnd,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+    handlePointerLeave,
     handleKeyDown,
     handleBlur,
   ]);
 
-  // Update accessibility label when highlight changes
+  // --- Accessibility ---
+
   useEffect(() => {
     if (!svgRef?.current || !accessibilityLabel) return;
 
     const svg = svgRef.current;
 
-    // If it's a static string, always use it
     if (typeof accessibilityLabel === 'string') {
       svg.setAttribute('aria-label', accessibilityLabel);
       return;
     }
 
-    // If it's a function, use it for dynamic labels during interaction
     if (!enabled) return;
 
     const currentItem = highlight[0];
@@ -475,18 +433,21 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     }
   }, [svgRef, enabled, highlight, accessibilityLabel]);
 
+  // --- Context values ---
+
   const contextValue: HighlightContextValue = useMemo(
     () => ({
       enabled,
       scope,
       highlight,
       setHighlight,
+      updatePointerHighlight,
+      removePointer,
     }),
-    [enabled, scope, highlight, setHighlight],
+    [enabled, scope, highlight, setHighlight, updatePointerHighlight, removePointer],
   );
 
-  // Provide ScrubberContext for backwards compatibility with Scrubber component
-  // Derive scrubberPosition from first highlighted item's dataIndex
+  // ScrubberContext bridge for backwards compatibility
   const scrubberPosition = useMemo(() => {
     if (!enabled) return undefined;
     return highlight[0]?.dataIndex ?? undefined;

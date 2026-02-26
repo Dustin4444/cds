@@ -71,6 +71,11 @@ export type BarBaseProps = {
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
+  /**
+   * Whether non-highlighted bars should fade when highlighting is active.
+   * @default false
+   */
+  fadeOnHighlight?: boolean;
 };
 
 export type BarProps = BarBaseProps & {
@@ -120,6 +125,7 @@ export const Bar = memo<BarProps>(
     roundTop = true,
     roundBottom = true,
     transition,
+    fadeOnHighlight,
   }) => {
     const theme = useTheme();
 
@@ -145,6 +151,7 @@ export const Bar = memo<BarProps>(
         d={barPath}
         dataX={dataX}
         dataY={dataY}
+        fadeOnHighlight={fadeOnHighlight}
         fill={effectiveFill}
         fillOpacity={fillOpacity}
         height={height}

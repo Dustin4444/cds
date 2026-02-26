@@ -5,8 +5,8 @@ import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
-import { type HighlightProps, HighlightProvider } from './HighlightProvider';
 import { CartesianChartProvider } from './ChartProvider';
+import { type HighlightProps, HighlightProvider } from './HighlightProvider';
 import { Legend } from './legend';
 import {
   type AxisConfig,

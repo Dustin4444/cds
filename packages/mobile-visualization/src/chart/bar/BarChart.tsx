@@ -32,6 +32,7 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
     | 'barMinSize'
     | 'stackMinSize'
     | 'transition'
+    | 'fadeOnHighlight'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -96,6 +97,7 @@ export const BarChart = memo(
         barMinSize,
         stackMinSize,
         transition,
+        fadeOnHighlight,
         ...chartProps
       },
       ref,
@@ -183,6 +185,7 @@ export const BarChart = memo(
             barMinSize={barMinSize}
             barPadding={barPadding}
             borderRadius={borderRadius}
+            fadeOnHighlight={fadeOnHighlight}
             fillOpacity={fillOpacity}
             roundBaseline={roundBaseline}
             seriesIds={seriesIds}

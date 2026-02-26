@@ -490,6 +490,416 @@ function MonthlyRewards() {
 };
 ```
 
+## Interaction
+
+Bar charts support the same highlighting system as line charts. Enable highlighting with `enableHighlighting` and listen to changes with `onHighlightChange`.
+
+### Basic Highlighting
+
+Highlighting tracks the data index (x-axis position) as the user moves their pointer across the chart.
+
+```jsx live
+function BasicHighlighting() {
+  const [highlightedIndex, setHighlightedIndex] = useState(null);
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const data = [45, 80, 120, 95, 150, 110, 85];
+
+  const handleHighlightChange = useCallback((items) => {
+    const index = items[0]?.dataIndex ?? null;
+    setHighlightedIndex(index);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text font="body">
+        {highlightedIndex !== null
+          ? `${days[highlightedIndex]}: ${data[highlightedIndex]} visits`
+          : 'Hover or touch to explore'}
+      </Text>
+      <BarChart
+        enableHighlighting
+        showXAxis
+        showYAxis
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onHighlightChange={handleHighlightChange}
+        series={[
+          {
+            id: 'visits',
+            data,
+            color: 'var(--color-accentBoldBlue)',
+          },
+        ]}
+        xAxis={{
+          data: days,
+        }}
+        yAxis={{
+          showGrid: true,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+### With Scrubber
+
+Adding a `Scrubber` component displays a vertical line at the highlighted position, just like in line charts.
+
+```jsx live
+function BarChartWithScrubber() {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  const revenue = [345, 510, 280, 720, 655, 410, 580, 815, 740, 910, 975, 620];
+
+  const tickFormatter = useCallback(
+    (amount) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(amount),
+    [],
+  );
+
+  const scrubberLabel = useCallback(
+    (index) => `${months[index]}: ${tickFormatter(revenue[index])}`,
+    [months, revenue, tickFormatter],
+  );
+
+  return (
+    <BarChart
+      enableHighlighting
+      showXAxis
+      showYAxis
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'revenue',
+          data: revenue,
+          color: 'var(--color-accentBoldGreen)',
+        },
+      ]}
+      xAxis={{
+        data: months,
+      }}
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: tickFormatter,
+        width: 50,
+      }}
+    >
+      <Scrubber accessibilityLabel={scrubberLabel} />
+    </BarChart>
+  );
+}
+```
+
+### Multi-Series with Scrubber
+
+Highlighting works with multiple series. The scrubber shows beacons for each series at the highlighted data index.
+
+```jsx live
+function MultiSeriesHighlighting() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const revenueData = [455, 520, 380, 455, 285, 235];
+  const costData = [270, 425, 190, 380, 210, 150];
+
+  const tickFormatter = useCallback(
+    (amount) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(amount),
+    [],
+  );
+
+  const scrubberLabel = useCallback(
+    (index) =>
+      `${months[index]}: Revenue ${tickFormatter(revenueData[index])}, Cost ${tickFormatter(costData[index])}`,
+    [months, revenueData, costData, tickFormatter],
+  );
+
+  return (
+    <BarChart
+      enableHighlighting
+      showXAxis
+      showYAxis
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: revenueData,
+          color: 'var(--color-accentBoldGreen)',
+        },
+        {
+          id: 'cost',
+          label: 'Cost',
+          data: costData,
+          color: 'var(--color-accentBoldPurple)',
+        },
+      ]}
+      xAxis={{
+        data: months,
+      }}
+      yAxis={{
+        showGrid: true,
+        GridLineComponent: ThinSolidLine,
+        tickLabelFormatter: tickFormatter,
+        width: 50,
+      }}
+    >
+      <Scrubber accessibilityLabel={scrubberLabel} />
+    </BarChart>
+  );
+}
+```
+
+### Controlled Highlighting
+
+You can control the highlight state externally using the `highlight` and `onHighlightChange` props.
+Passing `highlight` puts the chart in controlled mode — useful for synchronizing multiple charts or driving highlight from external UI.
+
+```jsx live
+function ControlledHighlighting() {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const data = [45, 80, 120, 95, 150, 110, 85];
+  const [highlight, setHighlight] = useState([]);
+
+  const handleHighlightChange = useCallback((items) => {
+    setHighlight(items);
+  }, []);
+
+  const highlightedIndex = highlight[0]?.dataIndex ?? null;
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} flexWrap="wrap">
+        {days.map((day, i) => (
+          <Button
+            key={day}
+            size="sm"
+            variant={highlightedIndex === i ? 'primary' : 'secondary'}
+            onClick={() => {
+              if (highlightedIndex === i) {
+                setHighlight([]);
+              } else {
+                setHighlight([{ dataIndex: i, seriesId: null }]);
+              }
+            }}
+          >
+            {day}
+          </Button>
+        ))}
+      </HStack>
+      <BarChart
+        enableHighlighting
+        showXAxis
+        showYAxis
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        highlight={highlight}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onHighlightChange={handleHighlightChange}
+        series={[
+          {
+            id: 'visits',
+            data,
+            color: 'var(--color-accentBoldBlue)',
+          },
+        ]}
+        xAxis={{
+          data: days,
+        }}
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </BarChart>
+    </VStack>
+  );
+}
+```
+
+### Series Scope Highlighting
+
+When `highlightScope` includes `series: true`, hovering individual bars will identify which series is being interacted with.
+The `seriesId` is included in the highlight callback.
+
+```jsx live
+function SeriesScopeHighlighting() {
+  const [info, setInfo] = useState('Hover a bar to see series info');
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  const handleHighlightChange = useCallback(
+    (items) => {
+      const item = items[0];
+      if (item?.dataIndex !== null && item?.dataIndex !== undefined) {
+        const seriesLabel = item.seriesId ? `Series: ${item.seriesId}` : 'No series detected';
+        setInfo(`${months[item.dataIndex]} — ${seriesLabel}`);
+      } else {
+        setInfo('Hover a bar to see series info');
+      }
+    },
+    [months],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text font="body">{info}</Text>
+      <BarChart
+        enableHighlighting
+        showXAxis
+        showYAxis
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        highlightScope={{ dataIndex: true, series: true }}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onHighlightChange={handleHighlightChange}
+        series={[
+          {
+            id: 'revenue',
+            label: 'Revenue',
+            data: [455, 520, 380, 455, 285, 235],
+            color: assets.btc.color,
+          },
+          {
+            id: 'cost',
+            label: 'Cost',
+            data: [270, 425, 190, 380, 210, 150],
+            color: assets.eth.color,
+          },
+        ]}
+        xAxis={{
+          data: months,
+        }}
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </BarChart>
+    </VStack>
+  );
+}
+```
+
+### Fade on Highlight
+
+Set `fadeOnHighlight` to dim non-highlighted bars during interaction. This makes the currently highlighted data index stand out.
+
+```jsx live
+function FadeOnHighlight() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <BarChart
+      enableHighlighting
+      fadeOnHighlight
+      showXAxis
+      showYAxis
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: [455, 520, 380, 455, 285, 235],
+          color: assets.btc.color,
+        },
+        {
+          id: 'cost',
+          label: 'Cost',
+          data: [270, 425, 190, 380, 210, 150],
+          color: assets.eth.color,
+        },
+      ]}
+      xAxis={{
+        data: months,
+      }}
+      yAxis={{
+        showGrid: true,
+      }}
+    />
+  );
+}
+```
+
+When `highlightScope` includes `series: true`, the fade logic also considers which series is highlighted.
+Only the bars matching both the data index and series remain at full opacity.
+
+```jsx live
+function FadeWithSeriesScope() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const [info, setInfo] = useState('Hover a bar to highlight it');
+
+  const handleHighlightChange = useCallback(
+    (items) => {
+      const item = items[0];
+      if (item?.dataIndex !== null && item?.dataIndex !== undefined) {
+        const series = item.seriesId ?? 'none';
+        setInfo(`${months[item.dataIndex]} — Series: ${series}`);
+      } else {
+        setInfo('Hover a bar to highlight it');
+      }
+    },
+    [months],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text font="body">{info}</Text>
+      <BarChart
+        enableHighlighting
+        fadeOnHighlight
+        showXAxis
+        showYAxis
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        highlightScope={{ dataIndex: true, series: true }}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onHighlightChange={handleHighlightChange}
+        series={[
+          {
+            id: 'revenue',
+            label: 'Revenue',
+            data: [455, 520, 380, 455, 285, 235],
+            color: assets.btc.color,
+          },
+          {
+            id: 'cost',
+            label: 'Cost',
+            data: [270, 425, 190, 380, 210, 150],
+            color: assets.eth.color,
+          },
+        ]}
+        xAxis={{
+          data: months,
+        }}
+        yAxis={{
+          showGrid: true,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
 ## Customization
 
 ### Bar Spacing
