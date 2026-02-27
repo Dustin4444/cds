@@ -1,5 +1,5 @@
 import React from 'react';
-// @ts-expect-error -- Fixture intentionally imports Button/IconButton from @coinbase/cds-web to exercise codemod import matching; typings are not validated for fixture sources.
+// @ts-expect-error -- Fixture import mirrors codemod target imports; fixture files are not validating package export typings.
 import { IconButton } from '@coinbase/cds-web';
 
 const iconProps = {
