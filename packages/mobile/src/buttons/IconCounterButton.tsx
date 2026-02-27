@@ -1,5 +1,5 @@
-import React, { forwardRef, memo } from 'react';
-import type { View } from 'react-native';
+import React, { forwardRef, memo, useMemo } from 'react';
+import type { PressableStateCallbackType, StyleProp, TextStyle, View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { IconSize, ValidateProps } from '@coinbase/cds-common/types';
 import { formatCount } from '@coinbase/cds-common/utils/formatCount';
@@ -24,11 +24,20 @@ export type IconCounterButtonBaseProps = {
   count?: number;
   /** Color of the icon */
   color?: ThemeVars.Color;
-  /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+  /** @deprecated Use `styles.icon` or `color` to customize icon color. This prop will be removed in a future major version of CDS. */
   dangerouslySetColor?: string;
 };
 
-export type IconCounterButtonProps = IconCounterButtonBaseProps & PressableProps;
+export type IconCounterButtonProps = IconCounterButtonBaseProps &
+  PressableProps & {
+    /** Custom styles for individual elements of the IconCounterButton component */
+    styles?: {
+      /** Root Pressable element */
+      root?: PressableProps['style'];
+      /** Icon element rendered when `icon` is an icon name */
+      icon?: StyleProp<TextStyle>;
+    };
+  };
 
 export const IconCounterButton = memo(
   forwardRef(function IconCounterButton(
@@ -40,14 +49,31 @@ export const IconCounterButton = memo(
       count = 0,
       color = 'fg',
       dangerouslySetColor,
+      styles,
+      style,
       ...props
     }: IconCounterButtonProps,
     ref: React.ForwardedRef<View>,
   ) {
+    const rootStyleOverride = styles?.root;
+
+    const rootStyle = useMemo<PressableProps['style']>(() => {
+      if (typeof style === 'function' || typeof rootStyleOverride === 'function') {
+        return (state: PressableStateCallbackType) => {
+          const baseStyle = typeof style === 'function' ? style(state) : style;
+          const rootOverride =
+            typeof rootStyleOverride === 'function' ? rootStyleOverride(state) : rootStyleOverride;
+          return [baseStyle, rootOverride];
+        };
+      }
+      return [style, rootStyleOverride];
+    }, [rootStyleOverride, style]);
+
     return (
       <Pressable
         ref={ref}
         background="transparent"
+        style={rootStyle}
         {...(props satisfies ValidateProps<
           typeof props,
           Omit<IconCounterButtonProps, keyof PressableProps>
@@ -61,6 +87,7 @@ export const IconCounterButton = memo(
               dangerouslySetColor={dangerouslySetColor}
               name={icon as IconName}
               size={size}
+              style={styles?.icon}
             />
           ) : (
             icon
