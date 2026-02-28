@@ -164,6 +164,7 @@ function GradientButtonsContent() {
             angle: 90,
           }}
           onClick={onClickConsole}
+          variant="gradient"
         >
           Custom: Blue to Purple
         </Button>
@@ -174,6 +175,7 @@ function GradientButtonsContent() {
             angle: 45,
           }}
           onClick={onClickConsole}
+          variant="gradient"
         >
           Custom: 45° Angle
         </Button>
@@ -189,6 +191,7 @@ function GradientButtonsContent() {
             angle: 90,
           }}
           onClick={onClickConsole}
+          variant="gradient"
         >
           Multi-Color Block Gradient
         </Button>
@@ -288,6 +291,7 @@ function DifferentGradientStyles() {
           angle: 90,
         }}
         onClick={onClickConsole}
+        variant="gradient"
       >
         Rainbow Gradient
       </Button>

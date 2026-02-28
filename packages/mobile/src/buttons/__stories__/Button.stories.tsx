@@ -21,33 +21,33 @@ const GradientButtonExamples = () => {
   return (
     <>
       <Example title="Theme Gradient Presets">
-        <Button color="fgInverse" gradient="brand" onPress={() => {}}>
+        <Button color="fgInverse" gradient="brand" onPress={() => {}} variant="gradient">
           Brand Preset
         </Button>
 
-        <Button color="fgInverse" gradient="premium" onPress={() => {}}>
+        <Button color="fgInverse" gradient="premium" onPress={() => {}} variant="gradient">
           Premium Preset
         </Button>
 
-        <Button color="fgInverse" gradient="positive" onPress={() => {}}>
+        <Button color="fgInverse" gradient="positive" onPress={() => {}} variant="gradient">
           Positive Preset
         </Button>
 
-        <Button color="fgInverse" gradient="negative" onPress={() => {}}>
+        <Button color="fgInverse" gradient="negative" onPress={() => {}} variant="gradient">
           Negative Preset
         </Button>
 
-        <Button color="fgInverse" gradient="primary" onPress={() => {}}>
+        <Button color="fgInverse" gradient="primary" onPress={() => {}} variant="gradient">
           Primary Preset
         </Button>
       </Example>
 
       <Example title="Theme Gradient Presets (Block)">
-        <Button block color="fgInverse" gradient="brand" onPress={() => {}}>
+        <Button block color="fgInverse" gradient="brand" onPress={() => {}} variant="gradient">
           Full Width Brand Gradient
         </Button>
 
-        <Button block color="fgInverse" gradient="premium" onPress={() => {}}>
+        <Button block color="fgInverse" gradient="premium" onPress={() => {}} variant="gradient">
           Full Width Premium Gradient
         </Button>
 
@@ -57,6 +57,7 @@ const GradientButtonExamples = () => {
           gradient="positive"
           onPress={() => {}}
           startIcon="checkmark"
+          variant="gradient"
         >
           Positive with Icon
         </Button>
@@ -70,6 +71,7 @@ const GradientButtonExamples = () => {
             angle: 90,
           }}
           onPress={() => {}}
+          variant="gradient"
         >
           Custom Warning Gradient
         </Button>
@@ -86,6 +88,7 @@ const GradientButtonExamples = () => {
             angle: 45,
           }}
           onPress={() => {}}
+          variant="gradient"
         >
           Multi-color Custom Gradient
         </Button>

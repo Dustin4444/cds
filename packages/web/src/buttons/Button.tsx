@@ -124,11 +124,13 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       /**
        * Toggle design and visual variants.
        *
-       * When using `variant="gradient"`, you must specify gradient styles via one of:
+       * For gradient buttons, set `variant="gradient"` along with one of:
        * - `gradient` prop with a theme preset name (e.g., "brand", "primary")
        * - `gradientConfig` prop with a custom config object (e.g., `{ colors: ['#0052FF', '#7B3FE4'], angle: 90 }`)
        * - `blendStyles.backgroundGradient` for state-based gradients (hover/pressed/disabled)
        * - `style={{ backgroundImage: '...' }}` for radial, conic, or other advanced gradients
+       *
+       * Note: gradient/gradientConfig props are ignored unless variant="gradient" is set.
        *
        * @default primary
        */
@@ -171,6 +173,16 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
        * @default 1
        */
       numberOfLines?: number;
+      /**
+       * Theme gradient preset name. Only applied when `variant="gradient"`.
+       * @example gradient="brand"
+       */
+      gradient?: PressableBaseProps['gradient'];
+      /**
+       * Custom gradient configuration. Only applied when `variant="gradient"`.
+       * @example gradientConfig={{ colors: ['#0052FF', '#7B3FE4'], angle: 90 }}
+       */
+      gradientConfig?: PressableBaseProps['gradientConfig'];
     }
 >;
 
@@ -191,7 +203,7 @@ export const Button: ButtonComponent = memo(
         as,
         gradient,
         gradientConfig,
-        variant = gradient || gradientConfig ? 'gradient' : 'primary',
+        variant = 'primary',
         loading,
         transparent,
         block,
@@ -231,6 +243,7 @@ export const Button: ButtonComponent = memo(
       const Component = (as ?? buttonDefaultElement) satisfies React.ElementType;
       const iconSize = compact ? 's' : 'm';
       const hasIcon = Boolean(startIcon ?? endIcon);
+      const isGradientVariant = variant === 'gradient';
 
       const variantMap = transparent ? transparentVariants : variants;
       const variantStyle = variantMap[variant];
@@ -265,8 +278,8 @@ export const Button: ButtonComponent = memo(
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
-          gradient={gradient}
-          gradientConfig={gradientConfig}
+          gradient={isGradientVariant ? gradient : undefined}
+          gradientConfig={isGradientVariant ? gradientConfig : undefined}
           height={height}
           loading={loading}
           margin={margin}

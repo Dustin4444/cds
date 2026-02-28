@@ -16,7 +16,7 @@ const GradientBox = (props: GradientBoxProps) => (
 describe('GradientBox', () => {
   it('renders SVG gradient with colors', async () => {
     render(
-      <GradientBox gradient={{ colors: ['#0052FF', '#7B43D9'] }} testID="parent">
+      <GradientBox gradientConfig={{ colors: ['#0052FF', '#7B43D9'] }} testID="parent">
         <Text>Child</Text>
       </GradientBox>,
     );
@@ -28,7 +28,7 @@ describe('GradientBox', () => {
 
   it('renders SVG gradient with custom angle', async () => {
     render(
-      <GradientBox gradient={{ angle: 90, colors: ['#FF6B6B', '#4ECDC4'] }} testID="parent">
+      <GradientBox gradientConfig={{ angle: 90, colors: ['#FF6B6B', '#4ECDC4'] }} testID="parent">
         <Text>Child</Text>
       </GradientBox>,
     );
@@ -40,7 +40,7 @@ describe('GradientBox', () => {
 
   it('renders children correctly', async () => {
     render(
-      <GradientBox gradient={{ colors: ['#0052FF', '#7B43D9'] }} testID="parent">
+      <GradientBox gradientConfig={{ colors: ['#0052FF', '#7B43D9'] }} testID="parent">
         <Text testID="child">Child Content</Text>
       </GradientBox>,
     );
@@ -55,7 +55,7 @@ describe('GradientBox', () => {
       <GradientBox
         bordered
         borderRadius={200}
-        gradient={{ colors: ['#0052FF', '#7B43D9'] }}
+        gradientConfig={{ colors: ['#0052FF', '#7B43D9'] }}
         padding={2}
         testID="parent"
       >
@@ -74,7 +74,7 @@ describe('GradientBox', () => {
 
   it('sets overflow hidden for gradient clipping', async () => {
     render(
-      <GradientBox gradient={{ colors: ['#0052FF', '#7B43D9'] }} testID="parent">
+      <GradientBox gradientConfig={{ colors: ['#0052FF', '#7B43D9'] }} testID="parent">
         <Text>Child</Text>
       </GradientBox>,
     );

@@ -40,9 +40,17 @@ export const styles = StyleSheet.create({
 
 export type ButtonBaseProps = SharedProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  PressableBaseProps & {
+  Omit<PressableBaseProps, 'gradient' | 'gradientConfig'> & {
     /**
      * Toggle design and visual variants.
+     *
+     * For gradient buttons, set `variant="gradient"` along with one of:
+     * - `gradient` prop with a theme preset name (e.g., "brand", "primary")
+     * - `gradientConfig` prop with a custom config object (e.g., `{ colors: ['#0052FF', '#7B3FE4'], angle: 90 }`)
+     * - `blendStyles.backgroundGradient` for state-based gradients (hover/pressed/disabled)
+     *
+     * Note: gradient/gradientConfig props are ignored unless variant="gradient" is set.
+     *
      * @default primary
      */
     variant?: ButtonVariant;
@@ -84,6 +92,16 @@ export type ButtonBaseProps = SharedProps &
      * @default 1
      */
     numberOfLines?: number;
+    /**
+     * Theme gradient preset name. Only applied when `variant="gradient"`.
+     * @example gradient="brand"
+     */
+    gradient?: PressableBaseProps['gradient'];
+    /**
+     * Custom gradient configuration. Only applied when `variant="gradient"`.
+     * @example gradientConfig={{ colors: ['#0052FF', '#7B3FE4'], angle: 90 }}
+     */
+    gradientConfig?: PressableBaseProps['gradientConfig'];
   };
 
 export type ButtonProps = ButtonBaseProps;
@@ -93,7 +111,7 @@ export const Button = memo(
     {
       gradient,
       gradientConfig,
-      variant = gradient || gradientConfig ? 'gradient' : 'primary',
+      variant = 'primary',
       loading,
       transparent,
       block,
@@ -131,6 +149,7 @@ export const Button = memo(
     const theme = useTheme();
     const iconSize = compact ? 's' : 'm';
     const hasIcon = Boolean(startIcon || endIcon);
+    const isGradientVariant = variant === 'gradient';
 
     const variantMap = transparent ? transparentVariants : variants;
 
@@ -194,8 +213,8 @@ export const Button = memo(
         borderRadius={borderRadius}
         borderWidth={borderWidth}
         feedback={feedback}
-        gradient={gradient}
-        gradientConfig={gradientConfig}
+        gradient={isGradientVariant ? gradient : undefined}
+        gradientConfig={isGradientVariant ? gradientConfig : undefined}
         loading={loading}
         marginEnd={marginEnd}
         marginStart={marginStart}
