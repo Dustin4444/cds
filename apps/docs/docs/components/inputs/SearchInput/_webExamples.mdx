@@ -1,6 +1,10 @@
 ### Basic usage
 
 ```tsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function BasicSearchInput() {
   const [value, setValue] = useState('');
   return (
@@ -23,6 +27,9 @@ function BasicSearchInput() {
 ### Variants
 
 ```tsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function SearchInputVariants() {
   const [value1, setValue1] = useState('');
   const [value2, setValue2] = useState('');
@@ -60,6 +67,8 @@ function SearchInputVariants() {
 ### With Custom End Element
 
 ```tsx live
+import React, { useState } from 'react';
+
 function CustomEndSearchInput() {
   const [value, setValue] = useState('');
   return (

@@ -1,79 +1,103 @@
 ## Default
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle progress={0} size={100} />
   <ProgressCircle progress={0.5} size={100} />
   <ProgressCircle progress={1} size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Thin
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle progress={0} weight="thin" size={100} />
   <ProgressCircle progress={0.5} weight="thin" size={100} />
   <ProgressCircle progress={1} weight="thin" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Semiheavy
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle progress={0} weight="semiheavy" size={100} />
   <ProgressCircle progress={0.5} weight="semiheavy" size={100} />
   <ProgressCircle progress={1} weight="semiheavy" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Heavy
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle progress={0} weight="heavy" size={100} />
   <ProgressCircle progress={0.5} weight="heavy" size={100} />
   <ProgressCircle progress={1} weight="heavy" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## No Text
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle progress={0} hideContent size={25} />
   <ProgressCircle progress={0.5} hideContent size={25} />
   <ProgressCircle progress={1} hideContent size={25} />
-</HStack>
+</HStack>;
 ```
 
 ## Disabled
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle progress={0} disabled size={100} />
   <ProgressCircle progress={0.5} disabled size={100} />
   <ProgressCircle progress={1} disabled size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Colors
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle progress={0.5} color="fgPositive" size={100} />
   <ProgressCircle progress={0.5} color="bgNegative" size={100} />
   <ProgressCircle progress={0.5} color="bgPrimary" size={100} />
   <ProgressCircle progress={0.5} color="fg" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Fill Parent
 
 The progress circle can be dynamically sized to fit its parent. If you drag the browser window smaller or larger then the ProgressCircle will resize accordingly.
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <div style={{ height: '15vw', width: '15vw', minWidth: '60px', minHeight: '60px' }}>
     <ProgressCircle progress={1} />
@@ -84,7 +108,7 @@ The progress circle can be dynamically sized to fit its parent. If you drag the 
   <div style={{ height: '5vw', width: '5vw', minWidth: '60px', minHeight: '60px' }}>
     <ProgressCircle progress={1} />
   </div>
-</HStack>
+</HStack>;
 ```
 
 ## Content Node Customization
@@ -95,7 +119,11 @@ You can override the default content node to display a custom node. Note that th
 
 You can provide an image, such as an asset, as the content node.
 
-```jsx
+```jsx live noPreview
+import { Box } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <ProgressCircle
   progress={1}
   size={56}
@@ -115,14 +143,17 @@ You can provide an image, such as an asset, as the content node.
     </Box>
   }
   weight="thin"
-/>
+/>;
 ```
 
 ### Custom Text Color
 
 The progress circle's default content can be customized to display a custom text color.
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle
     color="fgPrimary"
@@ -136,14 +167,19 @@ The progress circle's default content can be customized to display a custom text
     size={100}
     contentNode={<DefaultProgressCircleContent color="fgPositive" progress={0.4} />}
   />
-</HStack>
+</HStack>;
 ```
 
 ## Custom Styles
 
 The progress circle can be customized with styles.
 
-```jsx
+```jsx live noPreview
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle
     progress={0.4}
@@ -171,14 +207,18 @@ The progress circle can be customized with styles.
     }}
     contentNode={<Icon color="fgPositive" name="circleCheckmark" size="l" />}
   />
-</HStack>
+</HStack>;
 ```
 
 ## Animation
 
 By default, ProgressCircle animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
 
-```tsx
+```tsx live noPreview
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 <HStack gap={2}>
   <VStack gap={1} alignItems="center">
     <Text variant="label2">Normal animation</Text>
@@ -189,14 +229,19 @@ By default, ProgressCircle animates progress changes. Use `disableAnimateOnMount
     <Text variant="label2">Disable animation on mount</Text>
     <ProgressCircle disableAnimateOnMount progress={0.5} size={100} />
   </VStack>
-</HStack>
+</HStack>;
 ```
 
 ### Callbacks
 
 You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressCircle } from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const [animationStatus, setAnimationStatus] = React.useState('Ready');
 

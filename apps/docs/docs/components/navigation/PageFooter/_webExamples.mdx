@@ -1,6 +1,9 @@
 ### Basic usage
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { PageFooter } from '@coinbase/cds-web/page';
+
 function BasicPageFooter() {
   return (
     <PageFooter
@@ -17,6 +20,11 @@ function BasicPageFooter() {
 ### Responsive Layout
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { PageFooter } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ResponsivePageFooter() {
   return (
     <Text color="foregroundMuted" font="caption">
@@ -42,6 +50,10 @@ function ResponsivePageFooter() {
 ### Custom Layout
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { PageFooter } from '@coinbase/cds-web/page';
+
 function CustomLayoutFooter() {
   return (
     <VStack gap={2}>

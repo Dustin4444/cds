@@ -1,17 +1,23 @@
 ### Basic usage
 
 ```tsx live
+import { ContentCell } from '@coinbase/cds-web/cells';
+
 <ContentCell
   spacingVariant="condensed"
   title="Main Title"
   subtitle="Subtitle text"
   description="This is a detailed description of the content that can span multiple lines and will automatically handle overflow."
-/>
+/>;
 ```
 
 ### Spacing variants
 
 ```tsx live
+import { ContentCell } from '@coinbase/cds-web/cells';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <VStack>
   {/* Preferred configuration */}
   <ContentCell
@@ -59,7 +65,7 @@
       },
     }}
   />
-</VStack>
+</VStack>;
 ```
 
 When `spacingVariant="condensed"`, `meta` content is aligend with the accessory.
@@ -67,18 +73,23 @@ When `spacingVariant="condensed"`, `meta` content is aligend with the accessory.
 ### Meta and truncation
 
 ```tsx live
+import { ContentCell } from '@coinbase/cds-web/cells';
+
 <ContentCell
   spacingVariant="condensed"
   title="This is a very long title that wraps to two lines in condensed spacing"
   subtitle="This subtitle truncates to a single line"
   meta="2 days ago"
   description="The title wraps to a second line because condensed spacing is enabled. The subtitle truncates to a single line and meta content is right aligned."
-/>
+/>;
 ```
 
 ### With media and accessory
 
 ```tsx live
+import { ContentCell } from '@coinbase/cds-web/cells';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <ContentCell
   spacingVariant="condensed"
   title="Profile Information"
@@ -91,7 +102,7 @@ When `spacingVariant="condensed"`, `meta` content is aligend with the accessory.
       paddingTop: 'var(--space-0_5)',
     },
   }}
-/>
+/>;
 ```
 
 :::tip
@@ -101,24 +112,28 @@ Adjust the media `paddingTop` so the visual aligns with the text stack.
 ### Compact spacing (legacy)
 
 ```tsx live
+import { ContentCell } from '@coinbase/cds-web/cells';
+
 <ContentCell
   spacingVariant="compact"
   title="Compact Cell"
   subtitle="Reduced spacing"
   description="This cell uses compact spacing for denser layouts."
-/>
+/>;
 ```
 
 ### Selected state
 
 ```tsx live
+import { ContentCell } from '@coinbase/cds-web/cells';
+
 <ContentCell
   spacingVariant="condensed"
   title="Selected Item"
   subtitle="With checkmark"
   description="This cell shows the selected state with a checkmark accessory."
   selected
-/>
+/>;
 ```
 
 ### Loading states
@@ -126,6 +141,8 @@ Adjust the media `paddingTop` so the visual aligns with the text stack.
 The `ContentCellFallback` component provides loading state representations of `ContentCell`. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. Each placeholder can have its width determined by a predefined set of values, which can be selected using the `rectWidthVariant` prop. The web version uses percentage-based widths and custom layouts to match the `ContentCell` structure.
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+
 <VStack gap={3}>
   {/* Basic loading state */}
   <ContentCellFallback spacingVariant="condensed" title subtitle description />
@@ -146,5 +163,5 @@ The `ContentCellFallback` component provides loading state representations of `C
     rectWidthVariant={1} // Select a predefined set of widths for the loading rectangles
     disableRandomRectWidth // Disable random width variations
   />
-</VStack>
+</VStack>;
 ```

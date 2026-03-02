@@ -17,7 +17,10 @@ Use the `onChange` callback to update the `checked` state. This is the primary c
   alt="Slide button"
 />
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -48,7 +51,10 @@ Use the `variant` prop to change the color of the button. The default variant is
   alt="Negative variant slide button"
 />
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -68,7 +74,10 @@ function Example() {
 
 Use the `compact` prop to reduce the height, border-radius and padding of the button:
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -88,7 +97,10 @@ function Example() {
 
 Use the `disabled` prop to prevent interaction. This works for both unchecked and checked states.
 
-```jsx
+```jsx live noPreview
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   return (
     <VStack gap={2}>
@@ -110,7 +122,10 @@ By default, the user must release the handle past the threshold to complete. Set
 
 You can also adjust the threshold via `checkThreshold` (a value from 0 to 1, defaulting to 0.7).
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -139,7 +154,10 @@ If the user releases before the threshold, `onSlideCancel` fires instead, follow
 
 **Important:** Always use `onChange` to manage the `checked` state. The `checked` prop drives the component's `accessibilityLabel` (switching between `uncheckedLabel` and `checkedLabel`), so failing to update it means screen readers won't announce the state change. Use `onSlideComplete` only for supplementary side effects (e.g. analytics, haptic feedback) that don't affect accessible state.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -174,7 +192,11 @@ Use `startUncheckedNode` and `endCheckedNode` to replace the default arrow icon 
   alt="Slide button with custom bell icons on the handle"
 />
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -195,7 +217,11 @@ function Example() {
 
 The `uncheckedLabel` and `checkedLabel` props accept `ReactNode`, so you can pass custom styled text or other components. When using non-string labels, the component uses `accessibilityLabelledBy` to associate the handle with the container element, so ensure your label nodes contain meaningful text content.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -230,7 +256,13 @@ You can fully customize the background and handle by providing your own componen
   alt="Slide button with custom green/red background and handle"
 />
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 
@@ -291,7 +323,10 @@ When providing a custom `SlideButtonHandleComponent`, always spread the incoming
 
 When using `ReactNode` labels instead of strings, the component uses `accessibilityLabelledBy` to link to the container element, so ensure your custom label nodes contain meaningful text.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SlideButton } from '@coinbase/cds-mobile/buttons';
+
 function Example() {
   const [checked, setChecked] = useState(false);
 

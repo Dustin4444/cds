@@ -1,6 +1,8 @@
 ### Basic Usage
 
 ```tsx live
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+
 <RemoteImageGroup>
   <RemoteImage source={assets.eth.imageUrl} />
   <RemoteImage source={assets.eth.imageUrl} />
@@ -8,12 +10,14 @@
   <RemoteImage source={assets.hbar.imageUrl} />
   <RemoteImage source={assets.ltc.imageUrl} />
   <RemoteImage source={assets.uni.imageUrl} />
-</RemoteImageGroup>
+</RemoteImageGroup>;
 ```
 
 ### Max Items
 
 ```tsx live
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+
 <RemoteImageGroup max={4} size={32}>
   <RemoteImage source={assets.eth.imageUrl} />
   <RemoteImage source={assets.btc.imageUrl} />
@@ -21,18 +25,20 @@
   <RemoteImage source={assets.hbar.imageUrl} />
   <RemoteImage source={assets.ltc.imageUrl} />
   <RemoteImage source={assets.uni.imageUrl} />
-</RemoteImageGroup>
+</RemoteImageGroup>;
 ```
 
 ### Different Shapes
 
 ```tsx live
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+
 <RemoteImageGroup shape="circle" size="xxl">
   <RemoteImage shape="squircle" source={squareAssets.human1} />
   <RemoteImage source={assets.sushi.imageUrl} />
   <RemoteImage shape="squircle" source={squareAssets.human2} />
   <RemoteImage source={assets.ltc.imageUrl} />
-</RemoteImageGroup>
+</RemoteImageGroup>;
 ```
 
 ### Different Sizes
@@ -40,6 +46,10 @@
 Use the `size` prop to change the dimensions of the avatars in the group.
 
 ```tsx live
+import { Select } from '@coinbase/cds-web/alpha/select/Select';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+
 function Component() {
   const [size, setSize] = React.useState('m');
   const avatarSizes = ['s', 'm', 'l', 'xl', 'xxl', 'xxxl', 16, 24, 32];
@@ -70,10 +80,12 @@ function Component() {
 Use the `borderWidth` and `borderColor` props to change border style of the images in the group. `borderColor` defaults to `bg` when `borderWidth` is set.
 
 ```tsx live
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+
 <RemoteImageGroup borderWidth={300} max={3}>
   <RemoteImage source={assets.eth.imageUrl} />
   <RemoteImage source={assets.btc.imageUrl} />
   <RemoteImage source={assets.dai.imageUrl} />
   <RemoteImage source={assets.hbar.imageUrl} />
-</RemoteImageGroup>
+</RemoteImageGroup>;
 ```

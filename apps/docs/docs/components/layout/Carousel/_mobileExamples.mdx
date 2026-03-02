@@ -8,7 +8,12 @@ You simply wrap each child in a `CarouselItem` component, and can optionally set
 
 You can also set the `styles` prop to control the styles of the carousel, such as the gap between items.
 
-```jsx
+```jsx live noPreview
+import { ContainedAssetCard } from '@coinbase/cds-mobile/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function MyCarousel() {
   const theme = useTheme();
 
@@ -71,7 +76,14 @@ and want to offset 16px from edge of screen, you could do
 
 :::
 
-```jsx
+```jsx live noPreview
+import { UpsellCard } from '@coinbase/cds-mobile/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { Box } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function DynamicSizingCarousel() {
   const theme = useTheme();
   const windowWidth = Dimensions.get('window').width;
@@ -146,7 +158,9 @@ function DynamicSizingCarousel() {
 You can also use responsive props to change the number of items visible based on the carousel width.
 The carousel below will show per page 1 item on mobile, 2 items on tablet, and 3 items on desktop (based on screen width).
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function ResponsiveSizingCarousel() {
   const theme = useTheme();
   const windowWidth = Dimensions.get('window').width;
@@ -221,7 +235,9 @@ function ResponsiveSizingCarousel() {
 
 Not all carousel items need to be the same size. You can provide CarouselItems of varying widths as well.
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function VariedSizingCarousel() {
   const theme = useTheme();
   const windowWidth = Dimensions.get('window').width;
@@ -317,7 +333,9 @@ function VariedSizingCarousel() {
 You can set the `drag` prop to `snap` (default), `free`, or `none`.
 When set to `snap`, upon release the carousel will snap to either the nearest item or page (depending on `snapMode`).
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function DragCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -354,7 +372,9 @@ You can set the `snapMode` to `page` (default) or `item`.
 When set to `page`, the carousel will automatically group items into pages.
 When set to `item`, the carousel will snap to the nearest item.
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function SquareItemsCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -399,7 +419,9 @@ If you want to have the next item be shown at the edge of the screen, make sure 
 
 :::
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function OverflowCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -435,7 +457,9 @@ Use `autoplay` to allow for automatic page advancement. The default interval is 
 
 It is recommended to use pagination with autoplay so users know how many pages there are, and you should also set `paginationVariant="dot"` to best indicate the active page and progress.
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function AutoplayCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -466,7 +490,9 @@ function AutoplayCarousel() {
 }
 ```
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function CustomIntervalCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -502,7 +528,9 @@ function CustomIntervalCarousel() {
 
 Use `loop` to allow for infinite scrolling.
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function LoopingCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -542,7 +570,14 @@ You need to use `accessibilityLabel` or `accessibilityLabelledBy` props to provi
 
 Similar to web, you are provided the `isVisible` render prop, however it is not necessary to use since mobile users do not have a keyboard.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { UpsellCard } from '@coinbase/cds-mobile/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { Box } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Carousel paginationVariant="dot">
   <CarouselItem id="btc" accessibilityLabel="Bitcoin">
     <SquareAssetCard imageUrl={assets.btc.imageUrl} name={assets.btc.symbol} />
@@ -578,7 +613,7 @@ Similar to web, you are provided the `isVisible` render prop, however it is not 
       />
     )}
   </CarouselItem>
-</Carousel>
+</Carousel>;
 ```
 
 ## Customization
@@ -587,7 +622,16 @@ Similar to web, you are provided the `isVisible` render prop, however it is not 
 
 You can customize the navigation and pagination components of the carousel using the `NavigationComponent` and `PaginationComponent` props. You can also modify the title by providing a ReactNode for the `title` prop.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { Card, UpsellCard } from '@coinbase/cds-mobile/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { Box, HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function CustomComponentsCarousel() {
   function PaginationComponent({ totalPages, activePageIndex, onClickPage, style }) {
     const canGoPrevious = activePageIndex > 0;
@@ -775,7 +819,9 @@ function CustomComponentsCarousel() {
 
 You can use the `styles` props to customize different parts of the carousel.
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem, DefaultCarouselNavigation } from '@coinbase/cds-mobile/carousel';
+
 function CustomStylesCarousel() {
   return (
     <Carousel
@@ -864,7 +910,13 @@ function CustomStylesCarousel() {
 
 You can use `useCarouselAutoplayContext` inside a custom `PaginationComponent` to build your own controls. This example shows a composed layout with pagination and play/pause on the left, and navigation arrows on the right.
 
-```jsx
+```jsx live noPreview
+import React, { useRef } from 'react';
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+
 function ComposedAutoplayCarousel() {
   const carouselRef = useRef(null);
   const theme = useTheme();
@@ -1055,7 +1107,12 @@ function ComposedAutoplayCarousel() {
 
 You can dynamically add and remove items from the carousel.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function DynamicContentCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -1107,7 +1164,9 @@ You can hide the navigation and pagination components of the carousel if desired
 
 Note that this can prevent proper accessibility for the carousel, if carousel items are not focusable. If hiding pagination, it's recommended to ensure that the carousel is navigable by other means.
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+
 function HideNavigationAndPaginationCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
@@ -1143,7 +1202,13 @@ function HideNavigationAndPaginationCarousel() {
 
 You can control the carousel programmatically using a ref. The carousel exposes methods to navigate to specific pages and access the current page index.
 
-```jsx
+```jsx live noPreview
+import React, { useRef, useState } from 'react';
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ImperativeApiCarousel() {
   const theme = useTheme();
   const carouselRef = useRef(null);
@@ -1258,7 +1323,11 @@ function ImperativeApiCarousel() {
 
 You can create smooth pagination animations by customizing the pagination dots. This example shows how to create expanding dots that smoothly transition between active and inactive states.
 
-```jsx
+```jsx live noPreview
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+
 function AnimatedPaginationCarousel() {
   const theme = useTheme();
 
@@ -1339,12 +1408,14 @@ function AnimatedPaginationCarousel() {
 
 You can use the `onChangePage`, `onDragStart`, and `onDragEnd` callbacks to listen for user interaction in the carousel.
 
-```tsx
+```tsx live noPreview
+import { Carousel } from '@coinbase/cds-mobile/carousel';
+
 <Carousel
   onChangePage={(pageIndex: number) => console.log('Page changed', pageIndex)}
   onDragStart={() => console.log('Drag started')}
   onDragEnd={() => console.log('Drag ended')}
 >
   ...
-</Carousel>
+</Carousel>;
 ```

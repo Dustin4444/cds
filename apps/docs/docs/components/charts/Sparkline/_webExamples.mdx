@@ -3,6 +3,10 @@
 The global warning banner is used to communicate important alerts or warnings to users across the entire platform, ensuring universal visibility and building trust.
 
 ```jsx live
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { Sparkline } from '@coinbase/cds-web-visualization/sparkline';
+import { CellMedia, ListCell } from '@coinbase/cds-web/cells';
+
 function Example() {
   const dimensions = { width: 64, height: 20 };
   const path = useSparklinePath({ ...dimensions, data: prices });
@@ -24,6 +28,10 @@ function Example() {
 ### Dynamic path colors
 
 ```jsx live
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { Sparkline } from '@coinbase/cds-web-visualization/sparkline';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   const dimensions = { width: 400, height: 200 };
   const path = useSparklinePath({ ...dimensions, data: prices });
@@ -40,6 +48,10 @@ function Example() {
 ### Dynamic background colors
 
 ```jsx live
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { Sparkline } from '@coinbase/cds-web-visualization/sparkline';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   const dimensions = { width: 400, height: 200 };
   const path = useSparklinePath({ ...dimensions, data: prices });
@@ -58,6 +70,11 @@ function Example() {
 ### y axis scaling
 
 ```jsx live
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { Sparkline } from '@coinbase/cds-web-visualization/sparkline';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const yAxisScalingFactor = 0.2;
   const dimensions = { width: 400, height: 200 };
@@ -76,6 +93,11 @@ function Example() {
 ### Sparkline fill
 
 ```jsx live
+import { useSparklineArea } from '@coinbase/cds-common/visualizations/useSparklineArea';
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { Sparkline, SparklineArea } from '@coinbase/cds-web-visualization/sparkline';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   const dimensions = { width: 400, height: 200 };
   const path = useSparklinePath({ ...dimensions, data: prices });

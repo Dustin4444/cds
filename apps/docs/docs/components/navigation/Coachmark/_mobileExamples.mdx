@@ -1,29 +1,40 @@
 ### Basic usage
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Coachmark } from '@coinbase/cds-mobile/coachmark';
+
 <Coachmark
   title="Welcome!"
   content="This is a Coachmark. Use it to guide users."
   action={<Button onPress={() => {}}>Got it</Button>}
   onClose={() => {}}
-/>
+/>;
 ```
 
 ### With Media
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Coachmark } from '@coinbase/cds-mobile/coachmark';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <Coachmark
   title="Feature Highlight"
   content="You can add media to your Coachmark."
   media={<RemoteImage source={ethBackground} height={150} width="100%" alt="feature" />}
   action={<Button onPress={() => {}}>Next</Button>}
   onClose={() => {}}
-/>
+/>;
 ```
 
 ### With Checkbox
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Coachmark } from '@coinbase/cds-mobile/coachmark';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+
 <Coachmark
   title="Don't show again?"
   content="You can add a checkbox to let users opt out."
@@ -34,5 +45,5 @@
   }
   action={<Button onPress={() => {}}>Close</Button>}
   onClose={() => {}}
-/>
+/>;
 ```

@@ -8,7 +8,17 @@ See the [Migration Guide](#migration-from-legacy-datacard) at the end of this pa
 
 DataCard supports two layouts: `vertical` (stacked) and `horizontal` (side-by-side). Pass visualization components as children.
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const { spectrum } = useTheme();
   const exampleThumbnail = (
@@ -78,7 +88,17 @@ function Example() {
 
 Use `layout="vertical"` for stacked layouts (thumbnail on left, visualization below) or `layout="horizontal"` for side-by-side layouts (header on left, visualization on right).
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage
@@ -137,7 +157,17 @@ function Example() {
 
 Use `titleAccessory` to display supplementary information inline with the title, such as trends, percentages, or status indicators.
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const { spectrum } = useTheme();
   const exampleThumbnail = (
@@ -207,7 +237,18 @@ function Example() {
 
 Use `renderAsPressable` to make the card interactive with `onPress` handler.
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Alert } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const { spectrum } = useTheme();
   const exampleThumbnail = (
@@ -283,7 +324,17 @@ function Example() {
 
 Use `styles` prop to customize specific parts of the card layout.
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage
@@ -349,7 +400,17 @@ function Example() {
 
 DataCards work well in lists or dashboards to display multiple data points.
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const { spectrum } = useTheme();
   const exampleThumbnail = (
@@ -425,7 +486,12 @@ When making DataCard interactive with `renderAsPressable`:
 
 - Add an `accessibilityLabel` to summarize the card's content for VoiceOver users, ensuring all visual text of the card is included in the label (e.g., `accessibilityLabel="ETH Holdings, 45% progress, View details"`)
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 <DataCard
   renderAsPressable
   accessibilityLabel="ETH Holdings, 45% progress, View details"
@@ -448,7 +514,7 @@ When making DataCard interactive with `renderAsPressable`:
       <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
     </ProgressBarWithFixedLabels>
   </Box>
-</DataCard>
+</DataCard>;
 ```
 
 :::warning Avoid Nested Interactive Elements
@@ -475,7 +541,9 @@ When displaying gain or loss percentages in DataCard, be aware of color contrast
 
 **On mobile**, access the theme spectrum via `useTheme()` hook for light mode compatibility:
 
-```jsx
+```jsx live noPreview
+import { Text } from '@coinbase/cds-mobile/typography';
+
 const { spectrum } = useTheme();
 
 {
@@ -493,7 +561,13 @@ const { spectrum } = useTheme();
 </Text>;
 ```
 
-```jsx
+```jsx live noPreview
+import { DataCard } from '@coinbase/cds-mobile/cards';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const { spectrum } = useTheme();
   const exampleThumbnail = (

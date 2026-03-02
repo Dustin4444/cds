@@ -5,6 +5,11 @@ RollingNumber displays changing numeric values with a smooth per-digit roll anim
 Pass a number in the `value` prop. Use the `format` prop for Intl formatting (currency, percent, grouping, compact) instead of pre-formatting the string yourself.
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+
 function Example() {
   const values = [12345.67, 123340.011, 1220340.0123];
   const [valIdx, setValIdx] = useState(0);
@@ -28,6 +33,13 @@ function Example() {
 ## Example Use Case
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Examples() {
   const [price, setPrice] = useState<number>(12345.67);
   const [difference, setDifference] = useState<number>(0);
@@ -103,6 +115,11 @@ function Examples() {
 Use `format` prop for currency, percent, grouping, and compact notation formatting. The `format` prop takes in `Intl.NumberFormat` [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options).
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [value, setValue] = React.useState(92345.67);
   const onNext = () => setValue((v) => v * 13.5);
@@ -147,6 +164,11 @@ function Example() {
 RollingNumber forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout/container props may have no effect—use them judiciously.
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [price, setPrice] = React.useState(9876.54);
   const onNext = () =>
@@ -220,6 +242,11 @@ Customize color and motion. Configure `y` to control the digit roll, and `color`
 - Default: `{ y: { duration: durations.moderate3 / 1000, ease: curves.global }, color: { duration: durations.slow4 / 1000, ease: curves.global } }`
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [price, setPrice] = React.useState(555.55);
   const onNext = () =>
@@ -330,6 +357,11 @@ RollingNumber supports two digit transition styles via the `digitTransitionVaria
 - **`'single'`**: Rolls directly to the new digit without showing intermediates. Direction (up/down) is based on the total value change.
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [price, setPrice] = React.useState(12345.67);
   const [variant, setVariant] = React.useState<'every' | 'single'>('single');
@@ -381,6 +413,11 @@ function Example() {
 ### Variant comparison
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [price, setPrice] = React.useState(98765.43);
 
@@ -429,6 +466,12 @@ The single variant determines scroll direction based on the **total value change
 Attach text or React nodes before/after the number to create rich compositions. If the prefix/suffix is a string, it will pulse color together with the main number.
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const values = [98345.67, 91345.67, 123450.123, 1234512.88];
   const textPrefixes = ['+', '-', ''];
@@ -487,6 +530,10 @@ function Example() {
 ```
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+
 function SubscriptionPriceExample() {
   const [yearly, setYearly] = React.useState(false);
   const price = yearly ? 199 : 19;
@@ -534,6 +581,11 @@ When using React nodes for `prefix`/`suffix`, provide an `accessibilityLabel` or
 Customize the look of each logical section (`i18nPrefix`, `integer`, `fraction`, `i18nSuffix`, `prefix`, `suffix`).
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [price, setPrice] = React.useState(12345.67);
   const onNext = () => {
@@ -584,6 +636,11 @@ function Example() {
 Enable `enableSubscriptNotation` to compactly represent leading zeros in the fractional part.
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const values = [0.0000000001, 0.00009, 0.000012, 0.0000001, 0.000000000000000000000011];
   const [idx, setIdx] = React.useState(0);
@@ -623,6 +680,13 @@ function Example() {
 You can also provide `formattedValue`, and the component will render `formattedValue` directly instead of using the internal formatter. The numeric `value` is still required to drive animations and color pulse.
 
 ```tsx live
+import { prices } from '@coinbase/cds-common/internal/data/prices';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const btcPrices = [
     { value: 98765.43, formattedValue: '¥98,765.43 BTC' },
@@ -688,6 +752,10 @@ Practical demos combining formatting, animation, and interactivity.
 ### Counter
 
 ```tsx live
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+
 function CounterExample() {
   const [count, setCount] = React.useState(0);
   return (
@@ -710,6 +778,12 @@ function CounterExample() {
 ### Countdown
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 function CountDownExample() {
   const pad = (n: number) => String(n).padStart(2, '0');
   const totalSeconds = 5 * 60;
@@ -764,6 +838,12 @@ function CountDownExample() {
 ### Live Auction
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function LiveBiddingExample() {
   const [currentBid, setCurrentBid] = useState(45000);
   const [bidCount, setBidCount] = useState(23);
@@ -829,6 +909,13 @@ function LiveBiddingExample() {
 ### Social Media Statistics
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Text } from '@coinbase/cds-web/typography';
+
 function StatisticsExample() {
   const [views, setViews] = useState(1234567);
   const [likes, setLikes] = useState(89432);

@@ -11,7 +11,12 @@ Use `type` to set the card variant:
 - `upsell`: Primary background, used for promoting features or products. Use `variant="secondary"` buttons.
 - `nudge`: Alternate background, used for encouraging user actions. Use `variant="tertiary"` (transparent) buttons for a less intrusive appearance.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MessagingCard
     type="upsell"
@@ -41,7 +46,7 @@ Use `type` to set the card variant:
     media={<Pictogram dimension="64x64" name="addToWatchlist" />}
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 :::tip Nudge Button Style
@@ -52,7 +57,11 @@ Use transparent buttons (`variant="tertiary"` or `transparent` prop) for nudge c
 
 Use `mediaPlacement` to control the position of media content.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={2}>
   <MessagingCard
     type="nudge"
@@ -70,7 +79,7 @@ Use `mediaPlacement` to control the position of media content.
     media={<Pictogram dimension="48x48" name="addToWatchlist" />}
     mediaPlacement="start"
   />
-</VStack>
+</VStack>;
 ```
 
 ## Upsell Card Styles
@@ -86,7 +95,13 @@ For **custom background colors**, use the recommended approach:
 
 Utilize the default background for general information and non-urgent promotions. Its versatile design is perfect for a broad range of content, providing a subtle yet effective approach to engage users. It's also the most suitable style for Pictogram illustrations.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { Box } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <MessagingCard
   type="upsell"
   background="bgPrimaryWash"
@@ -114,14 +129,17 @@ Utilize the default background for general information and non-urgent promotions
   mediaPlacement="end"
   onDismissButtonPress={() => {}}
   dismissButtonAccessibilityLabel="Dismiss"
-/>
+/>;
 ```
 
 ### Feature Upsell
 
 Ideal for highlighting Coinbase tools, innovative features, and unique functionalities. Choose from our palette of distinct colors to make your Feature Upsell stand out. Each color is carefully selected to grab attention while aligning with the specific nature of the feature being promoted.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function FeatureUpsell() {
   const { spectrum } = useTheme();
   const image = (
@@ -174,7 +192,12 @@ function FeatureUpsell() {
 
 Designed for community-focused messaging. Vibrant colors spark enthusiasm and encourage active participation, fostering a sense of community engagement.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function CommunityUpsell() {
   const { spectrum } = useTheme();
   const cards = [
@@ -224,7 +247,12 @@ function CommunityUpsell() {
 
 Optimal for business products, security features, and functionalities that emphasize trust and reliability, such as Coinbase One and Coinbase Card. Blue and dark backgrounds symbolize stability, trustworthiness, and professionalism.
 
-```jsx
+```jsx live noPreview
+import { Card, MessagingCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ProductUpsell() {
   const { spectrum } = useTheme();
   const cards = [
@@ -286,7 +314,12 @@ function ProductUpsell() {
 
 Specifically tailored for company announcements and policy updates. Its design ensures that important information is conveyed clearly and prominently, ensuring users stay well-informed about the latest developments.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function NewsUpsell() {
   const { spectrum } = useTheme();
   const cards = [{ bg: `rgb(${spectrum.gray100})` }, { bg: `rgb(${spectrum.indigo70})` }];
@@ -333,7 +366,11 @@ function NewsUpsell() {
 
 Use `type="nudge"` for gentle reminders or secondary options. Nudge cards use the alternate background and blend more seamlessly with the page. Pair them with Pictogram illustrations and transparent buttons.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={2}>
   <MessagingCard
     type="nudge"
@@ -355,7 +392,7 @@ Use `type="nudge"` for gentle reminders or secondary options. Nudge cards use th
     media={<Pictogram dimension="48x48" name="derivativesNavigation" />}
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ## Features
@@ -364,7 +401,11 @@ Use `type="nudge"` for gentle reminders or secondary options. Nudge cards use th
 
 Use `onDismissButtonPress` to add a dismiss button.
 
-```jsx
+```jsx live noPreview
+import { Card, MessagingCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function DismissibleCards() {
   const { spectrum } = useTheme();
   return (
@@ -407,7 +448,12 @@ function DismissibleCards() {
 
 Use `tag` to add a label badge.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MessagingCard
     type="upsell"
@@ -435,14 +481,19 @@ Use `tag` to add a label badge.
     media={<Pictogram dimension="48x48" name="key" />}
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ### Actions
 
 Use the `action` prop to add an action button. Pass a string to render a default button with `onActionButtonPress`, or pass a custom React element.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MessagingCard
     type="upsell"
@@ -472,14 +523,19 @@ Use the `action` prop to add an action button. Pass a string to render a default
     media={<Pictogram dimension="64x64" name="wallet" />}
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ### Complete Example
 
 Combine all features in a complete card.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MessagingCard
     type="upsell"
@@ -515,14 +571,22 @@ Combine all features in a complete card.
     media={<Pictogram dimension="64x64" name="giftbox" />}
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ## Interactive Dismissible List
 
 This example shows a list of cards that can be dismissed interactively. Press the dismiss button to remove cards from the list.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function DismissibleCardsList() {
   const { spectrum } = useTheme();
   const cards = [
@@ -615,7 +679,12 @@ function DismissibleCardsList() {
 
 Use `renderAsPressable` with `onPress` for interactive cards.
 
-```jsx
+```jsx live noPreview
+import { Card, MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function InteractiveCards() {
   const { spectrum } = useTheme();
   return (
@@ -658,7 +727,11 @@ function InteractiveCards() {
 
 Use React nodes for custom styled content.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MessagingCard
     type="upsell"
@@ -705,14 +778,18 @@ Use React nodes for custom styled content.
     }
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ## Multiple Cards
 
 Display multiple cards in a carousel.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function MultipleCards() {
   const { spectrum } = useTheme();
   return (
@@ -786,7 +863,11 @@ When you need both `onDismissButtonPress` and want the entire card to be pressab
 - Regular users to tap anywhere on the card
 - Screen reader users to focus on individual interactive elements (action button + dismiss button)
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <MessagingCard
   renderAsPressable
   accessible={false}
@@ -816,7 +897,7 @@ When you need both `onDismissButtonPress` and want the entire card to be pressab
     />
   }
   mediaPlacement="end"
-/>
+/>;
 ```
 
 **Key points:**
@@ -839,7 +920,10 @@ MessagingCard supports custom backgrounds via the `background` prop and, for cus
 
 Replace `NudgeCard` with `MessagingCard` using `type="nudge"`.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
+
 // Before
 <NudgeCard
   title="Title"
@@ -867,7 +951,10 @@ Replace `NudgeCard` with `MessagingCard` using `type="nudge"`.
 
 Replace `UpsellCard` with `MessagingCard` using `type="upsell"`.
 
-```jsx
+```jsx live noPreview
+import { MessagingCard, UpsellCard } from '@coinbase/cds-mobile/cards';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 // Before
 <UpsellCard
   title="Title"

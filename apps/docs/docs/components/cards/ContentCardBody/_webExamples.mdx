@@ -1,6 +1,10 @@
 ### Basic Example
 
 ```jsx live
+import { ContentCardBody } from '@coinbase/cds-web/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
   <ContentCardBody
     title="Bitcoin Network Shatters Records"
@@ -23,12 +27,16 @@
       </VStack>
     }
   />
-</VStack>
+</VStack>;
 ```
 
 ### With Media (Top Placement)
 
 ```jsx live
+import { ContentCardBody } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
   <ContentCardBody
     title="Ethereum Update"
@@ -38,12 +46,16 @@
     }
     mediaPlacement="top"
   />
-</VStack>
+</VStack>;
 ```
 
 ### With Media (End Placement)
 
 ```jsx live
+import { ContentCardBody } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
   <ContentCardBody
     title="Bitcoin Holdings"
@@ -53,7 +65,7 @@
     }
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ### With Custom Children
@@ -61,6 +73,10 @@
 Use the `children` prop to render custom content below the title and description. This is useful when you need to display additional data, charts, or interactive elements that don't fit the standard media/title/description layout.
 
 ```jsx live
+import { ContentCardBody } from '@coinbase/cds-web/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
   <ContentCardBody title="Weekly Summary" description="Your trading activity this week." gap={2}>
     <HStack gap={2} justifyContent="space-between">
@@ -86,5 +102,5 @@ Use the `children` prop to render custom content below the title and description
       </VStack>
     </HStack>
   </ContentCardBody>
-</VStack>
+</VStack>;
 ```

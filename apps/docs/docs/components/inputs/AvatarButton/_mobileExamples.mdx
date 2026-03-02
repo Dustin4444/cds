@@ -1,17 +1,22 @@
 ## Basic Example
 
-```jsx
+```jsx live noPreview
+import { AvatarButton } from '@coinbase/cds-mobile/buttons';
+
 <AvatarButton
   src="https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg"
   accessibilityLabel="Sneezy"
-/>
+/>;
 ```
 
 ## Compact
 
 AvatarButton can be compact.
 
-```jsx
+```jsx live noPreview
+import { AvatarButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2} alignItems="center">
   <AvatarButton
     src="https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg"
@@ -22,14 +27,17 @@ AvatarButton can be compact.
     compact
     accessibilityLabel="Sneezy Compact"
   />
-</HStack>
+</HStack>;
 ```
 
 ## Shapes
 
 AvatarButton supports three different shapes: `circle`, `square`, and `hexagon`. The default shape is `circle`.
 
-```jsx
+```jsx live noPreview
+import { AvatarButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2} alignItems="center">
   <AvatarButton name="Alice" colorScheme="blue" shape="circle" accessibilityLabel="Alice Profile" />
   <AvatarButton name="Bob" colorScheme="purple" shape="square" accessibilityLabel="Bob Profile" />
@@ -39,14 +47,17 @@ AvatarButton supports three different shapes: `circle`, `square`, and `hexagon`.
     shape="hexagon"
     accessibilityLabel="Charlie Profile"
   />
-</HStack>
+</HStack>;
 ```
 
 ## Selected State
 
 AvatarButtons can show a selected state with a border indicator.
 
-```jsx
+```jsx live noPreview
+import { AvatarButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2}>
   <AvatarButton name="Alice" colorScheme="blue" accessibilityLabel="Alice Profile" />
   <AvatarButton
@@ -63,14 +74,17 @@ AvatarButtons can show a selected state with a border indicator.
     selected
     accessibilityLabel="Bob Profile Selected"
   />
-</HStack>
+</HStack>;
 ```
 
 ## Loading State
 
 AvatarButtons can show a loading state while content is being fetched.
 
-```jsx
+```jsx live noPreview
+import { AvatarButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2}>
   <AvatarButton name="Alice" colorScheme="blue" accessibilityLabel="Alice Profile" />
   <AvatarButton
@@ -79,25 +93,31 @@ AvatarButtons can show a loading state while content is being fetched.
     loading
     accessibilityLabel="Alice Profile Loading"
   />
-</HStack>
+</HStack>;
 ```
 
 ## Fallback Image
 
 If you do not provide a src or if the provided src does not resolve, AvatarButton will surface a placeholder image.
 
-```jsx
+```jsx live noPreview
+import { AvatarButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2} alignItems="center">
   <AvatarButton accessibilityLabel="Default Avatar" />
   <AvatarButton selected accessibilityLabel="Default Avatar Selected" />
-</HStack>
+</HStack>;
 ```
 
 ## Fallback with Colors
 
 AvatarButton can use fallback colors with names when no image source is provided.
 
-```jsx
+```jsx live noPreview
+import { AvatarButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2} alignItems="center">
   <AvatarButton name="Alice" colorScheme="blue" accessibilityLabel="Alice Profile" />
   <AvatarButton name="Bob" colorScheme="purple" accessibilityLabel="Bob Profile" />
@@ -105,5 +125,5 @@ AvatarButton can use fallback colors with names when no image source is provided
   <AvatarButton name="Diana" colorScheme="teal" accessibilityLabel="Diana Profile" />
   <AvatarButton name="Eve" colorScheme="pink" accessibilityLabel="Eve Profile" />
   <AvatarButton name="Frank" colorScheme="gray" accessibilityLabel="Frank Profile" />
-</HStack>
+</HStack>;
 ```

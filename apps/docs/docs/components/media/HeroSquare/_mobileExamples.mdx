@@ -1,7 +1,9 @@
 ### Basic example
 
-```jsx
-<HeroSquare name="accessToAdvancedCharts" />
+```jsx live noPreview
+import { HeroSquare } from '@coinbase/cds-mobile/illustrations';
+
+<HeroSquare name="accessToAdvancedCharts" />;
 ```
 
 ### `scaleMultiplier` prop
@@ -10,14 +12,18 @@ If no predefined dimensions fit your use case, you can use the `scaleMultiplier`
 
 Use `scaleMultiplier` sparingly and with caution. We have predefined dimensions to ensure that illustrations scale elegantly.
 
-```jsx
-<HeroSquare name="accessToAdvancedCharts" scaleMultiplier={1.5} />
+```jsx live noPreview
+import { HeroSquare } from '@coinbase/cds-mobile/illustrations';
+
+<HeroSquare name="accessToAdvancedCharts" scaleMultiplier={1.5} />;
 ```
 
 ### Scaling with dimension
 
 If `dimension` and `scaleMultiplier` are both provided the component will scale based on the provided dimension.
 
-```jsx
-<HeroSquare name="accessToAdvancedCharts" dimension="200x200" scaleMultiplier={1.5} />
+```jsx live noPreview
+import { HeroSquare } from '@coinbase/cds-mobile/illustrations';
+
+<HeroSquare name="accessToAdvancedCharts" dimension="200x200" scaleMultiplier={1.5} />;
 ```

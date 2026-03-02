@@ -1,6 +1,11 @@
 ### Basic usage
 
 ```tsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Table variant="ruled" bordered>
   <TableHeader>
     <TableRow backgroundColor="bgAlternate">
@@ -51,12 +56,15 @@
       <TableCell title="Third Item (footer)" />
     </TableRow>
   </TableFooter>
-</Table>
+</Table>;
 ```
 
 ### Custom Cell Spacing
 
 ```tsx live
+import { Avatar } from '@coinbase/cds-web/media';
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table
   variant="ruled"
   bordered
@@ -96,12 +104,14 @@
       <TableCell title="Engineering" subtitle="Full-time" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Accessibility Example - Multiple Headers
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table maxHeight={300} bordered variant="ruled">
   <TableHeader sticky>
     <TableRow backgroundColor="bgAlternate">
@@ -127,5 +137,5 @@
       <TableCell title="Complete" alignItems="flex-end" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```

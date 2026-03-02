@@ -6,7 +6,10 @@ Avoid using options with duplicate values. Each option's `value` should be uniqu
 
 Basic single selection with predefined options for mobile interfaces.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function SingleSelectExample() {
   const [value, setValue] = useState('1');
 
@@ -37,7 +40,10 @@ Multi-selection mode allows users to select multiple options from the list with 
 Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
 :::
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function MultiSelectExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '3'],
@@ -70,7 +76,10 @@ function MultiSelectExample() {
 
 Organize options into logical groups for better organization on mobile.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function SingleSelectWithGroupsExample() {
   const [value, setValue] = useState(null);
 
@@ -112,7 +121,10 @@ function SingleSelectWithGroupsExample() {
 
 Use groups in multi-select mode to organize selections on mobile.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function MultiSelectWithGroupsExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: [],
@@ -163,7 +175,12 @@ The mobile Select component supports aligning the selected value(s) using the `a
 Left / right alignment is preferred for styling.
 ::::
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function AlignmentExample() {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -225,7 +242,10 @@ function AlignmentExample() {
 
 The mobile Select component supports comprehensive accessibility features including custom labels, hints, and roles.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function AccessibilityExample() {
   const [value, setValue] = useState('2');
 
@@ -257,7 +277,11 @@ function AccessibilityExample() {
 
 The mobile Select component supports different visual variants for various states and contexts.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function VariantExample() {
   const [positiveValue, setPositiveValue] = useState('success');
   const [negativeValue, setNegativeValue] = useState('');
@@ -304,7 +328,10 @@ function VariantExample() {
 
 Disable entire groups to prevent selection of those options.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function DisabledGroupExample() {
   const [value, setValue] = useState(null);
 
@@ -351,7 +378,10 @@ function DisabledGroupExample() {
 
 The Select component can be rendered in a compact size for denser mobile UIs.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function CompactExample() {
   const [value, setValue] = useState('1');
 
@@ -377,7 +407,10 @@ function CompactExample() {
 
 You can also use multi-selection mode while in a compact size.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function MultiSelectExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '3'],
@@ -411,7 +444,11 @@ function MultiSelectExample() {
 
 Components can be disabled entirely or have individual options disabled.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function DisabledExample() {
   const [value1, setValue1] = useState('2');
   const [value2, setValue2] = useState('2');
@@ -450,7 +487,10 @@ function DisabledExample() {
 
 Options can include descriptions for additional context, perfect for mobile interfaces.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function DescriptionExample() {
   const [value, setValue] = useState('1');
 
@@ -477,7 +517,11 @@ function DescriptionExample() {
 
 Add an icon or element at the start of the select control for better visual context.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function StartNodeExample() {
   const [value, setValue] = useState('1');
 
@@ -504,7 +548,11 @@ function StartNodeExample() {
 
 Add an icon or element at the end of the select control.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function EndNodeExample() {
   const [value, setValue] = useState('1');
 
@@ -531,7 +579,11 @@ function EndNodeExample() {
 
 Add custom icons as accessories or media to options for enhanced visual hierarchy.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function CustomIconsExample() {
   const [value, setValue] = useState('1');
 
@@ -572,7 +624,12 @@ function CustomIconsExample() {
 
 Handle empty option lists with custom messages optimized for mobile screens.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function EmptyStateExample() {
   const [value, setValue] = useState(null);
 
@@ -608,7 +665,10 @@ function EmptyStateExample() {
 
 Handle very long option labels that may wrap on smaller mobile screens.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function LongLabelsExample() {
   const [value, setValue] = useState('1');
 
@@ -649,7 +709,10 @@ function LongLabelsExample() {
 
 Limit the number of selected items shown when using multi-select on mobile.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function MaxDisplayExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2', '3', '4', '5'],
@@ -679,7 +742,10 @@ function MaxDisplayExample() {
 
 Customize the select all functionality in multi-select mode for mobile.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function CustomSelectAllExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -714,7 +780,10 @@ function CustomSelectAllExample() {
 
 Hide the select all option for simpler multi-select interfaces.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function HideSelectAllExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],
@@ -746,7 +815,11 @@ function HideSelectAllExample() {
 
 Example combining multiple features for a rich mobile experience.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function CombinedFeaturesExample() {
   const [value, setValue] = useState('1');
 
@@ -792,7 +865,10 @@ function CombinedFeaturesExample() {
 
 Options that display only descriptions without labels.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function OnlyDescriptionExample() {
   const [value, setValue] = useState('1');
 
@@ -819,7 +895,10 @@ function OnlyDescriptionExample() {
 
 Select without a visible label (accessibility label/hint still required).
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function NoLabelExample() {
   const [value, setValue] = useState('1');
 
@@ -846,7 +925,10 @@ function NoLabelExample() {
 
 Options with varying properties in the same select.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function MixedOptionsExample() {
   const [value, setValue] = useState('1');
 
@@ -874,7 +956,11 @@ function MixedOptionsExample() {
 
 Combine compact mode with different variants.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function VariantCombinationsExample() {
   const [value1, setValue1] = useState('1');
   const [value2, setValue2] = useState('2');
@@ -915,7 +1001,10 @@ function VariantCombinationsExample() {
 
 Multi-select mode with descriptive options.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function MultiSelectWithDescriptionsExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],
@@ -945,7 +1034,10 @@ function MultiSelectWithDescriptionsExample() {
 
 Apply custom styles to the Select component.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function CustomStylesExample() {
   const [value, setValue] = useState('1');
 
@@ -984,7 +1076,10 @@ function CustomStylesExample() {
 
 Extended placeholder text for mobile screens.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function LongPlaceholderExample() {
   const [value, setValue] = useState(null);
 
@@ -1010,7 +1105,11 @@ function LongPlaceholderExample() {
 
 Options with accessory icons only.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function OnlyAccessoryExample() {
   const [value, setValue] = useState('1');
 
@@ -1048,7 +1147,11 @@ function OnlyAccessoryExample() {
 
 Options with media icons only.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function OnlyMediaExample() {
   const [value, setValue] = useState('1');
 
@@ -1086,7 +1189,11 @@ function OnlyMediaExample() {
 
 Options with custom React node labels and descriptions.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ReactNodeOptionsExample() {
   const [value, setValue] = useState('1');
 
@@ -1148,7 +1255,14 @@ function ReactNodeOptionsExample() {
 
 Customize the select all option component in multi-select.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function CustomSelectAllOptionExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -1203,7 +1317,10 @@ function CustomSelectAllOptionExample() {
 
 Handle edge cases with empty or special character labels.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function EdgeCaseLabelsExample() {
   const [value, setValue] = useState('3');
 
@@ -1232,7 +1349,11 @@ function EdgeCaseLabelsExample() {
 
 Test performance with many options on mobile.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function StressTestExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '5', '10'],
@@ -1264,7 +1385,12 @@ function StressTestExample() {
 
 You can remove the border from the select control by setting `bordered` to `false`. Now Select will only show a border when focused.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function BorderlessExample() {
   const [singleValue, setSingleValue] = useState('1');
   const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
@@ -1307,7 +1433,10 @@ function BorderlessExample() {
 
 You can use custom styles on the various subcomponents in Select.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function CustomStylesExample() {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -1345,7 +1474,10 @@ function CustomStylesExample() {
 
 You can use custom class names on the various subcomponents in Select.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
 function CustomClassNamesExamples() {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -1376,7 +1508,13 @@ function CustomClassNamesExamples() {
 
 You can pass a ReactNode to `label` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Tooltip } from '@coinbase/cds-mobile/overlays';
+
 function CustomLabelExample() {
   const [value, setValue] = useState('1');
 
@@ -1433,7 +1571,14 @@ Select
 
 ### Example
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Spinner } from '@coinbase/cds-mobile/loaders';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function CustomComponentExamples() {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

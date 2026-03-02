@@ -6,6 +6,8 @@ They are helpful for highlighting trends to users or allowing them to compare pr
 To start, pass in a series of data to the chart.
 
 ```jsx live
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 <BarChart
   height={{ base: 150, tablet: 200, desktop: 250 }}
   inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
@@ -19,7 +21,7 @@ To start, pass in a series of data to the chart.
   yAxis={{
     showGrid: true,
   }}
-/>
+/>;
 ```
 
 ## Multiple Series
@@ -27,6 +29,9 @@ To start, pass in a series of data to the chart.
 You can also provide multiple series of data to the chart. Series will have their bars for each data point rendered side by side.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { BarChart, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -78,6 +83,9 @@ function MonthlyGainsByAsset() {
 You can also configure stacking for your chart using the `stacked` prop.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { BarChart, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -144,6 +152,9 @@ function MonthlyGainsByAsset() {
 You can also configure multiple stacks by setting the `stackId` prop on each series.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { BarChart, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 function MonthlyGainsMultipleStacks() {
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -214,6 +225,9 @@ function MonthlyGainsMultipleStacks() {
 ### Stack Gap
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { BarChart, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -286,6 +300,8 @@ Bars have a default border radius of `100`. You can change this by setting the `
 Stacks will only round the top corners of touching bars.
 
 ```jsx live
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 <BarChart
   stacked
   borderRadius={1000}
@@ -313,7 +329,7 @@ Stacks will only round the top corners of touching bars.
     },
   }}
   style={{ margin: '0 auto' }}
-/>
+/>;
 ```
 
 ### Round Baseline
@@ -321,6 +337,8 @@ Stacks will only round the top corners of touching bars.
 You can also round the baseline of the bars by setting the `roundBaseline` prop on the chart.
 
 ```jsx live
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 <BarChart
   roundBaseline
   stacked
@@ -349,7 +367,7 @@ You can also round the baseline of the bars by setting the `roundBaseline` prop 
     },
   }}
   style={{ margin: '0 auto' }}
-/>
+/>;
 ```
 
 ## Data
@@ -357,6 +375,8 @@ You can also round the baseline of the bars by setting the `roundBaseline` prop 
 ### Negative
 
 ```jsx live
+import { BarChart, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 function PositiveAndNegativeCashFlow() {
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -399,6 +419,8 @@ function PositiveAndNegativeCashFlow() {
 You can pass in `null` or `0` values to not render a bar for that data point.
 
 ```jsx live
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 <BarChart
   showXAxis
   showYAxis
@@ -424,12 +446,14 @@ You can pass in `null` or `0` values to not render a bar for that data point.
     tickMarkSize: 1.5,
     domain: { max: 50 },
   }}
-/>
+/>;
 ```
 
 You can also use the `BarStackComponent` prop to render an empty circle for zero values.
 
 ```jsx live
+import { Bar, BarChart } from '@coinbase/cds-web-visualization/chart';
+
 function MonthlyRewards() {
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   const currentMonth = 7;
@@ -497,6 +521,10 @@ function MonthlyRewards() {
 You can pass in `[min, max]` tuples as data points to render bars that span a range of values.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 function PriceRange() {
   const candles = btcCandles.slice(0, 180).reverse();
   const data = candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]);
@@ -533,6 +561,8 @@ function PriceRange() {
 There are two ways to control the spacing between bars. You can set the `barPadding` prop to control the spacing between bars within a series. You can also set the `categoryPadding` prop to control the spacing between stacks of bars.
 
 ```jsx live
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 <BarChart
   height={{ base: 150, tablet: 200, desktop: 250 }}
   inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
@@ -557,7 +587,7 @@ There are two ways to control the spacing between bars. You can set the `barPadd
   xAxis={{
     categoryPadding: 0.2,
   }}
-/>
+/>;
 ```
 
 ### Minimum Size
@@ -570,6 +600,8 @@ It is recommended to only use `stackMinSize` for stacked charts and `barMinSize`
 You can set the `stackMinSize` prop to control the minimum size for entire stacks. This will only apply to stacks that have a value that is not `null` or `0`. It will proportionally scale the values of each bar in the stack to reach the minimum size.
 
 ```jsx live
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 <BarChart
   height={{ base: 150, tablet: 200, desktop: 250 }}
   inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
@@ -591,7 +623,7 @@ You can set the `stackMinSize` prop to control the minimum size for entire stack
   yAxis={{
     showGrid: true,
   }}
-/>
+/>;
 ```
 
 #### Minimum Bar Size
@@ -599,6 +631,8 @@ You can set the `stackMinSize` prop to control the minimum size for entire stack
 You can also set the `barMinSize` prop to control the minimum size for individual bars. This will only apply to bars that have a value that is not `null` or `0`.
 
 ```jsx live
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 <BarChart
   showXAxis
   showYAxis
@@ -625,7 +659,7 @@ You can also set the `barMinSize` prop to control the minimum size for individua
     domain: { max: 50 },
   }}
   barMinSize={4}
-/>
+/>;
 ```
 
 ### Multiple Y Axes
@@ -633,6 +667,8 @@ You can also set the `barMinSize` prop to control the minimum size for individua
 You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stacked.
 
 ```jsx live
+import { BarPlot, CartesianChart, XAxis, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   legend
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -689,7 +725,7 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
     tickLabelFormatter={(value) => `${value}%`}
   />
   <BarPlot />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Custom Components
@@ -699,6 +735,8 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
 You can set the `BarStackComponent` prop to render a custom component for stacks.
 
 ```jsx live
+import { Bar, BarChart } from '@coinbase/cds-web-visualization/chart';
+
 function MonthlyRewards() {
   const CustomBarStackComponent = ({ children, ...props }) => {
     return (
@@ -765,6 +803,9 @@ You can configure chart transitions using the `transitions` prop.
 You can pass in a custom spring based transition to your `BarChart` for a custom update transition.
 
 ```jsx live
+import React, { useEffect, useState } from 'react';
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 function AnimatedStackedBars() {
   const dataCount = 12;
   const minValue = 20;
@@ -872,6 +913,9 @@ function AnimatedStackedBars() {
 You can also disable animations by setting the `animate` prop to `false`.
 
 ```jsx live
+import React, { useEffect, useState } from 'react';
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 function AnimatedStackedBars() {
   const dataCount = 12;
   const minValue = 20;
@@ -978,6 +1022,12 @@ function AnimatedStackedBars() {
 You can render a candlestick chart by setting the `BarComponent` prop to a custom candlestick component.
 
 ```jsx live
+import React, { useId } from 'react';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { BarChart, Scrubber, SolidLine } from '@coinbase/cds-web-visualization/chart';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Candlesticks() {
   const infoTextId = useId();
   const infoTextRef = React.useRef(null);
@@ -1165,6 +1215,10 @@ function Candlesticks() {
 You can combine custom and BarPlot components and transitions to create a springy sunlight chart.
 
 ```tsx live
+import { BarPlot, CartesianChart, XAxis, YAxis } from '@coinbase/cds-web-visualization/chart';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 function SunlightChartExample() {
   const dayLength = 1440;
   type SunlightChartData = Array<{

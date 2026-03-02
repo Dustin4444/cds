@@ -3,6 +3,9 @@
 Display styles are to be used very sparingly. Display styles supersede Title styles, so they are there for when you need to layer on more hierarchy.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack>
   <Text font="display1" as="h1">
     Display1
@@ -13,7 +16,7 @@ Display styles are to be used very sparingly. Display styles supersede Title sty
   <Text font="display3" as="h3">
     Display3
   </Text>
-</VStack>
+</VStack>;
 ```
 
 ### Title
@@ -21,6 +24,9 @@ Display styles are to be used very sparingly. Display styles supersede Title sty
 Title styles are used to establish the primary hierarchy in a layout. They should be used to label sections.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack>
   <Text font="title1" as="h3">
     Title1
@@ -34,7 +40,7 @@ Title styles are used to establish the primary hierarchy in a layout. They shoul
   <Text font="title4" as="p">
     Title4
   </Text>
-</VStack>
+</VStack>;
 ```
 
 ### Headline & Body
@@ -42,6 +48,9 @@ Title styles are used to establish the primary hierarchy in a layout. They shoul
 Headline and body styles are your essential content styles. They’re versatile styles that can be used for paragraphs, data, labels for buttons.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack>
   <Text font="headline" as="p">
     Headline
@@ -49,7 +58,7 @@ Headline and body styles are your essential content styles. They’re versatile 
   <Text font="body" as="p">
     Body
   </Text>
-</VStack>
+</VStack>;
 ```
 
 ### Label & Caption
@@ -57,6 +66,9 @@ Headline and body styles are your essential content styles. They’re versatile 
 Label and caption styles are when you need to add hierarchy in your content. They ideally are used in conjunction with Headline and Body styles, but in extraordinarily dense interfaces they can replace Headline & Body should you need to present large data sets to users. They’re also great candidates for presenting numbers to the user as they have tabular numbers by default.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack>
   <Text font="label1" as="p">
     Label1
@@ -70,7 +82,7 @@ Label and caption styles are when you need to add hierarchy in your content. The
   <Text font="legal" as="p">
     Legal
   </Text>
-</VStack>
+</VStack>;
 ```
 
 ### Features

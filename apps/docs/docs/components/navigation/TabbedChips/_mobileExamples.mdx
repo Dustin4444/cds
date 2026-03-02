@@ -1,6 +1,12 @@
 ### Basic Example
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+import { SearchInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function TabbedChipsExample() {
   const tabs = [
     {

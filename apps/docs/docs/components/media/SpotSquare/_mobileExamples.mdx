@@ -1,7 +1,9 @@
 ### Basic example
 
-```jsx
-<SpotSquare name="yieldCenterUSDC" />
+```jsx live noPreview
+import { SpotSquare } from '@coinbase/cds-mobile/illustrations';
+
+<SpotSquare name="yieldCenterUSDC" />;
 ```
 
 ### `scaleMultiplier` prop
@@ -10,14 +12,18 @@ If no predefined dimensions fit your use case, you can use the `scaleMultiplier`
 
 Use `scaleMultiplier` sparingly and with caution. We have predefined dimensions to ensure that illustrations scale elegantly.
 
-```jsx
-<SpotSquare name="yieldCenterUSDC" scaleMultiplier={1.5} />
+```jsx live noPreview
+import { SpotSquare } from '@coinbase/cds-mobile/illustrations';
+
+<SpotSquare name="yieldCenterUSDC" scaleMultiplier={1.5} />;
 ```
 
 ### Scaling with dimension
 
 If `dimension` and `scaleMultiplier` are both provided the component will scale based on the provided dimension.
 
-```jsx
-<SpotSquare name="yieldCenterUSDC" dimension="120x120" scaleMultiplier={1.5} />
+```jsx live noPreview
+import { SpotSquare } from '@coinbase/cds-mobile/illustrations';
+
+<SpotSquare name="yieldCenterUSDC" dimension="120x120" scaleMultiplier={1.5} />;
 ```

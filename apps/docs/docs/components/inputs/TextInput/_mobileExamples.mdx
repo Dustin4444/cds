@@ -4,7 +4,11 @@
 
 Default composition of Inputs.
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <VStack gap={3}>
   <TextInput
     label="API Access Token"
@@ -29,7 +33,7 @@ Default composition of Inputs.
       suffix="USD"
     />
   </VStack>
-</VStack>
+</VStack>;
 ```
 
 ### Accessible Text Inputs
@@ -38,14 +42,18 @@ TextInput comes with an accessibilityLabel prop. If no accessibilityLabel is pas
 
 Here, since no accessibilityLabel is passed, the accessibilityLabel will be "Email".
 
-```jsx
-<TextInput label="Email" />
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
+<TextInput label="Email" />;
 ```
 
 Example of passing an accessibilityLabel. For web, this will set aria-label="Enter a Coinbase Email" under the hood
 
-```jsx
-<TextInput accessibilityLabel="Enter a Coinbase Email" label="Email" />
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
+<TextInput accessibilityLabel="Enter a Coinbase Email" label="Email" />;
 ```
 
 :::tip Accessibility tip
@@ -66,7 +74,10 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
 
 :::
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={4}>
   <TextInput
     label="Text Input rendered in an errored state"
@@ -82,13 +93,15 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
     // Override the default behavior when variant="negative"
     aria-invalid={false}
   />
-</VStack>
+</VStack>;
 ```
 
 ### Placeholder Text
 
-```jsx
-<TextInput label="Label" placeholder="Placeholder" />
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
+<TextInput label="Label" placeholder="Placeholder" />;
 ```
 
 ### Borderless
@@ -97,7 +110,10 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
 You should not use a borderless TextInput alone. It should be used with a TypeAhead component.
 :::
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack padding={2}>
   <TextInput
     label="Borderless TextInput"
@@ -105,14 +121,18 @@ You should not use a borderless TextInput alone. It should be used with a TypeAh
     helperText="helperText"
     bordered={false}
   />
-</HStack>
+</HStack>;
 ```
 
 ### Helper Text
 
 #### Default Sentiment
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <VStack gap={3}>
   <VStack>
     <Text as="p" font="headline">
@@ -150,12 +170,15 @@ You should not use a borderless TextInput alone. It should be used with a TypeAh
       end={<InputIcon active color="fgNegative" name="visible" />}
     />
   </VStack>
-</VStack>
+</VStack>;
 ```
 
 ### Color Surge Enabled
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={3}>
   <TextInput
     label="Default Color Surge"
@@ -179,12 +202,16 @@ You should not use a borderless TextInput alone. It should be used with a TypeAh
     variant="negative"
     enableColorSurge
   />
-</VStack>
+</VStack>;
 ```
 
 ### Content Alignment
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <VStack gap={3}>
   <VStack>
     <Text as="p">
@@ -205,14 +232,19 @@ You should not use a borderless TextInput alone. It should be used with a TypeAh
       suffix="USD"
     />
   </VStack>
-</VStack>
+</VStack>;
 ```
 
 ### StartContent & EndContent
 
 #### Examples of Input Objects placed at the Start
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+import { Avatar } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function StartContentExamples() {
   return (
     <VStack gap={3}>
@@ -260,7 +292,10 @@ function StartContentExamples() {
 
 ### Read only
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={3}>
   <TextInput label="Read Only Input" readOnly value="This value cannot be edited" />
   <TextInput label="Read Only with Suffix" readOnly value="1234.56" suffix="USD" />
@@ -270,7 +305,7 @@ function StartContentExamples() {
     value="BTC Address"
     start={<InputIconButton name="search" />}
   />
-</VStack>
+</VStack>;
 ```
 
 ### Label Variants
@@ -285,44 +320,58 @@ When using the `inside` label variant, you should always include a `placeholder`
 
 #### Outside label (default)
 
-```jsx
-<TextInput label="Email Address" placeholder="Enter your email" />
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
+<TextInput label="Email Address" placeholder="Enter your email" />;
 ```
 
 #### Inside label
 
-```jsx
-<TextInput label="Email Address" labelVariant="inside" placeholder="Enter your email" />
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
+<TextInput label="Email Address" labelVariant="inside" placeholder="Enter your email" />;
 ```
 
 #### Inside label (with start content)
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
 <TextInput
   label="Search"
   labelVariant="inside"
   start={<InputIconButton name="search" />}
   placeholder="Search for anything"
-/>
+/>;
 ```
 
 #### Inside label (with end content)
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
 <TextInput
   label="Password"
   labelVariant="inside"
   secureTextEntry
   end={<InputIconButton name="visible" />}
   placeholder="Enter your password"
-/>
+/>;
 ```
 
 ### Custom Label
 
 You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Tooltip } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <VStack gap={2}>
   <TextInput
     accessibilityLabel="Display name"
@@ -371,14 +420,20 @@ You can pass a ReactNode to `labelNode` to render a custom label. If you want to
     placeholder="Add a note"
     start={<InputIcon name="pencil" />}
   />
-</VStack>
+</VStack>;
 ```
 
 ## Example of Input Objects placed at the End
 
 Here are some examples and best practices when using end content in a TextField.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <VStack gap={3}>
   <VStack>
     <Text as="p">
@@ -422,7 +477,7 @@ Here are some examples and best practices when using end content in a TextField.
       }
     />
   </VStack>
-</VStack>
+</VStack>;
 ```
 
 ### Password input
@@ -431,7 +486,10 @@ Password Input - Use Icon Buttons at the end for actions like showing a password
 
 > a11y tip: Always provide an `accessibilityLabel` to start/end nodes to clearly communicate state/actions
 
-```jsx
+```jsx live noPreview
+import React, { useMemo, useState } from 'react';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
 function PasswordInput() {
   const [isVisible, setIsVisible] = useState(false);
   const type = useMemo(() => (isVisible ? 'text' : 'password'), [isVisible]);
@@ -457,7 +515,12 @@ function PasswordInput() {
 
 If needed, you can add a Link + Icon Button like this example here. Use this sparingly and only at the End of an Input.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useEffect, useState } from 'react';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Link } from '@coinbase/cds-mobile/typography';
+
 function CopyTextField() {
   const [copied, setCopied] = useState(false);
   const [variant, setVariant] = useState('foregroundMuted');
@@ -500,11 +563,14 @@ function CopyTextField() {
 
 ### Disabled
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={3}>
   <TextInput label="Label" disabled />
   <TextInput label="Label" compact disabled />
-</VStack>
+</VStack>;
 ```
 
 ### TextArea Example (mobile)
@@ -513,7 +579,9 @@ On mobile, TextInput is versatile enough to support
 a "TextArea" as well. You just need to add multiline prop.
 Here is an example
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+
 const [text, onChangeText] = useState('');
 
 <MockTextInput
@@ -543,7 +611,12 @@ const [text, onChangeText] = useState('');
 
 We recommend that you use spacing 3 when building stacked forms.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { Button, ButtonGroup } from '@coinbase/cds-mobile/buttons';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function FormExample() {
   const gap = 3;
 
@@ -581,7 +654,11 @@ function FormExample() {
 
 ### Example of a Sign Up Form
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { Box, HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2} alignItems="center">
   <TextInput
     label="Email"
@@ -591,7 +668,7 @@ function FormExample() {
   <Box spacingTop={0.5}>
     <Button variant="primary">Submit</Button>
   </Box>
-</HStack>
+</HStack>;
 ```
 
 ## Testing
@@ -602,7 +679,12 @@ You can also use the testIDMap to test different parts
 of the TextInput. If you use testID, it will add the testID to the root
 of the TextInput.
 
-```jsx
+```jsx live noPreview
+import React, { useMemo } from 'react';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { Box } from '@coinbase/cds-mobile/layout';
+import { Avatar } from '@coinbase/cds-mobile/media';
+
 function testExample() {
   const testIDMap = useMemo(() => {
     return {
@@ -640,7 +722,9 @@ If you have the keyboard open, then closing the keyboard and interacting with th
 
 To fix this issue, you can wrap the TextInput in a ScrollView, and set keyboardShouldPersistTaps="always".
 
-```jsx
+```jsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+
 function TextInputKeyboardExample() {
   return (
     <ScrollView style={{ height: '100%' }} keyboardShouldPersistTaps="always">

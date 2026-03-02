@@ -1,6 +1,10 @@
 ### Placement
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Tooltip } from '@coinbase/cds-web/overlays';
+
 function TooltipPlacement() {
   const content = 'This is the tooltip Content';
   return (
@@ -32,6 +36,10 @@ Sometimes you may want to use a tooltip with an absolute positioned element.
 To ensure the tooltip is properly aligned, you should instead set the position prop on the tooltip.
 
 ```jsx live
+import { Icon } from '@coinbase/cds-web/icons';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Tooltip } from '@coinbase/cds-web/overlays';
+
 function TooltipPosition() {
   const content = 'This is the tooltip Content';
   return (
@@ -58,6 +66,10 @@ function TooltipPosition() {
 Tooltips invert the current color scheme by default. Pass `invertColorScheme={false}` to keep the tooltip aligned with the surrounding surface and supply your preferred elevation/background tokens.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Box } from '@coinbase/cds-web/layout';
+import { Tooltip } from '@coinbase/cds-web/overlays';
+
 function TooltipColorSchemeOptOut() {
   return (
     <Box justifyContent="center">
@@ -74,6 +86,12 @@ function TooltipColorSchemeOptOut() {
 You can use tooltips within `TextInput` to provide more context.
 
 ```jsx live
+import { TextInput } from '@coinbase/cds-web/controls';
+import { InputLabel } from '@coinbase/cds-web/controls/InputLabel';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Tooltip } from '@coinbase/cds-web/overlays';
+
 <TextInput
   id="tooltip-input-example"
   label="Display name"
@@ -87,7 +105,7 @@ You can use tooltips within `TextInput` to provide more context.
     </HStack>
   }
   placeholder="Satoshi Nakamoto"
-/>
+/>;
 ```
 
 ### Visibility delay (hover)
@@ -95,6 +113,10 @@ You can use tooltips within `TextInput` to provide more context.
 Use `openDelay` and `closeDelay` to slow down hover activation and reduce accidental opens on dense UI. Keyboard focus still opens immediately.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Tooltip } from '@coinbase/cds-web/overlays';
+
 function TooltipVisibilityDelay() {
   return (
     <HStack spacingHorizontal={2} gap={2} justifyContent="space-around">

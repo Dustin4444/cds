@@ -4,7 +4,9 @@ Points are visual markers that highlight specific data values on a chart. They c
 
 You can add points using `points` on Line or [LineChart](/components/charts/LineChart).
 
-```jsx
+```jsx live noPreview
+import { LineChart, Scrubber } from '@coinbase/cds-mobile-visualization/chart';
+
 <LineChart
   enableScrubbing
   showArea
@@ -26,12 +28,14 @@ You can add points using `points` on Line or [LineChart](/components/charts/Line
   }}
 >
   <Scrubber />
-</LineChart>
+</LineChart>;
 ```
 
 You can also add Points directly to a chart.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Point, YAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 function MyChart() {
   const prices = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
@@ -69,7 +73,11 @@ function MyChart() {
 
 You can conditionally render points to highlight specific values in your data, such as maximum/minimum values or outliers.
 
-```tsx
+```tsx live noPreview
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { LineChart } from '@coinbase/cds-mobile-visualization/chart';
+
 function AssetPriceWithMinMax() {
   const data = sparklineInteractiveData.hour.map((d) => d.value);
 
@@ -116,7 +124,9 @@ function AssetPriceWithMinMax() {
 
 Points support customization through various properties including colors, sizes, and labels.
 
-```jsx
+```jsx live noPreview
+import { LineChart } from '@coinbase/cds-mobile-visualization/chart';
+
 function CustomizedPoints() {
   const theme = useTheme();
   return (
@@ -160,7 +170,9 @@ function CustomizedPoints() {
 
 You can use `labelPosition`, `labelOffset`, and `labelFont` to adjust Point's label.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Point, XAxis, YAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 function Scatterplot() {
   const dataPoints = [
     { x: 20, y: 30, label: 'A' },
@@ -201,7 +213,15 @@ function Scatterplot() {
 
 You can also use `LabelComponent` to create custom label components.
 
-```jsx
+```jsx live noPreview
+import {
+  CartesianChart,
+  ChartText,
+  Point,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 function ScatterplotWithCustomLabels() {
   const theme = useTheme();
   const dataPoints = [

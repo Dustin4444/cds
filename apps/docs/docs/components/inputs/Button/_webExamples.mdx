@@ -5,7 +5,9 @@ Buttons allow users to take actions and make choices with a single tap. They com
 The only required prop is `children`, which is the button's label. Buttons default to the `primary` variant.
 
 ```jsx live
-<Button onClick={console.log}>Get started</Button>
+import { Button } from '@coinbase/cds-web/buttons';
+
+<Button onClick={console.log}>Get started</Button>;
 ```
 
 ## Variants
@@ -18,6 +20,9 @@ Use variants to communicate the importance and intent of an action.
 - **Negative** — Destructive actions that can't be undone. Use sparingly.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap">
   <Button onClick={console.log} variant="primary">
     Primary
@@ -31,7 +36,7 @@ Use variants to communicate the importance and intent of an action.
   <Button onClick={console.log} variant="negative">
     Negative
   </Button>
-</HStack>
+</HStack>;
 ```
 
 ### Transparent
@@ -39,6 +44,9 @@ Use variants to communicate the importance and intent of an action.
 Use transparent buttons for supplementary actions with lower prominence. The container is only visible on interaction. Works with any variant.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap">
   <Button onClick={console.log} transparent>
     Primary
@@ -52,7 +60,7 @@ Use transparent buttons for supplementary actions with lower prominence. The con
   <Button onClick={console.log} variant="negative" transparent>
     Negative
   </Button>
-</HStack>
+</HStack>;
 ```
 
 ## States
@@ -62,6 +70,10 @@ Use transparent buttons for supplementary actions with lower prominence. The con
 Use the `loading` prop to indicate an action is in progress. The button becomes non-interactive and displays a spinner while preserving its width.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 function LoadingExample() {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -88,6 +100,9 @@ function LoadingExample() {
 Use the `disabled` prop to prevent interaction and indicate the action is unavailable.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap">
   <Button disabled onClick={console.log}>
     Primary
@@ -98,7 +113,7 @@ Use the `disabled` prop to prevent interaction and indicate the action is unavai
   <Button disabled onClick={console.log} variant="negative">
     Negative
   </Button>
-</HStack>
+</HStack>;
 ```
 
 ## Sizing
@@ -108,12 +123,15 @@ Use the `disabled` prop to prevent interaction and indicate the action is unavai
 Use `compact` for smaller buttons with reduced padding. Useful in dense UIs or alongside other compact elements.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap" alignItems="center">
   <Button onClick={console.log} compact>
     Compact
   </Button>
   <Button onClick={console.log}>Default</Button>
-</HStack>
+</HStack>;
 ```
 
 ### Block
@@ -121,6 +139,9 @@ Use `compact` for smaller buttons with reduced padding. Useful in dense UIs or a
 Use `block` to make the button expand to fill its container width.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+
 <VStack gap={2}>
   <Button onClick={console.log} block>
     Full width button
@@ -128,7 +149,7 @@ Use `block` to make the button expand to fill its container width.
   <Button onClick={console.log} variant="secondary" block>
     Another full width
   </Button>
-</VStack>
+</VStack>;
 ```
 
 ## Typography
@@ -136,6 +157,9 @@ Use `block` to make the button expand to fill its container width.
 Button forwards text-related font props to the internal `Text` label, so you can customize typography without rendering a custom child.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+
 <VStack alignItems="flex-start" gap={2}>
   <Button onClick={console.log}>Default (headline)</Button>
   <Button font="body" onClick={console.log}>
@@ -147,7 +171,7 @@ Button forwards text-related font props to the internal `Text` label, so you can
   <Button fontSize="title3" fontWeight="body" onClick={console.log}>
     Custom fontSize + fontWeight
   </Button>
-</VStack>
+</VStack>;
 ```
 
 ## Icons
@@ -157,6 +181,9 @@ Button forwards text-related font props to the internal `Text` label, so you can
 Add an icon after the label to provide additional context or indicate direction.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap">
   <Button onClick={console.log} endIcon="forwardArrow" variant="secondary" compact>
     See more
@@ -164,7 +191,7 @@ Add an icon after the label to provide additional context or indicate direction.
   <Button onClick={console.log} endIcon="externalLink" variant="secondary" compact>
     Open link
   </Button>
-</HStack>
+</HStack>;
 ```
 
 ### Start Icon
@@ -172,6 +199,9 @@ Add an icon after the label to provide additional context or indicate direction.
 Add an icon before the label to reinforce the action.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap">
   <Button onClick={console.log} startIcon="add" startIconActive variant="secondary" compact>
     Add item
@@ -179,7 +209,7 @@ Add an icon before the label to reinforce the action.
   <Button onClick={console.log} startIcon="download" variant="secondary" compact>
     Download
   </Button>
-</HStack>
+</HStack>;
 ```
 
 ### Full Width with Icons
@@ -187,9 +217,11 @@ Add an icon before the label to reinforce the action.
 When using `block` with icons, the content automatically spreads across the button width.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+
 <Button onClick={console.log} startIcon="wallet" endIcon="forwardArrow" variant="secondary" block>
   Connect wallet
-</Button>
+</Button>;
 ```
 
 ## Accessibility
@@ -209,12 +241,15 @@ Buttons automatically use their `children` as the accessible label. For buttons 
 A common pattern using primary and secondary buttons together.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap" justifyContent="flex-end">
   <Button onClick={console.log} variant="secondary" transparent>
     Cancel
   </Button>
   <Button onClick={console.log}>Confirm</Button>
-</HStack>
+</HStack>;
 ```
 
 ### Destructive Confirmation
@@ -222,6 +257,9 @@ A common pattern using primary and secondary buttons together.
 Use negative buttons with a secondary cancel option for destructive actions.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={2} flexWrap="wrap" justifyContent="flex-end">
   <Button onClick={console.log} variant="secondary" transparent>
     Cancel
@@ -229,7 +267,7 @@ Use negative buttons with a secondary cancel option for destructive actions.
   <Button onClick={console.log} variant="negative">
     Delete
   </Button>
-</HStack>
+</HStack>;
 ```
 
 ### Form Actions
@@ -237,6 +275,9 @@ Use negative buttons with a secondary cancel option for destructive actions.
 A full-width primary action with a compact secondary option.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+
 <VStack gap={2}>
   <Button onClick={console.log} block>
     Create account
@@ -244,5 +285,5 @@ A full-width primary action with a compact secondary option.
   <Button onClick={console.log} variant="secondary" transparent block>
     Already have an account? Sign in
   </Button>
-</VStack>
+</VStack>;
 ```

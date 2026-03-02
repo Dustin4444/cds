@@ -1,16 +1,21 @@
 ### Basic usage
 
 ```tsx live
+import { Box, VStack } from '@coinbase/cds-web/layout';
+
 <VStack alignItems="center">
   <Box width="100%">
     <LogoMark size={32} />
   </Box>
-</VStack>
+</VStack>;
 ```
 
 ### Different Sizes
 
 ```tsx live
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack gap={4}>
   <VStack gap={2}>
     <Text font="label2" color="fgMuted">
@@ -36,12 +41,15 @@
       <LogoMark size={32} />
     </Box>
   </VStack>
-</VStack>
+</VStack>;
 ```
 
 ### Foreground Variations
 
 ```tsx live
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack gap={4}>
   <VStack gap={2}>
     <Text font="label2" color="fgMuted">
@@ -59,5 +67,5 @@
       <LogoMark size={32} foreground={true} />
     </Box>
   </VStack>
-</VStack>
+</VStack>;
 ```

@@ -1,6 +1,11 @@
 ### Basic usage
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SearchInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function BasicSearchInput() {
   const [value, setValue] = useState('');
   return (
@@ -22,7 +27,12 @@ function BasicSearchInput() {
 
 ### With Back Navigation
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SearchInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function SearchInputWithBack() {
   const [value, setValue] = useState('');
   return (
@@ -45,7 +55,11 @@ function SearchInputWithBack() {
 
 ### Variants
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SearchInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function SearchInputVariants() {
   const [value1, setValue1] = useState('');
   const [value2, setValue2] = useState('');

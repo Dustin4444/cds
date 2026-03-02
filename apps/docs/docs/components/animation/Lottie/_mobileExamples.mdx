@@ -2,7 +2,12 @@ High-quality illustration animations powered by [Lottie](https://airbnb.design/l
 
 ### Basic usage
 
-```jsx
+```jsx live noPreview
+import React, { useRef } from 'react';
+import { Lottie } from '@coinbase/cds-mobile/animation';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function BasicExample() {
   const lottieRef = useRef();
 

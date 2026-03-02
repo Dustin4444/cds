@@ -1,6 +1,10 @@
 Use the `useToast` hook to show toasts. Call `toast.show()` with a message to display a temporary notification.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Toast } from '@coinbase/cds-web/overlays';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function BasicToastExample() {
   const toast = useToast();
 
@@ -13,6 +17,10 @@ function BasicToastExample() {
 Add an action button to the toast for quick user actions like "Undo" or "View".
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function ToastWithActionExample() {
   const toast = useToast();
 
@@ -34,6 +42,10 @@ function ToastWithActionExample() {
 Hide the close button when you want a cleaner appearance or when the toast should only be dismissed via the action or timeout.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function ToastWithoutCloseExample() {
   const toast = useToast();
 
@@ -62,6 +74,10 @@ Toast duration is automatically calculated based on content length:
 You can override the automatic calculation by providing a custom `duration` in milliseconds.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function CustomDurationExample() {
   const toast = useToast();
 
@@ -81,6 +97,10 @@ function CustomDurationExample() {
 Use `bottomOffset` to adjust the vertical position of the toast. This is useful when you have bottom navigation or other fixed elements.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function BottomOffsetExample() {
   const toast = useToast();
 
@@ -102,6 +122,10 @@ function BottomOffsetExample() {
 Use the `variant` prop to change the color surge effect on the toast background. This helps communicate the nature of the notification.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function VariantExample() {
   const toast = useToast();
 
@@ -123,6 +147,13 @@ function VariantExample() {
 Use `onWillHide` and `onDidHide` to respond to toast dismissal. This is useful for cleanup or triggering subsequent actions.
 
 ```jsx live
+import React, { useCallback, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Toast } from '@coinbase/cds-web/overlays';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function LifecycleCallbacksExample() {
   const toast = useToast();
   const [status, setStatus] = useState('Ready');
@@ -151,6 +182,12 @@ function LifecycleCallbacksExample() {
 Use `toast.hide()` to programmatically dismiss the current toast.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Toast } from '@coinbase/cds-web/overlays';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function HideToastExample() {
   const toast = useToast();
 
@@ -174,6 +211,11 @@ function HideToastExample() {
 When multiple toasts are triggered, they queue up. Use `toast.clearQueue()` to remove all pending toasts.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function ClearQueueExample() {
   const toast = useToast();
 
@@ -201,6 +243,11 @@ Toast uses `role="alert"` for screen reader announcements. On web, the toast per
 For internationalization, you can customize the close button's accessibility label:
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Toast } from '@coinbase/cds-web/overlays';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function AccessibilityExample() {
   const toast = useToast();
 
@@ -223,6 +270,12 @@ function AccessibilityExample() {
 A common pattern is showing toast feedback after form actions.
 
 ```jsx live
+import React, { useCallback, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { TextInput } from '@coinbase/cds-web/controls';
+import { VStack } from '@coinbase/cds-web/layout';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function FormSubmissionExample() {
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -259,6 +312,12 @@ function FormSubmissionExample() {
 Provide feedback when copying content to the clipboard.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ClipboardCopyExample() {
   const toast = useToast();
   const walletAddress = '0x1234...5678';
@@ -286,6 +345,12 @@ function ClipboardCopyExample() {
 Implement an undo pattern for destructive actions.
 
 ```jsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function UndoDeleteExample() {
   const toast = useToast();
   const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);

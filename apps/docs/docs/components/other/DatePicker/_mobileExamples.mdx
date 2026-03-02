@@ -4,7 +4,10 @@ DatePicker combines [DateInput](/components/other/DateInput/) with [Calendar](/c
 
 A basic DatePicker with the minimum props necessary for correct UX.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -32,7 +35,10 @@ function Example() {
 
 Always provide the `invalidDateError` prop for when users type an impossible date like 99/99/2000.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -54,7 +60,10 @@ function Example() {
 
 Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props. Navigation to dates before the `minDate` and after the `maxDate` is disabled.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -83,7 +92,10 @@ function Example() {
 
 Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -109,7 +121,11 @@ The DatePicker handles common error states internally, and calls `onErrorDate` w
 
 You can use the `DateInputValidationError` class to create custom error states.
 
-```jsx
+```jsx live noPreview
+import React, { useEffect, useState } from 'react';
+import { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -135,7 +151,10 @@ function Example() {
 
 Always provide the accessibility label props and all necessary error props. See the Accessibility section under the Guidelines tab at the top of the page for more info.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -165,7 +184,10 @@ function Example() {
 
 The date format is automatically adjusted to the `LocaleContext`. Check `LocaleProvider` usage below.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -193,7 +215,11 @@ DatePicker supports the same styling functionality as [DateInput](/components/ot
 
 Use the `compact` prop for a smaller input size.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -224,7 +250,10 @@ function Example() {
 
 ### Disabled
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(new Date());
   const [error, setError] = useState(null);
@@ -247,7 +276,10 @@ function Example() {
 
 Use the `helperText` prop to provide additional context below the input.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -270,7 +302,14 @@ function Example() {
 
 You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Tooltip } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -325,7 +364,12 @@ function Example() {
 
 Use the `labelVariant` prop to position the label inside the input.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -387,7 +431,10 @@ Defaults to today when undefined.
 
 On mobile the `seedDate` prop is the default date that the react-native-date-picker keyboard control will open to when there is no selected date value.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -416,7 +463,12 @@ This is a complex example using many different props. We use multiple DatePicker
 
 We enforce that the time between the start date and end date must be at least 5 days but less than 14 days long, that the end date comes after the start date, and that all days are within the current month. We use the `onChange` prop to automatically suggest an end date of 1 week after the start date, or the last of the month - whichever is sooner. We also explicitly disable 1 week at the beginning of the month.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const [startDate, setStartDate] = useState(null);
   const [startError, setStartError] = useState(null);
@@ -530,7 +582,10 @@ function Example() {
 
   `onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DatePicker } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);

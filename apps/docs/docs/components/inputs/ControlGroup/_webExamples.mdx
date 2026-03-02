@@ -1,6 +1,11 @@
 ### Checkbox Cell Group
 
 ```tsx live
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-web/controls';
+import { Group, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CheckboxGroupExample() {
   const [selected, setSelected] = useState(['one', 'four']);
   return (
@@ -41,6 +46,11 @@ function CheckboxGroupExample() {
 ### Radio Cell Group
 
 ```tsx live
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-web/controls';
+import { Group, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function RadioGroupExample() {
   const [selected, setSelected] = useState('one');
   return (
@@ -77,6 +87,11 @@ function RadioGroupExample() {
 ### Checkbox
 
 ```tsx live
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-web/controls';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CheckboxExample() {
   const [selected, setSelected] = useState(['one', 'four']);
   return (
@@ -107,6 +122,11 @@ function CheckboxExample() {
 ### Radio
 
 ```tsx live
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-web/controls';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function RadioExample() {
   const [selected, setSelected] = useState('one');
   return (
@@ -133,6 +153,11 @@ function RadioExample() {
 ### Switch
 
 ```tsx live
+import React, { useState } from 'react';
+import { Switch } from '@coinbase/cds-web/controls';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function SwitchExample() {
   const [selected, setSelected] = useState(['one', 'four']);
   return (
@@ -163,6 +188,11 @@ function SwitchExample() {
 ### Custom Card Toggle
 
 ```tsx live
+import React, { useState } from 'react';
+import { Card } from '@coinbase/cds-web/cards';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomCardToggleExample() {
   // Custom component that works with ControlGroup
   const CustomCardToggle = ({ checked, onChange, disabled, label, value, ...props }) => {
@@ -239,6 +269,12 @@ function CustomCardToggleExample() {
 ### Custom Radio Button
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Radio } from '@coinbase/cds-web/controls';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomRadioButtonExample() {
   // Custom radio component with enhanced styling
   const CustomRadioButton = ({ checked, onChange, disabled, children, value, ...props }) => {

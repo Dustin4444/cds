@@ -1,6 +1,9 @@
 ### Basic DotCount
 
 ```jsx live
+import { DotCount } from '@coinbase/cds-web/dots';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+
 function DotCountBasic() {
   const counts = [1, 100, 30, 2, 0, 99];
   return (
@@ -22,6 +25,8 @@ function DotCountBasic() {
 ### Variants
 
 ```jsx live
+import { DotCount } from '@coinbase/cds-web/dots';
+
 function Variants() {
   return <DotCount count={30} variant="negative" />;
 }
@@ -30,6 +35,9 @@ function Variants() {
 ### Placements
 
 ```jsx live
+import { DotCount } from '@coinbase/cds-web/dots';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Placements() {
   return (
     <DotCount count={30} pin="top-end">
@@ -46,6 +54,9 @@ function Placements() {
 You can use the overlap prop to place the dot relative to the corner of the wrapped element.
 
 ```jsx live
+import { DotCount } from '@coinbase/cds-web/dots';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+
 function DottingRelativeToShapeOfChild() {
   return (
     <Box gap={2} flexWrap="wrap">
@@ -79,6 +90,10 @@ function DottingRelativeToShapeOfChild() {
 You can use the styles or classNames prop to customize appearance.
 
 ```jsx live
+import { DotCount } from '@coinbase/cds-web/dots';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { HStack } from '@coinbase/cds-web/layout';
+
 function CustomizeStyle() {
   const theme = useTheme();
   return (

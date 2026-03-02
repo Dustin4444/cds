@@ -17,6 +17,16 @@ Modals also require an accessibility label, which we set to `title` by default. 
 ### Basic example
 
 ```jsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { Select } from '@coinbase/cds-web/alpha/select/Select';
+import { Button } from '@coinbase/cds-web/buttons';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { FullscreenModal, Modal } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function DefaultModal() {
   const [visible, setVisible] = useState(false);
   const triggerRef = useRef(null);

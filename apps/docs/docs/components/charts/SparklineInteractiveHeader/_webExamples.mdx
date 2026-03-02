@@ -5,6 +5,14 @@ When possible combining content that is contextually related benefits screen rea
 ### Default usage
 
 ```jsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  SparklineInteractive,
+  SparklineInteractiveHeader,
+} from '@coinbase/cds-web-visualization/sparkline';
+import { Box } from '@coinbase/cds-web/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -101,6 +109,14 @@ When possible combining content that is contextually related benefits screen rea
 The fill will be added by default
 
 ```jsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  SparklineInteractive,
+  SparklineInteractiveHeader,
+} from '@coinbase/cds-web-visualization/sparkline';
+import { Box } from '@coinbase/cds-web/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -196,6 +212,14 @@ The fill will be added by default
 ### Compact
 
 ```jsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  SparklineInteractive,
+  SparklineInteractiveHeader,
+} from '@coinbase/cds-web-visualization/sparkline';
+import { Box } from '@coinbase/cds-web/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -293,6 +317,16 @@ The fill will be added by default
 ### Custom Label
 
 ```jsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  SparklineInteractive,
+  SparklineInteractiveHeader,
+} from '@coinbase/cds-web-visualization/sparkline';
+import { Icon } from '@coinbase/cds-web/icons';
+import { Box, HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },

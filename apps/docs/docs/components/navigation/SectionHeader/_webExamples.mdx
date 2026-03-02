@@ -1,21 +1,29 @@
 ### Basic usage
 
 ```tsx live
-<SectionHeader title="Basic Section Header" />
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+
+<SectionHeader title="Basic Section Header" />;
 ```
 
 ### With Description
 
 ```tsx live
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+
 <SectionHeader
   title="Section with Description"
   description="This is a helpful description that provides more context about this section. It can span multiple lines and will be truncated after two lines of text if it's too long."
-/>
+/>;
 ```
 
 ### With Icons
 
 ```tsx live
+import { Icon } from '@coinbase/cds-web/icons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+
 <VStack gap={2}>
   <SectionHeader title="Start Icon Example" start={<Icon active name="star" />} />
   <SectionHeader
@@ -23,12 +31,16 @@
     icon="info-circle"
     description="The info icon is automatically sized and colored"
   />
-</VStack>
+</VStack>;
 ```
 
 ### With Balance and Actions
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+
 <VStack gap={2}>
   <SectionHeader
     title="Account Balance"
@@ -54,12 +66,16 @@
       </HStack>
     }
   />
-</VStack>
+</VStack>;
 ```
 
 ### Layout Customization
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+
 <VStack gap={2}>
   {/* Custom spacing */}
   <SectionHeader
@@ -90,5 +106,5 @@
       </Button>
     }
   />
-</VStack>
+</VStack>;
 ```

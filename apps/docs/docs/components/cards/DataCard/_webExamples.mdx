@@ -9,6 +9,16 @@ See the [Migration Guide](#migration-from-legacy-datacard) at the end of this pa
 DataCard supports two layouts: `vertical` (stacked) and `horizontal` (side-by-side). Pass visualization components as children.
 
 ```jsx live
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
@@ -73,6 +83,14 @@ function Example() {
 DataCard can also display chart visualizations like LineChart for showing price trends or time-series data.
 
 ```jsx live
+import React, { useMemo } from 'react';
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Card } from '@coinbase/cds-web/cards';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const lineChartData = useMemo(
     () => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58, 42, 65, 78, 55, 40, 62],
@@ -167,6 +185,16 @@ function Example() {
 Use `layout="vertical"` for stacked layouts (thumbnail on left, visualization below) or `layout="horizontal"` for side-by-side layouts (header on left, visualization on right).
 
 ```jsx live
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
@@ -221,6 +249,16 @@ function Example() {
 Use `titleAccessory` to display supplementary information inline with the title, such as trends, percentages, or status indicators.
 
 ```jsx live
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
@@ -285,6 +323,14 @@ function Example() {
 Use `renderAsPressable` to make the card interactive. You can render as a button with `onClick` or as a link with `as="a"` and `href`.
 
 ```jsx live
+import React, { useRef } from 'react';
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Card } from '@coinbase/cds-web/cards';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
@@ -362,6 +408,16 @@ function Example() {
 Use `styles` and `classNames` props to customize specific parts of the card layout.
 
 ```jsx live
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
@@ -423,6 +479,16 @@ function Example() {
 DataCards work well in lists or dashboards to display multiple data points.
 
 ```jsx live
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import {
+  ProgressBar,
+  ProgressBarWithFixedLabels,
+  ProgressCircle,
+} from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
@@ -493,6 +559,11 @@ When making DataCard interactive with `renderAsPressable`:
 - If `as` is set to `"button"` or `"a"`, `renderAsPressable` defaults to `true` automatically. Add an `accessibilityLabel` to summarize the card's content for screen reader users, ensuring all visual text of the card is included in the label (e.g., `accessibilityLabel="ETH Holdings, 45% progress, View details"`)
 
 ```jsx live
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Box } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations';
+
 <DataCard
   renderAsPressable
   accessibilityLabel="ETH Holdings, 45% progress, View details"
@@ -517,7 +588,7 @@ When making DataCard interactive with `renderAsPressable`:
       <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
     </ProgressBarWithFixedLabels>
   </Box>
-</DataCard>
+</DataCard>;
 ```
 
 :::warning Avoid Nested Interactive Elements
@@ -576,6 +647,12 @@ When displaying gain or loss percentages in DataCard, be aware of color contrast
 ```
 
 ```jsx live
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const exampleThumbnail = (
     <RemoteImage alt="Ethereum logo" shape="circle" size="l" src={ethBackground} />

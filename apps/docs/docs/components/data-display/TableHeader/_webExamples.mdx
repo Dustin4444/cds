@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered variant="ruled">
   <TableHeader>
     <TableRow>
@@ -17,12 +19,15 @@
       <TableCell title="TableFooter" subtitle="This is the TableFooter" />
     </TableRow>
   </TableFooter>
-</Table>
+</Table>;
 ```
 
 ### Sticky Header Example
 
 ```tsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Box height={300} overflow="auto" border="1px solid" borderColor="border">
   <Table>
     <TableHeader sticky>
@@ -44,12 +49,14 @@
       ))}
     </TableBody>
   </Table>
-</Box>
+</Box>;
 ```
 
 ### Multiple Columns Example
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered>
   <TableHeader>
     <TableRow>
@@ -73,5 +80,5 @@
       <TableCell>2024-03-21</TableCell>
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```

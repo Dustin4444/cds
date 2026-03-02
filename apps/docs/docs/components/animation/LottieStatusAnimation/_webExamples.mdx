@@ -5,6 +5,12 @@ The LottieStatusAnimation component is specifically designed for displaying trad
 The component accepts different status values and automatically plays the appropriate animation:
 
 ```tsx live
+import React, { useState } from 'react';
+import { LottieStatusAnimation } from '@coinbase/cds-web/animation';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Card } from '@coinbase/cds-web/cards';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   const [status, setStatus] = useState('loading');
   const [key, setKey] = useState(0);

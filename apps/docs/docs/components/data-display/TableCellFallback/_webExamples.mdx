@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import { Table, TableBody, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered variant="graph">
   <TableHeader>
     <TableRow>
@@ -18,12 +20,14 @@
       <TableCellFallback title subtitle end="asset" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Media Types
 
 ```tsx live
+import { Table, TableBody, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered variant="graph">
   <TableBody>
     <TableRow>
@@ -35,7 +39,7 @@
       <TableCellFallback title subtitle start="image" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Custom Rectangle Widths
@@ -53,6 +57,8 @@ Alternatively, you may create a variant with different rectangle widths by setti
 <br />
 
 ```tsx live
+import { Table, TableBody, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered variant="graph">
   <TableBody>
     <TableRow>
@@ -64,5 +70,5 @@ Alternatively, you may create a variant with different rectangle widths by setti
       <TableCellFallback title subtitle end="asset" rectWidthVariant={3} disableRandomRectWidth />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```

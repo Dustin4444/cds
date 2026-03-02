@@ -8,7 +8,11 @@ MediaChip automatically calculates spacing based on the content you provide (sta
 - End: **xs** size icons
   :::
 
-```tsx
+```tsx live noPreview
+import { MediaChip } from '@coinbase/cds-mobile/chips';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <HStack gap={2}>
   <MediaChip>Label only</MediaChip>
   <MediaChip
@@ -19,14 +23,19 @@ MediaChip automatically calculates spacing based on the content you provide (sta
   >
     Media + Label
   </MediaChip>
-</HStack>
+</HStack>;
 ```
 
 ### Configurations
 
 MediaChip supports all 6 spacing configurations automatically.
 
-```tsx
+```tsx live noPreview
+import { MediaChip } from '@coinbase/cds-mobile/chips';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <HStack flexWrap="wrap" gap={2}>
     <MediaChip>Label only</MediaChip>
@@ -52,7 +61,7 @@ MediaChip supports all 6 spacing configurations automatically.
       All three
     </MediaChip>
   </HStack>
-</VStack>
+</VStack>;
 ```
 
 ### Compact Variant
@@ -65,7 +74,12 @@ The compact variant reduces spacing for denser layouts.
 - End: **xs** size icons
   :::
 
-```tsx
+```tsx live noPreview
+import { MediaChip } from '@coinbase/cds-mobile/chips';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <HStack flexWrap="wrap" gap={2}>
   <MediaChip compact>Label only</MediaChip>
   <MediaChip
@@ -79,14 +93,19 @@ The compact variant reduces spacing for denser layouts.
   >
     Compact
   </MediaChip>
-</HStack>
+</HStack>;
 ```
 
 ### Inverted State
 
 Use the inverted prop to emphasize the chip with inverted colors.
 
-```tsx
+```tsx live noPreview
+import { MediaChip } from '@coinbase/cds-mobile/chips';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <HStack gap={2}>
   <MediaChip inverted>Selected</MediaChip>
   <MediaChip
@@ -96,14 +115,19 @@ Use the inverted prop to emphasize the chip with inverted colors.
   >
     Active State
   </MediaChip>
-</HStack>
+</HStack>;
 ```
 
 ### Interactive
 
 MediaChip can be made interactive by providing an onPress handler.
 
-```tsx
+```tsx live noPreview
+import { MediaChip } from '@coinbase/cds-mobile/chips';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Pressable } from '@coinbase/cds-mobile/system';
+
 <HStack gap={2}>
   <MediaChip onPress={() => console.log('Pressed!')}>Pressable</MediaChip>
   <MediaChip
@@ -115,14 +139,18 @@ MediaChip can be made interactive by providing an onPress handler.
   <MediaChip disabled onPress={() => console.log('Should not fire')}>
     Disabled
   </MediaChip>
-</HStack>
+</HStack>;
 ```
 
 ### Custom Spacing
 
 You can override the automatic spacing with custom values if needed.
 
-```tsx
+```tsx live noPreview
+import { MediaChip } from '@coinbase/cds-mobile/chips';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <HStack gap={2}>
   <MediaChip paddingX={4} paddingY={2}>
     Custom spacing
@@ -135,5 +163,5 @@ You can override the automatic spacing with custom values if needed.
   >
     Asymmetric padding
   </MediaChip>
-</HStack>
+</HStack>;
 ```

@@ -17,6 +17,13 @@ When enabled, only the children of the `<FocusTrap>` will be able to receive foc
 Please ensure there is at least one child element that can be focused in the `<FocusTrap>`.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Checkbox } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { FocusTrap } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [focusTrapEnabled, setFocusTrapEnabled] = useState(false);
 
@@ -54,6 +61,13 @@ function Example() {
 The `includeTriggerInFocusTrap` prop includes the triggering element causing the `<FocusTrap>` to render as part of the focus order.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Checkbox } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { FocusTrap } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [focusTrapEnabled, setFocusTrapEnabled] = useState(false);
 
@@ -91,6 +105,13 @@ function Example() {
 The `restoreFocusOnUnmount` prop returns focus to the triggering element when the `<FocusTrap>` is unmounted.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Checkbox } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { FocusTrap } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [focusTrapEnabled, setFocusTrapEnabled] = useState(false);
 

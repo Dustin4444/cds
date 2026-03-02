@@ -2,11 +2,31 @@
 .playgroundEditor pre {
   white-space: pre !important;
   padding: var(--space-2) !important;
-  scrollbar-width: thin;
   background-color: transparent !important;
   border-radius: 0 !important;
   color: var(--color-fg) !important;
-  font-family: var(--fontFamilyMono-label2) !important;
-  font-size: var(--fontSize-label2) !important;
-  font-weight: var(--fontWeight-label2) !important;
+  font-family:
+    SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+.sandpackEditor .cm-gutters {
+  border-right: none;
+}
+
+.sandpackEditor {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+}
+
+.sandpackEditor .cm-content {
+  padding: var(--space-1) var(--space-2);
+  tab-size: 2;
+}
+
+.sandpackEditor .cm-scroller {
+  overflow: auto;
+  max-height: 304.5px;
+  scrollbar-color: var(--color-line) transparent;
 }

@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered>
   <TableCaption>Simple Table Caption</TableCaption>
   <TableHeader>
@@ -15,12 +17,16 @@
       <TableCell title="Developer" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Custom Content
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Table bordered>
   <TableCaption>
     <VStack gap={1}>
@@ -44,12 +50,14 @@
       <TableCell title="Developer" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Styling Options
 
 ```tsx live
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered>
   <TableCaption
     align="center"
@@ -72,5 +80,5 @@
       <TableCell title="$1.2M" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```

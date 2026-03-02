@@ -1,6 +1,10 @@
 ### Basic Example
 
 ```jsx live
+import React, { useMemo, useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { TabNavigation } from '@coinbase/cds-web/tabs';
+
 function TabNavigationExample() {
   // TAB MOCK DATA
   const tabs = useMemo(() => [

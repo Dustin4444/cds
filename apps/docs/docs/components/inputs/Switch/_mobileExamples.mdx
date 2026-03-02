@@ -1,4 +1,7 @@
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Switch } from '@coinbase/cds-mobile/controls';
+
 function SwitchDemo() {
   const [checked, setChecked] = useState(false);
 
@@ -14,7 +17,10 @@ function SwitchDemo() {
 
 Like other control components (i.e. Radio, Checkbox), you can customize the color of the Switch by setting the `controlColor` prop.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Switch } from '@coinbase/cds-mobile/controls';
+
 function CustomColors() {
   const [checked, setChecked] = useState(false);
 
@@ -28,7 +34,10 @@ function CustomColors() {
 
 For more advanced color customization, you can use additional style props like `background`, `borderColor`, `borderWidth`, and `color`:
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Switch } from '@coinbase/cds-mobile/controls';
+
 function AdvancedCustomColors() {
   const [checked, setChecked] = useState(false);
 
@@ -52,7 +61,10 @@ function AdvancedCustomColors() {
 
 You can add a drop shadow to the Switch thumb using the `elevation` prop. By default, the Switch has no elevation.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Switch } from '@coinbase/cds-mobile/controls';
+
 function ElevationSwitchDemo() {
   const [checked, setChecked] = useState(false);
 

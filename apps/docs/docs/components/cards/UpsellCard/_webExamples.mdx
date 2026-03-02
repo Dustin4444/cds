@@ -3,6 +3,10 @@
 Utilize our Primary Wash Upsell for general information and non-urgent promotions. Its versatile design is perfect for a broad range of content, providing a subtle yet effective approach to engage users. It's also the only Upsell Card that supports Pictogram Illustrations.
 
 ```jsx live
+import { UpsellCard } from '@coinbase/cds-web/cards';
+import { Pictogram } from '@coinbase/cds-web/illustrations';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   function NoopFn() {
     console.log('pressed');
@@ -31,6 +35,12 @@ function Example() {
 Ideal for highlighting Coinbase tools, innovative features, and unique functionalities. Choose from our palette of four distinct colors to make your Feature Upsell stand out. Each color is carefully selected to grab attention while aligning with the specific nature of the feature being promoted
 
 ```jsx live
+import { UpsellCard } from '@coinbase/cds-web/cards';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const { colorScheme } = useTheme();
   function NoopFn() {
@@ -108,6 +118,12 @@ function Example() {
 Designed for community-focused upsells, our Community Upsell uses vibrant yellow and purple hues. These energetic colors are excellent for sparking enthusiasm and encouraging active participation, fostering a sense of community engagement
 
 ```jsx live
+import { UpsellCard } from '@coinbase/cds-web/cards';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const { colorScheme } = useTheme();
   function NoopFn() {
@@ -170,6 +186,12 @@ function Example() {
 Optimal for business products, security features, and functionalities that emphasize trust and reliability, such as Coinbase One and Coinbase Card. Our blue and black card options symbolize stability, trustworthiness, and professionalism, aligning with the core values of your product offerings
 
 ```jsx live
+import { UpsellCard } from '@coinbase/cds-web/cards';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const { colorScheme } = useTheme();
   function NoopFn() {
@@ -232,6 +254,12 @@ function Example() {
 Our News Upsell is specifically tailored for company announcements and policy updates. Its design ensures that important information is conveyed clearly and prominently, ensuring users stays well-informed about the latest developments.
 
 ```jsx live
+import { UpsellCard } from '@coinbase/cds-web/cards';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const { colorScheme } = useTheme();
   function NoopFn() {

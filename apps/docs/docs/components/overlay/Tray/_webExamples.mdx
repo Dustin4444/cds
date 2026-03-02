@@ -4,6 +4,14 @@ The recommended way to use a `Tray` is to add to dom when visible, and use onClo
 It is also recommended to pin it to the right side of the screen on tablet and desktop, and pin to bottom with handlebar on mobile.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { PageFooter } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function BasicTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -49,6 +57,14 @@ While you can pin the tray to any side of the screen, it is recommended to only 
 Handlebar is only shown on bottom pinned trays, and adjusts the padding to match other pins. It is deprecated to use bottom pin without handlebar.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { PageFooter } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function PinnedTray() {
   const [pinDirection, setPinDirection] = useState(null);
   const { isPhone } = useBreakpoints();
@@ -98,6 +114,13 @@ Web Tray will automatically be scrollable when the content is too large to fit. 
 When scrolling, a border is added to the header.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+
 function ResponsiveTray() {
   function ResponsiveTray({ styles, ...props }) {
     const [visible, setVisible] = useState(false);
@@ -162,6 +185,14 @@ function ResponsiveTray() {
 You can pass in a custom node to `title` to render a custom header.
 
 ```jsx live
+import React, { useId, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Pictogram } from '@coinbase/cds-web/illustrations';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function IllustrationSectionHeaderTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -204,6 +235,13 @@ function IllustrationSectionHeaderTray() {
 You can use a full bleed header with a background image. Use `header` and `title` to add a section header that stays fixed below the image while content scrolls. When scrolling, a border appears below the header area.
 
 ```jsx live
+import React, { useId, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function FullBleedHeaderTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -273,6 +311,14 @@ function FullBleedHeaderTray() {
 When using a full bleed header with scrollable content, the `header` prop keeps the section header fixed while list cells scroll beneath it.
 
 ```jsx live
+import React, { useId, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function FullBleedHeaderScrollableTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -364,6 +410,12 @@ A `ref` to the trigger that opens the tray, along with an `onClosedComplete` met
 :::
 
 ```jsx live
+import React, { useRef, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function TrayWithRef() {
   const [visible, setVisible] = useState(false);
   const trayRef = useRef(null);
@@ -400,6 +452,14 @@ You can prevent the user from dismissing the tray with `preventDismiss`. This wi
 You must provide an explicit action button to close the tray.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { PageFooter } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function PreventDismissTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -450,6 +510,14 @@ Trays require an accessibility label. If you pass in a ReactNode to `title`, mak
 Use the `reduceMotion` prop to accommodate users with reduced motion settings.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { PageFooter } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ReducedMotionTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -495,6 +563,13 @@ The Tray component exposes `styles` and `classNames` props for customizing vario
 You can customize the tray's outer container to adjust the border radius for floating trays or change the max width.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomContainerTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -534,6 +609,13 @@ function CustomContainerTray() {
 For full bleed images, use the `title` prop with a Box containing an image.
 
 ```jsx live
+import React, { useId, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function BackgroundImageHeaderTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -602,6 +684,13 @@ function BackgroundImageHeaderTray() {
 You can customize the content area to adjust padding, background, or other properties.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomContentTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -640,6 +729,14 @@ function CustomContentTray() {
 You can customize the footer section's appearance, such as the background color.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { PageFooter } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomFooterTray() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -687,6 +784,13 @@ function CustomFooterTray() {
 You can customize the handlebar appearance to change its color and opacity. This is useful when the default handlebar color does not have enough contrast against an image header, such as inverting it to white for dark or colorful backgrounds.
 
 ```jsx live
+import React, { useId, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function FullBleedWithInvertedHandlebar() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -760,6 +864,13 @@ function FullBleedWithInvertedHandlebar() {
 You can customize the close button to adjust the button's appearance, such as to improve visibility against header images or custom backgrounds.
 
 ```jsx live
+import React, { useId, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function FullBleedWithStyledCloseButton() {
   const [visible, setVisible] = useState(false);
   const { isPhone } = useBreakpoints();
@@ -836,6 +947,13 @@ function FullBleedWithStyledCloseButton() {
 You can create a floating tray by adjusting the inset based on pin direction.
 
 ```jsx live
+import React, { useMemo, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+
 function FloatingTrayExample() {
   function FloatingTray({
     pin = 'right',
@@ -931,6 +1049,14 @@ function FloatingTrayExample() {
 You can create a tray with multiple screens that have back navigation.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function MultiScreenTrayExample() {
   function MultiScreenTray({ screens, initialScreen = 0, onCloseComplete, ...props }) {
     const [currentScreen, setCurrentScreen] = useState(initialScreen);
@@ -1052,6 +1178,14 @@ function MultiScreenTrayExample() {
 You can create a reusable responsive tray with a pictogram and title in the header.
 
 ```jsx live
+import React, { useId, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Pictogram } from '@coinbase/cds-web/illustrations';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function IllustrationTrayExample() {
   function IllustrationTray({ pictogramName, title, children, ...props }) {
     const titleId = useId();
@@ -1110,6 +1244,14 @@ function IllustrationTrayExample() {
 You can create a reusable responsive tray that adapts its pin direction and handle bar visibility based on the viewport size.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { PageFooter } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ResponsiveTrayExample() {
   function ResponsiveTray({ pin, showHandleBar, footer, footerLabel, children, ...props }) {
     const { isPhone } = useBreakpoints();

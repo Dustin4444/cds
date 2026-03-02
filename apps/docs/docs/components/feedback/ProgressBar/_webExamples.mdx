@@ -1,37 +1,49 @@
 ### Default
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBar progress={0} />
   <ProgressBar progress={0.5} />
   <ProgressBar progress={1} />
-</VStack>
+</VStack>;
 ```
 
 ### Weights
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBar weight="thin" progress={0.3} />
   <ProgressBar weight="normal" progress={0.5} />
   <ProgressBar weight="semiheavy" progress={0.7} />
   <ProgressBar weight="heavy" progress={0.9} />
-</VStack>
+</VStack>;
 ```
 
 ### Disabled
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBar disabled progress={0} />
   <ProgressBar disabled progress={0.5} />
   <ProgressBar disabled progress={1} />
-</VStack>
+</VStack>;
 ```
 
 ### Colors
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBar color="bgPositive" progress={0.5} />
   <ProgressBar color="bgNegative" progress={0.5} />
@@ -39,7 +51,7 @@
   <ProgressBar color="bgWarning" progress={0.5} />
   <ProgressBar color="fg" progress={0.5} />
   <ProgressBar disabled color="fg" progress={0.5} />
-</VStack>
+</VStack>;
 ```
 
 ### Custom Styles
@@ -47,6 +59,9 @@
 You can customize the appearance of the progress bar using the `styles` prop. The `root` style controls the container, and `progress` controls the fill bar.
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBar
     progress={1}
@@ -78,7 +93,7 @@ You can customize the appearance of the progress bar using the `styles` prop. Th
       },
     }}
   />
-</VStack>
+</VStack>;
 ```
 
 ### Interactive Demo
@@ -86,6 +101,9 @@ You can customize the appearance of the progress bar using the `styles` prop. Th
 This is for demo purposes. ProgressContainerWithButtons isn't designed for production usage.
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -93,7 +111,7 @@ This is for demo purposes. ProgressContainerWithButtons isn't designed for produ
       <ProgressBar progress={calculateProgress(0.2)} />
     </VStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ## Animation
@@ -101,6 +119,10 @@ This is for demo purposes. ProgressContainerWithButtons isn't designed for produ
 By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -111,7 +133,7 @@ By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` t
       <ProgressBar disableAnimateOnMount progress={calculateProgress(0.3)} />
     </VStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ### Callbacks
@@ -119,6 +141,11 @@ By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` t
 You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const [animationStatus, setAnimationStatus] = React.useState('Ready');
 

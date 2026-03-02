@@ -5,6 +5,8 @@ Points are visual markers that highlight specific data values on a chart. They c
 You can add points using `points` on Line or [LineChart](/components/charts/LineChart).
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   showArea
@@ -26,12 +28,14 @@ You can add points using `points` on Line or [LineChart](/components/charts/Line
   }}
 >
   <Scrubber />
-</LineChart>
+</LineChart>;
 ```
 
 You can also add Points directly to a chart.
 
 ```jsx live
+import { CartesianChart, Point, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 function MyChart() {
   const prices = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
@@ -63,6 +67,10 @@ function MyChart() {
 You can conditionally render points to highlight specific values in your data, such as maximum/minimum values or outliers.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 function AssetPriceWithMinMax() {
   const data = sparklineInteractiveData.hour.map((d) => d.value);
 
@@ -111,6 +119,8 @@ function AssetPriceWithMinMax() {
 Points can be made interactive by adding click handlers, allowing users to explore data in more detail.
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   showArea
   showYAxis
@@ -146,7 +156,7 @@ Points can be made interactive by adding click handlers, allowing users to explo
     showGrid: true,
     label: 'Sales (units)',
   }}
-/>
+/>;
 ```
 
 ## Styling
@@ -154,6 +164,8 @@ Points can be made interactive by adding click handlers, allowing users to explo
 Points support customization through various properties including colors, sizes, and labels.
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   showArea
   showYAxis
@@ -188,7 +200,7 @@ Points support customization through various properties including colors, sizes,
     showGrid: true,
     label: 'Performance Score',
   }}
-/>
+/>;
 ```
 
 ### Labels
@@ -196,6 +208,8 @@ Points support customization through various properties including colors, sizes,
 You can use `labelPosition`, `labelOffset`, and `labelFont` to adjust Point's label.
 
 ```jsx live
+import { CartesianChart, Point, XAxis, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 function Scatterplot() {
   const dataPoints = [
     { x: 20, y: 30, label: 'A' },
@@ -237,6 +251,14 @@ function Scatterplot() {
 You can also use `LabelComponent` to create custom label components.
 
 ```jsx live
+import {
+  CartesianChart,
+  ChartText,
+  Point,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function ScatterplotWithCustomLabels() {
   const dataPoints = [
     { x: 12, y: 34, label: 'A', color: 'var(--color-fgAccent)' },

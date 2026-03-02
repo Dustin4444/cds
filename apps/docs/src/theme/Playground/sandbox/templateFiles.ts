@@ -79,28 +79,3 @@ export const TSCONFIG = JSON.stringify(
   null,
   2,
 );
-
-export const INDEX_TSX = `import '@coinbase/cds-icons/fonts/web/icon-font.css';
-import '@coinbase/cds-web/defaultFontStyles';
-import '@coinbase/cds-web/globalStyles';
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { VStack } from '@coinbase/cds-web/layout/VStack';
-import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
-import { MediaQueryProvider } from '@coinbase/cds-web/system/MediaQueryProvider';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
-import App from './App';
-
-const root = createRoot(document.getElementById('root')!);
-root.render(
-  <React.StrictMode>
-    <MediaQueryProvider>
-      <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-        <VStack padding={3}>
-          <App />
-        </VStack>
-      </ThemeProvider>
-    </MediaQueryProvider>
-  </React.StrictMode>,
-);
-`;

@@ -15,6 +15,13 @@ Images inside of the carousel have `pointer-events` disabled by default.
 :::
 
 ```jsx live
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function MyCarousel() {
   const toast = useToast();
 
@@ -79,6 +86,16 @@ you should give each item a width of `calc(50% - 8px)`.
 :::
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Card, UpsellCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Pictogram } from '@coinbase/cds-web/illustrations';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { SegmentedTabs } from '@coinbase/cds-web/tabs';
+import { Text } from '@coinbase/cds-web/typography';
+
 function DynamicSizingCarousel() {
   const itemsPerPage = [
     { id: 'one', label: 'One' },
@@ -276,6 +293,12 @@ You can also use responsive props to change the number of items visible based on
 The carousel below will show per page 1 item on mobile, 2 items on tablet, and 3 items on desktop.
 
 ```jsx live
+import { NudgeCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ResponsiveSizingCarousel() {
   const itemWidth = {
     phone: '100%',
@@ -355,6 +378,13 @@ function ResponsiveSizingCarousel() {
 Not all carousel items need to be the same size. You can provide CarouselItems of varying widths as well.
 
 ```jsx live
+import { ContainedAssetCard, NudgeCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 function VariedSizingCarousel() {
   function SquareAssetCard({ imageUrl, name }) {
     return (
@@ -457,6 +487,15 @@ You can set the `drag` prop to `snap` (default), `free`, or `none`.
 When set to `snap`, upon release the carousel will snap to either the nearest item or page (depending on `snapMode`).
 
 ```jsx live
+import React, { useState } from 'react';
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { SegmentedTabs } from '@coinbase/cds-web/tabs';
+import { Text } from '@coinbase/cds-web/typography';
+
 function DragCarousel() {
   const toast = useToast();
   const dragOptions = [
@@ -525,6 +564,15 @@ When set to `page`, the carousel will automatically group items into pages.
 When set to `item`, the carousel will snap to the nearest item.
 
 ```jsx live
+import React, { useState } from 'react';
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { SegmentedTabs } from '@coinbase/cds-web/tabs';
+import { Text } from '@coinbase/cds-web/typography';
+
 function SnapModeCarousel() {
   const toast = useToast();
   const snapModeOptions = [
@@ -600,6 +648,13 @@ If you want to have the next item be shown at the edge of the screen, make sure 
 :::
 
 ```jsx live
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function OverflowCarousel() {
   const toast = useToast();
   function SquareAssetCard({ imageUrl, name, onClick }) {
@@ -652,6 +707,13 @@ Use `autoplay` to allow for automatic page advancement. The default interval is 
 It is recommended to use pagination with autoplay so users know how many pages there are, and you should also set `paginationVariant="dot"` to best indicate the active page and progress.
 
 ```jsx live
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function AutoplayCarousel() {
   const toast = useToast();
 
@@ -704,6 +766,13 @@ function AutoplayCarousel() {
 Use `loop` to allow for infinite scrolling.
 
 ```jsx live
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function LoopingCarousel() {
   const toast = useToast();
   function SquareAssetCard({ imageUrl, name, onClick }) {
@@ -827,6 +896,10 @@ The Carousel provides several props to customize accessibility labels for screen
 You can customize the navigation and pagination components of the carousel using the `NavigationComponent` and `PaginationComponent` props. You can also modify the title by providing a ReactNode for the `title` prop.
 
 ```jsx live
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 function CustomComponentsCarousel() {
   function SeeAllComponent({ style }) {
     return (
@@ -1049,6 +1122,10 @@ function CustomComponentsCarousel() {
 You can use the `classNames` and `styles` props to customize different parts of the carousel.
 
 ```jsx live
+import { NudgeCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem, DefaultCarouselNavigation } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+
 function CustomStylesCarousel() {
   return (
     <Box marginX={-3}>
@@ -1140,6 +1217,13 @@ function CustomStylesCarousel() {
 You can use `useCarouselAutoplayContext` inside a custom `PaginationComponent` to build your own controls. This example shows a composed layout with pagination and play/pause on the left, and navigation arrows on the right.
 
 ```jsx live
+import React, { useRef } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { NudgeCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box, HStack } from '@coinbase/cds-web/layout';
+import { Pressable } from '@coinbase/cds-web/system';
+
 function ComposedAutoplayCarousel() {
   const carouselRef = useRef(null);
 
@@ -1314,6 +1398,15 @@ function ComposedAutoplayCarousel() {
 You can dynamically add and remove items from the carousel.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function DynamicContentCarousel() {
   const toast = useToast();
   const [items, setItems] = useState(Object.values(assets).slice(0, 3));
@@ -1378,6 +1471,15 @@ function DynamicContentCarousel() {
 You can also animate items as they enter or leave the viewport.
 
 ```jsx live
+import React, { useRef } from 'react';
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+import { motion } from 'framer-motion';
+
 function AnimatedCarousel() {
   const toast = useToast();
   function SquareAssetCard({ imageUrl, name, onClick }) {
@@ -1441,6 +1543,17 @@ function AnimatedCarousel() {
 You can even change the size or content of items. In the example below, click an asset to highlight it.
 
 ```jsx live
+import React, { useCallback, useState } from 'react';
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { Sparkline } from '@coinbase/cds-web-visualization/sparkline';
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+import { motion } from 'framer-motion';
+
 function AnimatedSelectionCarousel() {
   const dimensions = { width: 140, height: 60 };
   const path = useSparklinePath({ ...dimensions, data: prices });
@@ -1537,6 +1650,13 @@ pass in `DefaultCarouselNavigation` with `hideUnlessFocused` prop. Alternatively
 navigable by keyboard through other means.
 
 ```jsx live
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem, DefaultCarouselNavigation } from '@coinbase/cds-web/carousel';
+import { Box } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function HideNavigationAndPaginationCarousel() {
   const toast = useToast();
   function SquareAssetCard({ imageUrl, name, onClick }) {
@@ -1589,6 +1709,14 @@ function HideNavigationAndPaginationCarousel() {
 You can create smooth pagination animations by customizing the pagination dots. This example shows how to create expanding dots that smoothly transition between active and inactive states.
 
 ```jsx live
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box, HStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 function AnimatedPaginationCarousel() {
   const toast = useToast();
   const AnimatedPagination = memo((props) => {
@@ -1674,6 +1802,15 @@ function AnimatedPaginationCarousel() {
 You can control the carousel programmatically using a ref. The carousel exposes methods to navigate to specific pages and access the current page index.
 
 ```jsx live
+import React, { useRef, useState } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { ContainedAssetCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ImperativeApiCarousel() {
   const toast = useToast();
   const carouselRef = useRef(null);

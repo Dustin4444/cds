@@ -6,7 +6,10 @@ Mobile apps cache font files in the native build, so you must rebuild your app a
 
 ### Basic example
 
-```jsx
+```jsx live noPreview
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={2}>
   <HStack gap={1}>
     <Icon name="account" size="xs" />
@@ -24,5 +27,5 @@ Mobile apps cache font files in the native build, so you must rebuild your app a
     <Icon name="account" size="l" />
     <Icon name="account" size="l" active />
   </HStack>
-</VStack>
+</VStack>;
 ```

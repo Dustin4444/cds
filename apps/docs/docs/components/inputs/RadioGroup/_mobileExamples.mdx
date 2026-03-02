@@ -24,7 +24,12 @@ const [group, setGroup] = useState<string>();
 
 The new recommended approach provides better accessibility, cleaner API, and consistent behavior across the design system.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function RecommendedRadioGroup() {
   const options = [
     { value: 'btc', children: 'Bitcoin' },
@@ -124,7 +129,12 @@ The following examples show the **deprecated** RadioGroup usage. **Do not use th
 
 ### Basic RadioGroup (Legacy)
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { RadioGroup } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function LegacyRadioGroupDemo() {
   const options = {
     btc: 'Bitcoin',
@@ -155,7 +165,10 @@ function LegacyRadioGroupDemo() {
 
 ### With Accessibility Features (Legacy)
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { RadioGroup } from '@coinbase/cds-mobile/controls';
+
 function LegacyAccessibleRadioGroup() {
   const options = {
     'plan-basic': 'Basic Plan',
@@ -181,7 +194,10 @@ function LegacyAccessibleRadioGroup() {
 
 Like other control components (i.e. Checkbox, Switch), you can customize the color of the Radio by setting the `controlColor` prop.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { RadioGroup } from '@coinbase/cds-mobile/controls';
+
 function CustomColors() {
   // static values should live outside the component in product code.
   const options = {
@@ -208,7 +224,11 @@ function CustomColors() {
 
 For more advanced color customization, you can use additional style props on individual Radio components like `background`, `borderColor`, and `color`:
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function AdvancedCustomColors() {
   const [checked, setChecked] = useState(false);
 

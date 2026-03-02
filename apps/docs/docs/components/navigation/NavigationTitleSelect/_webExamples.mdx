@@ -5,6 +5,9 @@ NavigationTitleSelect wraps a [Dropdown](/components/layout/Dropdown) to create 
 Provide an array of `options` with `label` and `id` fields, a `value` matching the selected option's `id`, and an `onChange` handler.
 
 ```jsx live
+import React, { useState } from 'react';
+import { NavigationTitleSelect } from '@coinbase/cds-web/navigation';
+
 function BasicExample() {
   const options = [
     { label: 'My Portfolio', id: 'portfolio' },
@@ -29,6 +32,12 @@ function BasicExample() {
 Option labels can be React nodes for richer content, such as displaying an icon alongside text.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { NavigationTitleSelect } from '@coinbase/cds-web/navigation';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomLabelExample() {
   const options = [
     {
@@ -70,6 +79,10 @@ function CustomLabelExample() {
 Use `color` to customize the text and caret icon color. Any valid CDS design token color works.
 
 ```jsx live
+import React, { useState } from 'react';
+import { HStack } from '@coinbase/cds-web/layout';
+import { NavigationTitleSelect } from '@coinbase/cds-web/navigation';
+
 function ColorExample() {
   const options = [
     { label: 'Assets', id: 'assets' },
@@ -110,6 +123,10 @@ function ColorExample() {
 Use `font` to adjust the typography. The default is `title1`.
 
 ```jsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { NavigationTitleSelect } from '@coinbase/cds-web/navigation';
+
 function FontExample() {
   const options = [
     { label: 'Dashboard', id: 'dashboard' },
@@ -150,6 +167,9 @@ function FontExample() {
 Always provide `accessibilityLabel` to describe the purpose of the select for screen readers. The component manages focus and keyboard navigation through the underlying [Dropdown](/components/layout/Dropdown).
 
 ```jsx live
+import React, { useState } from 'react';
+import { NavigationTitleSelect } from '@coinbase/cds-web/navigation';
+
 function AccessibilityExample() {
   const accounts = [
     { label: 'Checking ••4521', id: 'checking' },

@@ -6,7 +6,9 @@ We use [fuse.js](https://www.fusejs.io/) to power the fuzzy search logic for Com
 
 Basic multi-selection combobox with search.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+
 function MultiSelect() {
   const multiSelectOptions = [
     { value: '1', label: 'Option 1' },
@@ -39,7 +41,9 @@ function MultiSelect() {
 
 Single selection combobox with an option to clear the current choice.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+
 function SingleSelect() {
   const singleSelectOptions = [
     { value: null, label: 'Remove selection' },
@@ -65,7 +69,10 @@ function SingleSelect() {
 
 Manage the search text externally while letting the combobox stay in sync.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+
 function ControlledSearch() {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   const [searchText, setSearchText] = useState('');
@@ -96,7 +103,9 @@ function ControlledSearch() {
 
 Use helper text to guide how many selections a user should make.
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+
 function HelperTextExample() {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
@@ -129,7 +138,10 @@ The alignment of the selected value(s) can be adjusted using the `align` prop.
 Left / right alignment is preferred for styling.
 ::::
 
-```jsx
+```jsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function AlignmentExample() {
   const fruitOptions = [
     { value: 'apple', label: 'Apple' },
@@ -169,7 +181,11 @@ function AlignmentExample() {
 
 You can remove the border from the combobox control by setting `bordered` to `false`.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function BorderlessExample() {
   const singleSelectOptions = [
     { value: null, label: 'Remove selection' },

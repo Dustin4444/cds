@@ -144,6 +144,11 @@ const Example = () => {
 The InvertedThemeProvider automatically inherits from its parent theme and flips the `activeColorScheme` to the opposite value.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Box } from '@coinbase/cds-web/layout';
+import { ThemeProvider } from '@coinbase/cds-web/system';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+
 <ThemeProvider theme={defaultTheme} activeColorScheme="light">
   {/* Default theme in light color scheme */}
   <Box background="bg" padding={2} borderRadius={400}>
@@ -155,5 +160,5 @@ The InvertedThemeProvider automatically inherits from its parent theme and flips
       <Button>Hello world!</Button>
     </Box>
   </InvertedThemeProvider>
-</ThemeProvider>
+</ThemeProvider>;
 ```

@@ -1,6 +1,10 @@
 ### Default usage
 
-```jsx
+```jsx live noPreview
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive, SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 <Box padding={3} width="100%">
   <SparklineInteractive
     data={sparklineInteractiveData}
@@ -20,7 +24,11 @@
 
 The fill will be added by default
 
-```jsx
+```jsx live noPreview
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive, SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 <Box padding={3} width="100%">
   <SparklineInteractive
     fill
@@ -39,7 +47,11 @@ The fill will be added by default
 
 ### Compact
 
-```jsx
+```jsx live noPreview
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive, SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 <Box padding={3} width="100%">
   <SparklineInteractive
     compact
@@ -59,7 +71,16 @@ The fill will be added by default
 
 ### Custom Label
 
-```jsx
+```jsx live noPreview
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  SparklineInteractive,
+  SparklineInteractiveHeader,
+} from '@coinbase/cds-mobile-visualization/sparkline';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { Box, HStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Box padding={3} width="100%">
   <SparklineInteractive
     data={sparklineInteractiveData}
@@ -87,5 +108,5 @@ The fill will be added by default
     periods={periods}
     strokeColor="#F7931A"
   />
-</Box>
+</Box>;
 ```

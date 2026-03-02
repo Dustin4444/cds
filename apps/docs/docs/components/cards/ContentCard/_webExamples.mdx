@@ -15,6 +15,17 @@ You can override these defaults using the `as` prop on each component.
 ContentCard uses sub-components for flexible layout. Combine `ContentCardHeader`, `ContentCardBody`, and `ContentCardFooter` to create your card structure.
 
 ```jsx live
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+  ContentCardHeader,
+} from '@coinbase/cds-web/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   return (
     <VStack gap={2} maxWidth={375}>
@@ -74,6 +85,15 @@ function Example() {
 Use the `mediaPlacement` prop on `ContentCardBody` to control where media is positioned relative to the content.
 
 ```jsx live
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardHeader,
+} from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const exampleMedia = (
     <RemoteImage alt="Ethereum background" source={ethBackground} width="100%" />
@@ -158,6 +178,16 @@ function Example() {
 Apply a background color to the card using the `background` prop. When using a background, consider using `variant="tertiary"` on buttons.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+  ContentCardHeader,
+} from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+
 function Example() {
   const exampleMedia = (
     <RemoteImage
@@ -226,6 +256,16 @@ function Example() {
 Example showing a rewards-style content card with claim button.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+} from '@coinbase/cds-web/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Avatar, RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   return (
     <VStack gap={2} maxWidth={375}>
@@ -292,6 +332,17 @@ When making ContentCard interactive, wrap it in a `Pressable` component and hand
 - Keyboard users to tab to the action button
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+  ContentCardHeader,
+} from '@coinbase/cds-web/cards/ContentCard';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 function AccessibleCard() {
   return (
     <Pressable

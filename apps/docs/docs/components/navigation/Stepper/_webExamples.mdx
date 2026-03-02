@@ -6,6 +6,12 @@ Each direction has its own unique default design in order to support different u
 ### Direction: Horizontal
 
 ```tsx live
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Stepper } from '@coinbase/cds-web/stepper';
+
 function StepperHorizontalBasicExample() {
   const steps = [
     { id: '1', label: 'Account Details' },
@@ -64,6 +70,12 @@ function StepperHorizontalBasicExample() {
 ### Direction: Vertical
 
 ```tsx live
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Stepper } from '@coinbase/cds-web/stepper';
+
 function StepperVerticalBasicExample() {
   const steps = [
     { id: '1', label: 'Account Details' },
@@ -170,6 +182,12 @@ Steps can be nested arbritrarily deep, however CDS does not advise nesting deepe
 :::
 
 ```tsx live
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Stepper } from '@coinbase/cds-web/stepper';
+
 function StepperVerticalSubStepsExample() {
   const steps: StepperValue[] = [
     {
@@ -359,6 +377,12 @@ import { DefaultStepperLabelHorizontal } from '@coinbase/cds-web/stepper';
 Pass null to any of the component props to completely disable its functionality and hide it from the user.
 
 ```tsx live
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Stepper } from '@coinbase/cds-web/stepper';
+
 function StepperNullComponentsExample() {
   const steps = [
     { id: '1', label: 'Account Details' },
@@ -416,6 +440,10 @@ by custom components to create rich, interactive experiences. This is particular
 for complex workflows where each step needs to display contextual information.
 
 ```tsx live
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { Stepper } from '@coinbase/cds-web/stepper';
+
 function StepperCustomMetadataExample() {
   const CustomBookingLabel = ({ step, active }) => {
     const { label, metadata } = step;
@@ -491,6 +519,12 @@ You can create custom icon, label, and progress components for individual steps 
 In this example, the "Payment Method" step uses metadata to indicate an error condition. The custom components check this metadata and the completion state to dynamically render an error indicator, falling back to default components otherwise.
 
 ```jsx live
+import React, { useMemo, useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Stepper } from '@coinbase/cds-web/stepper';
+
 function StepperErrorStepExample() {
   const ErrorStepperIcon = useMemo(
     () =>

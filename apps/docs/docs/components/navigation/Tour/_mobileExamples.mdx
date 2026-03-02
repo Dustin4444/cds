@@ -3,7 +3,16 @@ You define tour steps with unique IDs and wrap target elements with `TourStep` c
 
 ## Basic usage
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Coachmark } from '@coinbase/cds-mobile/coachmark';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+import { Tour, TourStep } from '@coinbase/cds-mobile/tour';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function BasicTourExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
 
@@ -128,7 +137,14 @@ function BasicTourExample() {
 
 Coachmarks can contain rich content including images, progress indicators, and custom layouts.
 
-```jsx
+```jsx live noPreview
+import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Coachmark } from '@coinbase/cds-mobile/coachmark';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 function RichContentExample() {
   const RichStep = () => {
     const { goNextTourStep, stopTour } = useTourContext();
@@ -169,7 +185,10 @@ function RichContentExample() {
 
 You can use TypeScript string literal types to ensure type safety for your step IDs.
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { Tour, TourStep } from '@coinbase/cds-mobile/tour';
+
 type StepId = 'intro' | 'feature-highlight' | 'call-to-action';
 
 function TypeSafeTourExample() {
@@ -203,7 +222,12 @@ function TypeSafeTourExample() {
 When tour steps are off-screen, you can use the `onBeforeActive` callback to scroll them into view.
 This callback runs before the step becomes active and can be async.
 
-```jsx
+```jsx live noPreview
+import React, { useRef, useState } from 'react';
+import { Box } from '@coinbase/cds-mobile/layout';
+import { Tour, TourStep } from '@coinbase/cds-mobile/tour';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ScrollingTourExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
   const scrollViewRef = useRef(null);
@@ -274,7 +298,10 @@ function ScrollingTourExample() {
 You can hide the dimmed overlay behind the coachmark using the `hideOverlay` prop.
 This can be set globally on the `Tour` component or per-step.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Tour } from '@coinbase/cds-mobile/tour';
+
 function HideOverlayExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
 
@@ -309,7 +336,10 @@ function HideOverlayExample() {
 
 Customize the mask (cutout) around the highlighted element with padding and border radius.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Tour } from '@coinbase/cds-mobile/tour';
+
 function MaskCustomizationExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
 
@@ -343,7 +373,10 @@ function MaskCustomizationExample() {
 The Tour component uses `@floating-ui` to position coachmarks relative to their target elements.
 You can customize positioning with the `tourStepOffset`, `tourStepShift`, and `tourStepAutoPlacement` props.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Tour } from '@coinbase/cds-mobile/tour';
+
 function PositioningExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
 
@@ -370,7 +403,10 @@ function PositioningExample() {
 
 You can customize the arrow that points to the target element by providing a custom `TourStepArrowComponent`.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Tour } from '@coinbase/cds-mobile/tour';
+
 function CustomArrowExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
 
@@ -409,7 +445,11 @@ function CustomArrowExample() {
 
 Always provide accessibility labels for close buttons using the `closeButtonAccessibilityLabel` prop and ensure coachmarks are navigable.
 
-```jsx
+```jsx live noPreview
+import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Coachmark } from '@coinbase/cds-mobile/coachmark';
+
 function AccessibleTourExample() {
   const AccessibleStep = () => {
     const { goNextTourStep, stopTour } = useTourContext();
@@ -441,7 +481,7 @@ function AccessibleTourExample() {
 Use the `onBeforeActive` callback to perform actions before a step becomes active,
 such as scrolling, fetching data, or preparing the UI.
 
-```jsx
+```jsx live noPreview
 function CallbacksExample() {
   const tourSteps = [
     {

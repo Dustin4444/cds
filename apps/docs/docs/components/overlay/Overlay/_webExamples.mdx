@@ -1,6 +1,12 @@
 ### Basic usage
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Overlay } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function BasicOverlay() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -19,6 +25,12 @@ function BasicOverlay() {
 ### With Animation
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Overlay } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function AnimatedOverlay() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -37,6 +49,12 @@ function AnimatedOverlay() {
 ### Custom Background
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Overlay } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomOverlay() {
   const [isVisible, setIsVisible] = useState(false);
 

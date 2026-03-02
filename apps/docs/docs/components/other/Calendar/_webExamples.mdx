@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import React, { useState } from 'react';
+
 () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   return <Calendar selectedDate={selectedDate} onPressDate={setSelectedDate} />;
@@ -10,6 +12,8 @@
 ### Disabled Dates
 
 ```tsx live
+import React, { useState } from 'react';
+
 () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   // Disable today and tomorrow
@@ -30,6 +34,8 @@
 ### Highlighted Dates
 
 ```tsx live
+import React, { useState } from 'react';
+
 () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   // Highlight the 10th, 15th, and 20th of the current month

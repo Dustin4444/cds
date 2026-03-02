@@ -4,7 +4,10 @@ NavigationTitleSelect opens a [Tray](/components/overlay/Tray) to create a conte
 
 Provide an array of `options` with `label` and `id` fields, a `value` matching the selected option's `id`, and an `onChange` handler.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
+
 const options = [
   { label: 'My Portfolio', id: 'portfolio' },
   { label: 'Family Account', id: 'family' },
@@ -19,7 +22,10 @@ const [value, setValue] = useState('portfolio');
 
 NavigationTitleSelect is typically used as the center content of a TopNavBar.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { NavigationTitleSelect, TopNavBar } from '@coinbase/cds-mobile/navigation';
+
 <TopNavBar start={<IconButton icon="arrow-left" accessibilityLabel="Back" />}>
   <NavigationTitleSelect
     options={[
@@ -29,14 +35,19 @@ NavigationTitleSelect is typically used as the center content of a TopNavBar.
     value="portfolio"
     onChange={(value) => console.log(value)}
   />
-</TopNavBar>
+</TopNavBar>;
 ```
 
 ## Custom Labels
 
 Option labels can be React nodes for richer content, such as displaying an icon alongside text.
 
-```jsx
+```jsx live noPreview
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 const options = [
   {
     label: (
@@ -67,27 +78,33 @@ const options = [
 
 Use `color` to customize the text and caret icon color. Any valid CDS design token color works.
 
-```jsx
-<NavigationTitleSelect options={options} value={value} onChange={setValue} color="fgMuted" />
+```jsx live noPreview
+import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
+
+<NavigationTitleSelect options={options} value={value} onChange={setValue} color="fgMuted" />;
 ```
 
 ### Font
 
 Use `font` to adjust the typography. The default is `headline`.
 
-```jsx
-<NavigationTitleSelect options={options} value={value} onChange={setValue} font="title2" />
+```jsx live noPreview
+import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
+
+<NavigationTitleSelect options={options} value={value} onChange={setValue} font="title2" />;
 ```
 
 ## Accessibility
 
 The component sets `accessibilityRole="header"` by default. Screen readers will announce the selected label as a header element. When the Tray opens, focus moves to the options list for navigation.
 
-```jsx
+```jsx live noPreview
+import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
+
 <NavigationTitleSelect
   options={accounts}
   value={selectedAccount}
   onChange={setSelectedAccount}
   accessibilityRole="header"
-/>
+/>;
 ```

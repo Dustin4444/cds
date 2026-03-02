@@ -1,6 +1,9 @@
 ### Basic usage
 
 ```jsx live
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+
 function ExampleDefault() {
   const tabs = [
     { id: 'all', label: 'All' },
@@ -35,6 +38,9 @@ Paddles appear automatically when the tab list overflows.
 :::
 
 ```jsx live
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+
 function ExampleWithPaddles() {
   const tabs = Array.from({ length: 12 }).map((_, i) => ({
     id: `tab_${i + 1}`,
@@ -52,6 +58,11 @@ The `autoScrollOffset` prop controls the X position offset when auto-scrolling t
 :::
 
 ```jsx live
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ExampleAutoScrollOffset() {
   const tabs = Array.from({ length: 25 }).map((_, i) => ({
     id: `tab_${i + 1}`,
@@ -85,6 +96,9 @@ You can adjust the size of the paddles via `styles.paddle`.
 :::
 
 ```jsx live
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+
 function ExampleCustomPaddles() {
   const tabs = Array.from({ length: 10 }).map((_, i) => ({
     id: `t_${i + 1}`,
@@ -105,6 +119,9 @@ function ExampleCustomPaddles() {
 ### Long text tabs
 
 ```jsx live
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+
 function ExampleLongText() {
   const tabs = [
     { id: 'a', label: 'Very long tab label that can wrap on small widths' },
@@ -119,6 +136,9 @@ function ExampleLongText() {
 ### Disabled tab
 
 ```jsx live
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+
 function ExampleDisabled() {
   const tabs = [
     { id: 'first', label: 'First' },
@@ -137,6 +157,10 @@ For start media, use circular images sized 24×24 for regular chips and 16×16 f
 :::
 
 ```jsx live
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function ExampleWithStart() {
   const icon = { height: 24, width: 24, shape: 'circle', source: assets.eth.imageUrl };
   const compactIcon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
@@ -164,6 +188,12 @@ When providing a custom TabComponent, use `useTabsContext()` and call `updateAct
 :::
 
 ```tsx live noInline
+import React, { useState } from 'react';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+import { MediaChip } from '@coinbase/cds-web/chips';
+import { Icon } from '@coinbase/cds-web/icons';
+
 function CustomTab({ id, label, ...props }: TabbedChipProps) {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = activeTab?.id === id;

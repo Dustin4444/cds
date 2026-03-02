@@ -2,20 +2,25 @@
 
 A `BrowserBar` can be used to display information and actions, like in a web browser.
 
-```tsx
+```tsx live noPreview
+import { BrowserBar, NavBarIconButton, NavigationTitle } from '@coinbase/cds-mobile/navigation';
+
 <BrowserBar
   start={<NavBarIconButton name="backArrow" accessibilityLabel="Back" />}
   end={<NavBarIconButton name="more" accessibilityLabel="More options" />}
 >
   <NavigationTitle>Coinbase</NavigationTitle>
-</BrowserBar>
+</BrowserBar>;
 ```
 
 ### With Search Input
 
 A common use case is to include a search or URL input field.
 
-```tsx
+```tsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { BrowserBar, NavBarIconButton } from '@coinbase/cds-mobile/navigation';
+
 <BrowserBar
   start={<NavBarIconButton name="lock" accessibilityLabel="Secure" />}
   end={
@@ -26,7 +31,7 @@ A common use case is to include a search or URL input field.
   }
 >
   <BrowserBarSearchInput value="coinbase.com" />
-</BrowserBar>
+</BrowserBar>;
 ```
 
 ### Contextual Hiding

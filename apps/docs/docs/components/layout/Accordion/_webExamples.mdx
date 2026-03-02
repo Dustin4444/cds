@@ -3,6 +3,12 @@ Check [here](/components/layout/AccordionItem) for AccordionItem Props.
 ### Simple Accordion
 
 ```jsx live
+import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { CellMedia } from '@coinbase/cds-web/cells';
+import { TextInput } from '@coinbase/cds-web/controls';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion defaultActiveKey="1" onChange={(itemKey) => console.log(itemKey)}>
   <AccordionItem
     itemKey="1"
@@ -30,12 +36,18 @@ Check [here](/components/layout/AccordionItem) for AccordionItem Props.
       {loremIpsum.repeat(20)}
     </Text>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ### Single item
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { Button } from '@coinbase/cds-web/buttons';
+import { TextInput } from '@coinbase/cds-web/controls';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion>
   <AccordionItem
     itemKey="1"
@@ -63,12 +75,16 @@ Check [here](/components/layout/AccordionItem) for AccordionItem Props.
       </HStack>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ### Multiple items (one item open by default)
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Accordion defaultActiveKey="2">
   <AccordionItem itemKey="1" title="What is a W-9 form?">
     <VStack>
@@ -162,5 +178,5 @@ Check [here](/components/layout/AccordionItem) for AccordionItem Props.
       </Text>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```

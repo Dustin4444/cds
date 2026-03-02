@@ -67,6 +67,14 @@ code {
   background-color: var(--color-bgSecondary);
 }
 
+pre {
+  margin-block: 0;
+  background-color: initial;
+  border-radius: initial;
+  font: initial;
+  overflow: initial;
+}
+
 .navbar {
   padding: 0;
   height: auto;

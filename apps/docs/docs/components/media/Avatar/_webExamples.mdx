@@ -1,11 +1,14 @@
 ## Basic Example
 
 ```jsx live
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <VStack gap={2}>
   <HStack gap={2} alignItems="center">
     <Avatar src={assets.btc.imageUrl} />
   </HStack>
-</VStack>
+</VStack>;
 ```
 
 ## Sizes
@@ -13,6 +16,9 @@
 Avatar comes in six different sizes. The default size is `l`.
 
 ```jsx live
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <VStack gap={2}>
   <HStack gap={2} alignItems="center">
     <Avatar src={assets.btc.imageUrl} size="s" />
@@ -22,7 +28,7 @@ Avatar comes in six different sizes. The default size is `l`.
     <Avatar src={assets.btc.imageUrl} size="xxl" />
     <Avatar src={assets.btc.imageUrl} size="xxxl" />
   </HStack>
-</VStack>
+</VStack>;
 ```
 
 ## Shapes
@@ -30,11 +36,14 @@ Avatar comes in six different sizes. The default size is `l`.
 Avatar supports three different shapes: `circle`, `square`, and `hexagon`. The default shape is `circle`.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <HStack gap={2} alignItems="center">
   <Avatar name="Alice" colorScheme="blue" size="xl" shape="circle" />
   <Avatar name="Bob" colorScheme="purple" size="xl" shape="square" />
   <Avatar name="Charlie" colorScheme="green" size="xl" shape="hexagon" />
-</HStack>
+</HStack>;
 ```
 
 ## Selected State
@@ -42,12 +51,15 @@ Avatar supports three different shapes: `circle`, `square`, and `hexagon`. The d
 Avatars can show a selected state with a border indicator.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <HStack gap={2}>
   <Avatar name="Alice" colorScheme="blue" size="xl" />
   <Avatar name="Alice" colorScheme="blue" size="xl" selected />
   <Avatar name="Bob" colorScheme="purple" size="xl" shape="square" />
   <Avatar name="Bob" colorScheme="purple" size="xl" shape="square" selected />
-</HStack>
+</HStack>;
 ```
 
 ## Fallback Image
@@ -55,10 +67,13 @@ Avatars can show a selected state with a border indicator.
 If you do not provide a src or if the provided src does not resolve, Avatar will surface a placeholder image.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <HStack gap={2} alignItems="center">
   <Avatar />
   <Avatar selected />
-</HStack>
+</HStack>;
 ```
 
 ## Fallback with Colors
@@ -66,6 +81,9 @@ If you do not provide a src or if the provided src does not resolve, Avatar will
 We've created a palette of identity colors using our CDS spectrum colors. When used as fallback, these colors will generate based on the provided name.
 
 ```jsx live
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 <VStack gap={2}>
   <HStack gap={2} alignItems="center">
     <Avatar name="Alice" colorScheme="blue" size="xl" />
@@ -83,5 +101,5 @@ We've created a palette of identity colors using our CDS spectrum colors. When u
     <Avatar name="Eve" colorScheme="pink" size="xl" selected />
     <Avatar name="Frank" colorScheme="gray" size="xl" selected />
   </HStack>
-</VStack>
+</VStack>;
 ```

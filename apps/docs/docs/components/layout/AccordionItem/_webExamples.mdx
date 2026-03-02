@@ -5,6 +5,9 @@ AccordionItem represents a single expandable section within an [Accordion](/comp
 Each `AccordionItem` requires a unique `itemKey` to identify it within the parent Accordion, and a `title` for the header text. The `children` become the collapsible content.
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion>
   <AccordionItem itemKey="1" title="What is Coinbase?">
     <Text as="p" font="body" color="fgMuted">
@@ -12,7 +15,7 @@ Each `AccordionItem` requires a unique `itemKey` to identify it within the paren
       currency.
     </Text>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Header Content
@@ -22,6 +25,11 @@ Each `AccordionItem` requires a unique `itemKey` to identify it within the paren
 Use the `title` prop for the main header text and `subtitle` for secondary information.
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion>
   <AccordionItem
     itemKey="1"
@@ -37,7 +45,7 @@ Use the `title` prop for the main header text and `subtitle` for secondary infor
       </Button>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ### Media
@@ -45,6 +53,11 @@ Use the `title` prop for the main header text and `subtitle` for secondary infor
 Add icons, avatars, or other media to the header using the `media` prop. This commonly uses `CellMedia` for consistent styling.
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { CellMedia } from '@coinbase/cds-web/cells';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion>
   <AccordionItem
     itemKey="1"
@@ -67,7 +80,7 @@ Add icons, avatars, or other media to the header using the `media` prop. This co
       </HStack>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Click Handling
@@ -75,6 +88,11 @@ Add icons, avatars, or other media to the header using the `media` prop. This co
 Use the `onClick` callback to respond when an item is clicked. It receives the `itemKey` as an argument.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ClickExample() {
   const [lastClicked, setLastClicked] = useState(null);
 
@@ -109,6 +127,12 @@ function ClickExample() {
 AccordionItem children can contain any React content—forms, lists, buttons, or other components.
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Card } from '@coinbase/cds-web/cards';
+import { TextInput } from '@coinbase/cds-web/controls';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+
 <Accordion>
   <AccordionItem itemKey="1" title="Payment Details" subtitle="Enter your payment information">
     <VStack gap={3}>
@@ -127,7 +151,7 @@ AccordionItem children can contain any React content—forms, lists, buttons, or
       </HStack>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ### Max Height
@@ -135,6 +159,10 @@ AccordionItem children can contain any React content—forms, lists, buttons, or
 Use `maxHeight` to limit the panel height for items with potentially long content. The content will scroll if it exceeds this height.
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion defaultActiveKey="1">
   <AccordionItem itemKey="1" title="Terms and Conditions" maxHeight={150}>
     <VStack gap={2}>
@@ -155,7 +183,7 @@ Use `maxHeight` to limit the panel height for items with potentially long conten
       </Text>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Multiple Items
@@ -163,6 +191,9 @@ Use `maxHeight` to limit the panel height for items with potentially long conten
 When using multiple AccordionItems, only one can be expanded at a time (controlled by the parent Accordion). Use `defaultActiveKey` on the Accordion to specify which item starts expanded.
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion defaultActiveKey="faq-2">
   <AccordionItem itemKey="faq-1" title="How do I get started?">
     <Text as="p" font="body" color="fgMuted">
@@ -180,7 +211,7 @@ When using multiple AccordionItems, only one can be expanded at a time (controll
       Fees vary based on your payment method and transaction size. See our pricing page for details.
     </Text>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Accessibility
@@ -194,6 +225,11 @@ AccordionItem automatically provides accessible behavior:
 For items with complex content, ensure any interactive elements inside the panel are keyboard accessible.
 
 ```jsx live
+import { Accordion, AccordionItem } from '@coinbase/cds-web/accordion';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Accordion>
   <AccordionItem
     itemKey="1"
@@ -210,7 +246,7 @@ For items with complex content, ensure any interactive elements inside the panel
       </Button>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Refs

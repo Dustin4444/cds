@@ -1,6 +1,9 @@
 ### Basic PageHeader
 
-```jsx
+```jsx live noPreview
+import { PageHeader } from '@coinbase/cds-mobile/page';
+import { Link } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   return (
     <PageHeader
@@ -21,7 +24,12 @@ function Example() {
 
 Use the `styles` prop to customize the `start`, `end`, `title`, or `root` of `PageHeader`. This example adjusts the spacing to align the header with page content.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { Box, HStack } from '@coinbase/cds-mobile/layout';
+import { PageHeader } from '@coinbase/cds-mobile/page';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const theme = useTheme();
   return (

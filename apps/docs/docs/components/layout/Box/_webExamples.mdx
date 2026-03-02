@@ -5,9 +5,11 @@ By default, Box has [flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS
 If you want to lay your content out in columns you should reach for [HStack](/components/layout/HStack) (a specialized Box that also allows for gaps between children). When you want to compose more complex layouts with columns of equal size or custom configurations you should use [Grid](/components/layout/Grid) (which leverages [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)). If you want to lay out content in a single column, you should use [VStack](/components/layout/VStack).
 
 ```jsx live
+import { Box } from '@coinbase/cds-web/layout';
+
 <Box bordered borderRadius="400" background="bgAlternate" paddingX={3} paddingY={2}>
   Any kind of content can go here!
-</Box>
+</Box>;
 ```
 
 ## A11y
@@ -38,6 +40,9 @@ Please note, there are no default responsive styles for Box. This is an additive
 ### Usage
 
 ```jsx live
+import { Box, HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ResponsiveBox() {
   return (
     <Box

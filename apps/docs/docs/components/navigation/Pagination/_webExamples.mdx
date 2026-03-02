@@ -3,6 +3,9 @@
 A simple example showing basic pagination with 10 total pages.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Pagination } from '@coinbase/cds-web/pagination';
+
 function BasicPaginationExample() {
   const [activePage, setActivePage] = useState(1);
   const totalPages = 10;
@@ -16,6 +19,9 @@ function BasicPaginationExample() {
 Shows pagination with the optional First and Last page navigation buttons enabled.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Pagination } from '@coinbase/cds-web/pagination';
+
 function FirstLastButtonsPaginationExample() {
   const [activePage, setActivePage] = useState(5);
   const totalPages = 15;
@@ -36,6 +42,9 @@ function FirstLastButtonsPaginationExample() {
 Demonstrates customizing the text labels for the first and last page buttons using `firstPageButtonLabel` and `lastPageButtonLabel` props.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Pagination } from '@coinbase/cds-web/pagination';
+
 function CustomButtonLabelsPaginationExample() {
   const [activePage, setActivePage] = useState(5);
   const totalPages = 15;
@@ -58,6 +67,9 @@ function CustomButtonLabelsPaginationExample() {
 Demonstrates using `siblingCount` and `boundaryCount` to adjust the number of pages displayed around the current page and at the boundaries, useful for larger page ranges.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Pagination } from '@coinbase/cds-web/pagination';
+
 function CustomCountsPaginationExample() {
   const [activePage, setActivePage] = useState(10);
   const totalPages = 20;
@@ -80,6 +92,9 @@ function CustomCountsPaginationExample() {
 This example explicitly manages the current page state, which might be necessary if the page change triggers other actions like fetching data.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Pagination } from '@coinbase/cds-web/pagination';
+
 function ControlledPaginationExample() {
   const [activePage, setActivePage] = useState(3);
   const totalPages = 10;
@@ -112,6 +127,12 @@ function ControlledPaginationExample() {
 This example shows how to use the headless `usePagination` hook to build a custom pagination interface. The hook provides the logic, and you render the UI.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { usePagination } from '@coinbase/cds-web/pagination';
+import { Text } from '@coinbase/cds-web/typography';
+
 function UsePaginationHookExample() {
   const [activePage, setActivePage] = useState(5);
   const totalPages = 12;
@@ -186,6 +207,11 @@ function UsePaginationHookExample() {
 This example demonstrates how to customize the appearance of pagination by providing custom components for page buttons, navigation buttons, and ellipsis.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Box } from '@coinbase/cds-web/layout';
+import { Pagination } from '@coinbase/cds-web/pagination';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomizedPaginationExample() {
   const [activePage, setActivePage] = useState(5);
   const totalPages = 20;
@@ -309,6 +335,14 @@ function CustomizedPaginationExample() {
 This example demonstrates integrating the Pagination component with a Table, a common use case for pagination.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Switch } from '@coinbase/cds-web/controls';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Pagination } from '@coinbase/cds-web/pagination';
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+import { Text } from '@coinbase/cds-web/typography';
+
 function TablePaginationExample() {
   const totalResults = accounts.length;
   const PAGE_SIZE = 5;

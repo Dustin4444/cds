@@ -4,31 +4,38 @@ Link renders a pressable [Text](/components/typography/Text) element that opens 
 
 By default, Link inherits the text styles of its parent. Pass a `to` prop to set the destination URL.
 
-```jsx
+```jsx live noPreview
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Text font="body">
   Check out the <Link to="https://www.coinbase.com/">Coinbase homepage</Link> for more info.
-</Text>
+</Text>;
 ```
 
 ## Underline
 
 Use the `underline` prop to add a text decoration underline to the link. This is important for inline links within body text to ensure they are visually distinguishable from surrounding text.
 
-```jsx
+```jsx live noPreview
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Text font="body">
   Read our{' '}
   <Link underline to="https://www.coinbase.com/">
     terms and conditions
   </Link>{' '}
   before proceeding.
-</Text>
+</Text>;
 ```
 
 ### Underline with different fonts
 
 The underline works across all font styles.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Link } from '@coinbase/cds-mobile/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Link underline font="body" to="https://www.coinbase.com/">
     body link
@@ -45,7 +52,7 @@ The underline works across all font styles.
   <Link underline font="title2" to="https://www.coinbase.com/">
     title2 link
   </Link>
-</VStack>
+</VStack>;
 ```
 
 ## Styling
@@ -56,7 +63,10 @@ To style a Link, either wrap it in the desired [Text](/components/typography/Tex
 
 #### Wrapping in Text
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Text font="body" as="p">
     <Link to="https://www.coinbase.com/" openInNewWindow>
@@ -98,28 +108,34 @@ To style a Link, either wrap it in the desired [Text](/components/typography/Tex
       title3 link
     </Link>
   </Text>
-</VStack>
+</VStack>;
 ```
 
 #### Using the font prop
 
 If you need to style a link without wrapping it in a parent text element, use the `font` prop directly.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Link } from '@coinbase/cds-mobile/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   {['body', 'caption', 'label1', 'label2', 'legal', 'title1', 'title2', 'title3'].map((font) => (
     <Link font={font} to="https://www.coinbase.com/" openInNewWindow>
       {`${font} link`}
     </Link>
   ))}
-</VStack>
+</VStack>;
 ```
 
 ### Color
 
 Override the default link color using the `color` prop.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Link } from '@coinbase/cds-mobile/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Link to="https://www.coinbase.com/" color="fgPrimary">
     fgPrimary (default)
@@ -130,7 +146,7 @@ Override the default link color using the `color` prop.
   <Link underline to="https://www.coinbase.com/" color="fgNegative">
     fgNegative with underline
   </Link>
-</VStack>
+</VStack>;
 ```
 
 ## Navigation
@@ -139,7 +155,10 @@ Override the default link color using the `color` prop.
 
 Control how the link opens with `forceOpenOutsideApp`, `preventRedirectionIntoApp`, and `readerMode`.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Link } from '@coinbase/cds-mobile/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Link font="body" forceOpenOutsideApp to="https://www.coinbase.com/">
     Opens outside the app
@@ -150,7 +169,7 @@ Control how the link opens with `forceOpenOutsideApp`, `preventRedirectionIntoAp
   <Link font="body" readerMode to="https://www.coinbase.com/">
     Opens in reader mode (iOS only)
   </Link>
-</VStack>
+</VStack>;
 ```
 
 ## Accessibility
@@ -167,7 +186,9 @@ _The link text must have a 3:1 contrast ratio from the surrounding non-link text
 
 Use the `underline` prop on inline links within body text to ensure they are distinguishable without relying on color alone.
 
-```jsx
+```jsx live noPreview
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Text font="body">
   By continuing, you agree to the{' '}
   <Link underline to="https://www.coinbase.com/">
@@ -178,7 +199,7 @@ Use the `underline` prop on inline links within body text to ensure they are dis
     Privacy Policy
   </Link>
   .
-</Text>
+</Text>;
 ```
 
 ### Nested link in text
@@ -212,7 +233,9 @@ import { AccessibilityInfo, Linking } from 'react-native';
 
 It is a design anti-pattern to have multiple nested links in a single block of text in React Native since it is bad for accessibility. If more than one link is necessary in one paragraph, separate them:
 
-```jsx
+```jsx live noPreview
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 function MultipleLinksA11yExample() {
   return (
     <>
@@ -230,10 +253,13 @@ function MultipleLinksA11yExample() {
 
 When applying padding to a `Text` component that contains a `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
 
-```jsx
+```jsx live noPreview
+import { Box } from '@coinbase/cds-mobile/layout';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Box paddingTop={2}>
   <Text font="legal" color="fgMuted">
     By continuing, you agree to the <Link to="/terms">Terms of Service</Link>.
   </Text>
-</Box>
+</Box>;
 ```

@@ -9,6 +9,10 @@ On mobile, stacked `View`s are used to achieve this.
 On web, combining `background-image`, `background-color`, and CSS variables are used to achieve this.
 
 ```jsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Interactable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Interactable
   as="button"
   background="bgAlternate"
@@ -21,7 +25,7 @@ On web, combining `background-image`, `background-color`, and CSS variables are 
       Content goes here!
     </Text>
   </Box>
-</Interactable>
+</Interactable>;
 ```
 
 ### Disabled states
@@ -29,6 +33,10 @@ On web, combining `background-image`, `background-color`, and CSS variables are 
 On both platforms, interactable elements have their opacity greatly reduced when disabled.
 
 ```jsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Interactable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Interactable
   disabled
   as="button"
@@ -42,7 +50,7 @@ On both platforms, interactable elements have their opacity greatly reduced when
       Content goes here!
     </Text>
   </Box>
-</Interactable>
+</Interactable>;
 ```
 
 ### Block Interactable
@@ -50,6 +58,10 @@ On both platforms, interactable elements have their opacity greatly reduced when
 Interactables expand to 100% width when the `block` prop is passed.
 
 ```jsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Interactable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Interactable
   block
   as="button"
@@ -63,7 +75,7 @@ Interactables expand to 100% width when the `block` prop is passed.
       Content goes here!
     </Text>
   </Box>
-</Interactable>
+</Interactable>;
 ```
 
 ### A11y

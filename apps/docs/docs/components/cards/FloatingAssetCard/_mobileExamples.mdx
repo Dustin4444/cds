@@ -2,7 +2,11 @@
 
 Most common composition for displaying individual assets like NFTs or dApps.
 
-```jsx
+```jsx live noPreview
+import { FloatingAssetCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function Example() {
   function NoopFn() {
     console.log('pressed');
@@ -37,7 +41,12 @@ function Example() {
 
 Trends help users make decisions about whether or not to invest in an asset.
 
-```jsx
+```jsx live noPreview
+import { FloatingAssetCard } from '@coinbase/cds-mobile/cards';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   function NoopFn() {
     console.log('pressed');
@@ -94,7 +103,12 @@ function Example() {
 
 Use this example for visual assets with ratings.
 
-```jsx
+```jsx live noPreview
+import { FloatingAssetCard } from '@coinbase/cds-mobile/cards';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   function NoopFn() {
     console.log('pressed');

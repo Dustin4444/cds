@@ -25,6 +25,11 @@ const [group, setGroup] = useState<string>();
 The new recommended approach provides better accessibility, cleaner API, and consistent behavior across the design system.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-web/controls';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function RecommendedRadioGroup() {
   const options = [
     { value: 'btc', children: 'Bitcoin' },
@@ -122,6 +127,11 @@ The following examples show the **deprecated** RadioGroup usage. **Do not use th
 ### Basic RadioGroup (Legacy)
 
 ```jsx live
+import React, { useState } from 'react';
+import { RadioGroup } from '@coinbase/cds-web/controls';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function LegacyRadioGroupDemo() {
   // static values should live outside the component in product code.
   const options = {
@@ -159,6 +169,10 @@ function LegacyRadioGroupDemo() {
 ### With Custom Label (Legacy)
 
 ```jsx live
+import React, { useState } from 'react';
+import { RadioGroup } from '@coinbase/cds-web/controls';
+import { Text } from '@coinbase/cds-web/typography';
+
 function LegacyRadioGroupWithLabel() {
   const options = {
     'yellow-jacket': 'Yellow Jacket',
@@ -191,6 +205,10 @@ function LegacyRadioGroupWithLabel() {
 Like other control components (i.e. Checkbox, Switch), you can customize the color of the Radio by setting the `controlColor` prop.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Radio, RadioGroup } from '@coinbase/cds-web/controls';
+import { Divider, VStack } from '@coinbase/cds-web/layout';
+
 function CustomColors() {
   // static values should live outside the component in product code.
   const options = {
@@ -229,6 +247,10 @@ function CustomColors() {
 For more advanced color customization, you can use additional style props on individual Radio components like `background`, `borderColor`, and `color`:
 
 ```jsx live
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-web/controls';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function AdvancedCustomColors() {
   const [checked, setChecked] = useState(false);
 

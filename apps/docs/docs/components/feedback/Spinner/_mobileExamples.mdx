@@ -4,15 +4,20 @@ On mobile, Spinner wraps React Native's `ActivityIndicator` component.
 
 By default, the spinner renders at the `small` size with the theme's primary background color.
 
-```jsx
-<Spinner />
+```jsx live noPreview
+import { Spinner } from '@coinbase/cds-mobile/loaders';
+
+<Spinner />;
 ```
 
 ## Buttons
 
 Use the `loading` prop on [Button](/components/inputs/Button) and [IconButton](/components/inputs/IconButton) to show a spinner during async operations. The button becomes non-interactive while preserving its dimensions.
 
-```jsx
+```jsx live noPreview
+import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2} alignItems="center">
   <Button onPress={handlePress} loading={isLoading}>
     Submit
@@ -26,7 +31,7 @@ Use the `loading` prop on [Button](/components/inputs/Button) and [IconButton](/
     name="refresh"
     accessibilityLabel="Refresh"
   />
-</HStack>
+</HStack>;
 ```
 
 ## Styling
@@ -35,28 +40,36 @@ Use the `loading` prop on [Button](/components/inputs/Button) and [IconButton](/
 
 Use the `size` prop to control the spinner dimensions. Available values are `small` (default) and `large`.
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Spinner } from '@coinbase/cds-mobile/loaders';
+
 <HStack gap={3} alignItems="center">
   <Spinner size="small" />
   <Spinner size="large" />
-</HStack>
+</HStack>;
 ```
 
 ### Animating
 
 Use the `animating` prop to control whether the spinner is spinning. Set to `false` to show a static indicator, which can be useful for loading state transitions.
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Spinner } from '@coinbase/cds-mobile/loaders';
+
 <HStack gap={3} alignItems="center">
   <Spinner animating={true} />
   <Spinner animating={false} />
-</HStack>
+</HStack>;
 ```
 
 ## Accessibility
 
 The underlying `ActivityIndicator` provides built-in accessibility support. Use `accessibilityLabel` to provide additional context for screen readers.
 
-```jsx
-<Spinner size="large" accessibilityLabel="Loading your transactions" />
+```jsx live noPreview
+import { Spinner } from '@coinbase/cds-mobile/loaders';
+
+<Spinner size="large" accessibilityLabel="Loading your transactions" />;
 ```

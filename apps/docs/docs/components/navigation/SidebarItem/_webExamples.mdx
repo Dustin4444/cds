@@ -3,6 +3,10 @@
 SidebarItem requires an `icon` and `title`. Place it inside a Sidebar component which provides context for collapsed state and variant styling.
 
 ```jsx live
+import React, { useState } from 'react';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+
 function BasicSidebarItem() {
   const [active, setActive] = useState(false);
 
@@ -27,6 +31,10 @@ function BasicSidebarItem() {
 Use the `active` prop to indicate the currently selected navigation item. The active state changes the text and icon color to provide visual feedback.
 
 ```jsx live
+import React, { useState } from 'react';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+
 function ActiveState() {
   const [activeIndex, setActiveIndex] = useState(0);
   const items = [
@@ -60,6 +68,11 @@ function ActiveState() {
 When the parent Sidebar is collapsed, SidebarItem automatically hides the title text and shows only the icon. Use `tooltipContent` to display a tooltip on hover, which is essential for usability since the title is hidden.
 
 ```jsx live
+import React, { useState } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+
 function CollapsedState() {
   const [collapsed, setCollapsed] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -104,6 +117,9 @@ function CollapsedState() {
 The default border radius is `1000` (pill shape) for the default sidebar variant. You can customize it with the `borderRadius` prop.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+
 function CustomBorderRadius() {
   return (
     <HStack alignItems="flex-start" overflow="hidden">
@@ -127,6 +143,12 @@ function CustomBorderRadius() {
 Use the `Component` prop to render a completely custom layout while still benefiting from SidebarItem's state management. Your custom component receives `icon`, `title`, `color`, `active`, and `isCollapsed` props.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { Box, HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomComponent() {
   const [activeIndex, setActiveIndex] = useState(0);
   const items = [
@@ -186,6 +208,10 @@ SidebarItem automatically sets `accessibilityLabel` to the `title` value and use
 Provide a custom `accessibilityLabel` for more descriptive screen reader announcements.
 
 ```jsx live
+import React, { useState } from 'react';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+
 function Accessibility() {
   const [activeIndex, setActiveIndex] = useState(0);
   const items = [

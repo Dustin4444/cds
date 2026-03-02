@@ -9,6 +9,10 @@ Alerts require an accessibility label, which we set to `title` by default. Howev
 ### Basic example
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Alert, FullscreenAlert } from '@coinbase/cds-web/overlays';
+
 function DefaultAlert() {
   const [visible, setVisible] = useState(false);
 

@@ -1,6 +1,10 @@
 ### Basic Example
 
-```jsx
+```jsx live noPreview
+import { ContentCardBody } from '@coinbase/cds-mobile/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const { spectrum } = useTheme();
 
@@ -34,7 +38,11 @@ function Example() {
 
 ### With Media (Top Placement)
 
-```jsx
+```jsx live noPreview
+import { ContentCardBody } from '@coinbase/cds-mobile/cards/ContentCard';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -59,7 +67,11 @@ function Example() {
 
 ### With Media (End Placement - Horizontal)
 
-```jsx
+```jsx live noPreview
+import { ContentCardBody } from '@coinbase/cds-mobile/cards/ContentCard';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -86,7 +98,11 @@ function Example() {
 
 Use the `children` prop to render custom content below the title and description. This is useful when you need to display additional data, charts, or interactive elements that don't fit the standard media/title/description layout.
 
-```jsx
+```jsx live noPreview
+import { ContentCardBody } from '@coinbase/cds-mobile/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const { spectrum } = useTheme();
 

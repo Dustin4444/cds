@@ -23,6 +23,9 @@ Do not use `useMediaQuery` for responsive styles. Use CSS media queries or [the 
 :::
 
 ```tsx live
+import { useMediaQuery } from '@coinbase/cds-web/hooks/useMediaQuery';
+import { MediaQueryProvider } from '@coinbase/cds-web/system';
+
 () => {
   const Page = () => {
     const isMobile = useMediaQuery('(max-width: 767px)');
@@ -76,6 +79,8 @@ You can populate the `defaultValues` prop with user preferences, cookies, etc. t
 Complex queries cannot be solved during SSR. They are solved on the client by calling `window.matchMedia`.
 
 ```tsx live
+import { useMediaQuery } from '@coinbase/cds-web/hooks/useMediaQuery';
+
 () => {
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const isHighDPI = useMediaQuery('(min-resolution: 2dppx)');

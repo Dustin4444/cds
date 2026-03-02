@@ -3,6 +3,9 @@
 `Select` can take anything as a child, however, we strongly recommend that you use `SelectOption`. It has the same API as a `ListCell`, but with custom styles specific to usage within a `Select`. `SelectOption` also comes with a lot of baked in functionality, like keyboard navigation, accessibility properties, and focus behaviors.
 
 ```jsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function DefaultSelect() {
   const [value, setValue] = useState();
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
@@ -23,6 +26,9 @@ function DefaultSelect() {
 Sometimes you may want to surface a label instead of the select value. You can pass a `valueLabel` prop with the currently selected value's corresponding label, which will appear to be the value of the Select.
 
 ```jsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function DefaultSelect() {
   const [value, setValue] = useState();
   const options = [
@@ -63,6 +69,9 @@ The `Select` trigger can be customized similar to `TextInput`. These options are
 When space is tight, this brings the label inside of the Input. Should be used with a `compact` `SelectOption`.
 
 ```jsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function LabelHelperTextSelect() {
   const [value, setValue] = useState('Option 2');
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
@@ -89,6 +98,9 @@ function LabelHelperTextSelect() {
 When space is tight, this brings the label inside of the Input. Should be used with a `compact` `SelectOption`.
 
 ```jsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function CompactSelect() {
   const [value, setValue] = useState('Option 2');
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
@@ -115,6 +127,9 @@ function CompactSelect() {
 Variants can be used to surface positive or negative feedback.
 
 ```jsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Variant() {
   const [value, setValue] = useState('Positive');
   const options = ['Positive', 'Negative', 'Primary', 'Secondary', 'Foreground'];
@@ -147,6 +162,9 @@ When using the `inside` label variant, you should always include a `placeholder`
 :::
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack gap={3}>
   <VStack>
     <Text as="p">
@@ -185,5 +203,5 @@ When using the `inside` label variant, you should always include a `placeholder`
       <SelectOption value="option3" title="Option 3" description="Description" />
     </OldSelect>
   </VStack>
-</VStack>
+</VStack>;
 ```

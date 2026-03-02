@@ -1,6 +1,10 @@
 ### Basic example
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-mobile/overlays';
+
 function Example() {
   const [visible, setVisible] = useState(false);
   return (

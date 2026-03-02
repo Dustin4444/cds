@@ -4,7 +4,12 @@ ModalBody provides a scrollable content area for [Modal](/components/overlay/Mod
 
 ModalBody renders children with default padding. Scrolling is automatically enabled when content exceeds the available height.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function BasicExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -27,7 +32,13 @@ function BasicExample() {
 
 When content exceeds the modal height, ModalBody automatically enables scrolling. The scroll behavior is dynamically determined based on content size.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ScrollableExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -56,7 +67,13 @@ function ScrollableExample() {
 
 Content within ModalBody remains accessible to assistive technologies. The built-in `KeyboardAvoidingView` ensures form inputs stay visible when the keyboard appears.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-mobile/overlays';
+
 function AccessibilityExample() {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState('');

@@ -3,20 +3,24 @@
 Uniformly group buttons with consistent spacing between each.
 
 ```jsx live
+import { Button, ButtonGroup } from '@coinbase/cds-web/buttons';
+
 <ButtonGroup accessibilityLabel="Group" direction="vertical">
   <Button>Save</Button>
   <Button variant="secondary">Cancel</Button>
   <Button variant="negative">Delete</Button>
-</ButtonGroup>
+</ButtonGroup>;
 ```
 
 The group is rather easy to use, just render a list of buttons. However, there is a hard requirement that direct children _must_ be a `Button` or `IconButton` component. Do _not_ provide your own markup.
 
 ```jsx live
+import { Button, ButtonGroup } from '@coinbase/cds-web/buttons';
+
 <ButtonGroup accessibilityLabel="Group">
   <Button>Save</Button>
   <Button transparent>Cancel</Button>
-</ButtonGroup>
+</ButtonGroup>;
 ```
 
 ### Block Button Group
@@ -24,10 +28,12 @@ The group is rather easy to use, just render a list of buttons. However, there i
 If you would like the buttons to expand and fill all available space, pass a `block` prop to the `ButtonGroup`.
 
 ```jsx live
+import { Button, ButtonGroup } from '@coinbase/cds-web/buttons';
+
 <ButtonGroup block accessibilityLabel="Group">
   <Button>Save</Button>
   <Button variant="secondary">Cancel</Button>
-</ButtonGroup>
+</ButtonGroup>;
 ```
 
 > If you are using a component that composes around a button component, be sure to pass props from the group down correctly, like `block`.
@@ -37,10 +43,12 @@ If you would like the buttons to expand and fill all available space, pass a `bl
 Icon buttons are unique in that their shape is a circle, not a rectangle. Because of this, icon buttons do _not_ support the `block` prop.
 
 ```jsx live
+import { ButtonGroup, IconButton } from '@coinbase/cds-web/buttons';
+
 <ButtonGroup accessibilityLabel="Group">
   <IconButton name="arrowLeft" />
   <IconButton name="arrowRight" />
-</ButtonGroup>
+</ButtonGroup>;
 ```
 
 ### A11y

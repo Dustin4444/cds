@@ -1,37 +1,49 @@
 ### Default
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <ProgressBar progress={0} />
   <ProgressBar progress={0.5} />
   <ProgressBar progress={1} />
-</VStack>
+</VStack>;
 ```
 
 ### Weights
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <ProgressBar weight="thin" progress={0.3} />
   <ProgressBar weight="normal" progress={0.5} />
   <ProgressBar weight="semiheavy" progress={0.7} />
   <ProgressBar weight="heavy" progress={0.9} />
-</VStack>
+</VStack>;
 ```
 
 ### Disabled
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <ProgressBar disabled progress={0} />
   <ProgressBar disabled progress={0.5} />
   <ProgressBar disabled progress={1} />
-</VStack>
+</VStack>;
 ```
 
 ### Colors
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <ProgressBar color="bgPositive" progress={0.5} />
   <ProgressBar color="bgNegative" progress={0.5} />
@@ -39,14 +51,17 @@
   <ProgressBar color="bgWarning" progress={0.5} />
   <ProgressBar color="fg" progress={0.5} />
   <ProgressBar disabled color="fg" progress={0.5} />
-</VStack>
+</VStack>;
 ```
 
 ### Custom Styles
 
 You can customize the appearance of the progress bar using the `styles` prop. The `root` style controls the container, and `progress` controls the fill bar.
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -65,28 +80,37 @@ You can customize the appearance of the progress bar using the `styles` prop. Th
       />
     </VStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ## Animation
 
 By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <Text variant="label2">Normal animation</Text>
   <ProgressBar progress={0.5} />
 
   <Text variant="label2">Disable animation on mount</Text>
   <ProgressBar disableAnimateOnMount progress={0.5} />
-</VStack>
+</VStack>;
 ```
 
 ### Callbacks
 
 You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const [animationStatus, setAnimationStatus] = React.useState('Ready');
 

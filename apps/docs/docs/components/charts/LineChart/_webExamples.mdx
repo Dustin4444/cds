@@ -5,6 +5,8 @@ LineChart is a wrapper for [CartesianChart](/components/charts/CartesianChart) t
 The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` array of numbers.
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   showArea
   height={{ base: 200, tablet: 225, desktop: 250 }}
@@ -14,13 +16,16 @@ The only prop required is `series`, which takes an array of series objects. Each
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-/>
+/>;
 ```
 
 LineChart also supports multiple lines, interaction, and axes.
 Other props, such as `areaType` can be applied to the chart as a whole or per series.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function MultipleLine() {
   const pages = useMemo(
     () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
@@ -88,6 +93,9 @@ function MultipleLine() {
 The data array for each series defines the y values for that series. You can adjust the y values for a series of data by setting the `data` prop on the xAxis.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function DataFormat() {
   const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
   const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
@@ -140,6 +148,10 @@ You can change the data passed in via `series` prop to update the chart.
 You can also use the `useRef` hook to reference the scrubber and pulse it on each update.
 
 ```jsx live
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function LiveUpdates() {
   const scrubberRef = useRef();
 
@@ -220,6 +232,9 @@ By default, null values in data create gaps in a line. Use `connectNulls` to ski
 Note that scrubber beacons and points are still only shown at non-null data values.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function MissingData() {
   const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
   const pageViews = [2400, 1398, null, 3908, 4800, 3800, 4300];
@@ -274,6 +289,8 @@ function MissingData() {
 #### Empty State
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   height={{ base: 200, tablet: 225, desktop: 250 }}
   series={[
@@ -285,7 +302,7 @@ function MissingData() {
     },
   ]}
   yAxis={{ domain: { min: -1, max: 3 } }}
-/>
+/>;
 ```
 
 ### Scales
@@ -293,6 +310,8 @@ function MissingData() {
 LineChart uses `linear` scaling on axes by default, but you can also use other types, such as `log`. See [XAxis](/components/charts/XAxis) and [YAxis](/components/charts/YAxis) for more information.
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   showArea
   showYAxis
@@ -308,7 +327,7 @@ LineChart uses `linear` scaling on axes by default, but you can also use other t
     showGrid: true,
     ticks: [1, 10, 100],
   }}
-/>
+/>;
 ```
 
 ## Interaction
@@ -316,6 +335,11 @@ LineChart uses `linear` scaling on axes by default, but you can also use other t
 Charts have built in functionality enabled through scrubbing, which can be used by setting `enableScrubbing` to true. You can listen to value changes through `onScrubberPositionChange`. Adding `Scrubber` to LineChart showcases the current scrubber position.
 
 ```jsx live
+import React, { useState } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState();
 
@@ -350,6 +374,8 @@ function Interaction() {
 You can use `points` from LineChart with `onClick` listeners to render instances of [Point](/components/charts/Point) that are interactable.
 
 ```jsx live
+import { Area, CartesianChart, Line } from '@coinbase/cds-web-visualization/chart';
+
 function Points() {
   const keyMarketShiftIndices = [4, 6, 7, 9, 10];
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
@@ -393,6 +419,15 @@ function Points() {
 You can configure chart transitions using `transitions`. The `transitions` prop accepts an object with `enter` (the clip-path reveal animation) and `update` (data change morph animation) keys. Set either to `null` to disable that animation phase. You can also disable all animations by setting `animate` on LineChart to `false`.
 
 ```jsx live
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  CartesianChart,
+  DottedArea,
+  Line,
+  Scrubber,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function Transitions() {
   const dataCount = 20;
   const maxDataOffset = 15000;
@@ -534,6 +569,9 @@ function Transitions() {
 You can use `accessibilityLabel` on both the chart and the scrubber to provide descriptive labels. The chart's label gives an overview, while the scrubber's label provides specific information about the current data point being viewed.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function BasicAccessible() {
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
@@ -577,6 +615,11 @@ function BasicAccessible() {
 When a chart has a visible header or title, you can use `aria-labelledby` to reference it, and still provide a dynamic scrubber accessibility label.
 
 ```jsx live
+import React, { useCallback, useId, useMemo } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function AccessibleWithHeader() {
   const headerId = useId();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
@@ -630,6 +673,8 @@ function AccessibleWithHeader() {
 Using `showXAxis` and `showYAxis` allows you to display the axes. For more information, such as adjusting domain and range, see [XAxis](/components/charts/XAxis) and [YAxis](/components/charts/YAxis).
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   showArea
   showXAxis
@@ -652,7 +697,7 @@ Using `showXAxis` and `showYAxis` allows you to display the axes. For more infor
     showLine: true,
     showTickMarks: true,
   }}
-/>
+/>;
 ```
 
 ### Gradients
@@ -662,6 +707,11 @@ Gradients can be applied to the y-axis (default) or x-axis. Each stop requires a
 Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
 
 ```jsx live
+import React, { useState } from 'react';
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Pressable } from '@coinbase/cds-web/system';
+
 function Gradients() {
   const spectrumColors = [
     'blue',
@@ -764,6 +814,15 @@ function Gradients() {
 You can even pass in a separate gradient for your `Line` and `Area` components.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import {
+  CartesianChart,
+  DottedArea,
+  Line,
+  Scrubber,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function GainLossChart() {
   const data = useMemo(() => [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8], []);
   const negativeColor = 'rgb(var(--gray15))';
@@ -843,6 +902,8 @@ Using `legend` will add a default [Legend](/components/charts/Legend) to your ch
 You can use `legendPosition` to place the legend at different positions around the chart.
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   legend
   showArea
@@ -875,7 +936,7 @@ You can use `legendPosition` to place the legend at different positions around t
     tickLabelFormatter: (value) =>
       new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
   }}
-/>
+/>;
 ```
 
 ### Lines
@@ -883,6 +944,8 @@ You can use `legendPosition` to place the legend at different positions around t
 You can customize lines by placing props in `LineChart` or at each individual series. Lines can have a `type` of `solid` or `dotted`. They can optionally show an area underneath them (using `showArea`).
 
 ```jsx live
+import { DottedArea, LineChart } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   height={{ base: 200, tablet: 225, desktop: 250 }}
   series={[
@@ -919,12 +982,19 @@ You can customize lines by placing props in `LineChart` or at each individual se
       showArea: true,
     },
   ]}
-/>
+/>;
 ```
 
 You can also add instances of [ReferenceLine](/components/charts/ReferenceLine) to your LineChart to highlight a specific x or y value.
 
 ```jsx live
+import {
+  DottedLine,
+  LineChart,
+  ReferenceLine,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   showArea
@@ -947,7 +1017,7 @@ You can also add instances of [ReferenceLine](/components/charts/ReferenceLine) 
     stroke="var(--color-fg)"
   />
   <Scrubber />
-</LineChart>
+</LineChart>;
 ```
 
 ### Points
@@ -955,6 +1025,9 @@ You can also add instances of [ReferenceLine](/components/charts/ReferenceLine) 
 You can also add instances of [Point](/components/charts/Point) directly inside of a LineChart.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { LineChart, Point } from '@coinbase/cds-web-visualization/chart';
+
 function HighLowPrice() {
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
   const minPrice = Math.min(...data);
@@ -1007,6 +1080,9 @@ You can customize the line used for and which series will render a scrubber beac
 You can have scrubber beacon's pulse by either adding `idlePulse` to Scrubber or use Scrubber's ref to dynamically pulse.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { LineChart, Scrubber, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 function StylingScrubber() {
   const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
   const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
@@ -1061,6 +1137,11 @@ function StylingScrubber() {
 Charts by default take up `100%` of the `width` and `height` available, but can be customized as any other component.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function DynamicChartSizing() {
   const candles = [...btcCandles].reverse();
   const prices = candles.map((candle) => parseFloat(candle.close));
@@ -1158,6 +1239,14 @@ function DynamicChartSizing() {
 You can also have charts in a compact form.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { prices } from '@coinbase/cds-common/internal/data/prices';
+import { LineChart, ReferenceLine } from '@coinbase/cds-web-visualization/chart';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 function Compact() {
   const dimensions = { width: 62, height: 18 };
 
@@ -1257,6 +1346,20 @@ function Compact() {
 You can use [PeriodSelector](/components/charts/PeriodSelector) to have a chart where the user can select a time period and the chart automatically animates.
 
 ```jsx live
+import React, { useCallback, useMemo, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import {
+  LineChart,
+  PeriodSelector,
+  PeriodSelectorActiveIndicator,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+import { Text } from '@coinbase/cds-web/typography';
+
 function AssetPriceWithDottedArea() {
   const BTCTab = memo(
     forwardRef(({ label, ...props }, ref) => {
@@ -1456,6 +1559,16 @@ function AssetPriceWithDottedArea() {
 You can adjust [YAxis](/components/charts/YAxis) and [Scrubber](/components/charts/Scrubber) to have a chart where the y-axis is overlaid and the beacon is inverted in style.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  DefaultAxisTickLabel,
+  DefaultScrubberBeacon,
+  LineChart,
+  Scrubber,
+  SolidLine,
+} from '@coinbase/cds-web-visualization/chart';
+
 function MonotoneAssetPrice() {
   const prices = sparklineInteractiveData.hour;
 
@@ -1579,6 +1692,13 @@ function MonotoneAssetPrice() {
 ### Asset Price Widget
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 function AssetPriceWidget() {
   const { isPhone } = useBreakpoints();
   const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
@@ -1679,6 +1799,15 @@ function AssetPriceWidget() {
 You can have irregular data points by passing in `data` to `xAxis`.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import {
+  CartesianChart,
+  Line,
+  Scrubber,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function ServiceAvailability() {
   const availabilityEvents = useMemo(
     () => [
@@ -1771,6 +1900,17 @@ function ServiceAvailability() {
 You can combine multiple lines within a series to change styles dynamically.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import {
+  CartesianChart,
+  DefaultScrubberBeacon,
+  DottedLine,
+  Line,
+  Scrubber,
+  SolidLine,
+  XAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function ForecastAssetPrice() {
   const startYear = 2020;
   const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];

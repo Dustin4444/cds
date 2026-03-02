@@ -1,6 +1,8 @@
 ### Horizontal Divider
 
-```jsx
+```jsx live noPreview
+import { Box, Divider, VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack width={500} padding={4} gap={2} width="100%">
   <Box background="background" height={100} background="bgAlternate" padding={2} borderRadius="300">
     Content Above
@@ -9,12 +11,14 @@
   <Box background="background" height={100} background="bgAlternate" padding={2} borderRadius="300">
     Content Below
   </Box>
-</VStack>
+</VStack>;
 ```
 
 ### Vertical Divider
 
-```jsx
+```jsx live noPreview
+import { Box, Divider, HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack height={200} padding={4} gap={2} justifyContent="stretch">
   <Box background="background" background="bgAlternate" padding={2} borderRadius="300" flexGrow={1}>
     Content Left
@@ -23,5 +27,5 @@
   <Box background="background" background="bgAlternate" padding={2} borderRadius="300" flexGrow={1}>
     Content Right
   </Box>
-</HStack>
+</HStack>;
 ```

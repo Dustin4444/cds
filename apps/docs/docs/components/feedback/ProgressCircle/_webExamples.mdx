@@ -1,72 +1,93 @@
 ## Default
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <ProgressCircle progress={0} size={100} />
   <ProgressCircle progress={0.5} size={100} />
   <ProgressCircle progress={1} size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Thin
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <ProgressCircle progress={0} weight="thin" size={100} />
   <ProgressCircle progress={0.5} weight="thin" size={100} />
   <ProgressCircle progress={1} weight="thin" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Semiheavy
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <ProgressCircle progress={0} weight="semiheavy" size={100} />
   <ProgressCircle progress={0.5} weight="semiheavy" size={100} />
   <ProgressCircle progress={1} weight="semiheavy" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Heavy
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <ProgressCircle progress={0} weight="heavy" size={100} />
   <ProgressCircle progress={0.5} weight="heavy" size={100} />
   <ProgressCircle progress={1} weight="heavy" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## No Text
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <ProgressCircle progress={0} hideContent size={25} />
   <ProgressCircle progress={0.5} hideContent size={25} />
   <ProgressCircle progress={1} hideContent size={25} />
-</HStack>
+</HStack>;
 ```
 
 ## Disabled
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <ProgressCircle progress={0} disabled size={100} />
   <ProgressCircle progress={0.5} disabled size={100} />
   <ProgressCircle progress={1} disabled size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Colors
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <ProgressCircle progress={0.5} color="bgPositive" size={100} />
   <ProgressCircle progress={0.5} color="bgNegative" size={100} />
   <ProgressCircle progress={0.5} color="bgPrimary" size={100} />
   <ProgressCircle progress={0.5} color="fg" size={100} />
-</HStack>
+</HStack>;
 ```
 
 ## Fill Parent
@@ -74,6 +95,9 @@
 The progress circle can be dynamically sized to fit its parent. If you drag the browser window smaller or larger then the ProgressCircle will resize accordingly.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2} flexWrap="wrap">
   <div style={{ height: '15vw', width: '15vw', minWidth: '60px', minHeight: '60px' }}>
     <ProgressCircle progress={1} />
@@ -84,7 +108,7 @@ The progress circle can be dynamically sized to fit its parent. If you drag the 
   <div style={{ height: '5vw', width: '5vw', minWidth: '60px', minHeight: '60px' }}>
     <ProgressCircle progress={1} />
   </div>
-</HStack>
+</HStack>;
 ```
 
 ## Content Node Customization
@@ -96,6 +120,10 @@ You can override the default content node to display a custom node. Note that th
 You can provide an image, such as an asset, as the content node.
 
 ```jsx live
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <HStack gap={2} flexWrap="wrap">
     <ProgressCircle
@@ -301,7 +329,7 @@ You can provide an image, such as an asset, as the content node.
       weight="thin"
     />
   </HStack>
-</VStack>
+</VStack>;
 ```
 
 ### Custom Text Color
@@ -309,6 +337,9 @@ You can provide an image, such as an asset, as the content node.
 The progress circle's default content can be customized to display a custom text color.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle
     color="fgPrimary"
@@ -322,7 +353,7 @@ The progress circle's default content can be customized to display a custom text
     size={100}
     contentNode={<DefaultProgressCircleContent color="fgPositive" progress={0.4} />}
   />
-</HStack>
+</HStack>;
 ```
 
 ## Custom Styles
@@ -330,6 +361,11 @@ The progress circle's default content can be customized to display a custom text
 The progress circle can be customized with styles and class names.
 
 ```jsx live
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <HStack gap={2}>
   <ProgressCircle
     progress={0.4}
@@ -357,7 +393,7 @@ The progress circle can be customized with styles and class names.
     }}
     contentNode={<Icon color="fgPositive" name="circleCheckmark" size="l" />}
   />
-</HStack>
+</HStack>;
 ```
 
 ## Interactive Demo
@@ -365,6 +401,9 @@ The progress circle can be customized with styles and class names.
 This is for demo purposes. ProgressContainerWithButtons isn't designed for production usage.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <HStack gap={2}>
@@ -372,7 +411,7 @@ This is for demo purposes. ProgressContainerWithButtons isn't designed for produ
       <ProgressCircle progress={calculateProgress(0.2)} size={100} />
     </HStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ## Animation
@@ -380,6 +419,10 @@ This is for demo purposes. ProgressContainerWithButtons isn't designed for produ
 By default, ProgressCircle animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
 
 ```tsx live
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <HStack gap={2}>
@@ -394,7 +437,7 @@ By default, ProgressCircle animates progress changes. Use `disableAnimateOnMount
       </VStack>
     </HStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ### Callbacks
@@ -402,6 +445,11 @@ By default, ProgressCircle animates progress changes. Use `disableAnimateOnMount
 You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const [animationStatus, setAnimationStatus] = React.useState('Ready');
 

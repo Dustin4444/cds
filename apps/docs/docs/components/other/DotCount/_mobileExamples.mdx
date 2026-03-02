@@ -1,6 +1,9 @@
 ### Basic DotCount
 
-```jsx
+```jsx live noPreview
+import { DotCount } from '@coinbase/cds-mobile/dots';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+
 function DotCountBasic() {
   const counts = [1, 100, 30, 2, 0, 99];
   return (
@@ -21,7 +24,9 @@ function DotCountBasic() {
 
 ### Variants
 
-```jsx
+```jsx live noPreview
+import { DotCount } from '@coinbase/cds-mobile/dots';
+
 function Variants() {
   return <DotCount count={30} variant="negative" />;
 }
@@ -29,7 +34,10 @@ function Variants() {
 
 ### Placements
 
-```jsx
+```jsx live noPreview
+import { DotCount } from '@coinbase/cds-mobile/dots';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Placements() {
   return (
     <DotCount count={30} pin="top-end">
@@ -45,7 +53,10 @@ function Placements() {
 
 You can use the overlap prop to place the dot relative to the corner of the wrapped element.
 
-```jsx
+```jsx live noPreview
+import { DotCount } from '@coinbase/cds-mobile/dots';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function DottingRelativeToShapeOfChild() {
   return (
     <HStack gap={2}>
@@ -78,7 +89,10 @@ function DottingRelativeToShapeOfChild() {
 
 You can use the styles prop to customize appearance.
 
-```jsx
+```jsx live noPreview
+import { DotCount } from '@coinbase/cds-mobile/dots';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 function CustomizeStyle() {
   const theme = useTheme();
   return (

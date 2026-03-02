@@ -4,6 +4,17 @@ You define tour steps with unique IDs and wrap target elements with `TourStep` c
 ## Basic usage
 
 ```jsx live
+import React, { useCallback, useState } from 'react';
+import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Coachmark } from '@coinbase/cds-web/coachmark';
+import { Checkbox } from '@coinbase/cds-web/controls';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Tour, TourStep } from '@coinbase/cds-web/tour';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const [activeTourStep, setActiveTourStep] = useState(null);
 
@@ -239,6 +250,15 @@ You can hide the dimmed overlay behind the coachmark using the `hideOverlay` pro
 This can be set globally on the `Tour` component or per-step.
 
 ```jsx live
+import React, { useState } from 'react';
+import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Coachmark } from '@coinbase/cds-web/coachmark';
+import { Checkbox } from '@coinbase/cds-web/controls';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tour, TourStep } from '@coinbase/cds-web/tour';
+import { Text } from '@coinbase/cds-web/typography';
+
 function HideOverlayExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
   const [hideOverlay, setHideOverlay] = useState(false);

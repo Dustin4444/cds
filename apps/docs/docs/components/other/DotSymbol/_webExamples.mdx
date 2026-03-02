@@ -1,6 +1,10 @@
 ### Placements
 
 ```jsx live
+import { DotSymbol } from '@coinbase/cds-web/dots';
+import { Icon } from '@coinbase/cds-web/icons';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Placements() {
   const PIN_DIRECTIONS = ['top-start', 'top-end', 'bottom-start', 'bottom-end'];
   return (
@@ -25,6 +29,9 @@ function Placements() {
 ### Sizes
 
 ```jsx live
+import { DotSymbol } from '@coinbase/cds-web/dots';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Sizes() {
   const SIZES = ['xs', 's', 'm', 'l'];
   return (
@@ -44,6 +51,10 @@ function Sizes() {
 You can use the overlap prop to place the dot relative to the corner of the wrapped element.
 
 ```jsx live
+import { DotSymbol } from '@coinbase/cds-web/dots';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 function DottingRelativeToShapeOfChild() {
   return (
     <VStack gap={2}>
@@ -63,6 +74,10 @@ function DottingRelativeToShapeOfChild() {
 ### Use DotSymbol paired with Icon
 
 ```jsx live
+import { DotSymbol } from '@coinbase/cds-web/dots';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 function UseDotSymbolPairedWithIcon() {
   return (
     <VStack gap={1}>
@@ -83,6 +98,10 @@ function UseDotSymbolPairedWithIcon() {
 ### Use DotSymbol paired with another Asset
 
 ```jsx live
+import { DotSymbol } from '@coinbase/cds-web/dots';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 function UseDotSymbolPairedWithAnotherAsset() {
   return (
     <VStack>

@@ -1,6 +1,11 @@
 ### Basic Example
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { TabIndicator } from '@coinbase/cds-mobile/tabs';
+
 function TabIndicatorExample() {
   const getRandomNumber = () => Math.random() * 100 + 100;
   const [width, setWidth] = useState(120);

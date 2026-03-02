@@ -4,7 +4,10 @@ AccordionItem represents a single expandable section within an [Accordion](/comp
 
 Each `AccordionItem` requires a unique `itemKey` to identify it within the parent Accordion, and a `title` for the header text. The `children` become the collapsible content.
 
-```jsx
+```jsx live noPreview
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Accordion>
   <AccordionItem itemKey="1" title="What is Coinbase?">
     <Text font="body" color="fgMuted">
@@ -12,7 +15,7 @@ Each `AccordionItem` requires a unique `itemKey` to identify it within the paren
       currency.
     </Text>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Header Content
@@ -21,7 +24,12 @@ Each `AccordionItem` requires a unique `itemKey` to identify it within the paren
 
 Use the `title` prop for the main header text and `subtitle` for secondary information.
 
-```jsx
+```jsx live noPreview
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Accordion>
   <AccordionItem
     itemKey="1"
@@ -37,14 +45,19 @@ Use the `title` prop for the main header text and `subtitle` for secondary infor
       </Button>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ### Media
 
 Add icons, avatars, or other media to the header using the `media` prop. This commonly uses `CellMedia` for consistent styling.
 
-```jsx
+```jsx live noPreview
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { CellMedia } from '@coinbase/cds-mobile/cells';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Accordion>
   <AccordionItem
     itemKey="1"
@@ -67,14 +80,19 @@ Add icons, avatars, or other media to the header using the `media` prop. This co
       </HStack>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Press Handling
 
 Use the `onPress` callback to respond when an item is pressed. It receives the `itemKey` as an argument.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function PressExample() {
   const [lastPressed, setLastPressed] = useState(null);
 
@@ -108,7 +126,13 @@ function PressExample() {
 
 AccordionItem children can contain any React Native content—forms, lists, buttons, or other components.
 
-```jsx
+```jsx live noPreview
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Card } from '@coinbase/cds-mobile/cards';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 <Accordion>
   <AccordionItem itemKey="1" title="Payment Details" subtitle="Enter your payment information">
     <VStack gap={3}>
@@ -127,14 +151,17 @@ AccordionItem children can contain any React Native content—forms, lists, butt
       </HStack>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Multiple Items
 
 When using multiple AccordionItems, only one can be expanded at a time (controlled by the parent Accordion). Use `defaultActiveKey` on the Accordion to specify which item starts expanded.
 
-```jsx
+```jsx live noPreview
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Accordion defaultActiveKey="faq-2">
   <AccordionItem itemKey="faq-1" title="How do I get started?">
     <Text font="body" color="fgMuted">
@@ -152,7 +179,7 @@ When using multiple AccordionItems, only one can be expanded at a time (controll
       Fees vary based on your payment method and transaction size. See our pricing page for details.
     </Text>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Accessibility
@@ -165,7 +192,12 @@ AccordionItem automatically provides accessible behavior on mobile:
 
 For items with complex content, ensure any interactive elements inside the panel have appropriate accessibility labels.
 
-```jsx
+```jsx live noPreview
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Accordion>
   <AccordionItem
     itemKey="1"
@@ -182,14 +214,18 @@ For items with complex content, ensure any interactive elements inside the panel
       </Button>
     </VStack>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ## Refs
 
 Use `headerRef` and `panelRef` to get references to the header and panel views for programmatic focus management or measurements.
 
-```jsx
+```jsx live noPreview
+import React, { useRef } from 'react';
+import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function RefExample() {
   const headerRef = useRef(null);
   const panelRef = useRef(null);

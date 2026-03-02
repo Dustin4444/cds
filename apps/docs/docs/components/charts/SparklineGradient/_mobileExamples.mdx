@@ -2,7 +2,11 @@ Expands upon the [Sparkline](/components/charts/Sparkline) component to provide 
 
 ### Dynamic path colors
 
-```jsx
+```jsx live noPreview
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { SparklineGradient } from '@coinbase/cds-mobile-visualization/sparkline';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const dimensions = { width: 400, height: 200 };
   const path = useSparklinePath({ ...dimensions, data: prices });
@@ -18,7 +22,11 @@ function Example() {
 
 ### Dynamic background colors
 
-```jsx
+```jsx live noPreview
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { SparklineGradient } from '@coinbase/cds-mobile-visualization/sparkline';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const dimensions = { width: 400, height: 200 };
   const path = useSparklinePath({ ...dimensions, data: prices });
@@ -36,7 +44,12 @@ function Example() {
 
 ### y axis scaling
 
-```jsx
+```jsx live noPreview
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { SparklineGradient } from '@coinbase/cds-mobile-visualization/sparkline';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const yAxisScalingFactor = 0.2;
   const dimensions = { width: 400, height: 200 };
@@ -59,7 +72,12 @@ function Example() {
 
 ### Sparkline fill
 
-```jsx
+```jsx live noPreview
+import { useSparklineArea } from '@coinbase/cds-common/visualizations/useSparklineArea';
+import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
+import { SparklineArea, SparklineGradient } from '@coinbase/cds-mobile-visualization/sparkline';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const dimensions = { width: 400, height: 200 };
   const path = useSparklinePath({ ...dimensions, data: prices });

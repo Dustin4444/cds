@@ -2,7 +2,10 @@
 
 Informational tags (default) are used to note a characteristic or state of an object. Promotional tags for editorial, ephemeral communication.
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Tag } from '@coinbase/cds-mobile/tag';
+
 <HStack>
   <Tag intent="informational" colorScheme="green">
     Green
@@ -10,14 +13,17 @@ Informational tags (default) are used to note a characteristic or state of an ob
   <Tag intent="promotional" colorScheme="green">
     Green
   </Tag>
-</HStack>
+</HStack>;
 ```
 
 ### Emphasis
 
 You can control the visual prominence of the Tag using the `emphasis` prop. By default, informational tags are low emphasis and promotional tags are high emphasis.
 
-```jsx
+```jsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Tag } from '@coinbase/cds-mobile/tag';
+
 <HStack>
   <Tag emphasis="high" colorScheme="green">
     High Green
@@ -29,14 +35,17 @@ You can control the visual prominence of the Tag using the `emphasis` prop. By d
   <Tag intent="promotional" emphasis="low" colorScheme="purple">
     Low Purple
   </Tag>
-</HStack>
+</HStack>;
 ```
 
 ### Icons
 
 Use the `startIcon` and `endIcon` props to render an icon at the start or end of the tag.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Tag } from '@coinbase/cds-mobile/tag';
+
 <VStack gap={2} alignItems="flex-start">
   <Tag colorScheme="blue" startIcon="add">
     Start icon
@@ -50,14 +59,18 @@ Use the `startIcon` and `endIcon` props to render an icon at the start or end of
   <Tag colorScheme="red" intent="promotional" startIcon="add" endIcon="add">
     Promotional with icons
   </Tag>
-</VStack>
+</VStack>;
 ```
 
 ### Custom Nodes
 
 Use the `start` and `end` props to render custom nodes at the start or end of the tag for full control over styling.
 
-```jsx
+```jsx live noPreview
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Tag } from '@coinbase/cds-mobile/tag';
+
 <VStack gap={2} alignItems="flex-start">
   <Tag colorScheme="blue" start={<Icon color="negative" name="add" size="xs" />}>
     Custom start node
@@ -72,14 +85,19 @@ Use the `start` and `end` props to render custom nodes at the start or end of th
   >
     Both custom nodes
   </Tag>
-</VStack>
+</VStack>;
 ```
 
 ### Composed Examples
 
 #### Account Status
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Tag } from '@coinbase/cds-mobile/tag';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <HStack justifyContent="space-between" gap="2" alignItems="center">
   <VStack gap={0.5}>
     <HStack gap={1}>
@@ -93,12 +111,18 @@ Use the `start` and `end` props to render custom nodes at the start or end of th
     </Text>
   </VStack>
   <Button>Get started</Button>
-</HStack>
+</HStack>;
 ```
 
 #### Margin Ratio
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Tag } from '@coinbase/cds-mobile/tag';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 function MarginExample() {
   const renderStartLabelNum = useCallback((num, disabled) => {
     return (
@@ -179,7 +203,12 @@ function MarginExample() {
 
 #### List Cell Integration
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { ListCell } from '@coinbase/cds-mobile/cells';
+import { Box, Divider, Group, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Tag } from '@coinbase/cds-mobile/tag';
+
 <Box justifyContent="center">
   <Group divider={Divider} width="420px" bordered borderRadius={300} background elevation={1}>
     <ListCell
@@ -217,5 +246,5 @@ function MarginExample() {
       media={<IconButton name="card" color="primary" />}
     />
   </Group>
-</Box>
+</Box>;
 ```

@@ -2,7 +2,13 @@
 
 Session Expired is a form of an Identity module that inform users when their login session has timed out. These modules require users to take action by either logging in again or switching to another account before they can continue using the product.
 
-```tsx
+```tsx live noPreview
+import { Button, ButtonGroup } from '@coinbase/cds-mobile/buttons';
+import { ListCell } from '@coinbase/cds-mobile/cells';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Avatar } from '@coinbase/cds-mobile/media';
+import { MultiContentModule } from '@coinbase/cds-mobile/multi-content-module';
+
 function Example() {
   const onClickConsole = () => console.log('onClick');
   const action = (
@@ -44,7 +50,12 @@ function Example() {
 
 Account Recovery is used to explain to users the options they have when they are having difficultly accessing their account.
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { ListCell } from '@coinbase/cds-mobile/cells';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { MultiContentModule } from '@coinbase/cds-mobile/multi-content-module';
+
 function Example() {
   const listItems = [
     {
@@ -94,7 +105,12 @@ function Example() {
 
 Login page is the entry point for users to access Coinbase products. Login features third-party sign in options to accelerate the sign in process.
 
-```tsx
+```tsx live noPreview
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { MultiContentModule } from '@coinbase/cds-mobile/multi-content-module';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const theme = useTheme();
   const spectrum = theme.activeColorScheme;

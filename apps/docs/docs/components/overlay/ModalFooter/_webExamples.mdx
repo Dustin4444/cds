@@ -5,6 +5,11 @@ ModalFooter provides a consistent action area for [Modal](/components/overlay/Mo
 Pass a `primaryAction` button to create a simple footer. The footer automatically displays a top border.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function BasicExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -27,6 +32,11 @@ function BasicExample() {
 Add a `secondaryAction` for cancel/dismiss patterns. On larger screens, buttons display side-by-side. On smaller screens, they stack vertically with the primary action on top.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function TwoActionsExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -56,6 +66,11 @@ function TwoActionsExample() {
 Use `variant="negative"` on the primary button for destructive actions.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function DestructiveExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -89,6 +104,11 @@ function DestructiveExample() {
 Show a loading state on the primary button while an action is processing.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function LoadingExample() {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);

@@ -3,6 +3,10 @@
 Pressables support an `onClick` prop for handling click/press interactions. When being pressed, the element will scale down to mimic a real-world button press. If this functionality is not desired, pass the `noScaleOnPress` prop.
 
 ```jsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Pressable
   onClick={console.log}
   as="button"
@@ -16,12 +20,16 @@ Pressables support an `onClick` prop for handling click/press interactions. When
       Click me...
     </Text>
   </Box>
-</Pressable>
+</Pressable>;
 ```
 
 ### Pressable with Transparent Background
 
 ```jsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Pressable
   onClick={console.log}
   as="button"
@@ -35,7 +43,7 @@ Pressables support an `onClick` prop for handling click/press interactions. When
       Click me...
     </Text>
   </Box>
-</Pressable>
+</Pressable>;
 ```
 
 ### Block Pressable
@@ -43,6 +51,10 @@ Pressables support an `onClick` prop for handling click/press interactions. When
 Pressables expand to 100% width when the `block` prop is passed.
 
 ```jsx live
+import { Box } from '@coinbase/cds-web/layout';
+import { Pressable } from '@coinbase/cds-web/system';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Pressable
   block
   as="button"
@@ -57,7 +69,7 @@ Pressables expand to 100% width when the `block` prop is passed.
       Click me...
     </Text>
   </Box>
-</Pressable>
+</Pressable>;
 ```
 
 ### A11y

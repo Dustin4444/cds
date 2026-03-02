@@ -5,6 +5,9 @@ CartesianChart is a customizable, SVG based component that can be used to displa
 [AreaChart](/components/charts/AreaChart/), [BarChart](/components/charts/BarChart/), and [LineChart](/components/charts/LineChart/) are built on top of CartesianChart and have default functionality for your chart.
 
 ```jsx live
+import { AreaChart, BarChart, LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { VStack } from '@coinbase/cds-web/layout';
+
 <VStack gap={2}>
   <AreaChart
     enableScrubbing
@@ -55,7 +58,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
   >
     <Scrubber />
   </LineChart>
-</VStack>
+</VStack>;
 ```
 
 ## Series
@@ -67,6 +70,8 @@ Series are the data that will be displayed on the chart. Each series must have a
 You can pass in an array of numbers or an array of tuples for the `data` prop. Passing in null values is equivalent to no data at that index.
 
 ```jsx live
+import { Area, CartesianChart, Line } from '@coinbase/cds-web-visualization/chart';
+
 function ForecastedPrice() {
   const ForecastRect = memo(({ startIndex, endIndex }) => {
     const { drawingArea, getXScale } = useCartesianChartContext();
@@ -135,6 +140,8 @@ function ForecastedPrice() {
 Each series can have a different `yAxisId`, allowing you to compare data from different contexts.
 
 ```jsx live
+import { BarPlot, CartesianChart, XAxis, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
@@ -183,7 +190,7 @@ Each series can have a different `yAxisId`, allowing you to compare data from di
     tickLabelFormatter={(value) => `$${value}k`}
   />
   <BarPlot />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Series Stacks
@@ -191,6 +198,8 @@ Each series can have a different `yAxisId`, allowing you to compare data from di
 You can provide a `stackId` to stack series together.
 
 ```jsx live
+import { AreaChart, LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <AreaChart
   enableScrubbing
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -223,6 +232,8 @@ You can provide a `stackId` to stack series together.
 You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` accepts an object while `yAxis` accepts an object or array.
 
 ```jsx live
+import { BarPlot, CartesianChart, XAxis, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
@@ -241,7 +252,7 @@ You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` 
   <YAxis showLine showTickMarks showGrid />
   <XAxis showLine showTickMarks />
   <BarPlot />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 For more info, learn about [XAxis](/components/charts/XAxis/#axis-config) and [YAxis](/components/charts/YAxis/#axis-config) configuration.
@@ -253,6 +264,11 @@ You can adjust the inset around the entire chart (outside the axes) with the `in
 You can also remove the default inset, such as to have a compact line chart.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Insets() {
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
@@ -329,6 +345,11 @@ function Insets() {
 CartesianChart has built-in scrubbing functionality that can be enabled with the `enableScrubbing` prop. This will then enable the usage of `onScrubberPositionChange` to get the current position of the scrubber as the user interacts with the chart.
 
 ```jsx live
+import React, { useCallback, useState } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Scrubbing() {
   const [scrubIndex, setScrubIndex] = useState(undefined);
 
@@ -373,6 +394,9 @@ CartesianChart delegates transition control to its child components. You can als
 Disable the update morph animation while keeping a slow enter reveal. Data changes snap instantly but the initial chart appearance animates. Useful when new data arrives frequently and morphing would be distracting.
 
 ```tsx live
+import React, { useEffect, useState } from 'react';
+import { CartesianChart, Line } from '@coinbase/cds-web-visualization/chart';
+
 function EnterAnimationOnly() {
   const dataCount = 15;
   const updateInterval = 2500;
@@ -431,6 +455,9 @@ function EnterAnimationOnly() {
 Disable the enter reveal animation while keeping a slow update morph. The chart appears instantly but data changes animate smoothly. Useful when the chart is embedded in content that should not animate on load.
 
 ```tsx live
+import React, { useEffect, useState } from 'react';
+import { CartesianChart, Line } from '@coinbase/cds-web-visualization/chart';
+
 function UpdateAnimationOnly() {
   const dataCount = 15;
   const updateInterval = 2500;
@@ -489,6 +516,9 @@ function UpdateAnimationOnly() {
 Each child component can define its own transitions independently. Here, the `Line` uses a spring morph while the bars snap with no update animation. This lets you fine-tune each visual layer within a single chart.
 
 ```tsx live
+import React, { useEffect, useState } from 'react';
+import { BarPlot, CartesianChart, Line } from '@coinbase/cds-web-visualization/chart';
+
 function MixedTransitions() {
   const dataCount = 10;
   const updateInterval = 2000;
@@ -566,6 +596,9 @@ function MixedTransitions() {
 You can disable all animations chart-wide by setting `animate` to `false` on CartesianChart. This is useful for static snapshots or when performance is a concern. Compare this to the animated examples above — data still updates, but changes snap instantly without any transition.
 
 ```tsx live
+import React, { useEffect, useState } from 'react';
+import { CartesianChart, Line } from '@coinbase/cds-web-visualization/chart';
+
 function DisableAnimations() {
   const dataCount = 15;
   const updateInterval = 2500;
@@ -620,6 +653,21 @@ function DisableAnimations() {
 You can showcase the price and volume of an asset over time within one chart.
 
 ```jsx live
+import React, { useCallback, useId, useMemo, useState } from 'react';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import {
+  BarPlot,
+  CartesianChart,
+  Line,
+  Scrubber,
+  SolidLine,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+import { Text } from '@coinbase/cds-web/typography';
+
 function PriceWithVolume() {
   const [scrubIndex, setScrubIndex] = useState(null);
   const btcData = btcCandles.slice(0, 180).reverse();
@@ -746,6 +794,11 @@ function PriceWithVolume() {
 You can also create your own type of cartesian chart by using `getSeriesData`, `getXScale`, and `getYScale` directly.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import { CartesianChart, XAxis, YAxis } from '@coinbase/cds-web-visualization/chart';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function EarningsHistory() {
   const CirclePlot = memo(({ seriesId, opacity = 1 }) => {
     const { drawingArea, getSeries, getSeriesData, getXScale, getYScale } =
@@ -882,6 +935,17 @@ function EarningsHistory() {
 You can have multiple axes with different domains and ranges to showcase different pieces of data over the time time period.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import {
+  BarPlot,
+  CartesianChart,
+  Line,
+  ReferenceLine,
+  SolidLine,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function TradingTrends() {
   const profitData = [34, 24, 28, -4, 8, -16, -3, 12, 24, 18, 20, 28];
   const gains = profitData.map((value) => (value > 0 ? value : 0));

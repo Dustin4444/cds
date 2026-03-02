@@ -7,6 +7,9 @@ We use [fuse.js](https://www.fusejs.io/) to power the fuzzy search logic for Com
 Basic multi-selection combobox with search.
 
 ```tsx live
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Combobox } from '@coinbase/cds-web/alpha/combobox/Combobox';
+
 function MultiSelect() {
   const fruitOptions: SelectOption[] = [
     { value: 'apple', label: 'Apple' },
@@ -46,6 +49,9 @@ function MultiSelect() {
 Standard single-selection combobox with an option to clear the current value.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Combobox } from '@coinbase/cds-web/alpha/combobox/Combobox';
+
 function SingleSelect() {
   const singleSelectOptions = [
     { value: null, label: 'Remove selection' },
@@ -74,6 +80,9 @@ function SingleSelect() {
 Communicate limits or guidance by pairing helper text with multi-select usage.
 
 ```tsx live
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Combobox } from '@coinbase/cds-web/alpha/combobox/Combobox';
+
 function HelperText() {
   const fruitOptions: SelectOption[] = [
     { value: 'apple', label: 'Apple' },
@@ -118,6 +127,10 @@ Left / right alignment is preferred for styling.
 ::::
 
 ```tsx live
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Combobox } from '@coinbase/cds-web/alpha/combobox/Combobox';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function AlignmentExample() {
   const fruitOptions: SelectOption[] = [
     { value: 'apple', label: 'Apple' },
@@ -160,6 +173,11 @@ function AlignmentExample() {
 You can remove the border from the combobox control by setting `bordered` to `false`.
 
 ```jsx live
+import React, { useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Combobox } from '@coinbase/cds-web/alpha/combobox/Combobox';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function BorderlessExample() {
   const singleSelectOptions = [
     { value: null, label: 'Remove selection' },

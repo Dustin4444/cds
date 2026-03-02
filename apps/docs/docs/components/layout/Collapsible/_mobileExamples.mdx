@@ -1,6 +1,11 @@
 ### Basic Collapsible
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Collapsible } from '@coinbase/cds-mobile/collapsible';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function BasicCollapsible() {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -19,7 +24,12 @@ function BasicCollapsible() {
 
 Place `Collapsible` above the trigger to expand top.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Collapsible } from '@coinbase/cds-mobile/collapsible';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function ExpandTop() {
   const [collapsed, setCollapsed] = useState(true);
   return (
@@ -37,7 +47,14 @@ function ExpandTop() {
 
 Enable scroll by setting `maxHeight`.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Collapsible } from '@coinbase/cds-mobile/collapsible';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Scroll() {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -58,7 +75,13 @@ function Scroll() {
 
 Set `direction="horizontal"` for horizontal expand/collapse.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Collapsible } from '@coinbase/cds-mobile/collapsible';
+import { DotCount } from '@coinbase/cds-mobile/dots';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 function Horizontal() {
   const [collapsed, setCollapsed] = useState(true);
 

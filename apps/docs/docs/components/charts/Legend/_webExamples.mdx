@@ -5,6 +5,9 @@ Legend displays series information for charts, showing labels and color indicato
 Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization. Legend's `flexDirection` is automatically set to `row` for top/bottom `legendPosition` and `column` otherwise.
 
 ```jsx live
+import React, { useCallback, useMemo } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function BasicLegend() {
   const pages = useMemo(
     () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
@@ -69,6 +72,9 @@ function BasicLegend() {
 Legend will automatically wrap when there are too many items to fit on one line.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function WrappedLegend() {
   const precipitationData = [
     {
@@ -185,6 +191,14 @@ function WrappedLegend() {
 Use `legendPosition` to place the legend at different positions around the chart. You can also customize alignment using the `justifyContent` prop on Legend.
 
 ```jsx live
+import {
+  BarPlot,
+  CartesianChart,
+  Legend,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function LegendPosition() {
   return (
     <CartesianChart
@@ -255,6 +269,8 @@ function LegendPosition() {
 Legend supports different shape variants: `pill`, `circle`, `square`, and `squircle`. Set the shape on each series using `legendShape`.
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 function ShapeVariants() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
@@ -310,6 +326,9 @@ function ShapeVariants() {
 You can pass a custom ReactNode as `legendShape` for fully custom indicators.
 
 ```jsx live
+import React, { useCallback, useId } from 'react';
+import { BarChart } from '@coinbase/cds-web-visualization/chart';
+
 function CustomLegendShapes() {
   const months = [
     'Jan',
@@ -459,6 +478,8 @@ function CustomLegendShapes() {
 Use `legendAccessibilityLabel` on chart components to provide a descriptive label for the legend group. This helps screen reader users understand what the legend represents.
 
 ```jsx live
+import { LineChart } from '@coinbase/cds-web-visualization/chart';
+
 function AccessibleLegend() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
@@ -499,6 +520,8 @@ function AccessibleLegend() {
 You can also set `accessibilityLabel` directly on the `Legend` component for more control:
 
 ```jsx live
+import { Legend, LineChart } from '@coinbase/cds-web-visualization/chart';
+
 function CustomAccessibleLegend() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
@@ -544,6 +567,16 @@ function CustomAccessibleLegend() {
 You can use `EntryComponent` to display a label that updates as a user interacts with the chart.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import {
+  DefaultLegendShape,
+  Legend,
+  LineChart,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomLegendEntry() {
   const timeLabels = [
     'Jan',
@@ -654,6 +687,12 @@ function CustomLegendEntry() {
 You can create an interactive legend that the user can use to toggle to emphasize a specific series.
 
 ```jsx live
+import React, { useCallback, useMemo, useState } from 'react';
+import { DefaultLegendShape, Legend, LineChart } from '@coinbase/cds-web-visualization/chart';
+import { Chip } from '@coinbase/cds-web/chips';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function InteractiveLegend() {
   const [emphasizedId, setEmphasizedId] = useState(null);
 

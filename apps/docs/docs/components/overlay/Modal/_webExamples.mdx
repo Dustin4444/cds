@@ -1,6 +1,10 @@
 ### Basic example
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-web/overlays';
+
 function Example() {
   const [visible, setVisible] = useState(false);
   return (
@@ -38,6 +42,11 @@ Use the `visible` and `onRequestClose` props as outlined above
 :::
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { useModal } from '@coinbase/cds-common/overlays/useModal';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-web/overlays';
+
 function Example() {
   const { openModal, closeModal } = useModal();
 
@@ -71,6 +80,11 @@ For chained modals, set `restoreFocusOnUnmount={false}` on each one and return f
 :::
 
 ```jsx live
+import React, { useRef, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ChainedModalsExample() {
   const triggerRef = useRef(null);
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);

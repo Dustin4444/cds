@@ -1,6 +1,10 @@
 ### Basic Example
 
-```jsx
+```jsx live noPreview
+import React, { useMemo, useState } from 'react';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { TabNavigation } from '@coinbase/cds-mobile/tabs';
+
 function TabNavigationExample() {
   // TAB MOCK DATA
   const tabs = useMemo(() => [

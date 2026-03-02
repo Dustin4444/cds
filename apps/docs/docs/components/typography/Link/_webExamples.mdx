@@ -5,9 +5,11 @@ Link renders a pressable [Text](/components/typography/Text) element as an ancho
 By default, Link inherits the text styles of its parent. Pass an `href` to set the destination URL.
 
 ```jsx live
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Text font="body" as="p">
   Check out the <Link href="https://www.coinbase.com/">Coinbase homepage</Link> for more info.
-</Text>
+</Text>;
 ```
 
 ## Underline
@@ -15,13 +17,15 @@ By default, Link inherits the text styles of its parent. Pass an `href` to set t
 Use the `underline` prop to add a text decoration underline to the link. This is particularly important for inline links within body text to meet [WCAG 2.0 accessibility requirements](https://webaim.org/standards/wcag/checklist).
 
 ```jsx live
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Text font="body" as="p">
   Read our{' '}
   <Link underline href="https://www.coinbase.com/">
     terms and conditions
   </Link>{' '}
   before proceeding.
-</Text>
+</Text>;
 ```
 
 ### Underline with different fonts
@@ -29,6 +33,9 @@ Use the `underline` prop to add a text decoration underline to the link. This is
 The underline works across all font styles.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link } from '@coinbase/cds-web/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Link underline font="body" href="https://www.coinbase.com/">
     body link
@@ -45,7 +52,7 @@ The underline works across all font styles.
   <Link underline font="title2" href="https://www.coinbase.com/">
     title2 link
   </Link>
-</VStack>
+</VStack>;
 ```
 
 ### Underline within a paragraph
@@ -53,13 +60,15 @@ The underline works across all font styles.
 When a link appears inline within body text, always use `underline` so users can distinguish the link from surrounding text without relying on color alone.
 
 ```jsx live
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Text as="p" display="block" font="body">
   This is a paragraph with an{' '}
   <Link underline href="https://www.coinbase.com/">
     inline underlined link
   </Link>{' '}
   that is clearly distinguishable from the surrounding text.
-</Text>
+</Text>;
 ```
 
 ## Styling
@@ -71,6 +80,9 @@ To style a Link, either wrap it in the desired [Text](/components/typography/Tex
 #### Wrapping in Text
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Text font="body" as="p">
     <Link href="https://www.coinbase.com/" openInNewWindow>
@@ -112,7 +124,7 @@ To style a Link, either wrap it in the desired [Text](/components/typography/Tex
       title3 link
     </Link>
   </Text>
-</VStack>
+</VStack>;
 ```
 
 #### Using the font prop
@@ -120,13 +132,16 @@ To style a Link, either wrap it in the desired [Text](/components/typography/Tex
 If you need to style a link without wrapping it in a semantically appropriate text element, use the `font` prop directly.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link } from '@coinbase/cds-web/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   {['body', 'caption', 'label1', 'label2', 'legal', 'title1', 'title2', 'title3'].map((font) => (
     <Link font={font} href="https://www.coinbase.com/" openInNewWindow>
       {`${font} link`}
     </Link>
   ))}
-</VStack>
+</VStack>;
 ```
 
 ### Color
@@ -134,6 +149,9 @@ If you need to style a link without wrapping it in a semantically appropriate te
 Override the default link color using the `color` prop with any CDS foreground token.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link } from '@coinbase/cds-web/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Link href="https://www.coinbase.com/" color="fgPrimary">
     fgPrimary (default)
@@ -144,7 +162,7 @@ Override the default link color using the `color` prop with any CDS foreground t
   <Link underline href="https://www.coinbase.com/" color="fgNegative">
     fgNegative with underline
   </Link>
-</VStack>
+</VStack>;
 ```
 
 ## Navigation
@@ -154,9 +172,11 @@ Override the default link color using the `color` prop with any CDS foreground t
 Set `openInNewWindow` to open the link in a new browser tab.
 
 ```jsx live
+import { Link } from '@coinbase/cds-web/typography';
+
 <Link font="body" href="https://www.coinbase.com/" openInNewWindow>
   Opens in a new tab
-</Link>
+</Link>;
 ```
 
 ### rel
@@ -164,6 +184,9 @@ Set `openInNewWindow` to open the link in a new browser tab.
 Use the `rel` prop to set the relationship between the current document and the linked resource.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link } from '@coinbase/cds-web/typography';
+
 <VStack alignItems="flex-start" gap={3}>
   <Link font="body" href="https://www.coinbase.com/" rel="noreferrer">
     rel=noreferrer
@@ -171,7 +194,7 @@ Use the `rel` prop to set the relationship between the current document and the 
   <Link font="body" href="https://www.coinbase.com/" rel="noopener">
     rel=noopener
   </Link>
-</VStack>
+</VStack>;
 ```
 
 ## Accessibility
@@ -189,6 +212,8 @@ _The link text must have a 3:1 contrast ratio from the surrounding non-link text
 Use the `underline` prop on inline links within body text to ensure they are distinguishable without relying on color alone.
 
 ```jsx live
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Text as="p" font="body">
   By continuing, you agree to the{' '}
   <Link underline href="https://www.coinbase.com/">
@@ -199,5 +224,5 @@ Use the `underline` prop on inline links within body text to ensure they are dis
     Privacy Policy
   </Link>
   .
-</Text>
+</Text>;
 ```

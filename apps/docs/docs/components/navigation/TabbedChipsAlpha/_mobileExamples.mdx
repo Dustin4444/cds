@@ -1,6 +1,9 @@
 ### Basic usage
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+
 function ExampleDefault() {
   const tabs = [
     { id: 'all', label: 'All' },
@@ -15,7 +18,10 @@ function ExampleDefault() {
 
 ### Compact
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+
 function ExampleCompactNoStart() {
   const tabs = [
     { id: 'all', label: 'All' },
@@ -34,7 +40,10 @@ function ExampleCompactNoStart() {
 The list becomes horizontally scrollable when content overflows; an `OverflowGradient` appears on the edge to hint more content.
 :::
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+
 function ExampleManyTabs() {
   const tabs = Array.from({ length: 12 }).map((_, i) => ({
     id: `tab_${i + 1}`,
@@ -51,7 +60,12 @@ function ExampleManyTabs() {
 The `autoScrollOffset` prop controls the X position offset when auto-scrolling to the active tab. This prevents the active tab from being covered by the overflow gradient on the left side. Try clicking tabs near the edges to see the difference.
 :::
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ExampleAutoScrollOffset() {
   const tabs = Array.from({ length: 25 }).map((_, i) => ({
     id: `tab_${i + 1}`,
@@ -76,7 +90,10 @@ function ExampleAutoScrollOffset() {
 
 ### Long text tabs
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+
 function ExampleLongText() {
   const tabs = [
     { id: 'a', label: 'Very long tab label that can wrap on small widths' },
@@ -90,7 +107,10 @@ function ExampleLongText() {
 
 ### Disabled tab
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+
 function ExampleDisabled() {
   const tabs = [
     { id: 'first', label: 'First' },
@@ -108,7 +128,11 @@ function ExampleDisabled() {
 For start media, use circular images sized 24×24 for regular chips and 16×16 for compact chips.
 :::
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { TabbedChips } from '@coinbase/cds-mobile/chips';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function ExampleWithStart() {
   const icon = { height: 24, width: 24, shape: 'circle', source: assets.eth.imageUrl };
   const compactIcon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
@@ -135,7 +159,12 @@ function ExampleWithStart() {
 When providing a custom TabComponent, use `useTabsContext()` and call `updateActiveTab(id)` to update selection state. Reflect the active state (e.g., end icon state) based on `activeTab?.id === id`.
 :::
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { MediaChip, TabbedChips } from '@coinbase/cds-mobile/chips';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function CustomTab({ id, label, ...props }: TabbedChipProps) {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = activeTab?.id === id;

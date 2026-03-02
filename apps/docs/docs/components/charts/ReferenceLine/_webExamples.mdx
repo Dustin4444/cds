@@ -3,6 +3,8 @@
 ReferenceLine can be used to add important details to a chart, such as a reference price or date. You can create horizontal lines using `dataY` or vertical lines using `dataX`.
 
 ```jsx live
+import { DottedLine, LineChart, ReferenceLine } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   showArea
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -19,7 +21,7 @@ ReferenceLine can be used to add important details to a chart, such as a referen
     dataY={10}
     stroke="var(--color-fg)"
   />
-</LineChart>
+</LineChart>;
 ```
 
 ### With Labels
@@ -27,6 +29,8 @@ ReferenceLine can be used to add important details to a chart, such as a referen
 You can add text labels to reference lines and position them using alignment and offset props:
 
 ```jsx live
+import { LineChart, ReferenceLine } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
@@ -51,7 +55,7 @@ You can add text labels to reference lines and position them using alignment and
     labelHorizontalAlignment="right"
     labelVerticalAlignment="bottom"
   />
-</LineChart>
+</LineChart>;
 ```
 
 ## Data Values
@@ -59,6 +63,8 @@ You can add text labels to reference lines and position them using alignment and
 ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dataY` will create a horizontal line across the y axis at that value, and passing in `dataX` will do the same along the x axis.
 
 ```jsx live
+import { LineChart, ReferenceLine } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   showArea
   curve="natural"
@@ -87,7 +93,7 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
     labelPosition="left"
     labelVerticalAlignment="bottom"
   />
-</LineChart>
+</LineChart>;
 ```
 
 ## Labels
@@ -97,6 +103,8 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
 You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `labelHorizontalAlignment`, and `labelVerticalAlignment` props.
 
 ```jsx live
+import { LineChart, ReferenceLine } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   height={150}
   series={[
@@ -124,7 +132,7 @@ You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `lab
     labelHorizontalAlignment="left"
     labelPosition="top"
   />
-</LineChart>
+</LineChart>;
 ```
 
 ### Bounds
@@ -132,6 +140,9 @@ You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `lab
 Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
 
 ```jsx live
+import { LineChart, ReferenceLine } from '@coinbase/cds-web-visualization/chart';
+import { Box } from '@coinbase/cds-web/layout';
+
 <Box marginX={-3}>
   <LineChart
     height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -159,7 +170,7 @@ Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
       labelPosition="top"
     />
   </LineChart>
-</Box>
+</Box>;
 ```
 
 ### Custom Components
@@ -167,6 +178,16 @@ Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
 You can adjust the style of the label using a custom `LabelComponent`.
 
 ```jsx live
+import React, { useMemo } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  DefaultReferenceLineLabel,
+  DottedLine,
+  LineChart,
+  ReferenceLine,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+
 function CustomLabelExample() {
   const PriceLabel = memo((props) => (
     <DefaultReferenceLineLabel
@@ -235,6 +256,16 @@ function CustomLabelExample() {
 You can also optionally hide the label based on user scrubbing.
 
 ```jsx live
+import React, { useMemo } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  DefaultReferenceLineLabel,
+  DottedLine,
+  LineChart,
+  ReferenceLine,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+
 function StartPriceReferenceLine() {
   const PriceLabel = memo((props) => {
     const { scrubberPosition } = useScrubberContext();
@@ -323,6 +354,18 @@ function StartPriceReferenceLine() {
 You can pair a ReferenceLine with a custom drag component to create a draggable price target.
 
 ```tsx live
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  ChartText,
+  DefaultReferenceLineLabel,
+  LineChart,
+  ReferenceLine,
+  SolidLine,
+} from '@coinbase/cds-web-visualization/chart';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+
 function DraggablePriceTarget() {
   const DragIcon = ({ x, y }) => {
     const DragCircle = (props) => <circle {...props} fill="var(--color-fg)" r="1.5" />;

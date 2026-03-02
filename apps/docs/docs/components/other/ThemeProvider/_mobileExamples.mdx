@@ -27,7 +27,7 @@ The `color` and `spectrum` objects automatically change based on the `activeColo
 
 [See the `useTheme` docs here &rarr;](/hooks/useTheme)
 
-```jsx
+```jsx live noPreview
 const theme = useTheme();
 theme.activeColorScheme; // "light" or "dark"
 theme.spectrum; // Resolves to lightSpectrum or darkSpectrum, depends on activeColorScheme
@@ -42,19 +42,21 @@ theme.fontSize.display3; // 40
 
 ThemeProviders can be nested to create theme overrides for specific sections.
 
-```jsx
+```jsx live noPreview
+import { ThemeProvider } from '@coinbase/cds-mobile/system';
+
 <ThemeProvider theme={defaultTheme} activeColorScheme="light">
   {/* Default theme in light color scheme */}
 
   <ThemeProvider theme={customTheme} activeColorScheme="dark">
     {/* Custom theme in dark color scheme */}
   </ThemeProvider>
-</ThemeProvider>
+</ThemeProvider>;
 ```
 
 When nesting, you may want to override specific color values from the current theme. Overrides must be conditionally applied because we don't enforce that a theme has both light and dark colors defined.
 
-```jsx
+```jsx live noPreview
 // Override parts of the parent theme
 const theme = useTheme();
 const customTheme = {
@@ -84,7 +86,9 @@ const customTheme = {
 
 Nested ThemeProviders do not automatically inherit the theme from their parent provider. You can manually inherit the theme with the `useTheme` hook.
 
-```jsx
+```jsx live noPreview
+import { ThemeProvider } from '@coinbase/cds-mobile/system';
+
 const Example = () => {
   // Pass the parent theme down to another ThemeProvider
   const theme = useTheme();
@@ -100,12 +104,14 @@ const Example = () => {
 
 The InvertedThemeProvider automatically inherits from its parent theme and flips the `activeColorScheme` to the opposite value.
 
-```jsx
+```jsx live noPreview
+import { ThemeProvider } from '@coinbase/cds-mobile/system';
+
 <ThemeProvider theme={defaultTheme} activeColorScheme="light">
   {/* Default theme in light color scheme */}
 
   <InvertedThemeProvider>
     {/* Default theme in inverse (dark) color scheme */}
   </InvertedThemeProvider>
-</ThemeProvider>
+</ThemeProvider>;
 ```

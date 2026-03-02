@@ -1,6 +1,11 @@
 ### Basic usage
 
 ```tsx live
+import React, { useCallback, useState } from 'react';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { Pressable } from '@coinbase/cds-web/system';
+import { TabLabel, Tabs } from '@coinbase/cds-web/tabs';
+
 () => {
   const tabs = [
     { id: 'tab1', label: 'Tab 1' },
@@ -47,6 +52,11 @@
 ### Custom Tab Component
 
 ```tsx live
+import React, { useCallback, useState } from 'react';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { Pressable } from '@coinbase/cds-web/system';
+import { TabLabel, Tabs } from '@coinbase/cds-web/tabs';
+
 () => {
   const tabs = [
     { id: 'home', label: 'Home', icon: '🏠' },

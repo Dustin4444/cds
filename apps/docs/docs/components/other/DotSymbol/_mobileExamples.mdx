@@ -1,6 +1,10 @@
 ### Placements
 
-```jsx
+```jsx live noPreview
+import { DotSymbol } from '@coinbase/cds-mobile/dots';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Placements() {
   const PIN_DIRECTIONS = ['top-start', 'top-end', 'bottom-start', 'bottom-end'];
   return (
@@ -24,7 +28,10 @@ function Placements() {
 
 ### Sizes
 
-```jsx
+```jsx live noPreview
+import { DotSymbol } from '@coinbase/cds-mobile/dots';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Sizes() {
   const SIZES = ['xs', 's', 'm', 'l'];
   return (
@@ -43,7 +50,11 @@ function Sizes() {
 
 You can use the overlap prop to place the dot relative to the corner of the wrapped element.
 
-```jsx
+```jsx live noPreview
+import { DotSymbol } from '@coinbase/cds-mobile/dots';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Avatar } from '@coinbase/cds-mobile/media';
+
 function DottingRelativeToShapeOfChild() {
   return (
     <VStack gap={2}>
@@ -62,7 +73,11 @@ function DottingRelativeToShapeOfChild() {
 
 ### Use DotSymbol paired with Icon
 
-```jsx
+```jsx live noPreview
+import { DotSymbol } from '@coinbase/cds-mobile/dots';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Avatar } from '@coinbase/cds-mobile/media';
+
 function UseDotSymbolPairedWithIcon() {
   return (
     <VStack gap={1}>
@@ -82,7 +97,11 @@ function UseDotSymbolPairedWithIcon() {
 
 ### Use DotSymbol paired with another Asset
 
-```jsx
+```jsx live noPreview
+import { DotSymbol } from '@coinbase/cds-mobile/dots';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Avatar } from '@coinbase/cds-mobile/media';
+
 function UseDotSymbolPairedWithAnotherAsset() {
   return (
     <VStack>

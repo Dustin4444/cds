@@ -1,6 +1,9 @@
 ## Label Above
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBarWithFloatLabel label={0} progress={0} labelPlacement="above">
     <ProgressBar progress={0} />
@@ -8,12 +11,15 @@
   <ProgressBarWithFloatLabel label={20} progress={0.2} labelPlacement="above">
     <ProgressBar progress={0.2} />
   </ProgressBarWithFloatLabel>
-</VStack>
+</VStack>;
 ```
 
 ## Label Below
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBarWithFloatLabel label={0} progress={0} labelPlacement="below">
     <ProgressBar progress={0} />
@@ -21,22 +27,30 @@
   <ProgressBarWithFloatLabel label={20} progress={0.2} labelPlacement="below">
     <ProgressBar progress={0.2} />
   </ProgressBarWithFloatLabel>
-</VStack>
+</VStack>;
 ```
 
 ## Disabled
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 <VStack gap={2}>
   <ProgressBarWithFloatLabel label={70} progress={0.7} disabled>
     <ProgressBar progress={0.7} disabled />
   </ProgressBarWithFloatLabel>
-</VStack>
+</VStack>;
 ```
 
 ## Custom Labels
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const renderLabelNumStr = useCallback((num) => {
     return `$${num.toLocaleString()}`;
@@ -92,6 +106,9 @@ function Example() {
 You can customize the appearance of the progress bar and float label using the `styles` prop.
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -122,7 +139,7 @@ You can customize the appearance of the progress bar and float label using the `
       </ProgressBarWithFloatLabel>
     </VStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ## Interactive Demo
@@ -130,6 +147,9 @@ You can customize the appearance of the progress bar and float label using the `
 This is for demo purposes. ProgressContainerWithButtons isn't designed for production usage.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -149,7 +169,7 @@ This is for demo purposes. ProgressContainerWithButtons isn't designed for produ
       </ProgressBarWithFloatLabel>
     </VStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ## Animation
@@ -157,6 +177,10 @@ This is for demo purposes. ProgressContainerWithButtons isn't designed for produ
 By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -180,7 +204,7 @@ By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` t
       </ProgressBarWithFloatLabel>
     </VStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ### Callbacks
@@ -188,6 +212,11 @@ By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` t
 You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
 function Example() {
   const [animationStatus, setAnimationStatus] = React.useState('Ready');
 

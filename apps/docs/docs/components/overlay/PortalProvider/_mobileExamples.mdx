@@ -2,7 +2,9 @@
 
 The PortalProvider component is typically used at the root of your mobile application to manage overlay components:
 
-```tsx
+```tsx live noPreview
+import { Box } from '@coinbase/cds-mobile/layout';
+
 function App() {
   return (
     <PortalProvider>
@@ -18,7 +20,9 @@ function App() {
 
 You can disable the default portal rendering and use the PortalNodes component separately:
 
-```tsx
+```tsx live noPreview
+import { Box } from '@coinbase/cds-mobile/layout';
+
 function App() {
   return (
     <PortalProvider renderPortals={false}>
@@ -35,7 +39,11 @@ function App() {
 
 The PortalProvider's `toastBottomOffset` prop sets the default bottom offset for all toasts:
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Box } from '@coinbase/cds-mobile/layout';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function App() {
   function ToastDemo() {
     const toast = useToast();

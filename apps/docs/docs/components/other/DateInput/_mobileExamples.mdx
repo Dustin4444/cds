@@ -4,7 +4,10 @@ DateInput uses [TextInput](/components/inputs/TextInput/) for entering dates by 
 
 DateInput requires controlled state for both the date value and error state. The component automatically formats dates based on the user's locale and validates input on blur.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -30,7 +33,10 @@ function Example() {
 
 Use `minDate` and `maxDate` props to restrict the date range. Provide the `disabledDateError` prop to show an error when users enter a date outside the allowed range.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -60,7 +66,10 @@ function Example() {
 
 The `disabledDates` prop accepts an array of `Date` objects or `[Date, Date]` tuples to disable specific dates or ranges.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -91,7 +100,11 @@ function Example() {
 
 Use the `DateInputValidationError` class to create custom error states for application-specific validation rules.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -124,14 +137,18 @@ DateInput inherits accessibility props from TextInput. If no `accessibilityLabel
 
 Here, since no `accessibilityLabel` is passed, the `accessibilityLabel` will be "Birthdate".
 
-```jsx
-<DateInput label="Birthdate" />
+```jsx live noPreview
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
+<DateInput label="Birthdate" />;
 ```
 
 Example of passing an `accessibilityLabel`:
 
-```jsx
-<DateInput accessibilityLabel="Enter your date of birth" label="Birthdate" />
+```jsx live noPreview
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
+<DateInput accessibilityLabel="Enter your date of birth" label="Birthdate" />;
 ```
 
 :::tip Accessibility tip
@@ -150,7 +167,12 @@ It's advised you always format error messages with `Error: ${errorMessage}`. We'
 
 The date format automatically adjusts based on the `LocaleContext` provided by `LocaleProvider`.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const [usDate, setUsDate] = useState(null);
   const [usError, setUsError] = useState(null);
@@ -198,7 +220,11 @@ function Example() {
 
 Use the `compact` prop for a smaller input size.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -229,7 +255,10 @@ function Example() {
 
 ### Disabled
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(new Date());
   const [error, setError] = useState(null);
@@ -250,7 +279,10 @@ function Example() {
 
 ### Helper text
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -273,7 +305,13 @@ function Example() {
 
 You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Tooltip } from '@coinbase/cds-mobile/overlays';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -304,7 +342,10 @@ function Example() {
 
 Use the `required` prop to indicate that the field is mandatory. Provide `requiredError` to display a message if the user blurs the input without a date after typing.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -328,7 +369,11 @@ function Example() {
 
 Use the `variant` prop to change the visual style of the input.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);
@@ -361,7 +406,11 @@ function Example() {
 
 Customize the date format separator using the `separator` prop. Defaults to `/`.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function Example() {
   const [date1, setDate1] = useState(null);
   const [error1, setError1] = useState(null);
@@ -397,7 +446,11 @@ function Example() {
 
 Use the `start` and `end` props to add icons or other elements to the input.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { DateInput } from '@coinbase/cds-mobile/dates';
+import { Icon } from '@coinbase/cds-mobile/icons';
+
 function Example() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState(null);

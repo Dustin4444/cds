@@ -3,6 +3,11 @@ High-quality illustration animations powered by [Lottie](https://airbnb.design/l
 ### Basic usage
 
 ```jsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { Lottie } from '@coinbase/cds-web/animation';
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function BasicExample() {
   const [isPlaying, setIsPlaying] = useState(false);
   const lottieRef = useRef();

@@ -1,6 +1,9 @@
 ## Basic Example
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { PeriodSelector } from '@coinbase/cds-mobile-visualization/chart';
+
 function BasicExample() {
   const tabs = [
     { id: '1H', label: '1H' },
@@ -21,7 +24,10 @@ function BasicExample() {
 
 You can set the `width` prop to `fit-content` to make the period selector as small as possible.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { PeriodSelector } from '@coinbase/cds-mobile-visualization/chart';
+
 function MinimumWidthExample() {
   const tabs = [
     { id: '1W', label: '1W' },
@@ -45,7 +51,12 @@ function MinimumWidthExample() {
 
 ## Many Periods with Overflow
 
-```jsx
+```jsx live noPreview
+import React, { useMemo, useState } from 'react';
+import { LiveTabLabel, PeriodSelector } from '@coinbase/cds-mobile-visualization/chart';
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 function ManyPeriodsExample() {
   const tabs = useMemo(
     () => [
@@ -100,7 +111,10 @@ function ManyPeriodsExample() {
 
 ## Live Indicator
 
-```jsx
+```jsx live noPreview
+import React, { useMemo, useState } from 'react';
+import { LiveTabLabel, PeriodSelector } from '@coinbase/cds-mobile-visualization/chart';
+
 function LiveExample() {
   const tabs = useMemo(
     () => [
@@ -135,7 +149,15 @@ function LiveExample() {
 
 ### Custom Colors
 
-```jsx
+```jsx live noPreview
+import React, { useMemo, useState } from 'react';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import {
+  PeriodSelector,
+  PeriodSelectorActiveIndicator,
+} from '@coinbase/cds-mobile-visualization/chart';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ColoredBTCExample() {
   const btcColor = assets.btc.color;
 
@@ -235,7 +257,16 @@ function ColoredBTCExample() {
 
 Customize colors for regular periods while keeping the default red styling for live periods.
 
-```jsx
+```jsx live noPreview
+import React, { useMemo, useState } from 'react';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import {
+  LiveTabLabel,
+  PeriodSelector,
+  PeriodSelectorActiveIndicator,
+} from '@coinbase/cds-mobile-visualization/chart';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ColoredExcludingLiveExample() {
   const btcColor = assets.btc.color;
 

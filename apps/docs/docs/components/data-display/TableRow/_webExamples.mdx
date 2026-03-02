@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered variant="ruled">
   <TableBody>
     <TableRow>
@@ -13,12 +15,15 @@
       <TableCell title="Row with Custom Text Color" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Interactive Rows
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 function InteractiveExample() {
   const handlePress = () => console.log('Row clicked');
 
@@ -56,6 +61,12 @@ function InteractiveExample() {
 ### Full Width Rows
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Table, TableBody, TableRow } from '@coinbase/cds-web/tables';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Table bordered>
   <TableBody>
     <TableRow fullWidth>
@@ -77,12 +88,18 @@ function InteractiveExample() {
       </HStack>
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Responsive Spacing
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Table, TableBody, TableRow } from '@coinbase/cds-web/tables';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ResponsiveExample() {
   const responsiveConfig = {
     phone: {

@@ -3,6 +3,9 @@
 The global warning banner is used to communicate important alerts or warnings to users across the entire platform, ensuring universal visibility and building trust.
 
 ```tsx live
+import { Banner } from '@coinbase/cds-web/banner';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Banner
   showDismiss
   label="Message last updated today at 3:33pm"
@@ -18,7 +21,7 @@ The global warning banner is used to communicate important alerts or warnings to
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
   </Text>
-</Banner>
+</Banner>;
 ```
 
 ### In-line Error Banner
@@ -26,6 +29,9 @@ The global warning banner is used to communicate important alerts or warnings to
 The In-line Error Banner is used to display specific error messages directly beneath the relevant section headers. Use in-line banners to help users identify exactly where the error or outage is located.
 
 ```tsx live
+import { Banner } from '@coinbase/cds-web/banner';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Banner
   startIcon="info"
   startIconActive
@@ -39,7 +45,7 @@ The In-line Error Banner is used to display specific error messages directly ben
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
   </Text>
-</Banner>
+</Banner>;
 ```
 
 ### Contextual Promotional Banner
@@ -47,6 +53,9 @@ The In-line Error Banner is used to display specific error messages directly ben
 The Contextual Promotional Banner is used to highlight special offers, promotions, or announcements within a specific context or section of the platform. It is used to increase user engagement and drive conversions.
 
 ```tsx live
+import { Banner } from '@coinbase/cds-web/banner';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <Banner
   startIcon="info"
   startIconActive
@@ -58,7 +67,7 @@ The Contextual Promotional Banner is used to highlight special offers, promotion
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
   </Text>
-</Banner>
+</Banner>;
 ```
 
 ### In-line Informational Banner
@@ -66,6 +75,10 @@ The Contextual Promotional Banner is used to highlight special offers, promotion
 The in-line Informational Banner is used to provide users with additional information or helpful tips directly within the content or interface, providing relevant guidance.
 
 ```tsx live
+import { Banner } from '@coinbase/cds-web/banner';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <VStack gap={2}>
   <Banner
     startIcon="info"
@@ -92,7 +105,7 @@ The in-line Informational Banner is used to provide users with additional inform
       <Link to="https://www.coinbase.com">Retry</Link>
     </Text>
   </Banner>
-</VStack>
+</VStack>;
 ```
 
 ### Rounded Corner Banners
@@ -100,6 +113,10 @@ The in-line Informational Banner is used to provide users with additional inform
 You can customize `borderRadius` to soften contextual and in-line banners.
 
 ```tsx live
+import { Banner } from '@coinbase/cds-web/banner';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 <VStack gap={2}>
   <Banner
     borderRadius={200}
@@ -127,7 +144,7 @@ You can customize `borderRadius` to soften contextual and in-line banners.
       You can incrementally increase the radius to match surrounding cards or panels.
     </Text>
   </Banner>
-</VStack>
+</VStack>;
 ```
 
 :::tip
@@ -139,6 +156,10 @@ Avoid setting `borderRadius` for `styleVariant="global"` so the vertical status 
 When using negative `margin*` props to create a bleed effect, explicitly set `width` so the Banner expands beyond its container.
 
 ```tsx live
+import { Banner } from '@coinbase/cds-web/banner';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack height={150} background="bgPositiveWash">
   <Banner
     marginX={-2}
@@ -153,5 +174,5 @@ When using negative `margin*` props to create a bleed effect, explicitly set `wi
       Use with prop to override the default 100% width
     </Text>
   </Banner>
-</VStack>
+</VStack>;
 ```

@@ -1,6 +1,10 @@
 ### Basic usage
 
-```tsx
+```tsx live noPreview
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { TabLabel, Tabs } from '@coinbase/cds-mobile/tabs';
+
 const tabs = [
   { id: 'tab1', label: 'Tab 1' },
   { id: 'tab2', label: 'Tab 2' },
@@ -36,7 +40,11 @@ const TabComponent = ({ id, label, disabled }) => {
 
 ### Custom Tab Component
 
-```tsx
+```tsx live noPreview
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { TabLabel, Tabs } from '@coinbase/cds-mobile/tabs';
+
 const tabs = [
   { id: 'home', label: 'Home', icon: '🏠' },
   { id: 'profile', label: 'Profile', icon: '👤' },

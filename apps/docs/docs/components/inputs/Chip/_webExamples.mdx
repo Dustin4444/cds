@@ -1,6 +1,9 @@
 ### Basic usage
 
 ```tsx live
+import { Chip } from '@coinbase/cds-web/chips';
+import { HStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <HStack gap={2}>
@@ -15,6 +18,9 @@ function Example() {
 ### Variants
 
 ```tsx live
+import { Chip } from '@coinbase/cds-web/chips';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <VStack gap={2}>
@@ -33,6 +39,11 @@ function Example() {
 ### With Icons and Images
 
 ```tsx live
+import { Chip } from '@coinbase/cds-web/chips';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 function Example() {
   return (
     <VStack gap={2}>

@@ -1,10 +1,12 @@
 ### Basic example
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+
 <VStack gap={1}>
   <Fallback width={150} height={45} />
   <Fallback width={65} height={45} percentage />
-</VStack>
+</VStack>;
 ```
 
 ### Shape
@@ -12,11 +14,13 @@
 The shape of the fallback can further be customized with the `shape` prop.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={1}>
   <Fallback width={50} height={50} shape="square" />
   <Fallback width={50} height={50} shape="squircle" />
   <Fallback width={50} height={50} shape="circle" />
-</HStack>
+</HStack>;
 ```
 
 :::tip Rectangular fallback width
@@ -30,6 +34,8 @@ Alternatively, you may create a rectangle width variant by setting a number valu
 <br />
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+
 function RenderFallbacksInList() {
   const items = [{}, {}, {}, {}, {}];
   return (

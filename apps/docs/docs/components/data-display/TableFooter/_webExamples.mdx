@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered variant="ruled">
   <TableHeader>
     <TableRow>
@@ -24,12 +26,14 @@
       <TableCell title="$300" />
     </TableRow>
   </TableFooter>
-</Table>
+</Table>;
 ```
 
 ### Footer with Summary Data
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered variant="ruled">
   <TableHeader>
     <TableRow>
@@ -57,5 +61,5 @@
       <TableCell title="+21%" color="primary" alignItems="flex-end" />
     </TableRow>
   </TableFooter>
-</Table>
+</Table>;
 ```

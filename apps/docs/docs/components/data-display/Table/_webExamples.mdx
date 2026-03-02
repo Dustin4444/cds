@@ -44,6 +44,9 @@ Tables should have an accessible label for people using assistive technologies. 
 The Table component supports three variants: `default`, `graph`, and `ruled`.
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <VStack gap={4}>
   <Table variant="default">
     <TableCaption>Default variant - Simple and clean</TableCaption>
@@ -74,12 +77,19 @@ The Table component supports three variants: `default`, `graph`, and `ruled`.
       </TableRow>
     </TableBody>
   </Table>
-</VStack>
+</VStack>;
 ```
 
 ### Basic usage with Layout Control
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Switch } from '@coinbase/cds-web/controls';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 function Example() {
   const totalResults = accounts.length;
   const PAGE_SIZE = 7;
@@ -159,6 +169,12 @@ function Example() {
 ### Cell Spacing and Compact Mode
 
 ```tsx live
+import React, { useState } from 'react';
+import { CellMedia } from '@coinbase/cds-web/cells';
+import { Switch } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 function TableCellCompactExample() {
   const MOCK_DATA = Object.entries(assets).slice(0, 20);
   const mediaTypes = ['Text', 'Asset', 'Image', 'Avatar'];
@@ -221,6 +237,8 @@ function TableCellCompactExample() {
 ### Height-Constrained Table with Sticky Header
 
 ```tsx live
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table maxHeight={360} bordered variant="ruled" accessibilityLabel="Cryptocurrency prices table">
   <TableCaption>Sticky Header Example</TableCaption>
   <TableHeader sticky>
@@ -239,12 +257,14 @@ function TableCellCompactExample() {
       </TableRow>
     ))}
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Complex Table Structure with Row/Column Spans
 
 ```tsx live
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table variant="graph" bordered accessibilityLabel="Transfer conditions and outcomes matrix">
   <TableCaption>Complex Table Example</TableCaption>
   <TableHeader>
@@ -279,12 +299,18 @@ function TableCellCompactExample() {
       <TableCell title="0" />
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Sortable Table
 
 ```tsx live
+import React, { useState } from 'react';
+import { useSort } from '@coinbase/cds-common/hooks/useSort';
+import { Icon } from '@coinbase/cds-web/icons';
+import { Table, TableBody, TableCaption, TableCell, TableRow } from '@coinbase/cds-web/tables';
+import { useSortableCell } from '@coinbase/cds-web/tables/hooks/useSortableCell';
+
 function SortingExample() {
   const [{ sortBy, sortDirection }, setSort] = useState({
     sortBy: 'name',

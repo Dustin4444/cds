@@ -17,6 +17,14 @@ Dropdown menus can show an scrim below the menu, overlaying all other content on
 Dropdown can render as a Modal on mobile web if passed `enableMobileModal`.
 
 ```jsx live
+import React, { useMemo, useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Switch } from '@coinbase/cds-web/controls';
+import { Dropdown } from '@coinbase/cds-web/dropdown';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Modal, Overlay } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [value, setValue] = useState(undefined);
   const [showMobileModal, setShowMobileModal] = useState(false);

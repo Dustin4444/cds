@@ -2,7 +2,9 @@
 
 ReferenceLine can be used to add important details to a chart, such as a reference price or date. You can create horizontal lines using `dataY` or vertical lines using `dataX`.
 
-```jsx
+```jsx live noPreview
+import { DottedLine, LineChart, ReferenceLine } from '@coinbase/cds-mobile-visualization/chart';
+
 function SimpleReferenceLineExample() {
   const theme = useTheme();
 
@@ -32,7 +34,9 @@ function SimpleReferenceLineExample() {
 
 You can add text labels to reference lines and position them using alignment and offset props:
 
-```jsx
+```jsx live noPreview
+import { LineChart, ReferenceLine } from '@coinbase/cds-mobile-visualization/chart';
+
 function WithLabelsExample() {
   return (
     <LineChart
@@ -68,7 +72,9 @@ function WithLabelsExample() {
 
 ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dataY` will create a horizontal line across the y axis at that value, and passing in `dataX` will do the same along the x axis.
 
-```jsx
+```jsx live noPreview
+import { LineChart, ReferenceLine } from '@coinbase/cds-mobile-visualization/chart';
+
 function DataValuesExample() {
   const theme = useTheme();
 
@@ -112,7 +118,9 @@ function DataValuesExample() {
 
 You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `labelHorizontalAlignment`, and `labelVerticalAlignment` props.
 
-```jsx
+```jsx live noPreview
+import { LineChart, ReferenceLine } from '@coinbase/cds-mobile-visualization/chart';
+
 function LabelCustomizationExample() {
   return (
     <LineChart
@@ -151,7 +159,9 @@ function LabelCustomizationExample() {
 
 Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
 
-```jsx
+```jsx live noPreview
+import { LineChart, ReferenceLine } from '@coinbase/cds-mobile-visualization/chart';
+
 function BoundsExample() {
   return (
     <LineChart
@@ -188,7 +198,17 @@ function BoundsExample() {
 
 You can adjust the style of the label using a custom `LabelComponent`.
 
-```jsx
+```jsx live noPreview
+import React, { useMemo } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  DefaultReferenceLineLabel,
+  DottedLine,
+  LineChart,
+  ReferenceLine,
+  Scrubber,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 function CustomLabelExample() {
   const StartPriceLabel = memo((props) => {
     const theme = useTheme();
@@ -260,7 +280,17 @@ function CustomLabelExample() {
 
 You can also optionally hide the label based on user scrubbing.
 
-```jsx
+```jsx live noPreview
+import React, { useMemo } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  DefaultReferenceLineLabel,
+  DottedLine,
+  LineChart,
+  ReferenceLine,
+  Scrubber,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 function StartPriceReferenceLine() {
   const StartPriceLabel = memo((props) => {
     const theme = useTheme();

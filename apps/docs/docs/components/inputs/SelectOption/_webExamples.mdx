@@ -5,6 +5,10 @@
 #### Default Composition
 
 ```jsx live
+import React, { useState } from 'react';
+import { CellMedia } from '@coinbase/cds-web/cells';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function DefaultSelect() {
   const [value, setValue] = useState();
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];

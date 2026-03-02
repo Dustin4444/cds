@@ -3,6 +3,13 @@
 This component is primarily used internally by the `Modal` component to provide the animated layout for fullscreen modals. It wraps your modal content and manages the overlay, animations, and focus trapping.
 
 ```tsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Modal } from '@coinbase/cds-web/overlays';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   const [visible, setVisible] = useState(false);
   const triggerRef = useRef(null);
@@ -60,6 +67,16 @@ function Example() {
 This example demonstrates a three-column layout structure with a FullscreenModalHeader at the top and PageFooter at the bottom, matching the tertiary + secondary + primary column pattern. The layout includes vertical dividers between columns and demonstrates how to structure complex modal content.
 
 ```tsx live
+import React, { useCallback, useRef, useState } from 'react';
+import { Button, ButtonGroup, IconButton } from '@coinbase/cds-web/buttons';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { Icon } from '@coinbase/cds-web/icons';
+import { Divider, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+import { Modal } from '@coinbase/cds-web/overlays';
+import { PageFooter, PageHeader } from '@coinbase/cds-web/page';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 function ThreeColumnExample() {
   const [visible, setVisible] = useState(false);
   const triggerRef = useRef(null);

@@ -3,7 +3,9 @@
 The `size` prop is required and controls the spinner dimensions. The value is in pixels and determines the font size from which the width (10em), height (10em), and border width (1.1em) are calculated.
 
 ```jsx live
-<Spinner size={2} />
+import { Spinner } from '@coinbase/cds-web/loaders';
+
+<Spinner size={2} />;
 ```
 
 ## Buttons
@@ -11,6 +13,10 @@ The `size` prop is required and controls the spinner dimensions. The value is in
 Use `loading` on [Button](/components/inputs/Button) and [IconButton](/components/inputs/IconButton) to show a spinner during async operations. The button becomes non-interactive while preserving its dimensions.
 
 ```jsx live
+import React, { useCallback, useState } from 'react';
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
+import { HStack } from '@coinbase/cds-web/layout';
+
 function LoadingButtons() {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,12 +51,15 @@ function LoadingButtons() {
 Use the `color` prop to customize the spinner's color. The default is `fgMuted`. Any valid CDS design token color can be used.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Spinner } from '@coinbase/cds-web/loaders';
+
 <HStack gap={3} alignItems="center">
   <Spinner size={3} color="fgMuted" />
   <Spinner size={3} color="fgPrimary" />
   <Spinner size={3} color="fgPositive" />
   <Spinner size={3} color="fgNegative" />
-</HStack>
+</HStack>;
 ```
 
 #### On Colored Backgrounds
@@ -58,6 +67,9 @@ Use the `color` prop to customize the spinner's color. The default is `fgMuted`.
 When placing a spinner on a colored background, choose a color with sufficient contrast.
 
 ```jsx live
+import { Box, HStack } from '@coinbase/cds-web/layout';
+import { Spinner } from '@coinbase/cds-web/loaders';
+
 <HStack gap={2}>
   <Box
     background="fgMuted"
@@ -99,7 +111,7 @@ When placing a spinner on a colored background, choose a color with sufficient c
   >
     <Spinner size={3} color="fg" />
   </Box>
-</HStack>
+</HStack>;
 ```
 
 ### Sizing
@@ -107,12 +119,15 @@ When placing a spinner on a colored background, choose a color with sufficient c
 Use different sizes to match the context - smaller spinners work well inline or within buttons, while larger spinners are appropriate for page or section loading states.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Spinner } from '@coinbase/cds-web/loaders';
+
 <HStack gap={3} alignItems="center">
   <Spinner size={2} />
   <Spinner size={3} />
   <Spinner size={4} />
   <Spinner size={6} />
-</HStack>
+</HStack>;
 ```
 
 ## Accessibility
@@ -120,5 +135,7 @@ Use different sizes to match the context - smaller spinners work well inline or 
 Use `accessibilityLabel` to provide context for screen readers. The spinner uses `role="status"` and `aria-live="polite"` to announce the loading state.
 
 ```jsx live
-<Spinner size={3} accessibilityLabel="Loading your account details" />
+import { Spinner } from '@coinbase/cds-web/loaders';
+
+<Spinner size={3} accessibilityLabel="Loading your account details" />;
 ```

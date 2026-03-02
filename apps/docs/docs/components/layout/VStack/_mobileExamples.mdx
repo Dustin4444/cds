@@ -11,7 +11,9 @@ You should use VStack when:
 
 ### Rows Sized to Content
 
-```jsx
+```jsx live noPreview
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={1}>
   <Box height={100} bordered>
     I am 100px tall
@@ -20,12 +22,14 @@ You should use VStack when:
     I am 200px tall
   </Box>
   <Box bordered>I am as tall as my content</Box>
-</VStack>
+</VStack>;
 ```
 
 ### Rows with Gaps
 
-```jsx
+```jsx live noPreview
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={1}>
   <Box gap={3} background="bgAlternate">
     First
@@ -36,22 +40,26 @@ You should use VStack when:
   <Box gap={3} background="bgAlternate">
     Third
   </Box>
-</VStack>
+</VStack>;
 ```
 
 ### Rows that Fill the Available Space
 
-```jsx
+```jsx live noPreview
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+
 <Box height={200}>
   <VStack gap={3} flexGrow={1} background="bgAlternate">
     I will fill the entire width and height of my parent
   </VStack>
-</Box>
+</Box>;
 ```
 
 ### Rows that Have Proportionate Sizes
 
-```jsx
+```jsx live noPreview
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+
 <VStack gap={1} height={600}>
   <Box gap={3} flexGrow={1} background="bgAlternate">
     First
@@ -62,7 +70,7 @@ You should use VStack when:
   <Box gap={3} flexGrow={3} background="bgAlternate">
     Third
   </Box>
-</VStack>
+</VStack>;
 ```
 
 ### A11y
@@ -86,7 +94,10 @@ Please note, there are no default responsive styles for VStack. This is an addit
 
 #### Usage
 
-```jsx
+```jsx live noPreview
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ResponsiveVStack() {
   return (
     <VStack

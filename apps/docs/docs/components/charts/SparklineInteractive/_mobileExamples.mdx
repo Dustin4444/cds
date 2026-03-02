@@ -1,6 +1,11 @@
 ### Default usage
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -37,7 +42,12 @@
 
 The fill will be added by default with a gradient style. You can set `fillType="dotted"` to get a dotted gradient fill.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -74,7 +84,12 @@ The fill will be added by default with a gradient style. You can set `fillType="
 
 ### Compact
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -110,7 +125,12 @@ The fill will be added by default with a gradient style. You can set `fillType="
 
 ### Hide period selector
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -148,7 +168,12 @@ The fill will be added by default with a gradient style. You can set `fillType="
 
 The scaling factor is usually used when you want to show less variance in the chart. An example of this is a stable coin that doesn't change price by more than a few cents.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -184,7 +209,11 @@ The scaling factor is usually used when you want to show less variance in the ch
 
 ### With header
 
-```jsx
+```jsx live noPreview
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive, SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 <Box padding={3} width="100%">
   <SparklineInteractive
     fill
@@ -203,7 +232,15 @@ The scaling factor is usually used when you want to show less variance in the ch
 
 ### Custom hover data
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import {
+  sparklineInteractiveData,
+  sparklineInteractiveHoverData,
+} from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -242,7 +279,12 @@ The scaling factor is usually used when you want to show less variance in the ch
 
 `periodSelectorPlacement` can be used to place the period selector in different positions (`above` or `below`).
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 () => {
   const periods = [
     { label: '1H', value: 'hour' },
@@ -280,7 +322,11 @@ The scaling factor is usually used when you want to show less variance in the ch
 
 You can also provide custom styles, such as to remove bottom padding from the header.
 
-```jsx
+```jsx live noPreview
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { SparklineInteractive, SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization/sparkline';
+import { Box } from '@coinbase/cds-mobile/layout';
+
 <Box padding={3} width="100%">
   <SparklineInteractive
     fill

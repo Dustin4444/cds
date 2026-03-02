@@ -13,14 +13,18 @@
 ### With custom content
 
 ```tsx live
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <TileButton count={0} onClick={() => {}} title="Bitcoin">
   <RemoteImage source={assets.btc.imageUrl} />
-</TileButton>
+</TileButton>;
 ```
 
 ### Show overflow
 
 ```tsx live
+import { Box } from '@coinbase/cds-web/layout';
+
 <Box height={180}>
   <TileButton
     title="A very long title that will overflow and show the full text on hover"
@@ -28,5 +32,5 @@
     showOverflow
     onClick={() => {}}
   />
-</Box>
+</Box>;
 ```

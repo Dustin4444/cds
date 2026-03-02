@@ -2,7 +2,11 @@
 
 Radio components are typically used individually as part of a radio group. Each radio represents a single option in a mutually exclusive set.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function BasicRadio() {
   const [selectedValue, setSelectedValue] = useState('option1');
 
@@ -41,7 +45,10 @@ function BasicRadio() {
 
 The recommended way to use Radio components is with a ControlGroup for better accessibility and easier state management.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-mobile/controls';
+
 function RadioGroupExample() {
   const options = [
     { value: 'btc', children: 'Bitcoin' },
@@ -69,7 +76,11 @@ function RadioGroupExample() {
 
 You can customize the radio's color using the `controlColor` prop.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function CustomColorRadio() {
   const [selectedColor, setSelectedColor] = useState('default');
 
@@ -110,7 +121,11 @@ function CustomColorRadio() {
 
 Radio components can be disabled to prevent user interaction.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Radio } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function DisabledRadio() {
   const [selectedValue, setSelectedValue] = useState('enabled');
 
@@ -151,7 +166,12 @@ function DisabledRadio() {
 
 Radio components on mobile should always include proper accessibility labels and hints.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Card } from '@coinbase/cds-mobile/cards';
+import { Radio } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function AccessibleRadio() {
   const [selectedPayment, setSelectedPayment] = useState('credit');
 

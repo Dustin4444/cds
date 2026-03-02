@@ -11,6 +11,7 @@ import webPackageJson from '../../packages/web/package.json';
 import webVisualizationPackageJson from '../../packages/web-visualization/package.json';
 
 import docgenConfig from './docgen.config';
+import remarkPlaygroundExamples from './src/remark/remarkPlaygroundExamples';
 
 if (
   !(
@@ -167,6 +168,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
+          remarkPlugins: [remarkPlaygroundExamples],
         },
         blog: {
           blogTitle: 'CDS Blog',

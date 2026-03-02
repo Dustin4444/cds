@@ -5,6 +5,9 @@ ContentCardFooter renders as a `<footer>` element by default. You can override t
 ### With Icon Counter Buttons
 
 ```jsx live
+import { ContentCardFooter } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -21,6 +24,11 @@ function Example() {
 ### With Image Group and Button
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { ContentCardFooter } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-web/media';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -42,6 +50,11 @@ function Example() {
 ### With Text and Actions
 
 ```jsx live
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { ContentCardFooter } from '@coinbase/cds-web/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -67,6 +80,10 @@ function Example() {
 ### Centered Content
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { ContentCardFooter } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>

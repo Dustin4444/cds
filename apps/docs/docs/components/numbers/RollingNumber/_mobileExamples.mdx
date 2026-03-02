@@ -4,13 +4,20 @@ RollingNumber displays changing numeric values with a smooth per-digit roll anim
 
 Pass a number in the `value` prop. Use the `format` prop for Intl formatting (currency, percent, grouping, compact) instead of pre-formatting the string yourself.
 
-```tsx
-<RollingNumber value={12345.67} />
+```tsx live noPreview
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+
+<RollingNumber value={12345.67} />;
 ```
 
 ## Example Use Case
 
-```tsx
+```tsx live noPreview
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ExampleUseCase() {
   const price = 12345.67;
   const difference = 79.65;
@@ -70,7 +77,11 @@ function ExampleUseCase() {
 
 Use `format` prop for currency, percent, grouping, and compact notation formatting. The `format` prop takes in `Intl.NumberFormat` [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options).
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Format() {
   const value = 98345.67;
   return (
@@ -102,7 +113,11 @@ RollingNumber forwards all Text props, but only character-level typographic prop
 Non-tabular numbers are currently not supported on mobile. The `tabularNumbers` setting should not be disabled.
 ::::
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function TypographyExamples() {
   const price = 9876.54;
   return (
@@ -160,7 +175,11 @@ color?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpri
   },
 }`
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ColorAndTransition() {
   const price = 555.55;
   return (
@@ -269,7 +288,11 @@ RollingNumber supports two digit transition styles via the `digitTransitionVaria
 - **`'every'`** (default): Rolls through every intermediate digit (e.g., 1→2→3→...→9).
 - **`'single'`**: Rolls directly to the new digit without showing intermediates. Direction (up/down) is based on the total value change.
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function DigitTransitionVariants() {
   const price = 12345.67;
   return (
@@ -303,7 +326,12 @@ The single variant determines scroll direction based on the **total value change
 
 Attach text or React nodes before/after the number to create rich compositions. If the prefix/suffix is a string, it will pulse color together with the main number.
 
-```tsx
+```tsx live noPreview
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function PrefixAndSuffix() {
   const value = 98345.67;
   const format = {
@@ -372,7 +400,11 @@ Customize the look of each logical section (`i18nPrefix`, `integer`, `fraction`,
 Per-section text styling (color, font, etc.) is not supported on mobile; text styles are applied globally within `RollingNumber`.
 :::
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function StyleOverrides() {
   const price = 12345.67;
   return (
@@ -413,7 +445,11 @@ function StyleOverrides() {
 
 Enable `enableSubscriptNotation` to compactly represent leading zeros in the fractional part.
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Subscript() {
   const value = 0.0000000001;
   const format = { minimumFractionDigits: 2, maximumFractionDigits: 25 } as const;
@@ -433,7 +469,13 @@ function Subscript() {
 
 You can also provide `formattedValue`; the component will render it directly instead of using the internal formatter. The numeric `value` is still required to drive animations and the color pulse.
 
-```tsx
+```tsx live noPreview
+import { prices } from '@coinbase/cds-common/internal/data/prices';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function UserProvidedFormattedValue() {
   const btc = { value: 98_765.43, formattedValue: '¥98,765.43 BTC' } as const;
   const tiny = {
@@ -475,7 +517,11 @@ Practical demos combining formatting, animation, and interactivity.
 
 ### Counter
 
-```tsx
+```tsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+
 function CounterExample() {
   const [count, setCount] = React.useState(0);
   const onInc = () => setCount((c) => c + 1);
@@ -499,7 +545,13 @@ function CounterExample() {
 
 ### Countdown
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations';
+
 function CountDownExample() {
   const pad = (n: number) => String(n).padStart(2, '0');
   const totalSeconds = 5 * 60;
@@ -553,7 +605,12 @@ function CountDownExample() {
 
 ### Live Auction
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function LiveBiddingExample() {
   const [currentBid, setCurrentBid] = React.useState(45000);
   const [bidCount, setBidCount] = React.useState(23);
@@ -624,7 +681,9 @@ RollingNumber (mobile) is composed of swappable subcomponents and exposes style 
 
 You can replace any of these with your own components via props:
 
-```tsx
+```tsx live noPreview
+import { RollingNumber } from '@coinbase/cds-mobile/numbers';
+
 <RollingNumber
   RollingNumberMaskComponent={MyMask}
   RollingNumberAffixSectionComponent={MyAffixSection}
@@ -633,7 +692,7 @@ You can replace any of these with your own components via props:
   RollingNumberSymbolComponent={MySymbol}
   value={1234.56}
   format={{ style: 'currency', currency: 'USD' }}
-/>
+/>;
 ```
 
 ### Style overrides

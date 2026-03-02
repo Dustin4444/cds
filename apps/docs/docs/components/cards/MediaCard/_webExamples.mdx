@@ -9,6 +9,10 @@ See the [Migration Guide](#migration-from-deprecated-components) at the end of t
 At minimum, provide a `thumbnail` to display visual content and a `title` for the card heading.
 
 ```jsx live
+import { MediaCard } from '@coinbase/cds-web/cards';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <VStack gap={2}>
   <MediaCard
     thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
@@ -34,7 +38,7 @@ At minimum, provide a `thumbnail` to display visual content and a `title` for th
       />
     }
   />
-</VStack>
+</VStack>;
 ```
 
 ## Media Placement
@@ -45,6 +49,10 @@ Use the `media` prop to display larger visual content. Control its position with
 - `end` (default): Media on the right
 
 ```jsx live
+import { MediaCard } from '@coinbase/cds-web/cards';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <VStack gap={2}>
   <MediaCard
     thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
@@ -82,7 +90,7 @@ Use the `media` prop to display larger visual content. Control its position with
     }
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ## Polymorphic and Interactive
@@ -90,6 +98,12 @@ Use the `media` prop to display larger visual content. Control its position with
 MediaCard supports polymorphic rendering and can be made interactive with `renderAsPressable`. Use `as` to change the underlying element.
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Card, MediaCard } from '@coinbase/cds-web/cards';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Link } from '@coinbase/cds-web/typography';
+
 <VStack gap={2}>
   <MediaCard
     as="article"
@@ -151,7 +165,7 @@ MediaCard supports polymorphic rendering and can be made interactive with `rende
       />
     }
   />
-</VStack>
+</VStack>;
 ```
 
 ## Text Content
@@ -161,6 +175,9 @@ MediaCard supports polymorphic rendering and can be made interactive with `rende
 The card handles long text content with truncation.
 
 ```jsx live
+import { MediaCard } from '@coinbase/cds-web/cards';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <MediaCard
   renderAsPressable
   accessibilityLabel="View card with long text content"
@@ -182,7 +199,7 @@ The card handles long text content with truncation.
       width="100%"
     />
   }
-/>
+/>;
 ```
 
 ### Custom Content
@@ -190,6 +207,10 @@ The card handles long text content with truncation.
 Use React nodes for custom styled text content.
 
 ```jsx live
+import { MediaCard } from '@coinbase/cds-web/cards';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+
 <MediaCard
   thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
   title={
@@ -218,7 +239,7 @@ Use React nodes for custom styled text content.
       width="100%"
     />
   }
-/>
+/>;
 ```
 
 ## Styling
@@ -226,6 +247,10 @@ Use React nodes for custom styled text content.
 Use `styles` and `classNames` props to customize specific parts of the card.
 
 ```jsx live
+import { MediaCard } from '@coinbase/cds-web/cards';
+import { VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <VStack gap={2}>
   <MediaCard
     thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
@@ -271,7 +296,7 @@ Use `styles` and `classNames` props to customize specific parts of the card.
       root: { borderWidth: 2, borderColor: 'blue' },
     }}
   />
-</VStack>
+</VStack>;
 ```
 
 ## Multiple Cards
@@ -279,6 +304,10 @@ Use `styles` and `classNames` props to customize specific parts of the card.
 Display multiple cards in a carousel.
 
 ```jsx live
+import { Card, MediaCard } from '@coinbase/cds-web/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 <Carousel styles={{ carousel: { gap: 16 } }}>
   <CarouselItem id="card1">
     <MediaCard
@@ -340,7 +369,7 @@ Display multiple cards in a carousel.
       width={320}
     />
   </CarouselItem>
-</Carousel>
+</Carousel>;
 ```
 
 ## Accessibility

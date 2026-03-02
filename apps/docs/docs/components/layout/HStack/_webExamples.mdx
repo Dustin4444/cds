@@ -16,6 +16,8 @@ If you want to lay out children in equal width columns, or with repeated rows of
 ### Columns Sized to Content
 
 ```jsx live
+import { Box, HStack } from '@coinbase/cds-web/layout';
+
 <HStack>
   <Box padding={3} background="bgAlternate">
     First
@@ -26,12 +28,14 @@ If you want to lay out children in equal width columns, or with repeated rows of
   <Box padding={3} background="bgAlternate">
     Third
   </Box>
-</HStack>
+</HStack>;
 ```
 
 ### Columns with Gaps
 
 ```jsx live
+import { Box, HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={1}>
   <Box padding={3} background="bgAlternate">
     First
@@ -42,12 +46,14 @@ If you want to lay out children in equal width columns, or with repeated rows of
   <Box padding={3} background="bgAlternate">
     Third
   </Box>
-</HStack>
+</HStack>;
 ```
 
 ### Columns that Fill the Available Space
 
 ```jsx live
+import { Box, HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={1}>
   <Box padding={3} flexGrow={1} background="bgAlternate">
     First
@@ -58,12 +64,14 @@ If you want to lay out children in equal width columns, or with repeated rows of
   <Box padding={3} flexGrow={1} background="bgAlternate">
     Third
   </Box>
-</HStack>
+</HStack>;
 ```
 
 ### Columns that Have Proportionate Sizes
 
 ```jsx live
+import { Box, HStack } from '@coinbase/cds-web/layout';
+
 <HStack gap={1}>
   <Box padding={3} flexGrow={1} background="bgAlternate">
     First
@@ -74,7 +82,7 @@ If you want to lay out children in equal width columns, or with repeated rows of
   <Box padding={3} flexGrow={3} background="bgAlternate">
     Third
   </Box>
-</HStack>
+</HStack>;
 ```
 
 ### A11y
@@ -99,6 +107,9 @@ Please note, there are no default responsive styles for Box. This is an additive
 #### Usage
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ResponsiveBox() {
   return (
     <HStack

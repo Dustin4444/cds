@@ -2,7 +2,9 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
 
 ## Basic Example
 
-```jsx
+```jsx live noPreview
+import { AreaChart } from '@coinbase/cds-mobile-visualization/chart';
+
 <AreaChart
   height={150}
   padding={0}
@@ -18,12 +20,14 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
   yAxis={{
     showGrid: true,
   }}
-/>
+/>;
 ```
 
 ## Simple
 
-```jsx
+```jsx live noPreview
+import { AreaChart } from '@coinbase/cds-mobile-visualization/chart';
+
 <AreaChart
   height={150}
   padding={0}
@@ -35,14 +39,16 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
   ]}
   type="gradient"
   showLines
-/>
+/>;
 ```
 
 ## Stacking
 
 You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/charts/CartesianChart/#series-stacks) for more details.
 
-```jsx
+```jsx live noPreview
+import { AreaChart, DottedArea, DottedLine } from '@coinbase/cds-mobile-visualization/chart';
+
 function StackingExample() {
   const theme = useTheme();
   return (
@@ -81,7 +87,9 @@ function StackingExample() {
 
 When an area chart contains negative values, the baseline automatically adjusts to zero instead of the bottom of the chart. The area fills from the data line to the zero baseline, properly showing both positive and negative regions.
 
-```jsx
+```jsx live noPreview
+import { AreaChart, SolidArea } from '@coinbase/cds-mobile-visualization/chart';
+
 <AreaChart
   showLines
   height={400}
@@ -96,14 +104,16 @@ When an area chart contains negative values, the baseline automatically adjusts 
   yAxis={{
     showGrid: true,
   }}
-/>
+/>;
 ```
 
 ## Area Styles
 
 You can have different area styles for each series.
 
-```jsx
+```jsx live noPreview
+import { AreaChart } from '@coinbase/cds-mobile-visualization/chart';
+
 <AreaChart
   height={350}
   series={[
@@ -128,7 +138,7 @@ You can have different area styles for each series.
       type: 'gradient',
     },
   ]}
-/>
+/>;
 ```
 
 ## Animations
@@ -139,7 +149,10 @@ You can configure chart transitions using the `transitions` prop on individual c
 
 You can pass in a custom spring or timing based transition to your chart for custom update animations. Use `CartesianChart` with `Area` and `Line` components directly to configure `transitions` per element.
 
-```jsx
+```jsx live noPreview
+import React, { useEffect, useState } from 'react';
+import { AreaChart, DottedArea } from '@coinbase/cds-mobile-visualization/chart';
+
 function AnimatedStackedAreas() {
   const theme = useTheme();
   const dataCount = 20;
@@ -254,7 +267,10 @@ function AnimatedStackedAreas() {
 
 You can also disable animations by setting the `animate` prop to `false`.
 
-```jsx
+```jsx live noPreview
+import React, { useEffect, useState } from 'react';
+import { AreaChart, DottedArea } from '@coinbase/cds-mobile-visualization/chart';
+
 function AnimatedStackedAreas() {
   const theme = useTheme();
   const dataCount = 20;
@@ -370,7 +386,12 @@ Each stop requires an `offset`, which is based on the data within the x/y scale 
 
 Values in between stops will be interpolated smoothly.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { AreaChart, Scrubber } from '@coinbase/cds-mobile-visualization/chart';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+
 function ContinuousGradient() {
   const theme = useTheme();
   const spectrumColors = [
@@ -440,7 +461,12 @@ function ContinuousGradient() {
 
 You can set multiple stops at the same offset to create a discrete gradient.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { AreaChart, Scrubber } from '@coinbase/cds-mobile-visualization/chart';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+
 function DiscreteGradient() {
   const theme = useTheme();
   const spectrumColors = [
@@ -529,7 +555,12 @@ function DiscreteGradient() {
 
 By default, gradients will be applied to the y-axis. You can apply a gradient to the x-axis by setting `axis` to `x` in the gradient definition.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { AreaChart, Scrubber } from '@coinbase/cds-mobile-visualization/chart';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+
 function XAxisGradient() {
   const theme = useTheme();
   const spectrumColors = [

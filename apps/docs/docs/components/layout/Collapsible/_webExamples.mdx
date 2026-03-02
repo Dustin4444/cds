@@ -7,6 +7,12 @@ In order to ensure Collapsible components are accessible on the web, we need to 
 :::
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Collapsible } from '@coinbase/cds-web/collapsible';
+import { useA11yControlledVisibility } from '@coinbase/cds-web/hooks/useA11yControlledVisibility';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function BasicCollapsible() {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -35,6 +41,11 @@ function BasicCollapsible() {
 Place `Collapsible` above the trigger to expand top.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Collapsible } from '@coinbase/cds-web/collapsible';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function ExpandTop() {
   const [collapsed, setCollapsed] = useState(true);
   return (
@@ -53,6 +64,13 @@ function ExpandTop() {
 Enable scroll by setting `maxHeight`.
 
 ```jsx live
+import React, { useState } from 'react';
+import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Collapsible } from '@coinbase/cds-web/collapsible';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Scroll() {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -74,6 +92,12 @@ function Scroll() {
 Set `direction="horizontal"` for horizontal expand/collapse.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Collapsible } from '@coinbase/cds-web/collapsible';
+import { DotCount } from '@coinbase/cds-web/dots';
+import { HStack } from '@coinbase/cds-web/layout';
+
 function Horizontal() {
   const [collapsed, setCollapsed] = useState(true);
 

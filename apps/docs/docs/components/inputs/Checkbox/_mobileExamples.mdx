@@ -2,7 +2,10 @@
 
 Checkbox UI and state management are separated so that you can swap in any form or state code you like.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+
 function BasicCheckbox() {
   const [isChecked, setIsChecked] = useState(false);
   return (
@@ -17,7 +20,13 @@ function BasicCheckbox() {
 
 If you don't want to use the default label or layout style, you can just not provide `children` to the `Checkbox` component. However, you should think about wrapping the custom label and `Checkbox` in a `Pressable` to increase the tap target.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function CustomLayoutCheckbox() {
   const [isChecked, setIsChecked] = useState(false);
   return (
@@ -40,7 +49,11 @@ function CustomLayoutCheckbox() {
 
 Checkboxes support various states including disabled and indeterminate.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function CheckboxStates() {
   const [checked, setChecked] = useState(false);
   const [indeterminate, setIndeterminate] = useState(true);
@@ -76,7 +89,11 @@ function CheckboxStates() {
 
 Mobile checkboxes should include proper accessibility labels and hints for screen readers.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function AccessibleCheckbox() {
   const [settings, setSettings] = useState({
     notifications: true,
@@ -126,7 +143,10 @@ function AccessibleCheckbox() {
 
 Like other control components (i.e. Radio, Switch), you can customize the color of the Checkbox by setting the `controlColor` prop.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+
 function CustomColors() {
   const [checked, setChecked] = useState(false);
 
@@ -144,7 +164,10 @@ function CustomColors() {
 
 For more advanced color customization, you can use additional style props like `background`, `borderColor`, `borderRadius`, and `borderWidth`:
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+
 function AdvancedCustomColors() {
   const [checked, setChecked] = useState(false);
 
@@ -168,7 +191,10 @@ function AdvancedCustomColors() {
 
 For multiple checkbox scenarios, use [ControlGroup](/components/inputs/ControlGroup) with `accessibilityRole="group"` for better accessibility and state management:
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+
 function MultipleCheckboxes() {
   const options = [
     { value: 'email', children: 'Email notifications' },

@@ -4,19 +4,25 @@ IconButton is a compact button that displays only an icon. Use it for actions wh
 
 The only required props are `name` (which determines the icon) and `accessibilityLabel` (for screen readers).
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2}>
   <IconButton name="gear" accessibilityLabel="Open settings" onPress={console.log} />
   <IconButton name="close" accessibilityLabel="Close modal" onPress={console.log} />
   <IconButton name="refresh" accessibilityLabel="Refresh data" onPress={console.log} />
-</HStack>
+</HStack>;
 ```
 
 ## Variants
 
 Use variants to denote intent and importance. The `active` prop fills the icon when enabled.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2}>
   <IconButton
     active
@@ -44,14 +50,17 @@ Use variants to denote intent and importance. The `active` prop fills the icon w
     variant="foregroundMuted"
     onPress={console.log}
   />
-</HStack>
+</HStack>;
 ```
 
 ### Transparent
 
 Use the `transparent` prop to remove the background until the user interacts with the button.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2}>
   <IconButton
     active
@@ -83,7 +92,7 @@ Use the `transparent` prop to remove the background until the user interacts wit
     transparent
     onPress={console.log}
   />
-</HStack>
+</HStack>;
 ```
 
 ## States
@@ -92,7 +101,10 @@ Use the `transparent` prop to remove the background until the user interacts wit
 
 Use the `loading` prop to show a spinner when an action is in progress. The button becomes non-interactive and displays a loading spinner instead of the icon.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2}>
   <IconButton
     active
@@ -110,14 +122,17 @@ Use the `loading` prop to show a spinner when an action is in progress. The butt
     loading
     onPress={console.log}
   />
-</HStack>
+</HStack>;
 ```
 
 ### Disabled
 
 Use the `disabled` prop to prevent interaction and show a disabled visual state.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2}>
   <IconButton
     active
@@ -142,14 +157,17 @@ Use the `disabled` prop to prevent interaction and show a disabled visual state.
     disabled
     onPress={console.log}
   />
-</HStack>
+</HStack>;
 ```
 
 ## Sizing
 
 IconButtons are compact by default. Use `compact={false}` for larger touch targets.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 <HStack gap={2} alignItems="center">
   <IconButton
     active
@@ -167,15 +185,17 @@ IconButtons are compact by default. Use `compact={false}` for larger touch targe
     compact={false}
     onPress={console.log}
   />
-</HStack>
+</HStack>;
 ```
 
 ## Accessibility
 
 Since icon buttons have no visible text, an `accessibilityLabel` is required to describe the button's purpose for screen readers.
 
-```jsx
-<IconButton name="close" accessibilityLabel="Close trade modal" />
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+
+<IconButton name="close" accessibilityLabel="Close trade modal" />;
 ```
 
 When composing a button with a visible label, use `accessibilityLabelledBy` to reference the label's `id` instead. See the [Claim Drop example](#claim-drop) below.
@@ -186,7 +206,12 @@ When composing a button with a visible label, use `accessibilityLabelledBy` to r
 
 A toggleable icon button with an adjacent label. Uses `accessibilityLabelledBy` to associate the button with its visible label.
 
-```jsx
+```jsx live noPreview
+import React, { useMemo, useState } from 'react';
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ClaimDropExample() {
   const [active, setActive] = useState(false);
   const variant = useMemo(() => (active ? 'primary' : 'foregroundMuted'), [active]);
@@ -214,7 +239,10 @@ function ClaimDropExample() {
 
 An icon button with a badge showing the notification count. Uses `DotCount` to display the number of unread notifications.
 
-```jsx
+```jsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { DotCount } from '@coinbase/cds-mobile/dots';
+
 <DotCount count={3} overlap="circular" pin="top-end">
   <IconButton
     name="bell"
@@ -222,5 +250,5 @@ An icon button with a badge showing the notification count. Uses `DotCount` to d
     variant="secondary"
     onPress={console.log}
   />
-</DotCount>
+</DotCount>;
 ```

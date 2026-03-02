@@ -5,7 +5,11 @@ Each direction has its own unique default design in order to support different u
 
 ### Direction: Horizontal
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 const steps = [
   { id: '1', label: 'Account Details' },
   { id: '2', label: 'Personal Information' },
@@ -37,7 +41,11 @@ return (
 
 ### Direction: Vertical
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 const steps = [
   { id: '1', label: 'Account Details' },
   { id: '2', label: 'Personal Information' },
@@ -85,7 +93,10 @@ Call the `useStepper` hook to initialize stepper state, access the current state
 
 The hook returns a tuple where the first member is the current stepper state containing the `activeStepId`.
 
-```tsx
+```tsx live noPreview
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 const [stepperState, stepperApi] = useStepper({ steps });
 
 <Stepper direction="horizontal" activeStepId={stepperState.activeStepId} steps={steps} />;
@@ -93,7 +104,7 @@ const [stepperState, stepperApi] = useStepper({ steps });
 
 The second member is an API for manipulating the stepper state and includes the following methods:
 
-```tsx
+```tsx live noPreview
 type StepperApi = {
   /** Update the currently active step to the step with `id`. */
   goToStep: (id: string) => void;
@@ -117,7 +128,11 @@ A StepperValue object optionally accepts a `subSteps` property, which is also an
 Steps can be nested arbritrarily deep, however CDS does not advise nesting deeper than one level.
 :::
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 const steps: StepperValue[] = [
   {
     id: 'first-step',
@@ -271,7 +286,11 @@ import { DefaultStepperLabelHorizontal } from '@coinbase/cds-web/stepper';
 
 Pass null to any of the component props to completely disable its functionality and hide it from the user.
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 const steps = [
   { id: '1', label: 'Account Details' },
   { id: '2', label: 'Personal Information' },
@@ -299,7 +318,11 @@ The `metadata` property on each step allows you to store additional data that ca
 by custom components to create rich, interactive experiences. This is particularly useful
 for complex workflows where each step needs to display contextual information.
 
-```tsx
+```tsx live noPreview
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { ListCell } from '@coinbase/cds-mobile/cells';
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 function StepperCustomMetadataExample() {
   const CustomBookingLabel = ({ step, active }) => {
     const { label, metadata } = step;
@@ -374,7 +397,11 @@ function StepperCustomMetadataExample() {
 You can create custom icon, label, and progress components for individual steps to show special states like errors.
 In this example, the "Payment Method" step uses metadata to indicate an error condition. The custom components check this metadata and the completion state to dynamically render an error indicator, falling back to default components otherwise.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 const ErrorStepperIcon = memo(function ErrorStepperIcon(props) {
   const { step, visited, complete } = props;
   const showError = step.metadata?.isError && (visited || complete);
@@ -481,7 +508,9 @@ It accepts an object with the following optional keys:
 - `label` - Applied to each step label element
 - `icon` - Applied to each step icon element
 
-```tsx
+```tsx live noPreview
+import { Stepper } from '@coinbase/cds-mobile/stepper';
+
 <Stepper
   direction="horizontal"
   styles={{

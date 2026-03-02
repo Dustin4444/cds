@@ -2,7 +2,13 @@
 
 Use when needing to explain an item in detail. Once selected, only show the title within the chip
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { SelectOption } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function SelectChipExample() {
   const options = [
     { title: 'All time return', description: 'Lifetime return of each crypto' },
@@ -35,7 +41,12 @@ function SelectChipExample() {
 
 A select chip with dropdown menu. Use when changing format of data
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { SelectOption } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function SelectChipExample() {
   const options = ['USD', 'CAD', 'GBP', 'JPY'];
   const [value, setValue] = useState(options[0]);
@@ -58,7 +69,14 @@ function SelectChipExample() {
 
 When utilizing single select, replace the label with the selection.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { CellMedia } from '@coinbase/cds-mobile/cells';
+import { SelectOption } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function SelectChipExample() {
   const options = [
     { title: 'Polygon', value: 'polygon', imageUrl: assets.polygon.imageUrl },
@@ -113,7 +131,14 @@ function SelectChipExample() {
 
 Use sort when giving the user the ability to change the order in which data is shown. Avoid using in conjunction with table data as that function is already built into the cells, and this would be duplicative.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { SelectOption } from '@coinbase/cds-mobile/controls';
+import { Icon } from '@coinbase/cds-mobile/icons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function SelectChipExample() {
   const options = [
     {

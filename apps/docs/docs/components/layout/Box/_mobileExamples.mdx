@@ -4,20 +4,24 @@ By default, Box has [flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS
 
 If you want to lay your content out in columns you should reach for [HStack](/components/layout/HStack) (a specialized Box that also allows for gaps between children). When you want to compose more complex layouts with columns of equal size or custom configurations you should use [Grid](/components/layout/Grid) (which leverages [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)). If you want to lay out content in a single column, you should use [VStack](/components/layout/VStack).
 
-```jsx
+```jsx live noPreview
+import { Box } from '@coinbase/cds-mobile/layout';
+
 <Box bordered borderRadius="400" background="bgAlternate" paddingX={3} paddingY={2}>
   Any kind of content can go here!
-</Box>
+</Box>;
 ```
 
 ## A11y
 
 **Web only** By default the box is not accessibility aware as it renders a standard `div`. We highly encourage the use of semantic elements so that screen readers can easily infer intent. This can be achieved through the `as` and `role` props.
 
-```jsx
+```jsx live noPreview
+import { Box } from '@coinbase/cds-mobile/layout';
+
 <Box as="aside" role="complementary">
   <SideBar />
-</Box>
+</Box>;
 ```
 
 ## Responsive Styles
@@ -37,7 +41,10 @@ Please note, there are no default responsive styles for Box. This is an additive
 
 ### Usage
 
-```jsx
+```jsx live noPreview
+import { Box, HStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ResponsiveBox() {
   return (
     <Box

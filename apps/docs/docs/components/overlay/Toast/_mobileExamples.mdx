@@ -1,6 +1,9 @@
 Use the `useToast` hook to show toasts. Call `toast.show()` with a message to display a temporary notification. On mobile, toasts can also be swiped away.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Toast, useToast } from '@coinbase/cds-mobile/overlays';
+
 function BasicToastExample() {
   const toast = useToast();
 
@@ -12,7 +15,11 @@ function BasicToastExample() {
 
 Add an action button to the toast for quick user actions like "Undo" or "View".
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function ToastWithActionExample() {
   const toast = useToast();
 
@@ -39,7 +46,11 @@ Toast duration is automatically calculated based on content length:
 
 You can override the automatic calculation by providing a custom `duration` in milliseconds.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function CustomDurationExample() {
   const toast = useToast();
 
@@ -58,7 +69,11 @@ function CustomDurationExample() {
 
 Use `bottomOffset` to adjust the vertical position of the toast. This is useful when you have bottom navigation or tab bars.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function BottomOffsetExample() {
   const toast = useToast();
 
@@ -79,7 +94,11 @@ function BottomOffsetExample() {
 
 Use the `variant` prop to change the color surge effect on the toast background. This helps communicate the nature of the notification.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function VariantExample() {
   const toast = useToast();
 
@@ -100,7 +119,13 @@ function VariantExample() {
 
 Use `onWillHide` and `onDidHide` to respond to toast dismissal. This is useful for cleanup or triggering subsequent actions.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Toast, useToast } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function LifecycleCallbacksExample() {
   const toast = useToast();
   const [status, setStatus] = useState('Ready');
@@ -128,7 +153,12 @@ function LifecycleCallbacksExample() {
 
 Use `toast.hide()` to programmatically dismiss the current toast.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { Toast, useToast } from '@coinbase/cds-mobile/overlays';
+
 function HideToastExample() {
   const toast = useToast();
 
@@ -151,7 +181,12 @@ function HideToastExample() {
 
 When multiple toasts are triggered, they queue up. Use `toast.clearQueue()` to remove all pending toasts.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function ClearQueueExample() {
   const toast = useToast();
 
@@ -178,7 +213,11 @@ Toast announces its content to screen readers using `accessibilityRole="alert"`.
 
 You can customize the accessibility announcement with `accessibilityLabel`:
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function AccessibilityExample() {
   const toast = useToast();
 
@@ -202,7 +241,13 @@ function AccessibilityExample() {
 
 A common pattern is showing toast feedback after form actions.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { TextInput } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+
 function FormSubmissionExample() {
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -269,7 +314,13 @@ function ClipboardCopyExample() {
 
 Implement an undo pattern for destructive actions.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useRef, useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { useToast } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function UndoDeleteExample() {
   const toast = useToast();
   const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);
@@ -326,7 +377,12 @@ function UndoDeleteExample() {
 
 On mobile, toasts can be dismissed by swiping. This interaction is built-in and requires no additional configuration.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Toast, useToast } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function SwipeToDismissExample() {
   const toast = useToast();
 

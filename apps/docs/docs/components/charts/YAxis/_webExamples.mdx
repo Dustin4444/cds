@@ -3,6 +3,8 @@
 The YAxis component provides a vertical axis for charts with automatic tick generation and labeling.
 
 ```jsx live
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -16,7 +18,7 @@ The YAxis component provides a vertical axis for charts with automatic tick gene
   <YAxis showGrid />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ## Axis Config
@@ -28,6 +30,8 @@ Properties related to the scale of an axis are set on the Chart component. This 
 YAxis supports `linear` (default) and `log` scale types. Both `linear` and `log` are numeric scales.
 
 ```jsx live
+import { CartesianChart, Line, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   height={400}
   series={[
@@ -52,7 +56,7 @@ YAxis supports `linear` (default) and `log` scale types. Both `linear` and `log`
     width={70}
     tickLabelFormatter={(value) => value.toLocaleString()}
   />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Domain
@@ -61,6 +65,8 @@ An axis's domain is the range of values that the axis will display.
 You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
 
 ```jsx live
+import { CartesianChart, Line, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   height={250}
   series={[
@@ -75,7 +81,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
 >
   <YAxis showGrid />
   <Line seriesId="prices" showArea />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 #### Domain Limit
@@ -89,6 +95,8 @@ An axis's range is the range of values that the axis will display in pixels. Thi
 You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
 
 ```jsx live
+import { CartesianChart, Line } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   height={250}
   series={[
@@ -102,7 +110,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
   }}
 >
   <Line seriesId="prices" showArea />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ## Axis Props
@@ -114,6 +122,8 @@ Properties related to the visual appearance of the YAxis are set on the componen
 You can set the position of an axis to `left` or `right` (default).
 
 ```jsx live
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={512}
@@ -137,7 +147,7 @@ You can set the position of an axis to `left` or `right` (default).
   <Line curve="natural" seriesId="linear" />
   <Line curve="natural" seriesId="log" />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Grid
@@ -145,6 +155,11 @@ You can set the position of an axis to `left` or `right` (default).
 You can show grid lines at each tick position using the `showGrid` prop.
 
 ```jsx live
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+import { Switch } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function YAxisGridExample() {
   const [showGrid, setShowGrid] = useState(true);
   return (
@@ -176,6 +191,15 @@ function YAxisGridExample() {
 You can also customize the grid lines using the `GridLineComponent` prop.
 
 ```jsx live
+import {
+  BarPlot,
+  CartesianChart,
+  ReferenceLine,
+  SolidLine,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function CustomGridLineExample() {
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -218,6 +242,11 @@ function CustomGridLineExample() {
 You can show the axis line using the `showLine` prop.
 
 ```jsx live
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+import { Switch } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function YAxisLineExample() {
   const [showLine, setShowLine] = useState(true);
   return (
@@ -249,6 +278,11 @@ function YAxisLineExample() {
 You can also customize the axis line using the `classNames` and `styles` props.
 
 ```jsx live
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+import { Switch } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function YAxisLineStylesExample() {
   const [showLine, setShowLine] = useState(true);
   return (
@@ -286,6 +320,8 @@ function YAxisLineStylesExample() {
 The `size` prop sets the size of the axis in pixels. The default is 44 for YAxis, but can be adjusted to fit the size of your data.
 
 ```jsx live
+import { CartesianChart, Line, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   height={400}
   series={[
@@ -307,7 +343,7 @@ The `size` prop sets the size of the axis in pixels. The default is 44 for YAxis
     width={70}
     tickLabelFormatter={(value) => value.toLocaleString()}
   />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Ticks
@@ -317,6 +353,8 @@ You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInte
 `ticks` accepts an array of numbers, which corresponds to the values of that axis that you would like to display ticks for.
 
 ```jsx live
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -330,7 +368,7 @@ You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInte
   <YAxis showLine showTickMarks showGrid ticks={[34, 56, 80]} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-array/ticks#ticks) to determine the number and placement of ticks. Note that this count is not guaranteed to be respected.
@@ -338,6 +376,8 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
 This is the default behavior for YAxis, and defaults to `5`.
 
 ```jsx live
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -351,12 +391,14 @@ This is the default behavior for YAxis, and defaults to `5`.
   <YAxis showLine showTickMarks showGrid requestedTickCount={5} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 `tickInterval`, which accepts a number for the gap between ticks in pixels, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
 
 ```jsx live
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -370,7 +412,7 @@ This is the default behavior for YAxis, and defaults to `5`.
   <YAxis showLine showTickMarks showGrid tickInterval={8} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Tick Marks
@@ -379,6 +421,11 @@ You can show tick marks on the axis using the `showTickMarks` prop.
 You can also customize the tick mark size using the `tickMarkSize` prop.
 
 ```jsx live
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+import { Switch } from '@coinbase/cds-web/controls';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function YAxisTickMarksExample() {
   const [showTickMarks, setShowTickMarks] = useState(true);
   return (
@@ -412,6 +459,8 @@ function YAxisTickMarksExample() {
 You can customize the tick labels using the `tickLabelFormatter` prop.
 
 ```jsx live
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -425,7 +474,7 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
   <YAxis showGrid tickLabelFormatter={(value) => `$${value}`} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Label
@@ -433,6 +482,8 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
 You can add a label to the axis using the `label` prop.
 
 ```jsx live
+import { CartesianChart, Line, Scrubber, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -446,7 +497,7 @@ You can add a label to the axis using the `label` prop.
   <YAxis showGrid label="Price ($)" tickLabelFormatter={(value) => `$${value}`} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 #### Custom Tick Labels
@@ -454,6 +505,15 @@ You can add a label to the axis using the `label` prop.
 You can create custom tick label components using the `TickLabelComponent` prop for advanced styling and positioning that works cross-platform.
 
 ```jsx live
+import React, { useCallback } from 'react';
+import {
+  CartesianChart,
+  DefaultAxisTickLabel,
+  Line,
+  Scrubber,
+  YAxis,
+} from '@coinbase/cds-web-visualization/chart';
+
 function CustomTickLabelExample() {
   const CustomYAxisTickLabel = useCallback(
     (props) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
@@ -490,6 +550,8 @@ function CustomTickLabelExample() {
 ### Multiple Y Axes
 
 ```jsx live
+import { BarPlot, CartesianChart, XAxis, YAxis } from '@coinbase/cds-web-visualization/chart';
+
 <CartesianChart
   height={400}
   series={[
@@ -544,5 +606,5 @@ function CustomTickLabelExample() {
     tickLabelFormatter={(value) => `${value}%`}
   />
   <BarPlot />
-</CartesianChart>
+</CartesianChart>;
 ```

@@ -5,6 +5,11 @@ SidebarMoreMenu wraps a [Dropdown](/components/layout/Dropdown) to provide an ov
 Place `SidebarMoreMenu` inside a `Sidebar` component. Pass `SelectOption` components as children to define the menu items. Use the `onChange` callback to handle selection and `value` to control the selected item.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem, SidebarMoreMenu } from '@coinbase/cds-web/navigation';
+
 function BasicSidebarMoreMenu() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [moreMenuValue, setMoreMenuValue] = useState();
@@ -71,6 +76,11 @@ function BasicSidebarMoreMenu() {
 Use `triggerTitle` to customize the label shown on the menu trigger. This is useful for localization.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem, SidebarMoreMenu } from '@coinbase/cds-web/navigation';
+
 function TriggerTitleExample() {
   const [moreMenuValue, setMoreMenuValue] = useState();
 
@@ -109,6 +119,12 @@ function TriggerTitleExample() {
 When the sidebar is collapsed, the `tooltipContent` prop displays a tooltip on hover to identify the menu trigger.
 
 ```jsx live
+import React, { useState } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem, SidebarMoreMenu } from '@coinbase/cds-web/navigation';
+
 function CollapsedSidebarExample() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [moreMenuValue, setMoreMenuValue] = useState();
@@ -184,6 +200,11 @@ function CollapsedSidebarExample() {
 `SidebarMoreMenu` adapts automatically to the sidebar's `condensed` variant.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem, SidebarMoreMenu } from '@coinbase/cds-web/navigation';
+
 function CondensedVariantExample() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [moreMenuValue, setMoreMenuValue] = useState();
@@ -251,6 +272,11 @@ function CondensedVariantExample() {
 Use the `borderRadius` prop to customize the trigger's corner radius.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem, SidebarMoreMenu } from '@coinbase/cds-web/navigation';
+
 function BorderRadiusExample() {
   const [moreMenuValue, setMoreMenuValue] = useState();
 
@@ -307,6 +333,11 @@ function BorderRadiusExample() {
 `SidebarMoreMenu` automatically handles ARIA attributes for the dropdown menu pattern. Set `tooltipContent` to provide context when the sidebar is collapsed, ensuring users can identify the trigger via tooltip.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem, SidebarMoreMenu } from '@coinbase/cds-web/navigation';
+
 function AccessibilityExample() {
   const [moreMenuValue, setMoreMenuValue] = useState();
 

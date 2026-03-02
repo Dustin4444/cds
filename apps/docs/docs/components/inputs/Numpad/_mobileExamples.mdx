@@ -13,7 +13,14 @@ Primary use case for this is when a user is inputing a PIN code. Notice it does 
   alt="Pin Numpad"
 />
 
-```tsx
+```tsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Numpad } from '@coinbase/cds-mobile/controls';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 const PinNumpadExample = () => {
   // localState
   const [visible, { toggleOn, toggleOff }] = useToggler(false);
@@ -88,7 +95,15 @@ Best when used in the context of a transactional scenario. This could range from
   alt="Transactional Numpad"
 />
 
-```tsx
+```tsx live noPreview
+import React, { useCallback, useMemo, useState } from 'react';
+import { Banner } from '@coinbase/cds-mobile/banner';
+import { Button, ButtonGroup } from '@coinbase/cds-mobile/buttons';
+import { Numpad, TextInput } from '@coinbase/cds-mobile/controls';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 const VALUE_MAX = 1000000;
 const TransactionalNumpadExample = () => {
   const [visible, { toggleOn, toggleOff }] = useToggler(false);

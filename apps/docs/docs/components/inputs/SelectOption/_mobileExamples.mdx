@@ -8,7 +8,11 @@
 
 #### Default Composition
 
-```tsx
+```tsx live noPreview
+import React, { useRef, useState } from 'react';
+import { Menu, SelectOption } from '@coinbase/cds-mobile/controls';
+import { Tray } from '@coinbase/cds-mobile/overlays';
+
 const SelectMobile = () => {
   const [isTrayVisible, { toggleOff: handleClose, toggleOn: handleOpenTray }] = useToggler(false);
   const [value, setValue] = useState();

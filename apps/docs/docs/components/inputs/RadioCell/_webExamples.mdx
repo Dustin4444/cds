@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import { VStack } from '@coinbase/cds-web/layout';
+
 function RadioCellExample() {
   const [value, setValue] = React.useState('one');
   return (
@@ -36,6 +38,10 @@ function RadioCellExample() {
 ### With Custom Content and Styling
 
 ```tsx live
+import React, { useState } from 'react';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomRadioCellExample() {
   const [selectedPlan, setSelectedPlan] = useState('pro');
   return (

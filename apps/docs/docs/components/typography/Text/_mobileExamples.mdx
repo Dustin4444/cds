@@ -2,32 +2,41 @@
 
 Display styles are to be used very sparingly. Display styles supersede Title styles, so they are there for when you need to layer on more hierarchy.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <VStack>
   <Text font="display1">Display1</Text>
   <Text font="display2">Display2</Text>
   <Text font="display3">Display3</Text>
-</VStack>
+</VStack>;
 ```
 
 ### Title
 
 Title styles are used to establish the primary hierarchy in a layout. They should be used to label sections.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <VStack>
   <Text font="title1">Title1</Text>
   <Text font="title2">Title2</Text>
   <Text font="title3">Title3</Text>
   <Text font="title4">Title4</Text>
-</VStack>
+</VStack>;
 ```
 
 ### Headline & Body
 
 Headline and body styles are your essential content styles. They’re versatile styles that can be used for paragraphs, data, labels for buttons.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <VStack>
   <Text font="headline" as="p">
     Headline
@@ -35,20 +44,23 @@ Headline and body styles are your essential content styles. They’re versatile 
   <Text font="body" as="p">
     Body
   </Text>
-</VStack>
+</VStack>;
 ```
 
 ### Label & Caption
 
 Label and caption styles are when you need to add hierarchy in your content. They ideally are used in conjunction with Headline and Body styles, but in extraordinarily dense interfaces they can replace Headline & Body should you need to present large data sets to users. They’re also great candidates for presenting numbers to the user as they have tabular numbers by default.
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <VStack>
   <Text font="label1">Label1</Text>
   <Text font="label2">Label2</Text>
   <Text font="caption">Caption</Text>
   <Text font="legal">Legal</Text>
-</VStack>
+</VStack>;
 ```
 
 ### Features
@@ -59,7 +71,9 @@ All text components support a few numeric typography styles, overflow, text tran
 
 On the web, there are different HTML elements to wrap texts with to communicated semantic meanings of the strings. Therefore, CDS does not make any assumptions about the semantic of the text but ask developers to choose the approriate semantic HTML element via the `as` prop.
 
-```jsx
+```jsx live noPreview
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <Text font="display1" as="h1">Display</Text>
 
 // If we want large text but not as the page title
@@ -90,10 +104,13 @@ In a nutshell, you can reference the following for the most common text semantic
 
 When applying padding to a `Text` component that contains instances of `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
 
-```jsx
+```jsx live noPreview
+import { Box } from '@coinbase/cds-mobile/layout';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Box paddingTop={2}>
   <Text font="legal" color="fgMuted">
     By continuing, you agree to the <Link to="/terms">Terms of Service</Link>.
   </Text>
-</Box>
+</Box>;
 ```

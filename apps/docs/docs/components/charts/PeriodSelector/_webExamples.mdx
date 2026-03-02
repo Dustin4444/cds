@@ -1,6 +1,10 @@
 ## Basic Example
 
 ```jsx live
+import React, { useState } from 'react';
+import { PeriodSelector } from '@coinbase/cds-web-visualization/chart';
+import { Box } from '@coinbase/cds-web/layout';
+
 function BasicExample() {
   const tabs = [
     { id: '1H', label: '1H' },
@@ -27,6 +31,9 @@ function BasicExample() {
 You can set the `width` prop to `fit-content` to make the period selector as small as possible.
 
 ```jsx live
+import React, { useState } from 'react';
+import { PeriodSelector } from '@coinbase/cds-web-visualization/chart';
+
 function MinimumWidthExample() {
   const tabs = [
     { id: '1W', label: '1W' },
@@ -51,6 +58,11 @@ function MinimumWidthExample() {
 ## Many Periods with Overflow
 
 ```jsx live
+import React, { useMemo, useState } from 'react';
+import { PeriodSelector } from '@coinbase/cds-web-visualization/chart';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { Box, HStack } from '@coinbase/cds-web/layout';
+
 function ManyPeriodsExample() {
   const tabs = useMemo(
     () => [
@@ -128,6 +140,10 @@ function ManyPeriodsExample() {
 ## Live Indicator
 
 ```jsx live
+import React, { useMemo, useState } from 'react';
+import { LiveTabLabel, PeriodSelector } from '@coinbase/cds-web-visualization/chart';
+import { Box } from '@coinbase/cds-web/layout';
+
 function LiveExample() {
   const tabs = useMemo(
     () => [
@@ -165,6 +181,10 @@ function LiveExample() {
 ### Custom Colors
 
 ```jsx live
+import React, { useMemo, useState } from 'react';
+import { PeriodSelector } from '@coinbase/cds-web-visualization/chart';
+import { Box } from '@coinbase/cds-web/layout';
+
 function LiveExample() {
   const tabs = useMemo(
     () => [
@@ -199,6 +219,12 @@ function LiveExample() {
 ### Color Shifting
 
 ```jsx live
+import React, { useCallback, useMemo, useState } from 'react';
+import { PeriodSelector } from '@coinbase/cds-web-visualization/chart';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function ColorShiftingExample() {
   const TabLabel = memo(({ label }) => (
     <Text font="label1" style={{ color: 'var(--chartActiveColor)' }}>
@@ -278,6 +304,18 @@ function ColorShiftingExample() {
 You can use a PeriodSelector to control the time period of a LineChart, with a settings icon to enable extra customization for users.
 
 ```jsx live
+import React, { useCallback, useMemo, useState } from 'react';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { Axis, LineChart, PeriodSelector, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { Switch } from '@coinbase/cds-web/controls';
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RollingNumber } from '@coinbase/cds-web/numbers';
+import { Tray } from '@coinbase/cds-web/overlays';
+import { SectionHeader } from '@coinbase/cds-web/section-header';
+import { Text } from '@coinbase/cds-web/typography';
+
 function CustomizableAssetPriceExample() {
   const tabs = [
     { id: 'hour', label: '1H' },

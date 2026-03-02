@@ -34,6 +34,9 @@ function GridColumnExample() {
 You can use GridColumn to create "full bleed" layouts. This is a common layout where most content will not be edge to edge with the parent Grid, rather, content will only occupy columns in the center of the Grid buffered by gutters on either end; some columns may "break" from this and become full bleed spanning the entire width of the layout. You can use GridColumn to accomplish this within the same parent Grid.
 
 ```jsx live
+import { HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function FullBleedExample() {
   function Item({ children, ...props }) {
     return (

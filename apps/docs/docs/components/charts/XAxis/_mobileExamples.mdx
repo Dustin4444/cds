@@ -2,7 +2,9 @@
 
 The XAxis component provides a horizontal axis for charts with automatic tick generation and labeling.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -19,7 +21,7 @@ The XAxis component provides a horizontal axis for charts with automatic tick ge
   <XAxis showLine showTickMarks showGrid />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ## Axis Config
@@ -32,7 +34,9 @@ XAxis supports `linear` (default), `log`, and `band` scale types.
 `linear` and `log` are numeric scales while `band` is a categorical scale.
 `band` scale is required for bar charts.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   height={250}
   series={[
@@ -47,7 +51,7 @@ XAxis supports `linear` (default), `log`, and `band` scale types.
 >
   <XAxis showLine showTickMarks showGrid />
   <Line seriesId="prices" showArea />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Domain
@@ -55,7 +59,9 @@ XAxis supports `linear` (default), `log`, and `band` scale types.
 An axis's domain is the range of values that the axis will display.
 You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   height={250}
   series={[
@@ -70,7 +76,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
 >
   <XAxis showLine showTickMarks showGrid tickInterval={16} />
   <Line seriesId="prices" showArea />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 #### Domain Limit
@@ -83,7 +89,9 @@ An axis's range is the range of values that the axis will display in pixels. Thi
 
 You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   height={250}
   series={[
@@ -97,7 +105,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
   }}
 >
   <Line seriesId="prices" showArea />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Data
@@ -108,7 +116,9 @@ Data sets x values for the axis.
 
 Using string data will allow you to set string x values for each data point.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   height={250}
   series={[
@@ -123,14 +133,16 @@ Using string data will allow you to set string x values for each data point.
 >
   <XAxis showLine showTickMarks showGrid />
   <Line seriesId="prices" showArea />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 #### Number Data
 
 Using number data with a numeric scale will allow you to adjust the x values for each data point.
 
-```jsx
+```jsx live noPreview
+import { LineChart, Scrubber } from '@coinbase/cds-mobile-visualization/chart';
+
 <LineChart
   enableScrubbing
   series={[
@@ -155,14 +167,16 @@ Using number data with a numeric scale will allow you to adjust the x values for
   }}
 >
   <Scrubber />
-</LineChart>
+</LineChart>;
 ```
 
 ### Category Padding
 
 For band scales, you can set the category padding to adjust the spacing between categories. The default is 0.1. This is a value between 0 and 1, where 0.1 = 10% spacing.
 
-```jsx
+```jsx live noPreview
+import { BarChart } from '@coinbase/cds-mobile-visualization/chart';
+
 <BarChart
   showXAxis
   height={400}
@@ -178,7 +192,7 @@ For band scales, you can set the category padding to adjust the spacing between 
     showLine: true,
     categoryPadding: 0.5,
   }}
-/>
+/>;
 ```
 
 ## Axis Props
@@ -189,7 +203,10 @@ Properties related to the visual appearance of the XAxis are set on the componen
 
 You can set the position of an axis to `top` or `bottom` (default).
 
-```tsx
+```tsx live noPreview
+import React, { useCallback, useMemo } from 'react';
+import { LineChart, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 function XAxisPositionExample() {
   const theme = useTheme();
   const lineA = [5, 5, 10, 90, 85, 70, 30, 25, 25];
@@ -282,7 +299,12 @@ function XAxisPositionExample() {
 
 You can show grid lines at each tick position using the `showGrid` prop.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+import { Switch } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function XAxisGridExample() {
   const [showGrid, setShowGrid] = useState(true);
   return (
@@ -316,7 +338,15 @@ function XAxisGridExample() {
 
 You can also customize the grid lines using the `GridLineComponent` prop.
 
-```tsx
+```tsx live noPreview
+import {
+  CartesianChart,
+  Line,
+  Scrubber,
+  SolidLine,
+  XAxis,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 function CustomGridLineExample() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -346,7 +376,15 @@ On band scales, you can also use `bandGridLinePlacement` to control where grid l
 
 Using edges will place a grid line at the start of each band, plus a grid line at the end of the last band.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import {
+  BarPlot,
+  CartesianChart,
+  SolidLine,
+  XAxis,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 function BandGridPlacement() {
   const [selectedBandGridPlacement, setSelectedBandGridPlacement] = useState('edges');
 
@@ -382,7 +420,12 @@ function BandGridPlacement() {
 
 You can show the axis line using the `showLine` prop.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+import { Switch } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function XAxisLineExample() {
   const [showLine, setShowLine] = useState(true);
   return (
@@ -416,7 +459,12 @@ function XAxisLineExample() {
 
 You can also customize the axis line using the `styles` props.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+import { Switch } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function XAxisLineStylesExample() {
   const theme = useTheme();
   const [showLine, setShowLine] = useState(true);
@@ -454,7 +502,9 @@ function XAxisLineStylesExample() {
 
 The `size` prop sets the size of the axis in pixels. The default is 32 for XAxis, but can be adjusted to fit the size of your data.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -471,7 +521,7 @@ The `size` prop sets the size of the axis in pixels. The default is 32 for XAxis
   <XAxis showLine showTickMarks showGrid height={64} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Ticks
@@ -480,7 +530,9 @@ You can use the `ticks`, `requestedTickCount`, and `tickInterval` (default for X
 
 `ticks` accepts an array of numbers, which corresponds to the values of that axis that you would like to display ticks for.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -494,12 +546,14 @@ You can use the `ticks`, `requestedTickCount`, and `tickInterval` (default for X
   <XAxis showLine showTickMarks showGrid ticks={[0, 2, 4, 6]} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-array/ticks#ticks) to determine the number and placement of ticks. Note that this count is not guaranteed to be respected.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -513,12 +567,14 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
   <XAxis showLine showTickMarks showGrid requestedTickCount={4} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 `tickInterval`, which accepts a number for the gap between ticks in pixels, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -532,14 +588,19 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
   <XAxis showLine showTickMarks showGrid tickInterval={16} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Tick Marks
 
 You can show tick marks on the axis using the `showTickMarks` prop. You can also customize the tick mark size using the `tickMarkSize` prop.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+import { Switch } from '@coinbase/cds-mobile/controls';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
 function XAxisTickMarksExample() {
   const [showTickMarks, setShowTickMarks] = useState(true);
   return (
@@ -575,7 +636,10 @@ On band scales, you can also use `bandTickMarkPlacement` to control where tick m
 
 Using edges will place a tick mark at the start of each band, plus a tick mark at the end of the last band.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { BarPlot, CartesianChart, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 function BandTickMarkPlacement() {
   const [selectedBandTickMarkPlacement, setSelectedBandTickMarkPlacement] = useState('middle');
 
@@ -610,7 +674,9 @@ function BandTickMarkPlacement() {
 
 You can customize the tick labels using the `tickLabelFormatter` prop. It will receive the x data value of the tick. Meaning, if data is provided for the axis, it will receive the string label for the tick.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -627,12 +693,14 @@ You can customize the tick labels using the `tickLabelFormatter` prop. It will r
   <XAxis showGrid tickLabelFormatter={(value) => `Day of ${value}`} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 If no data is set for the axis, it will receive the regular number value of the tick, which is normally the index corresponding to each value in the series.
 
-```jsx
+```jsx live noPreview
+import { CartesianChart, Line, Scrubber, XAxis } from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -649,14 +717,22 @@ If no data is set for the axis, it will receive the regular number value of the 
   <XAxis showGrid tickLabelFormatter={(value) => value * 2} />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 ### Label
 
 You can add a label to the axis using the `label` prop.
 
-```jsx
+```jsx live noPreview
+import {
+  CartesianChart,
+  Line,
+  Scrubber,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 <CartesianChart
   enableScrubbing
   height={250}
@@ -674,14 +750,24 @@ You can add a label to the axis using the `label` prop.
   <YAxis showGrid />
   <Line seriesId="prices" showArea />
   <Scrubber />
-</CartesianChart>
+</CartesianChart>;
 ```
 
 #### Custom Tick Labels
 
 You can create custom tick label components using the `TickLabelComponent` prop for advanced styling that works cross-platform.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import {
+  CartesianChart,
+  DefaultAxisTickLabel,
+  Line,
+  Scrubber,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 function CustomTickLabelExample() {
   const theme = useTheme();
 

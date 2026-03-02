@@ -1,16 +1,21 @@
 ### Basic usage
 
 ```tsx live
+import { Box, VStack } from '@coinbase/cds-web/layout';
+
 <VStack alignItems="center">
   <Box height="40px">
     <LogoWordmark />
   </Box>
-</VStack>
+</VStack>;
 ```
 
 ### Foreground Variations
 
 ```tsx live
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack gap={4}>
   <VStack gap={2}>
     <Text font="label2" color="fgMuted">
@@ -28,7 +33,7 @@
       <LogoWordmark foreground={true} />
     </Box>
   </VStack>
-</VStack>
+</VStack>;
 ```
 
 ### Sizing
@@ -36,6 +41,9 @@
 LogoWordmark doesn't have a `size` prop. Instead, control its size by setting the width or height of its container. The component will automatically maintain its aspect ratio.
 
 ```tsx live
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 <VStack gap={4}>
   <VStack gap={2}>
     <Text font="label2" color="fgMuted">
@@ -69,5 +77,5 @@ LogoWordmark doesn't have a `size` prop. Instead, control its size by setting th
       <LogoWordmark />
     </Box>
   </VStack>
-</VStack>
+</VStack>;
 ```

@@ -2,7 +2,10 @@
 
 Use the `onChange` prop to listen and make changes to the `activeTab` state.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
+
 function Example() {
   const tabs = [
     { id: 'buy', label: 'Buy' },
@@ -26,7 +29,10 @@ function Example() {
 
 You can set any tab as the initial active tab.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
+
 function Example() {
   const tabs = [
     { id: 'buy', label: 'Buy' },
@@ -50,7 +56,10 @@ function Example() {
 
 SegmentedTabs can start with no active selection.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
+
 function Example() {
   const tabs = [
     { id: 'buy', label: 'Buy' },
@@ -74,7 +83,10 @@ function Example() {
 
 You can disable the entire SegmentedTabs component.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
+
 function Example() {
   const tabs = [
     { id: 'buy', label: 'Buy' },
@@ -99,7 +111,10 @@ function Example() {
 
 Individual tabs can be disabled while keeping others interactive.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
+
 function Example() {
   const tabs = [
     { id: 'buy', label: 'Buy' },
@@ -123,7 +138,10 @@ function Example() {
 
 You can customize individual tabs by providing a custom `Component` for specific tabs.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
+
 function Example() {
   const CustomSegmentedTabColor = useCallback(
     (props) => <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" font="label2" />,
@@ -157,7 +175,12 @@ function Example() {
 
 You can customize the active indicator component and overall styling.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useState } from 'react';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const CustomActiveIndicator = ({ activeTabRect }) => (
     <TabsActiveIndicator activeTabRect={activeTabRect} background="bgOverlay" />

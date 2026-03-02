@@ -1,6 +1,8 @@
 ### Basic usage
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered>
   <TableHeader>
     <TableRow>
@@ -12,12 +14,16 @@
       <TableCell>Content</TableCell>
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Loading State Example
 
 ```tsx live
+import { Spinner } from '@coinbase/cds-web/loaders';
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+import { Text } from '@coinbase/cds-web/typography';
+
 <Table bordered variant="ruled">
   <TableHeader>
     <TableRow>
@@ -34,12 +40,14 @@
       </TableCell>
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Multiple Rows Example
 
 ```tsx live
+import { Table, TableBody, TableCell, TableRow } from '@coinbase/cds-web/tables';
+
 <Table bordered>
   <TableHeader>
     <TableRow>
@@ -57,5 +65,5 @@
       <TableCell>Designer</TableCell>
     </TableRow>
   </TableBody>
-</Table>
+</Table>;
 ```

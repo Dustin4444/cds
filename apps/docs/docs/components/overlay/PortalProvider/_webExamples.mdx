@@ -3,6 +3,8 @@
 The PortalProvider component is typically used at the root of your application to manage overlay components:
 
 ```tsx live
+import { Box } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <PortalProvider>
@@ -19,6 +21,8 @@ function Example() {
 You can disable the default portal rendering and use the PortalNodes component separately:
 
 ```tsx live
+import { Box } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <PortalProvider renderPortals={false}>
@@ -36,6 +40,11 @@ function Example() {
 The PortalProvider's `toastBottomOffset` prop sets the default bottom offset for all toasts:
 
 ```tsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { Box } from '@coinbase/cds-web/layout';
+import { Toast } from '@coinbase/cds-web/overlays';
+import { useToast } from '@coinbase/cds-web/overlays/useToast';
+
 function Example() {
   function ToastDemo() {
     const toast = useToast();

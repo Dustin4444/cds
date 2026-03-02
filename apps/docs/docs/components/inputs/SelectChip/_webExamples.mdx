@@ -3,6 +3,10 @@
 Use when needing to explain an item in detail. Once selected, only show the title within the chip
 
 ```jsx live
+import React, { useState } from 'react';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function SelectChipExample() {
   const options = [
     { title: 'All time return', description: 'Lifetime return of each crypto' },
@@ -36,6 +40,9 @@ function SelectChipExample() {
 A select chip with dropdown menu. Use when changing format of data
 
 ```jsx live
+import React, { useState } from 'react';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+
 function SelectChipExample() {
   const options = ['USD', 'CAD', 'GBP', 'JPY'];
   const [value, setValue] = useState(options[0]);
@@ -59,6 +66,11 @@ function SelectChipExample() {
 When utilizing single select, replace the label with the selection.
 
 ```jsx live
+import React, { useState } from 'react';
+import { CellMedia } from '@coinbase/cds-web/cells';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function SelectChipExample() {
   const options = [
     { title: 'Polygon', value: 'polygon', imageUrl: assets.polygon.imageUrl },
@@ -114,6 +126,11 @@ function SelectChipExample() {
 Use sort when giving the user the ability to change the order in which data is shown. Avoid using in conjunction with table data as that function is already built into the cells, and this would be duplicative.
 
 ```jsx live
+import React, { useState } from 'react';
+import { Icon } from '@coinbase/cds-web/icons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 function SelectChipExample() {
   const options = [
     {

@@ -1,6 +1,12 @@
 ### Basic usage
 
-```tsx
+```tsx live noPreview
+import React, { useRef } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Overlay } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function BasicOverlay() {
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -24,7 +30,12 @@ function BasicOverlay() {
 
 ### With useOverlayAnimation Hook
 
-```tsx
+```tsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Overlay } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function AnimatedOverlay() {
   const { opacity, show, hide } = useOverlayAnimation();
 

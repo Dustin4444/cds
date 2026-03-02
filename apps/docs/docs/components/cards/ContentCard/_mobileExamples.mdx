@@ -4,7 +4,18 @@ ContentCard is a flexible, composable card component built with `ContentCardHead
 
 ContentCard uses sub-components for flexible layout. Combine `ContentCardHeader`, `ContentCardBody`, and `ContentCardFooter` to create your card structure.
 
-```jsx
+```jsx live noPreview
+import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+  ContentCardHeader,
+} from '@coinbase/cds-mobile/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   return (
     <VStack gap={2}>
@@ -63,7 +74,16 @@ function Example() {
 
 Use the `mediaPlacement` prop on `ContentCardBody` to control where media is positioned relative to the content.
 
-```jsx
+```jsx live noPreview
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardHeader,
+} from '@coinbase/cds-mobile/cards/ContentCard';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   const exampleMedia = (
     <RemoteImage
@@ -128,7 +148,17 @@ function Example() {
 
 Apply a background color to the card using the `background` prop. When using a background, consider using `variant="tertiary"` on buttons.
 
-```jsx
+```jsx live noPreview
+import { Button, IconCounterButton } from '@coinbase/cds-mobile/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+  ContentCardHeader,
+} from '@coinbase/cds-mobile/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-mobile/media';
+
 function Example() {
   const exampleMedia = (
     <RemoteImage
@@ -190,7 +220,17 @@ function Example() {
 
 Example showing a rewards-style content card with claim button.
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+} from '@coinbase/cds-mobile/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function Example() {
   return (
     <VStack gap={2}>
@@ -254,7 +294,17 @@ When making ContentCard interactive, wrap it in a `Pressable` component and hand
 - VoiceOver users to navigate through card content and focus on individual interactive elements
 - Switch Control users to activate the action button
 
-```jsx
+```jsx live noPreview
+import { Button } from '@coinbase/cds-mobile/buttons';
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardFooter,
+  ContentCardHeader,
+} from '@coinbase/cds-mobile/cards/ContentCard';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function AccessibleCard() {
   return (
     <Pressable

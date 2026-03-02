@@ -1,6 +1,10 @@
 ### Basic usage
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Coachmark } from '@coinbase/cds-web/coachmark';
+
 () => {
   const [open, setOpen] = useState(true);
   if (!open) return <Button onClick={() => setOpen(true)}>Show Coachmark</Button>;
@@ -22,6 +26,11 @@
 ### With Media
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Coachmark } from '@coinbase/cds-web/coachmark';
+import { RemoteImage } from '@coinbase/cds-web/media';
+
 () => {
   const [open, setOpen] = useState(true);
   if (!open) return <Button onClick={() => setOpen(true)}>Show Coachmark</Button>;
@@ -44,6 +53,11 @@
 ### With Checkbox
 
 ```tsx live
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Coachmark } from '@coinbase/cds-web/coachmark';
+import { Checkbox } from '@coinbase/cds-web/controls';
+
 () => {
   const [open, setOpen] = useState(true);
   const [checked, setChecked] = useState(false);

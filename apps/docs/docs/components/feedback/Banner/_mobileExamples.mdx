@@ -2,7 +2,10 @@
 
 The global warning banner is used to communicate important alerts or warnings to users across the entire platform, ensuring universal visibility and building trust.
 
-```tsx
+```tsx live noPreview
+import { Banner } from '@coinbase/cds-mobile/banner';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Banner
   showDismiss
   startIcon="warning"
@@ -17,14 +20,17 @@ The global warning banner is used to communicate important alerts or warnings to
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
   </Text>
-</Banner>
+</Banner>;
 ```
 
 ### In-line Error Banner
 
 The In-line Error Banner is used to display specific error messages directly beneath the relevant section headers. Use in-line banners to help users identify exactly where the error or outage is located.
 
-```tsx
+```tsx live noPreview
+import { Banner } from '@coinbase/cds-mobile/banner';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Banner
   startIcon="info"
   startIconActive
@@ -38,14 +44,17 @@ The In-line Error Banner is used to display specific error messages directly ben
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
   </Text>
-</Banner>
+</Banner>;
 ```
 
 ### Contextual Promotional Banner
 
 The Contextual Promotional Banner is used to highlight special offers, promotions, or announcements within a specific context or section of the platform. It is used to increase user engagement and drive conversions.
 
-```tsx
+```tsx live noPreview
+import { Banner } from '@coinbase/cds-mobile/banner';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <Banner
   startIcon="info"
   startIconActive
@@ -57,14 +66,18 @@ The Contextual Promotional Banner is used to highlight special offers, promotion
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
   </Text>
-</Banner>
+</Banner>;
 ```
 
 ### In-line Informational Banner
 
 The in-line Informational Banner is used to provide users with additional information or helpful tips directly within the content or interface, providing relevant guidance.
 
-```tsx
+```tsx live noPreview
+import { Banner } from '@coinbase/cds-mobile/banner';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <VStack gap={2}>
   <Banner
     startIcon="info"
@@ -91,14 +104,18 @@ The in-line Informational Banner is used to provide users with additional inform
       <Link to="https://www.coinbase.com">Retry</Link>
     </Text>
   </Banner>
-</VStack>
+</VStack>;
 ```
 
 ### Rounded Corner Banners
 
 Customize `borderRadius` to align contextual or in-line banners with surrounding surfaces.
 
-```tsx
+```tsx live noPreview
+import { Banner } from '@coinbase/cds-mobile/banner';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Link, Text } from '@coinbase/cds-mobile/typography';
+
 <VStack gap={2}>
   <Banner
     borderRadius={200}
@@ -126,7 +143,7 @@ Customize `borderRadius` to align contextual or in-line banners with surrounding
       Larger radii can help inline banners feel cohesive with pill-shaped buttons or chips nearby.
     </Text>
   </Banner>
-</VStack>
+</VStack>;
 ```
 
 :::tip

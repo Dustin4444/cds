@@ -5,6 +5,11 @@ ContentCardHeader renders as a `<header>` element by default. You can override t
 ### Basic Example
 
 ```jsx live
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { ContentCardHeader } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -29,6 +34,11 @@ function Example() {
 ### With Multiple Actions
 
 ```jsx live
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { ContentCardHeader } from '@coinbase/cds-web/cards/ContentCard';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Avatar } from '@coinbase/cds-web/media';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -56,6 +66,10 @@ function Example() {
 ### Without Thumbnail
 
 ```jsx live
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { ContentCardHeader } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
@@ -74,6 +88,9 @@ function Example() {
 ### Title Only
 
 ```jsx live
+import { ContentCardHeader } from '@coinbase/cds-web/cards/ContentCard';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>

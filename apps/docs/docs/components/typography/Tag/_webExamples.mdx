@@ -3,6 +3,9 @@
 Informational tags (default) are used to note a characteristic or state of an object. Promotional tags for editorial, ephemeral communication.
 
 ```jsx live
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag';
+
 <VStack gap={2}>
   <HStack gap={2} wrap>
     <Tag intent="informational" colorScheme="green">
@@ -44,7 +47,7 @@ Informational tags (default) are used to note a characteristic or state of an ob
       Gray
     </Tag>
   </HStack>
-</VStack>
+</VStack>;
 ```
 
 ### Emphasis
@@ -52,6 +55,9 @@ Informational tags (default) are used to note a characteristic or state of an ob
 You can control the visual prominence of the Tag using the `emphasis` prop. By default, informational tags are low emphasis and promotional tags are high emphasis.
 
 ```jsx live
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag';
+
 <VStack gap={2}>
   <HStack gap={2} wrap>
     <Tag emphasis="high" colorScheme="green">
@@ -87,7 +93,7 @@ You can control the visual prominence of the Tag using the `emphasis` prop. By d
       Low Gray
     </Tag>
   </HStack>
-</VStack>
+</VStack>;
 ```
 
 ### Icons
@@ -95,6 +101,9 @@ You can control the visual prominence of the Tag using the `emphasis` prop. By d
 Use the `startIcon` and `endIcon` props to render an icon at the start or end of the tag.
 
 ```jsx live
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag';
+
 <VStack gap={2} alignItems="flex-start">
   <Tag colorScheme="blue" startIcon="add">
     Start icon
@@ -108,7 +117,7 @@ Use the `startIcon` and `endIcon` props to render an icon at the start or end of
   <Tag colorScheme="red" intent="promotional" startIcon="add" endIcon="add">
     Promotional with icons
   </Tag>
-</VStack>
+</VStack>;
 ```
 
 ### Custom Nodes
@@ -116,6 +125,10 @@ Use the `startIcon` and `endIcon` props to render an icon at the start or end of
 Use the `start` and `end` props to render custom nodes at the start or end of the tag for full control over styling.
 
 ```jsx live
+import { Icon } from '@coinbase/cds-web/icons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag';
+
 <VStack gap={2} alignItems="flex-start">
   <Tag colorScheme="blue" start={<Icon color="fgNegative" name="add" size="xs" />}>
     Custom start node
@@ -130,7 +143,7 @@ Use the `start` and `end` props to render custom nodes at the start or end of th
   >
     Both custom nodes
   </Tag>
-</VStack>
+</VStack>;
 ```
 
 ### Composed Examples
@@ -138,6 +151,11 @@ Use the `start` and `end` props to render custom nodes at the start or end of th
 #### Account Status
 
 ```jsx live
+import { Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag';
+import { Text } from '@coinbase/cds-web/typography';
+
 <HStack justifyContent="space-between" gap="2" alignItems="center">
   <VStack gap={0.5}>
     <HStack gap={1}>
@@ -151,12 +169,18 @@ Use the `start` and `end` props to render custom nodes at the start or end of th
     </Text>
   </VStack>
   <Button>Get started</Button>
-</HStack>
+</HStack>;
 ```
 
 #### Margin Ratio
 
 ```jsx live
+import React, { useCallback } from 'react';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag';
+import { Text } from '@coinbase/cds-web/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations';
+
 function MarginExample() {
   const renderStartLabelNum = useCallback((num, disabled) => {
     return (
@@ -238,6 +262,11 @@ function MarginExample() {
 #### List Cell Integration
 
 ```jsx live
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { Box, Divider, Group, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag';
+
 <Box justifyContent="center">
   <Group divider={Divider} width="420px" bordered borderRadius={300} background elevation={1}>
     <ListCell
@@ -275,5 +304,5 @@ function MarginExample() {
       media={<IconButton name="card" color="primary" />}
     />
   </Group>
-</Box>
+</Box>;
 ```

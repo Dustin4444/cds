@@ -2,17 +2,22 @@
 
 A `TopNavBar` with a title and back button.
 
-```tsx
+```tsx live noPreview
+import { NavBarIconButton, NavigationTitle, TopNavBar } from '@coinbase/cds-mobile/navigation';
+
 <TopNavBar start={<NavBarIconButton name="arrowLeft" accessibilityLabel="Back" />}>
   <NavigationTitle>Page Title</NavigationTitle>
-</TopNavBar>
+</TopNavBar>;
 ```
 
 ### With Start and End Actions
 
 You can add actions to both the start and end sections of the navigation bar.
 
-```tsx
+```tsx live noPreview
+import { HStack } from '@coinbase/cds-mobile/layout';
+import { NavBarIconButton, NavigationTitle, TopNavBar } from '@coinbase/cds-mobile/navigation';
+
 <TopNavBar
   start={<NavBarIconButton name="arrowLeft" accessibilityLabel="Back" />}
   end={
@@ -23,14 +28,17 @@ You can add actions to both the start and end sections of the navigation bar.
   }
 >
   <NavigationTitle>Profile</NavigationTitle>
-</TopNavBar>
+</TopNavBar>;
 ```
 
 ### With a Bottom Section
 
 The `bottom` prop can be used to render components like tabs below the main navigation bar.
 
-```tsx
+```tsx live noPreview
+import { NavBarIconButton, NavigationTitle, TopNavBar } from '@coinbase/cds-mobile/navigation';
+import { TabNavigation } from '@coinbase/cds-mobile/tabs';
+
 <TopNavBar
   start={<NavBarIconButton name="close" accessibilityLabel="Close" />}
   end={<NavBarIconButton name="settings" accessibilityLabel="Settings" />}
@@ -47,5 +55,5 @@ The `bottom` prop can be used to render components like tabs below the main navi
   }
 >
   <NavigationTitle>Home</NavigationTitle>
-</TopNavBar>
+</TopNavBar>;
 ```

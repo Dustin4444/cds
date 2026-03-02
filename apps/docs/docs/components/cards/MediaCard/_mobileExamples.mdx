@@ -8,7 +8,11 @@ See the [Migration Guide](#migration-from-deprecated-components) at the end of t
 
 At minimum, provide a `thumbnail` to display visual content and a `title` for the card heading.
 
-```jsx
+```jsx live noPreview
+import { MediaCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MediaCard
     thumbnail={
@@ -43,7 +47,7 @@ At minimum, provide a `thumbnail` to display visual content and a `title` for th
       />
     }
   />
-</VStack>
+</VStack>;
 ```
 
 ## Media Placement
@@ -53,7 +57,11 @@ Use the `media` prop to display larger visual content. Control its position with
 - `start`: Media on the left
 - `end` (default): Media on the right
 
-```jsx
+```jsx live noPreview
+import { MediaCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MediaCard
     thumbnail={
@@ -95,14 +103,17 @@ Use the `media` prop to display larger visual content. Control its position with
     }
     mediaPlacement="end"
   />
-</VStack>
+</VStack>;
 ```
 
 ## Interactive
 
 MediaCard can be made interactive with the `onPress` prop and `renderAsPressable`.
 
-```jsx
+```jsx live noPreview
+import { MediaCard } from '@coinbase/cds-mobile/cards';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <MediaCard
   renderAsPressable
   accessibilityLabel="View Ethereum details"
@@ -124,7 +135,7 @@ MediaCard can be made interactive with the `onPress` prop and `renderAsPressable
     />
   }
   onPress={() => console.log('Card clicked!')}
-/>
+/>;
 ```
 
 ## Text Content
@@ -133,7 +144,10 @@ MediaCard can be made interactive with the `onPress` prop and `renderAsPressable
 
 The card handles long text content with truncation.
 
-```jsx
+```jsx live noPreview
+import { MediaCard } from '@coinbase/cds-mobile/cards';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <MediaCard
   thumbnail={
     <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
@@ -152,14 +166,18 @@ The card handles long text content with truncation.
       width="100%"
     />
   }
-/>
+/>;
 ```
 
 ### Custom Content
 
 Use React nodes for custom styled text content.
 
-```jsx
+```jsx live noPreview
+import { MediaCard } from '@coinbase/cds-mobile/cards';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 <MediaCard
   thumbnail={
     <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
@@ -187,14 +205,18 @@ Use React nodes for custom styled text content.
       width="100%"
     />
   }
-/>
+/>;
 ```
 
 ## Styling
 
 Use the `styles` prop to customize specific parts of the card.
 
-```jsx
+```jsx live noPreview
+import { MediaCard } from '@coinbase/cds-mobile/cards';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <VStack gap={2}>
   <MediaCard
     thumbnail={
@@ -244,14 +266,18 @@ Use the `styles` prop to customize specific parts of the card.
       root: { borderWidth: 2, borderColor: 'blue' },
     }}
   />
-</VStack>
+</VStack>;
 ```
 
 ## Multiple Cards
 
 Display multiple cards in a carousel.
 
-```jsx
+```jsx live noPreview
+import { MediaCard } from '@coinbase/cds-mobile/cards';
+import { Carousel, CarouselItem } from '@coinbase/cds-mobile/carousel';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 <Carousel styles={{ carousel: { gap: 16 } }}>
   <CarouselItem id="card1">
     <MediaCard
@@ -321,7 +347,7 @@ Display multiple cards in a carousel.
       onPress={() => {}}
     />
   </CarouselItem>
-</Carousel>
+</Carousel>;
 ```
 
 ## Accessibility
@@ -346,7 +372,11 @@ When customizing card backgrounds, ensure sufficient color contrast between text
 
 Replace `ContainedAssetCard` with `MediaCard`:
 
-```jsx
+```jsx live noPreview
+import { ContainedAssetCard, MediaCard } from '@coinbase/cds-mobile/cards';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 // Before
 <ContainedAssetCard
   header={<RemoteImage source={assets.btc.imageUrl} width={32} height={32} />}
@@ -373,7 +403,10 @@ Replace `ContainedAssetCard` with `MediaCard`:
 
 Replace `FloatingAssetCard` with `MediaCard`. Note that the floating variation (media outside the card container) is no longer supported:
 
-```jsx
+```jsx live noPreview
+import { FloatingAssetCard, MediaCard } from '@coinbase/cds-mobile/cards';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 // Before
 <FloatingAssetCard
   title="Balancing the Air"

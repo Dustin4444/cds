@@ -1,6 +1,9 @@
 ## Label Below
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="below">
     <ProgressBar progress={0.2} />
@@ -8,12 +11,15 @@
   <ProgressBarWithFixedLabels endLabel={20} labelPlacement="below">
     <ProgressBar progress={0.2} />
   </ProgressBarWithFixedLabels>
-</VStack>
+</VStack>;
 ```
 
 ## Label Beside
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="beside">
     <ProgressBar progress={0.2} />
@@ -21,12 +27,15 @@
   <ProgressBarWithFixedLabels endLabel={20} labelPlacement="beside">
     <ProgressBar progress={0.2} />
   </ProgressBarWithFixedLabels>
-</VStack>
+</VStack>;
 ```
 
 ## Disabled
 
-```jsx
+```jsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <ProgressBarWithFixedLabels startLabel={0} endLabel={20} disabled labelPlacement="beside">
     <ProgressBar disabled progress={0.2} />
@@ -34,12 +43,17 @@
   <ProgressBarWithFixedLabels startLabel={0} endLabel={20} disabled labelPlacement="above">
     <ProgressBar disabled progress={0.2} />
   </ProgressBarWithFixedLabels>
-</VStack>
+</VStack>;
 ```
 
 ## Custom Labels
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const renderStartLabelNumStr = useCallback((num) => {
     return `$${num.toLocaleString()}`;
@@ -107,7 +121,10 @@ function Example() {
 
 You can customize the appearance of the progress bar and labels using the `styles` prop.
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -130,14 +147,18 @@ You can customize the appearance of the progress bar and labels using the `style
       </ProgressBarWithFixedLabels>
     </VStack>
   )}
-</ProgressContainerWithButtons>
+</ProgressContainerWithButtons>;
 ```
 
 ## Animation
 
 By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
 
-```tsx
+```tsx live noPreview
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 <VStack gap={2}>
   <Text variant="label2">Normal animation</Text>
   <ProgressBarWithFixedLabels startLabel={0} endLabel={50} labelPlacement="above">
@@ -153,14 +174,19 @@ By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` t
   >
     <ProgressBar disableAnimateOnMount progress={0.5} />
   </ProgressBarWithFixedLabels>
-</VStack>
+</VStack>;
 ```
 
 ### Callbacks
 
 You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback } from 'react';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-mobile/visualizations';
+
 function Example() {
   const [animationStatus, setAnimationStatus] = React.useState('Ready');
 

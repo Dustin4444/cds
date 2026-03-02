@@ -14,7 +14,12 @@ Use **[ControlGroup](/components/inputs/ControlGroup)** with `accessibilityRole=
 
 The new recommended approach provides better accessibility, cleaner API, and consistent behavior across the design system.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function RecommendedCheckboxGroup() {
   const options = [
     { value: 'email', children: 'Email notifications' },
@@ -127,7 +132,12 @@ The following examples show the **deprecated** CheckboxGroup usage. **Do not use
 
 ### Basic CheckboxGroup (Legacy)
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox, CheckboxGroup } from '@coinbase/cds-mobile/controls';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function LegacyCheckboxGroup() {
   const [selectedValues, setSelectedValues] = useState(new Set(['feature1']));
 
@@ -166,7 +176,11 @@ function LegacyCheckboxGroup() {
 
 ### With Custom Label (Legacy)
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox, CheckboxGroup } from '@coinbase/cds-mobile/controls';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function LegacyCheckboxGroupWithLabel() {
   const [permissions, setPermissions] = useState(new Set(['read']));
 
@@ -198,7 +212,10 @@ function LegacyCheckboxGroupWithLabel() {
 
 ### With Accessibility Features (Legacy)
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Checkbox, CheckboxGroup } from '@coinbase/cds-mobile/controls';
+
 function LegacyAccessibleCheckboxGroup() {
   const [settings, setSettings] = useState(new Set());
 

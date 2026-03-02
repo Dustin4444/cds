@@ -3,6 +3,9 @@
 A basic page header with a logo on the left, title in the center, and a help link on the right.
 
 ```jsx live
+import { PageHeader } from '@coinbase/cds-web/page';
+import { Link } from '@coinbase/cds-web/typography';
+
 function Example() {
   return (
     <PageHeader
@@ -24,6 +27,12 @@ function Example() {
 Use the `styles` or `classNames` props to customize the `start`, `end`, `title`, or `root` of `PageHeader`. This example adjusts the spacing to align the header with page content.
 
 ```jsx live
+import { prices } from '@coinbase/cds-common/internal/data/prices';
+import { IconButton } from '@coinbase/cds-web/buttons';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { PageHeader } from '@coinbase/cds-web/page';
+import { Link, Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   return (
     <>
@@ -96,6 +105,11 @@ function Example() {
 Use Page Header for full-screen messaging states.
 
 ```jsx live
+import { HeroSquare } from '@coinbase/cds-web/illustrations';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { PageHeader } from '@coinbase/cds-web/page';
+import { Text } from '@coinbase/cds-web/typography';
+
 function Example() {
   return (
     <VStack>

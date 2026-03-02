@@ -2,8 +2,11 @@
 
 The `NavigationTitle` should be used inside a `TopNavBar` or `BrowserBar` to provide a consistent header style.
 
-```tsx
+```tsx live noPreview
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { NavigationTitle, TopNavBar } from '@coinbase/cds-mobile/navigation';
+
 <TopNavBar start={<IconButton icon="arrow-left" accessibilityLabel="Back" />}>
   <NavigationTitle>Settings</NavigationTitle>
-</TopNavBar>
+</TopNavBar>;
 ```

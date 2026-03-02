@@ -4,7 +4,11 @@ Legend displays series information for charts, showing labels and color indicato
 
 Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization. Legend's `flexDirection` is automatically set to `row` for top/bottom `legendPosition` and `column` otherwise.
 
-```jsx
+```jsx live noPreview
+import React, { useMemo } from 'react';
+import { LineChart } from '@coinbase/cds-mobile-visualization/chart';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function BasicLegend() {
   const theme = useTheme();
   const pages = useMemo(
@@ -49,7 +53,15 @@ function BasicLegend() {
 
 Use `legendPosition` to place the legend at different positions around the chart. You can also customize alignment using the `justifyContent` prop on Legend.
 
-```jsx
+```jsx live noPreview
+import {
+  BarPlot,
+  CartesianChart,
+  Legend,
+  XAxis,
+  YAxis,
+} from '@coinbase/cds-mobile-visualization/chart';
+
 function LegendPosition() {
   const theme = useTheme();
 
@@ -122,7 +134,10 @@ function LegendPosition() {
 
 Legend supports different shape variants: `pill`, `circle`, `square`, and `squircle`. Set the shape on each series using `legendShape`.
 
-```jsx
+```jsx live noPreview
+import { Legend, LineChart } from '@coinbase/cds-mobile-visualization/chart';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function ShapeVariants() {
   const theme = useTheme();
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
@@ -178,7 +193,11 @@ function ShapeVariants() {
 
 You can pass a custom ReactNode as `legendShape` for fully custom indicators. On mobile, this uses React Native Skia for rendering dotted patterns.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useMemo } from 'react';
+import { BarChart } from '@coinbase/cds-mobile-visualization/chart';
+import { Group } from '@coinbase/cds-mobile/layout';
+
 function CustomLegendShapes() {
   const theme = useTheme();
   const months = [
@@ -319,7 +338,9 @@ function CustomLegendShapes() {
 
 Use `legendAccessibilityLabel` on chart components to provide a descriptive label for the legend group. This helps screen reader users understand what the legend represents.
 
-```jsx
+```jsx live noPreview
+import { LineChart } from '@coinbase/cds-mobile-visualization/chart';
+
 function AccessibleLegend() {
   const theme = useTheme();
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
@@ -355,7 +376,9 @@ function AccessibleLegend() {
 
 You can also set `accessibilityLabel` directly on the `Legend` component for more control:
 
-```jsx
+```jsx live noPreview
+import { Legend, LineChart } from '@coinbase/cds-mobile-visualization/chart';
+
 function CustomAccessibleLegend() {
   const theme = useTheme();
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
@@ -399,7 +422,16 @@ function CustomAccessibleLegend() {
 
 You can use `EntryComponent` to display a label that updates as a user interacts with the chart.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useMemo, useState } from 'react';
+import {
+  DefaultLegendShape,
+  Legend,
+  LineChart,
+  Scrubber,
+} from '@coinbase/cds-mobile-visualization/chart';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 function DynamicLabel() {
   const theme = useTheme();
   const [scrubberPosition, setScrubberPosition] = useState();
@@ -497,7 +529,12 @@ function DynamicLabel() {
 
 You can create an interactive legend that the user can use to toggle to emphasize a specific series.
 
-```jsx
+```jsx live noPreview
+import React, { useCallback, useMemo, useState } from 'react';
+import { DefaultLegendShape, Legend, LineChart } from '@coinbase/cds-mobile-visualization/chart';
+import { Chip } from '@coinbase/cds-mobile/chips';
+import { HStack } from '@coinbase/cds-mobile/layout';
+
 function InteractiveLegend() {
   const theme = useTheme();
   const [emphasizedId, setEmphasizedId] = useState(null);

@@ -3,6 +3,8 @@
 Scrubber can be used to provide horizontal interaction with a chart. As your mouse hovers over the chart, you will see a line and scrubber beacon following.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   showArea
@@ -23,12 +25,14 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
   }}
 >
   <Scrubber idlePulse />
-</LineChart>
+</LineChart>;
 ```
 
 All series will be scrubbed by default. You can set `seriesIds` to show only specific series.
 
 ```jsx live
+import { DottedArea, LineChart, Scrubber, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -68,7 +72,7 @@ All series will be scrubbed by default. You can set `seriesIds` to show only spe
   ]}
 >
   <Scrubber seriesIds={['top', 'lowerMiddle']} />
-</LineChart>
+</LineChart>;
 ```
 
 ## Labels
@@ -77,6 +81,8 @@ Setting `label` on a series will display a label to the side of the scrubber bea
 setting `label` on Scrubber displays a label above the scrubber line.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -90,7 +96,7 @@ setting `label` on Scrubber displays a label above the scrubber line.
   showArea
 >
   <Scrubber label={(dataIndex) => `Day ${dataIndex + 1}`} />
-</LineChart>
+</LineChart>;
 ```
 
 ## Pulsing
@@ -100,6 +106,13 @@ Pulses will show even when animation is disabled for the chart or scrubber.
 Set `idlePulse` to cause scrubber beacons to pulse when the user is not actively scrubbing.
 
 ```jsx live
+import {
+  DottedLine,
+  LineChart,
+  ReferenceLine,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   showArea
@@ -118,12 +131,17 @@ Set `idlePulse` to cause scrubber beacons to pulse when the user is not actively
     stroke="var(--color-fg)"
   />
   <Scrubber idlePulse />
-</LineChart>
+</LineChart>;
 ```
 
 You can also use the imperative handle to pulse the scrubber beacons programmatically.
 
 ```jsx live
+import React, { useRef } from 'react';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+
 function ImperativeHandle() {
   const scrubberRef = useRef(null);
   return (
@@ -154,6 +172,9 @@ function ImperativeHandle() {
 You can use the `beaconStroke` prop to customize the stroke color of the scrubber beacon.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { Box } from '@coinbase/cds-web/layout';
+
 <Box borderRadius={300} padding={2} style={{ background: 'rgb(var(--red40))' }}>
   <LineChart
     enableScrubbing
@@ -174,12 +195,15 @@ You can use the `beaconStroke` prop to customize the stroke color of the scrubbe
       beaconStroke="rgb(var(--red40))"
     />
   </LineChart>
-</Box>
+</Box>;
 ```
 
 For more advanced customizations, you can pass a custom component to `BeaconComponent`.
 
 ```jsx live
+import React, { useEffect, useMemo, useState } from 'react';
+import { DefaultScrubberBeacon, LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function OutlineBeacon() {
   const dataCount = 14;
   const minDataValue = 0;
@@ -281,6 +305,13 @@ function OutlineBeacon() {
 You can use `BeaconLabelComponent` to customize the labels for each scrubber beacon.
 
 ```jsx live
+import React, { useMemo } from 'react';
+import {
+  DefaultScrubberBeaconLabel,
+  LineChart,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+
 function CustomBeaconLabel() {
   // This custom component label shows the percentage value of the data at the scrubber position.
   const MyScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
@@ -361,6 +392,8 @@ function CustomBeaconLabel() {
 You can use `hideBeaconLabels` to hide beacon labels, while still being able to provide a label for a series.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   legend
@@ -383,12 +416,14 @@ You can use `hideBeaconLabels` to hide beacon labels, while still being able to 
   inset={{ top: 60 }}
 >
   <Scrubber hideBeaconLabels label={(dataIndex) => `Day ${dataIndex + 1}`} labelElevated />
-</LineChart>
+</LineChart>;
 ```
 
 Using `labelElevated` will elevate the Scrubber's reference line label with a shadow.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -402,12 +437,14 @@ Using `labelElevated` will elevate the Scrubber's reference line label with a sh
   inset={{ top: 60 }}
 >
   <Scrubber label={(dataIndex) => `Day ${dataIndex + 1}`} labelElevated />
-</LineChart>
+</LineChart>;
 ```
 
 You can use `LabelComponent` to customize this label even further.
 
 ```jsx live
+import { DefaultScrubberLabel, LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 function CustomLabelComponent() {
   const CustomLabelComponent = memo((props) => {
     const { drawingArea } = useCartesianChartContext();
@@ -453,6 +490,8 @@ function CustomLabelComponent() {
 You can use `labelFont` to customize the font of the scrubber line label and `beaconLabelFont` to customize the font of the beacon labels.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   showArea
@@ -481,7 +520,7 @@ You can use `labelFont` to customize the font of the scrubber line label and `be
     labelFont="legal"
     beaconLabelFont="legal"
   />
-</LineChart>
+</LineChart>;
 ```
 
 #### Bounds
@@ -489,6 +528,9 @@ You can use `labelFont` to customize the font of the scrubber line label and `be
 Use `labelBoundsInset` to prevent the scrubber line label from getting too close to chart edges.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { Box } from '@coinbase/cds-web/layout';
+
 <Box marginX={-3}>
   <LineChart
     enableScrubbing
@@ -504,10 +546,13 @@ Use `labelBoundsInset` to prevent the scrubber line label from getting too close
   >
     <Scrubber label="Without bounds - text touches edge" labelBoundsInset={0} />
   </LineChart>
-</Box>
+</Box>;
 ```
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+import { Box } from '@coinbase/cds-web/layout';
+
 <Box marginX={-3}>
   <LineChart
     enableScrubbing
@@ -526,7 +571,7 @@ Use `labelBoundsInset` to prevent the scrubber line label from getting too close
       labelBoundsInset={{ left: 12, right: 12 }}
     />
   </LineChart>
-</Box>
+</Box>;
 ```
 
 ### Line
@@ -534,6 +579,8 @@ Use `labelBoundsInset` to prevent the scrubber line label from getting too close
 You can use `LineComponent` to customize Scrubber's line. In this case, as a user scrubs, they will see a solid line instead of dotted.
 
 ```jsx live
+import { LineChart, Scrubber, SolidLine } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -546,7 +593,7 @@ You can use `LineComponent` to customize Scrubber's line. In this case, as a use
   showArea
 >
   <Scrubber LineComponent={SolidLine} />
-</LineChart>
+</LineChart>;
 ```
 
 ### Opacity
@@ -554,6 +601,13 @@ You can use `LineComponent` to customize Scrubber's line. In this case, as a use
 You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop to hide scrubber beacons and labels when idle.
 
 ```jsx live
+import {
+  DefaultScrubberBeacon,
+  DefaultScrubberBeaconLabel,
+  LineChart,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+
 function HiddenScrubberWhenIdle() {
   const MyScrubberBeacon = memo(
     forwardRef((props, ref) => {
@@ -595,6 +649,8 @@ function HiddenScrubberWhenIdle() {
 By default, Scrubber will show an overlay to de-emphasize future data. You can hide this by setting `hideOverlay` to `true`.
 
 ```jsx live
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization/chart';
+
 <LineChart
   enableScrubbing
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -607,7 +663,7 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
   showArea
 >
   <Scrubber hideOverlay />
-</LineChart>
+</LineChart>;
 ```
 
 ## Composed Examples
@@ -617,6 +673,15 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
 You can use `BeaconLabelComponent` to display a label with the percentage value of the data at the scrubber position.
 
 ```jsx live
+import React, { useMemo } from 'react';
+import {
+  DefaultScrubberBeaconLabel,
+  LineChart,
+  Scrubber,
+} from '@coinbase/cds-web-visualization/chart';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { Box } from '@coinbase/cds-web/layout';
+
 function PercentageBeaconLabels() {
   const PercentageScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();

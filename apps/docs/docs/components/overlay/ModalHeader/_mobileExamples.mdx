@@ -4,7 +4,12 @@ ModalHeader provides a consistent header section for [Modal](/components/overlay
 
 Pass a `title` to display centered text. The close button automatically appears and uses Modal's `onRequestClose` handler.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function BasicExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -25,7 +30,12 @@ function BasicExample() {
 
 Use `onBackButtonClick` to show a back arrow for multi-step flows. The back button appears on the left side of the header.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function BackButtonExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -51,7 +61,14 @@ function BackButtonExample() {
 
 Omit buttons by not providing `onBackButtonClick` and setting `hideCloseButton` on the Modal.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Spinner } from '@coinbase/cds-mobile/loaders';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function TitleOnlyExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -77,7 +94,12 @@ function TitleOnlyExample() {
 
 Set `hideDividers` on Modal to remove the bottom border from the header.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function NoDividerExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -98,7 +120,12 @@ function NoDividerExample() {
 
 Always provide `closeAccessibilityLabel` for the close button and `backAccessibilityLabel` when using the back button. These labels are announced by VoiceOver.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { Modal, ModalBody, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function AccessibilityExample() {
   const [visible, setVisible] = useState(false);
   return (
@@ -128,7 +155,13 @@ function AccessibilityExample() {
 
 Use `onBackButtonClick` to navigate between steps in a wizard flow.
 
-```jsx
+```jsx live noPreview
+import React, { useState } from 'react';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@coinbase/cds-mobile/overlays';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function WizardExample() {
   const [visible, setVisible] = useState(false);
   const [step, setStep] = useState(1);

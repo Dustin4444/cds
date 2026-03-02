@@ -6,7 +6,10 @@ Avoid using options with duplicate values. Each option's `value` should be uniqu
 
 ### Basic usage
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+
 function ExampleDefault() {
   const exampleOptions = [
     { value: null, label: 'Clear selection' },
@@ -31,7 +34,11 @@ function ExampleDefault() {
 
 ### Single select with groups
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { SelectOption } from '@coinbase/cds-mobile/controls';
+
 function ExampleSingleGroups() {
   const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
     {
@@ -70,7 +77,11 @@ function ExampleSingleGroups() {
 
 ### With disabled option group
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { SelectOption } from '@coinbase/cds-mobile/controls';
+
 function ExampleDisabledGroup() {
   const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
     {
@@ -114,7 +125,10 @@ function ExampleDisabledGroup() {
 Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
 :::
 
-```tsx
+```tsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+
 function ExampleMulti() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
@@ -140,7 +154,11 @@ function ExampleMulti() {
 
 ### Multi-select with groups
 
-```tsx
+```tsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { SelectOption } from '@coinbase/cds-mobile/controls';
+
 function ExampleMultiGroups() {
   const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
     {
@@ -180,7 +198,12 @@ function ExampleMultiGroups() {
 
 ### Multi-select with assets
 
-```tsx
+```tsx live noPreview
+import React, { useMemo } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { RemoteImage, RemoteImageGroup } from '@coinbase/cds-mobile/media';
+
 function ExampleMultiAssets() {
   const assetImageMap: Record<string, string> = {
     btc: assets.btc.imageUrl,
@@ -233,7 +256,10 @@ function ExampleMultiAssets() {
 
 ### Compact
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+
 function ExampleCompact() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
@@ -257,7 +283,11 @@ function ExampleCompact() {
 
 ### With start and end nodes
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+
 function ExampleWithNodes() {
   const exampleOptions = [
     { value: 'btc', label: assets.btc.name },
@@ -291,7 +321,10 @@ function ExampleWithNodes() {
 
 ### Empty options
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+
 function ExampleEmptyOptions() {
   const [value, setValue] = useState<string | null>(null);
   return (
@@ -308,7 +341,10 @@ function ExampleEmptyOptions() {
 
 ### Options with descriptions
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+
 function ExampleDescriptions() {
   const exampleOptions = [
     { value: '1', label: 'Option 1', description: 'First option description' },
@@ -334,7 +370,10 @@ function ExampleDescriptions() {
 
 Use the `displayValue` prop to override the displayed value and avoid truncation, especially in multi-select scenarios where multiple option labels might be too long to display.
 
-```tsx
+```tsx live noPreview
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+
 function ExampleDisplayValue() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
@@ -364,7 +403,12 @@ function ExampleDisplayValue() {
 
 ### With max width
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+
 function ExampleMaxWidth() {
   const exampleOptions = [
     { value: '1', label: 'Very Long Option Name That Exceeds Default Width' },
@@ -417,7 +461,11 @@ function ExampleMaxWidth() {
 
 ### Disabled
 
-```tsx
+```tsx live noPreview
+import React, { useState } from 'react';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
 function ExampleDisabled() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
