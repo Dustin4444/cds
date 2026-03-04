@@ -23,7 +23,16 @@ export const DEFAULT_REGULAR_HEIGHT = 56;
 
 export type SlideButtonBackgroundProps = Pick<
   SlideButtonBaseProps,
-  'borderRadius' | 'checked' | 'compact' | 'disabled' | 'uncheckedLabel' | 'variant'
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderRadius'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'checked'
+  | 'compact'
+  | 'disabled'
+  | 'uncheckedLabel'
+  | 'variant'
 > & {
   progress: SharedValue<number>;
   style?: StyleProp<ViewStyle>;
@@ -159,6 +168,10 @@ export const SlideButton = memo(
         checked,
         compact,
         borderRadius = compact ? 700 : 900,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         uncheckedLabel,
         checkedLabel,
         onSlideStart,
@@ -297,7 +310,11 @@ export const SlideButton = memo(
       return (
         <View ref={ref} id={labelId} onLayout={onLayout} style={containerStyle} testID={testID}>
           <SlideButtonBackgroundComponent
+            borderBottomLeftRadius={borderBottomLeftRadius}
+            borderBottomRightRadius={borderBottomRightRadius}
             borderRadius={borderRadius}
+            borderTopLeftRadius={borderTopLeftRadius}
+            borderTopRightRadius={borderTopRightRadius}
             checked={checked}
             compact={compact}
             disabled={disabled}
@@ -314,7 +331,11 @@ export const SlideButton = memo(
                 {...(typeof accessibilityLabel === 'string'
                   ? { accessibilityLabel }
                   : { accessibilityLabelledBy: labelId })}
+                borderBottomLeftRadius={borderBottomLeftRadius}
+                borderBottomRightRadius={borderBottomRightRadius}
                 borderRadius={borderRadius}
+                borderTopLeftRadius={borderTopLeftRadius}
+                borderTopRightRadius={borderTopRightRadius}
                 checked={checked}
                 checkedLabel={checkedLabel}
                 compact={compact}

@@ -1,39 +1,30 @@
-import React, { forwardRef, memo, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { forwardRef, memo } from 'react';
+import type { View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
-import { useTheme } from '../hooks/useTheme';
+import { Box } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 import type { SlideButtonBackgroundProps } from './SlideButton';
 
-export const styles = StyleSheet.create({
-  base: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
 export const DefaultSlideButtonBackground = memo(
   forwardRef<View, SlideButtonBackgroundProps>(
-    ({ progress, uncheckedLabel, disabled, compact, style, borderRadius }, ref) => {
-      const theme = useTheme();
-
+    (
+      {
+        progress,
+        uncheckedLabel,
+        disabled,
+        compact,
+        style,
+        borderRadius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
+      },
+      ref,
+    ) => {
       const horizontalPadding = compact ? 7 : 9;
-
-      const containerStyle = useMemo(
-        () => [
-          styles.base,
-          {
-            backgroundColor: theme.color.bgSecondary,
-            borderRadius,
-          },
-          style,
-        ],
-        [theme.color.bgSecondary, style, borderRadius],
-      );
 
       const animatedStyle = useAnimatedStyle(
         () => ({ opacity: disabled ? 0.5 : 1 - progress.value }),
@@ -41,7 +32,21 @@ export const DefaultSlideButtonBackground = memo(
       );
 
       return (
-        <View ref={ref} aria-hidden style={containerStyle}>
+        <Box
+          ref={ref}
+          aria-hidden
+          alignItems="center"
+          background="bgSecondary"
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
+          height="100%"
+          justifyContent="center"
+          style={style}
+          width="100%"
+        >
           <Animated.View style={animatedStyle}>
             {typeof uncheckedLabel !== 'string' ? (
               uncheckedLabel
@@ -56,7 +61,7 @@ export const DefaultSlideButtonBackground = memo(
               </Text>
             )}
           </Animated.View>
-        </View>
+        </Box>
       );
     },
   ),

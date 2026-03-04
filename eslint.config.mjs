@@ -59,6 +59,7 @@ const disabledNewReactHooksRules = {
 
 // These rules apply to all files
 const sharedRules = {
+  'internal/no-object-rest-spread-in-worklet': 'error',
   'import/default': 'off',
   'import/extensions': 'off',
   'import/named': 'off',
@@ -271,6 +272,7 @@ const testRules = {
 
 // These plugins apply to all files
 const sharedPlugins = {
+  internal: internalPlugin,
   'simple-import-sort': eslintSimpleImportSort,
 };
 
