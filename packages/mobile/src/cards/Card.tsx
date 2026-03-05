@@ -24,6 +24,9 @@ export type CardBaseProps = Pick<
     pressableProps?: Omit<PressableProps, 'onPress'>;
   };
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This component will be removed in a future release.
+ */
 export type CardProps = CardBaseProps & BoxProps;
 
 const getBorderRadiusPinStyle = (borderRadius: number) => ({
@@ -58,6 +61,9 @@ const getBorderRadiusPinStyle = (borderRadius: number) => ({
   all: {},
 });
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This component will be removed in a future release.
+ */
 export const Card = memo(function OldCard({
   children,
   background = 'bg',
