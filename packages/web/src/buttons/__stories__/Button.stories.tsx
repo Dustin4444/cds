@@ -145,7 +145,7 @@ function GradientButtonsContent() {
         </Text>
         <VStack alignItems="flex-start" gap={2}>
           {(['primary', 'brand', 'positive', 'negative', 'premium'] as const).map((preset) => (
-            <Button color="fgInverse" gradient={preset} onClick={onClickConsole}>
+            <Button color="fgInverse" gradient={preset} variant="gradient" onClick={onClickConsole}>
               Preset: {preset}
             </Button>
           ))}

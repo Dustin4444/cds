@@ -4,9 +4,11 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { Button } from '../../buttons/Button';
 import { TextInput } from '../../controls';
 import { useTheme } from '../../hooks/useTheme';
-import { VStack } from '../../layout';
+import { HStack, VStack } from '../../layout';
+import { defaultGradientTheme } from '../../themes/gradients';
 import { Text } from '../../typography';
 import { getInteractableStyles, Interactable } from '../Interactable';
+import { ThemeProvider } from '../ThemeProvider';
 
 export default {
   title: 'Components/Interactable',
@@ -143,5 +145,102 @@ export const GeneratedColorStates = () => {
         <pre>{JSON.stringify(data, null, 2)}</pre>
       </VStack>
     </VStack>
+  );
+};
+
+export const GradientStates = () => {
+  const theme = useTheme();
+  return (
+    <ThemeProvider activeColorScheme={theme.activeColorScheme} theme={defaultGradientTheme}>
+      <VStack gap={3}>
+        <Text font="label1">Theme preset gradient (gradient prop)</Text>
+        <HStack gap={2}>
+          <Interactable borderRadius={300} gradient="brand" padding={2}>
+            <Text color="fgInverse" font="body">
+              Brand preset
+            </Text>
+          </Interactable>
+          <Interactable borderRadius={300} gradient="premium" padding={2}>
+            <Text color="fgInverse" font="body">
+              Premium preset
+            </Text>
+          </Interactable>
+          <Interactable borderRadius={300} gradient="positive" padding={2}>
+            <Text color="fgInverse" font="body">
+              Positive preset
+            </Text>
+          </Interactable>
+        </HStack>
+
+        <Text font="label1">Custom gradient (gradientConfig prop)</Text>
+        <HStack gap={2}>
+          <Interactable
+            borderRadius={300}
+            gradientConfig={{
+              colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
+              angle: 90,
+            }}
+            padding={2}
+          >
+            <Text color="fgInverse" font="body">
+              Horizontal
+            </Text>
+          </Interactable>
+          <Interactable
+            borderRadius={300}
+            borderWidth={300}
+            gradientConfig={{
+              colors: [
+                theme.color.accentBoldGreen,
+                theme.color.accentBoldBlue,
+                theme.color.accentBoldPurple,
+              ],
+              stops: [0, 0.5, 1],
+              angle: 135,
+            }}
+            padding={2}
+          >
+            <Text color="fgInverse" font="body">
+              Multi-color diagonal
+            </Text>
+          </Interactable>
+        </HStack>
+
+        <Text font="label1">Gradient interaction states (blendStyles — hover/press/disabled)</Text>
+        <Text color="fgMuted" font="caption">
+          Hover and press the buttons to see gradient transitions
+        </Text>
+        <HStack gap={2}>
+          <Interactable
+            blendStyles={{
+              backgroundGradient: `linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
+              hoveredBackgroundGradient: `linear-gradient(90deg, ${theme.color.accentBoldPurple}, ${theme.color.accentBoldBlue})`,
+              pressedBackgroundGradient: `linear-gradient(90deg, ${theme.color.accentBoldGreen}, ${theme.color.accentBoldBlue})`,
+            }}
+            borderRadius={300}
+            padding={2}
+          >
+            <Text color="fgInverse" font="body">
+              Hover / Press changes gradient
+            </Text>
+          </Interactable>
+
+          <Interactable
+            disabled
+            blendStyles={{
+              backgroundGradient: `linear-gradient(90deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
+              disabledBackgroundGradient: `linear-gradient(90deg, ${theme.color.bgSecondary}, ${theme.color.bgTertiary})`,
+            }}
+            borderRadius={300}
+            borderWidth={300}
+            padding={2}
+          >
+            <Text color="fgMuted" font="body">
+              Disabled gradient
+            </Text>
+          </Interactable>
+        </HStack>
+      </VStack>
+    </ThemeProvider>
   );
 };

@@ -192,6 +192,13 @@ export type InteractableBlendStyles = {
   hoveredBackgroundGradient?: string;
 };
 
+const BLEND_STYLES_GRADIENT_KEYS = [
+  'backgroundGradient',
+  'hoveredBackgroundGradient',
+  'pressedBackgroundGradient',
+  'disabledBackgroundGradient',
+] as const satisfies ReadonlyArray<keyof InteractableBlendStyles>;
+
 export type InteractableBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   Pick<GradientBoxBaseProps, 'gradient' | 'gradientConfig'> & {
@@ -245,7 +252,7 @@ export const Interactable: InteractableComponent = forwardRef<
       as,
       background = 'transparent',
       borderColor = background,
-      borderWidth = 100,
+      borderWidth,
       block,
       className,
       disabled,
@@ -264,6 +271,11 @@ export const Interactable: InteractableComponent = forwardRef<
     const Component = (as ?? interactableDefaultElement) satisfies React.ElementType;
     const theme = useTheme();
 
+    const hasBlendStylesGradient = BLEND_STYLES_GRADIENT_KEYS.some((key) => !!blendStyles?.[key]);
+    const hasGradient = !!gradient || !!gradientConfig || hasBlendStylesGradient;
+
+    const resolvedBorderWidth = borderWidth ?? (hasGradient ? undefined : 100);
+
     const interactableStyle = useMemo(
       () => ({
         ...getInteractableStyles({
@@ -277,7 +289,7 @@ export const Interactable: InteractableComponent = forwardRef<
       [style, background, theme, blendStyles, borderColor],
     );
 
-    const Wrapper = gradient || gradientConfig ? GradientBox : Box;
+    const Wrapper = hasGradient ? GradientBox : Box;
 
     return (
       <Wrapper
@@ -286,7 +298,7 @@ export const Interactable: InteractableComponent = forwardRef<
         aria-disabled={loading || disabled || undefined}
         aria-pressed={pressed}
         as={Component}
-        borderWidth={borderWidth}
+        borderWidth={resolvedBorderWidth}
         className={cx(
           COMPONENT_STATIC_CLASSNAME,
           baseCss,

@@ -85,7 +85,7 @@ export type InteractableProps = InteractableBaseProps & Omit<ViewProps, 'style'>
 export const Interactable = memo(function Interactable({
   background = 'transparent',
   borderColor = background,
-  borderWidth = 100,
+  borderWidth,
   block,
   children,
   disabled,
@@ -161,6 +161,10 @@ export const Interactable = memo(function Interactable({
     pressed,
   ]);
 
+  const hasGradient = !!(activeGradientConfig || gradientNode);
+
+  const resolvedBorderWidth = borderWidth ?? (hasGradient ? undefined : 100);
+
   const mergedWrapperStyles = useMemo(
     () => [
       block && { flexGrow: 1 },
@@ -183,13 +187,13 @@ export const Interactable = memo(function Interactable({
 
   const content = <View style={mergedContentStyles}>{children}</View>;
 
-  const Wrapper = activeGradientConfig || gradientNode ? GradientBox : Box;
+  const Wrapper = hasGradient ? GradientBox : Box;
 
   return (
     <Wrapper
       animated
       borderColor={borderColor}
-      borderWidth={borderWidth}
+      borderWidth={resolvedBorderWidth}
       {...(activeGradientConfig && { gradientConfig: activeGradientConfig })}
       {...(gradientNode && { gradientNode })}
       style={mergedWrapperStyles}
