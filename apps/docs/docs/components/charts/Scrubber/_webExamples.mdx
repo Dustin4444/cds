@@ -448,6 +448,166 @@ function CustomLabelComponent() {
 }
 ```
 
+#### Multi-line Text Alignment
+
+You can render a two-line scrubber label by returning a newline-delimited string from `label`.
+To keep the label positioned correctly, use the same alignment state in both places:
+
+- `setAlignment('left' | 'center' | 'right')`
+- `<DefaultScrubberLabel {...props} horizontalAlignment="center" />`
+- Set each line's `textAnchor` and `x` from the active alignment.
+
+```jsx live
+function TwoLineScrubberLabel() {
+  const theme = useTheme();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+  const [alignment, setAlignment] = useState('center');
+
+  const formatPrice = useCallback((price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(price);
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index) => {
+      const price = formatPrice((data[index] ?? 0) * 100);
+      const day = `Day ${index + 100}`;
+      return `${price}\n${day}`;
+    },
+    [data, formatPrice],
+  );
+
+  const AlignedScrubberLabel = memo((props) => {
+    const [priceLabel, dayLabel = ''] = String(props.children ?? '').split('\n');
+    const textLayout = useMemo(() => {
+      const centerLayout = { anchor: 'middle', x: props.x };
+      if (alignment === 'center' || typeof document === 'undefined') {
+        return centerLayout;
+      }
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      if (!context) {
+        return centerLayout;
+      }
+
+      const measureText = ({ fontSize, fontWeight, fontFamily }, label) => {
+        context.font = `${fontWeight} ${fontSize} ${fontFamily}`;
+        return context.measureText(label).width;
+      };
+
+      const priceWidth = measureText(
+        {
+          fontWeight: String(theme.fontWeight.headline ?? '600'),
+          fontSize: String(theme.fontSize.headline ?? '16px'),
+          fontFamily: String(theme.fontFamily.headline ?? 'Inter, sans-serif'),
+        },
+        priceLabel,
+      );
+      const dayWidth = measureText(
+        {
+          fontWeight: String(theme.fontWeight.legal ?? '400'),
+          fontSize: String(theme.fontSize.legal ?? '13px'),
+          fontFamily: String(theme.fontFamily.legal ?? 'Inter, sans-serif'),
+        },
+        dayLabel,
+      );
+      const maxLineWidth = Math.max(priceWidth, dayWidth);
+
+      if (alignment === 'left') {
+        return { anchor: 'start', x: props.x - maxLineWidth / 2 };
+      }
+
+      return { anchor: 'end', x: props.x + maxLineWidth / 2 };
+    }, [dayLabel, priceLabel, props.x]);
+
+    return (
+      <DefaultScrubberLabel {...props} horizontalAlignment="center">
+        <>
+          <tspan
+            style={{
+              fill: theme.color.fg,
+              fontFamily: theme.fontFamily.headline,
+              fontSize: theme.fontSize.headline,
+              fontWeight: theme.fontWeight.headline,
+            }}
+            textAnchor={textLayout.anchor}
+            x={textLayout.x}
+          >
+            {priceLabel}
+          </tspan>
+          <tspan
+            dy="1.2em"
+            style={{
+              fill: theme.color.fgMuted,
+              fontFamily: theme.fontFamily.legal,
+              fontSize: theme.fontSize.legal,
+              fontWeight: theme.fontWeight.legal,
+            }}
+            textAnchor={textLayout.anchor}
+            x={textLayout.x}
+          >
+            {dayLabel}
+          </tspan>
+        </>
+      </DefaultScrubberLabel>
+    );
+  });
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={1}>
+        <Button
+          compact
+          onClick={() => setAlignment('left')}
+          variant={alignment === 'left' ? 'primary' : 'secondary'}
+        >
+          Left
+        </Button>
+        <Button
+          compact
+          onClick={() => setAlignment('center')}
+          variant={alignment === 'center' ? 'primary' : 'secondary'}
+        >
+          Center
+        </Button>
+        <Button
+          compact
+          onClick={() => setAlignment('right')}
+          variant={alignment === 'right' ? 'primary' : 'secondary'}
+        >
+          Right
+        </Button>
+      </HStack>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        inset={{ top: 72 }}
+        series={[
+          {
+            id: 'prices',
+            data,
+            color: theme.color.accentBoldBlue,
+          },
+        ]}
+      >
+        <Scrubber
+          idlePulse
+          labelElevated
+          LabelComponent={AlignedScrubberLabel}
+          label={scrubberLabel}
+        />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
 #### Fonts
 
 You can use `labelFont` to customize the font of the scrubber line label and `beaconLabelFont` to customize the font of the beacon labels.
@@ -709,5 +869,187 @@ function PercentageBeaconLabels() {
   }
 
   return <Example />;
+}
+```
+
+### Multi Line Beacon Label
+
+You can use a custom `BeaconLabelComponent` to render each beacon label as two lines (team name + percentage).
+
+```jsx live
+function MatchupBeaconLabels() {
+  const matchupBlueData = [
+    47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
+    64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
+  ];
+  const matchupRedData = matchupBlueData.map((value) => 100 - value);
+  const matchupTeamLabels = {
+    blue: 'BLUE',
+    red: 'RED',
+  };
+
+  const TeamBeaconLabel = memo(
+    ({
+      color = 'var(--color-fgPrimary)',
+      teamLabel,
+      percentageLabel,
+      transition,
+      x,
+      y,
+      dx,
+      horizontalAlignment,
+      onDimensionsChange,
+      ...chartTextProps
+    }) => {
+      const teamLabelDimensionsRef = useRef(null);
+      const percentageLabelDimensionsRef = useRef(null);
+
+      const emitCombinedDimensions = useCallback(() => {
+        if (!onDimensionsChange) {
+          return;
+        }
+
+        const teamRect = teamLabelDimensionsRef.current;
+        const percentageRect = percentageLabelDimensionsRef.current;
+
+        if (!teamRect || !percentageRect) {
+          return;
+        }
+
+        const minX = Math.min(teamRect.x, percentageRect.x);
+        const minY = Math.min(teamRect.y, percentageRect.y);
+        const maxX = Math.max(teamRect.x + teamRect.width, percentageRect.x + percentageRect.width);
+        const maxY = Math.max(
+          teamRect.y + teamRect.height,
+          percentageRect.y + percentageRect.height,
+        );
+
+        onDimensionsChange({
+          x: minX,
+          y: minY,
+          width: maxX - minX,
+          height: maxY - minY,
+        });
+      }, [onDimensionsChange]);
+
+      const handleTeamLabelDimensionsChange = useCallback(
+        (rect) => {
+          teamLabelDimensionsRef.current = rect;
+          emitCombinedDimensions();
+        },
+        [emitCombinedDimensions],
+      );
+
+      const handlePercentageLabelDimensionsChange = useCallback(
+        (rect) => {
+          percentageLabelDimensionsRef.current = rect;
+          emitCombinedDimensions();
+        },
+        [emitCombinedDimensions],
+      );
+
+      return (
+        <m.g animate={{ y }} initial={false} transition={transition}>
+          <ChartText
+            disableRepositioning
+            color={color}
+            dx={dx}
+            font="legal"
+            horizontalAlignment={horizontalAlignment}
+            onDimensionsChange={handleTeamLabelDimensionsChange}
+            verticalAlignment="bottom"
+            x={x}
+            y={transition ? 0 : y}
+            {...chartTextProps}
+          >
+            {teamLabel}
+          </ChartText>
+          <ChartText
+            disableRepositioning
+            color={color}
+            dx={dx}
+            font="title3"
+            horizontalAlignment={horizontalAlignment}
+            onDimensionsChange={handlePercentageLabelDimensionsChange}
+            verticalAlignment="top"
+            x={x}
+            y={transition ? 0 : y}
+          >
+            {percentageLabel}
+          </ChartText>
+        </m.g>
+      );
+    },
+  );
+
+  const MatchupScrubberBeaconLabel = memo(({ seriesId, color, ...props }) => {
+    const { getSeriesData, dataLength } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+
+    const seriesData = useMemo(
+      () => getLineData(getSeriesData(seriesId)),
+      [getSeriesData, seriesId],
+    );
+
+    const dataIndex = useMemo(() => {
+      return scrubberPosition ?? Math.max(0, dataLength - 1);
+    }, [scrubberPosition, dataLength]);
+
+    const teamLabel = matchupTeamLabels[seriesId] ?? String(seriesId).toUpperCase();
+
+    const value = useMemo(() => {
+      if (seriesData === undefined) {
+        return null;
+      }
+
+      return seriesData[dataIndex];
+    }, [dataIndex, seriesData]);
+
+    return (
+      <TeamBeaconLabel
+        {...props}
+        color={color}
+        percentageLabel={`${value ?? 0}%`}
+        seriesId={seriesId}
+        teamLabel={teamLabel}
+      />
+    );
+  });
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      areaType="dotted"
+      height={250}
+      series={[
+        {
+          id: 'blue',
+          data: matchupBlueData,
+          color: 'rgb(var(--blue50))',
+          label: 'BLUE',
+        },
+        {
+          id: 'red',
+          data: matchupRedData,
+          color: 'rgb(var(--red50))',
+          label: 'RED',
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 64 }),
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <Scrubber
+        idlePulse
+        BeaconLabelComponent={MatchupScrubberBeaconLabel}
+        beaconLabelHorizontalOffset={16}
+        beaconLabelPreferredSide="right"
+      />
+    </LineChart>
+  );
 }
 ```

@@ -1,14 +1,18 @@
-import { memo, useMemo, useRef } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import type { Rect } from '@coinbase/cds-common/types';
 import { Button } from '@coinbase/cds-web/buttons';
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
-import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
+import { m as motion } from 'framer-motion';
 
 import {
+  ChartText,
   type ChartTextChildren,
   DefaultScrubberBeacon,
   DefaultScrubberBeaconLabel,
+  type DefaultScrubberBeaconLabelProps,
   DefaultScrubberLabel,
   getLineData,
   type ScrubberBeaconLabelProps,
@@ -23,6 +27,15 @@ import { LineChart, SolidLine } from '../../line';
 import { Scrubber } from '../Scrubber';
 
 const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+const matchupBlueData = [
+  47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
+  64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
+];
+const matchupRedData = matchupBlueData.map((value) => 100 - value);
+const matchupTeamLabels: Record<string, string> = {
+  blue: 'BLUE',
+  red: 'RED',
+};
 
 export default {
   component: Scrubber,
@@ -389,6 +402,179 @@ const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLab
   );
 };
 
+type TeamBeaconLabelProps = Omit<
+  DefaultScrubberBeaconLabelProps,
+  'label' | 'verticalAlignment' | 'font' | 'inset' | 'elevated' | 'borderRadius' | 'background'
+> & {
+  teamLabel: string;
+  percentageLabel: string;
+};
+
+const TeamBeaconLabel = memo<TeamBeaconLabelProps>(
+  ({
+    color = 'var(--color-fgPrimary)',
+    teamLabel,
+    percentageLabel,
+    transition,
+    x,
+    y,
+    dx,
+    horizontalAlignment,
+    onDimensionsChange,
+    ...chartTextProps
+  }) => {
+    const teamLabelDimensionsRef = useRef<Rect | null>(null);
+    const percentageLabelDimensionsRef = useRef<Rect | null>(null);
+
+    const emitCombinedDimensions = useCallback(() => {
+      if (!onDimensionsChange) {
+        return;
+      }
+
+      const teamRect = teamLabelDimensionsRef.current;
+      const percentageRect = percentageLabelDimensionsRef.current;
+
+      if (!teamRect || !percentageRect) {
+        return;
+      }
+
+      const minX = Math.min(teamRect.x, percentageRect.x);
+      const minY = Math.min(teamRect.y, percentageRect.y);
+      const maxX = Math.max(teamRect.x + teamRect.width, percentageRect.x + percentageRect.width);
+      const maxY = Math.max(teamRect.y + teamRect.height, percentageRect.y + percentageRect.height);
+
+      onDimensionsChange({
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY,
+      });
+    }, [onDimensionsChange]);
+
+    const handleTeamLabelDimensionsChange = useCallback(
+      (rect: Rect) => {
+        teamLabelDimensionsRef.current = rect;
+        emitCombinedDimensions();
+      },
+      [emitCombinedDimensions],
+    );
+
+    const handlePercentageLabelDimensionsChange = useCallback(
+      (rect: Rect) => {
+        percentageLabelDimensionsRef.current = rect;
+        emitCombinedDimensions();
+      },
+      [emitCombinedDimensions],
+    );
+
+    return (
+      <motion.g animate={{ y }} initial={false} transition={transition}>
+        <ChartText
+          disableRepositioning
+          color={color}
+          dx={dx}
+          font="legal"
+          horizontalAlignment={horizontalAlignment}
+          onDimensionsChange={handleTeamLabelDimensionsChange}
+          verticalAlignment="bottom"
+          x={x}
+          y={transition ? 0 : y}
+          {...chartTextProps}
+        >
+          {teamLabel}
+        </ChartText>
+        <ChartText
+          disableRepositioning
+          color={color}
+          dx={dx}
+          font="title3"
+          horizontalAlignment={horizontalAlignment}
+          onDimensionsChange={handlePercentageLabelDimensionsChange}
+          verticalAlignment="top"
+          x={x}
+          y={transition ? 0 : y}
+        >
+          {percentageLabel}
+        </ChartText>
+      </motion.g>
+    );
+  },
+);
+
+const MatchupBeaconLabels = () => {
+  const MatchupScrubberBeaconLabel = memo(
+    ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, dataLength } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const dataIndex = useMemo(() => {
+        return scrubberPosition ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
+
+      const teamLabel = matchupTeamLabels[seriesId] ?? String(seriesId).toUpperCase();
+
+      const value: number | null = useMemo(() => {
+        if (seriesData === undefined) {
+          return null;
+        }
+
+        return seriesData[dataIndex];
+      }, [dataIndex, seriesData]);
+
+      return (
+        <TeamBeaconLabel
+          {...props}
+          color={color}
+          percentageLabel={`${value ?? 0}%`}
+          seriesId={seriesId}
+          teamLabel={teamLabel}
+        />
+      );
+    },
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      areaType="dotted"
+      height={250}
+      series={[
+        {
+          id: 'blue',
+          data: matchupBlueData,
+          color: 'rgb(var(--blue50))',
+          label: 'BLUE',
+        },
+        {
+          id: 'red',
+          data: matchupRedData,
+          color: 'rgb(var(--red50))',
+          label: 'RED',
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 64 }),
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <Scrubber
+        idlePulse
+        BeaconLabelComponent={MatchupScrubberBeaconLabel}
+        beaconLabelHorizontalOffset={16}
+        beaconLabelPreferredSide="right"
+      />
+    </LineChart>
+  );
+};
+
 const HideBeaconLabels = () => {
   return (
     <LineChart
@@ -625,6 +811,165 @@ const HideOverlay = () => {
   );
 };
 
+const TwoLineScrubberLabel = () => {
+  const theme = useTheme();
+  const [alignment, setAlignment] = useState<'left' | 'center' | 'right'>('center');
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(price);
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = formatPrice((sampleData[index] ?? 0) * 100);
+      const day = `Day ${index + 100}`;
+      return `${price}\n${day}`;
+    },
+    [formatPrice],
+  );
+
+  const AlignedScrubberLabel = memo((props: ScrubberLabelProps) => {
+    const [priceLabel, dayLabel = ''] = String(props.children ?? '').split('\n');
+    const textLayout = useMemo(() => {
+      const centerLayout = { anchor: 'middle' as const, x: props.x };
+      if (alignment === 'center' || typeof document === 'undefined') {
+        return centerLayout;
+      }
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      if (!context) {
+        return centerLayout;
+      }
+
+      const measureText = (
+        {
+          fontSize,
+          fontWeight,
+          fontFamily,
+        }: {
+          fontSize: string;
+          fontWeight: string;
+          fontFamily: string;
+        },
+        label: string,
+      ): number => {
+        context.font = `${fontWeight} ${fontSize} ${fontFamily}`;
+        return context.measureText(label).width;
+      };
+
+      const priceWidth = measureText(
+        {
+          fontWeight: String(theme.fontWeight.headline ?? '600'),
+          fontSize: String(theme.fontSize.headline ?? '16px'),
+          fontFamily: String(theme.fontFamily.headline ?? 'Inter, sans-serif'),
+        },
+        priceLabel,
+      );
+      const dayWidth = measureText(
+        {
+          fontWeight: String(theme.fontWeight.legal ?? '400'),
+          fontSize: String(theme.fontSize.legal ?? '13px'),
+          fontFamily: String(theme.fontFamily.legal ?? 'Inter, sans-serif'),
+        },
+        dayLabel,
+      );
+      const maxLineWidth = Math.max(priceWidth, dayWidth);
+
+      if (alignment === 'left') {
+        return { anchor: 'start' as const, x: props.x - maxLineWidth / 2 };
+      }
+
+      return { anchor: 'end' as const, x: props.x + maxLineWidth / 2 };
+    }, [dayLabel, priceLabel, props.x]);
+
+    return (
+      <DefaultScrubberLabel {...props} horizontalAlignment="center">
+        <>
+          <tspan
+            style={{
+              fill: theme.color.fg,
+              fontFamily: theme.fontFamily.headline,
+              fontSize: theme.fontSize.headline,
+              fontWeight: theme.fontWeight.headline,
+            }}
+            textAnchor={textLayout.anchor}
+            x={textLayout.x}
+          >
+            {priceLabel}
+          </tspan>
+          <tspan
+            dy="1.2em"
+            style={{
+              fill: theme.color.fgMuted,
+              fontFamily: theme.fontFamily.legal,
+              fontSize: theme.fontSize.legal,
+              fontWeight: theme.fontWeight.legal,
+            }}
+            textAnchor={textLayout.anchor}
+            x={textLayout.x}
+          >
+            {dayLabel}
+          </tspan>
+        </>
+      </DefaultScrubberLabel>
+    );
+  });
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={1}>
+        <Button
+          compact
+          onClick={() => setAlignment('left')}
+          variant={alignment === 'left' ? 'primary' : 'secondary'}
+        >
+          Left
+        </Button>
+        <Button
+          compact
+          onClick={() => setAlignment('center')}
+          variant={alignment === 'center' ? 'primary' : 'secondary'}
+        >
+          Center
+        </Button>
+        <Button
+          compact
+          onClick={() => setAlignment('right')}
+          variant={alignment === 'right' ? 'primary' : 'secondary'}
+        >
+          Right
+        </Button>
+      </HStack>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={200}
+        inset={{ top: 72 }}
+        series={[
+          {
+            id: 'prices',
+            data: sampleData,
+            color: theme.color.accentBoldBlue,
+          },
+        ]}
+      >
+        <Scrubber
+          idlePulse
+          labelElevated
+          LabelComponent={AlignedScrubberLabel}
+          label={scrubberLabel}
+        />
+      </LineChart>
+    </VStack>
+  );
+};
+
 export const All = () => {
   return (
     <VStack gap={4}>
@@ -681,6 +1026,12 @@ export const All = () => {
       </Example>
       <Example title="Hide Overlay">
         <HideOverlay />
+      </Example>
+      <Example title="Matchup Beacon Labels">
+        <MatchupBeaconLabels />
+      </Example>
+      <Example title="Two Line Scrubber Label">
+        <TwoLineScrubberLabel />
       </Example>
     </VStack>
   );

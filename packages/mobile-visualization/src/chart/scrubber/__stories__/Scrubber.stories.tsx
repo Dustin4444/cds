@@ -28,6 +28,15 @@ import {
 } from '..';
 
 const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+const matchupBlueData = [
+  47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
+  64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
+];
+const matchupRedData = matchupBlueData.map((value) => 100 - value);
+const matchupTeamLabels: Record<string, string> = {
+  blue: 'BLUE',
+  red: 'RED',
+};
 
 const BasicScrubber = () => {
   return (
@@ -315,7 +324,7 @@ const PercentageBeaconLabels = () => {
 
   const PercentageScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
-      const { getSeriesData, series, fontProvider } = useCartesianChartContext();
+      const { getSeriesData, series, fontFamilies, fontProvider } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const seriesData = useMemo(
@@ -461,6 +470,132 @@ const PercentageBeaconLabels = () => {
         </LineChart>
       </Box>
     </VStack>
+  );
+};
+
+const MatchupBeaconLabels = () => {
+  const theme = useTheme();
+
+  const MatchupScrubberBeaconLabel = memo(
+    ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, series, fontProvider } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const dataLength = useMemo(
+        () =>
+          series?.reduce((max, currentSeries) => {
+            const data = getSeriesData(currentSeries.id);
+            return Math.max(max, data?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
+
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
+
+      const teamLabel = matchupTeamLabels[seriesId] ?? String(seriesId).toUpperCase();
+      const labelColor = color ?? theme.color.fgPrimary;
+      const legalFontSize = theme.fontSize.legal;
+      const title3FontSize = theme.fontSize.title3;
+
+      const teamStyle: SkTextStyle = useMemo(
+        () => ({
+          fontFamilies: ['Inter'],
+          fontSize: legalFontSize,
+          fontStyle: {
+            weight: FontWeight.Normal,
+          },
+          color: Skia.Color(labelColor),
+        }),
+        [labelColor, legalFontSize],
+      );
+
+      const percentageStyle: SkTextStyle = useMemo(
+        () => ({
+          fontFamilies: ['Inter'],
+          fontSize: title3FontSize,
+          fontStyle: {
+            weight: FontWeight.Bold,
+          },
+          color: Skia.Color(labelColor),
+        }),
+        [title3FontSize, labelColor],
+      );
+
+      const matchupLabel = useDerivedValue(() => {
+        if (seriesData === undefined) {
+          return teamLabel;
+        }
+
+        const value = seriesData[dataIndex.value];
+        const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontProvider);
+
+        builder.pushStyle(teamStyle);
+        builder.addText(teamLabel);
+        builder.addText('\n');
+        builder.pushStyle(percentageStyle);
+        builder.addText(`${value}%`);
+
+        const paragraph = builder.build();
+        paragraph.layout(240);
+        return paragraph;
+      }, [dataIndex, fontProvider, percentageStyle, seriesData, teamLabel, teamStyle]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background="transparent"
+          color={labelColor}
+          elevated={false}
+          inset={0}
+          label={matchupLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      areaType="dotted"
+      height={300}
+      inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
+      series={[
+        {
+          id: 'blue',
+          data: matchupBlueData,
+          color: `rgb(${theme.spectrum.blue50})`,
+          label: 'BLUE',
+        },
+        {
+          id: 'red',
+          data: matchupRedData,
+          color: `rgb(${theme.spectrum.red50})`,
+          label: 'RED',
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 64 }),
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <Scrubber
+        idlePulse
+        BeaconLabelComponent={MatchupScrubberBeaconLabel}
+        beaconLabelHorizontalOffset={16}
+        beaconLabelPreferredSide="right"
+      />
+    </LineChart>
   );
 };
 
@@ -706,6 +841,129 @@ const HideOverlay = () => {
   );
 };
 
+function TwoLineScrubberLabel() {
+  const theme = useTheme();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+  const [alignment, setAlignment] = useState<TextAlign>(TextAlign.Center);
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(price);
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = formatPrice((data[index] ?? 0) * 100);
+      const day = `Day ${index + 100}`;
+      return `${price}\n${day}`;
+    },
+    [data, formatPrice],
+  );
+
+  // Custom scrubber label component that uses the selected alignment
+  const AlignedScrubberLabel = memo(({ children, ...props }: ScrubberLabelProps) => {
+    const { fontProvider, width: chartWidth } = useCartesianChartContext();
+
+    const styledLabel = useDerivedValue(() => {
+      const unwrappedChildren = unwrapAnimatedValue(children);
+      const [priceLabel = '', ...dayLabelParts] = String(unwrappedChildren ?? '').split('\n');
+      const dayLabel = dayLabelParts.join('\n');
+
+      const priceStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 16,
+        fontStyle: {
+          weight: FontWeight.Bold,
+        },
+        color: Skia.Color(theme.color.fg),
+      };
+
+      const dayStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 14,
+        fontStyle: {
+          weight: FontWeight.Normal,
+        },
+        color: Skia.Color(theme.color.fgMuted),
+      };
+
+      const builder = Skia.ParagraphBuilder.Make({ textAlign: alignment }, fontProvider);
+      builder.pushStyle(priceStyle);
+      builder.addText(priceLabel);
+      builder.pop();
+
+      if (dayLabel.length > 0) {
+        builder.addText('\n');
+        builder.pushStyle(dayStyle);
+        builder.addText(dayLabel);
+        builder.pop();
+      }
+
+      const paragraph = builder.build();
+      paragraph.layout(chartWidth > 0 ? chartWidth : 384);
+      return paragraph;
+    }, [children, alignment, fontProvider, chartWidth, theme.color.fg, theme.color.fgMuted]);
+
+    return (
+      <DefaultScrubberLabel {...props} paragraphAlignment={alignment}>
+        {styledLabel}
+      </DefaultScrubberLabel>
+    );
+  });
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={1}>
+        <Button
+          compact
+          onPress={() => setAlignment(TextAlign.Left)}
+          variant={alignment === TextAlign.Left ? 'primary' : 'secondary'}
+        >
+          Left
+        </Button>
+        <Button
+          compact
+          onPress={() => setAlignment(TextAlign.Center)}
+          variant={alignment === TextAlign.Center ? 'primary' : 'secondary'}
+        >
+          Center
+        </Button>
+        <Button
+          compact
+          onPress={() => setAlignment(TextAlign.Right)}
+          variant={alignment === TextAlign.Right ? 'primary' : 'secondary'}
+        >
+          Right
+        </Button>
+      </HStack>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={200}
+        inset={{ top: 64 }}
+        series={[
+          {
+            id: 'prices',
+            data,
+            color: theme.color.accentBoldBlue,
+          },
+        ]}
+      >
+        <Scrubber
+          idlePulse
+          labelElevated
+          LabelComponent={AlignedScrubberLabel}
+          label={scrubberLabel}
+        />
+      </LineChart>
+    </VStack>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -784,20 +1042,26 @@ const ExampleNavigator = () => {
         title: 'Hide Overlay',
         component: <HideOverlay />,
       },
+      {
+        title: 'Matchup Beacon Labels',
+        component: <MatchupBeaconLabels />,
+      },
+      {
+        title: 'Two-Line Scrubber Label',
+        component: <TwoLineScrubberLabel />,
+      },
     ],
     [],
   );
 
   const currentExample = examples[currentIndex];
-  const isFirstExample = currentIndex === 0;
-  const isLastExample = currentIndex === examples.length - 1;
 
   const handlePrevious = useCallback(() => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
-  }, []);
+    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
+  }, [examples.length]);
 
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(examples.length - 1, prev + 1));
+    setCurrentIndex((prev) => (prev + 1) % examples.length);
   }, [examples.length]);
 
   return (
@@ -807,7 +1071,6 @@ const ExampleNavigator = () => {
           <IconButton
             accessibilityHint="Navigate to previous example"
             accessibilityLabel="Previous"
-            disabled={isFirstExample}
             name="arrowLeft"
             onPress={handlePrevious}
             variant="secondary"
@@ -821,7 +1084,6 @@ const ExampleNavigator = () => {
           <IconButton
             accessibilityHint="Navigate to next example"
             accessibilityLabel="Next"
-            disabled={isLastExample}
             name="arrowRight"
             onPress={handleNext}
             variant="secondary"
