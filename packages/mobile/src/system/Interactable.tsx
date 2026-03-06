@@ -194,9 +194,9 @@ export const Interactable = memo(function Interactable({
       animated
       borderColor={borderColor}
       borderWidth={resolvedBorderWidth}
+      style={mergedWrapperStyles}
       {...(activeGradientConfig && { gradientConfig: activeGradientConfig })}
       {...(gradientNode && { gradientNode })}
-      style={mergedWrapperStyles}
       {...props}
     >
       {content}

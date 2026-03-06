@@ -1,7 +1,10 @@
 import React from 'react';
 import { names } from '@coinbase/cds-icons/names';
 
+import { useTheme } from '../../hooks/useTheme';
 import { HStack, VStack } from '../../layout';
+import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultGradientTheme } from '../../themes/gradients/defaultGradientTheme';
 import { Text } from '../../typography/Text';
 import { IconButton, type IconButtonBaseProps } from '../IconButton';
 
@@ -128,4 +131,112 @@ export const Sheet4 = () => <IconButtonSheet endIndex={640} startIndex={480} />;
 export default {
   title: 'Components/Buttons/IconButton',
   component: IconButton,
+};
+
+export const GradientVariants = () => {
+  const theme = useTheme();
+  return (
+    <VStack gap={6}>
+      <VStack gap={2}>
+        <Text font="title3">Theme gradient preset (gradient prop)</Text>
+        <ThemeProvider activeColorScheme={theme.activeColorScheme} theme={defaultGradientTheme}>
+          <HStack alignItems="center" gap={4}>
+            <IconButton
+              accessibilityLabel="Brand gradient"
+              gradient="brand"
+              name="arrowsHorizontal"
+              variant="gradient"
+            />
+            <IconButton
+              accessibilityLabel="Premium gradient"
+              gradient="premium"
+              name="arrowsHorizontal"
+              variant="gradient"
+            />
+            <IconButton
+              accessibilityLabel="Positive gradient"
+              gradient="positive"
+              name="arrowsHorizontal"
+              variant="gradient"
+            />
+            <IconButton
+              accessibilityLabel="Positive gradient"
+              gradient="negative"
+              loading={true}
+              name="arrowsHorizontal"
+              variant="gradient"
+            />
+          </HStack>
+        </ThemeProvider>
+      </VStack>
+
+      <VStack gap={2}>
+        <Text font="title3">Custom gradient (gradientConfig prop)</Text>
+        <HStack alignItems="center" gap={4}>
+          <IconButton
+            accessibilityLabel="Horizontal gradient"
+            gradientConfig={{
+              colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
+              angle: 90,
+            }}
+            name="arrowsHorizontal"
+            variant="gradient"
+          />
+          <IconButton
+            accessibilityLabel="Diagonal multi-color gradient"
+            gradientConfig={{
+              colors: [
+                theme.color.accentBoldGreen,
+                theme.color.accentBoldBlue,
+                theme.color.accentBoldPurple,
+              ],
+              stops: [0, 0.5, 1],
+              angle: 135,
+            }}
+            name="star"
+            variant="gradient"
+          />
+          <IconButton
+            accessibilityLabel="Large gradient"
+            compact={false}
+            gradientConfig={{
+              colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
+              angle: 45,
+            }}
+            name="arrowsHorizontal"
+            variant="gradient"
+          />
+        </HStack>
+      </VStack>
+
+      <VStack gap={2}>
+        <Text font="title3">Gradient interaction states (blendStyles — hover/press/disabled)</Text>
+        <Text color="fgMuted" font="caption">
+          Hover and press to see gradient transitions
+        </Text>
+        <HStack alignItems="center" gap={4}>
+          <IconButton
+            accessibilityLabel="Hover gradient"
+            blendStyles={{
+              backgroundGradient: `linear-gradient(135deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
+              hoveredBackgroundGradient: `linear-gradient(135deg, ${theme.color.accentBoldPurple}, ${theme.color.accentBoldBlue})`,
+              pressedBackgroundGradient: `linear-gradient(135deg, ${theme.color.accentBoldGreen}, ${theme.color.accentBoldBlue})`,
+            }}
+            name="arrowsHorizontal"
+            variant="gradient"
+          />
+          <IconButton
+            disabled
+            accessibilityLabel="Disabled gradient"
+            blendStyles={{
+              backgroundGradient: `linear-gradient(135deg, ${theme.color.accentBoldBlue}, ${theme.color.accentBoldPurple})`,
+              disabledBackgroundGradient: `linear-gradient(135deg, ${theme.color.bgSecondary}, ${theme.color.bgTertiary})`,
+            }}
+            name="arrowsHorizontal"
+            variant="gradient"
+          />
+        </HStack>
+      </VStack>
+    </VStack>
+  );
 };

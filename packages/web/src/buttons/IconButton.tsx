@@ -26,8 +26,11 @@ export const iconButtonDefaultElement = 'button';
 export type IconButtonDefaultElement = typeof iconButtonDefaultElement;
 
 export type IconButtonBaseProps = Polymorphic.ExtendableProps<
-  Omit<PressableBaseProps, 'children'>,
-  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush'> & {
+  Omit<PressableBaseProps, 'children' | 'gradient' | 'gradientConfig'>,
+  Pick<
+    ButtonBaseProps,
+    'disabled' | 'transparent' | 'compact' | 'flush' | 'gradient' | 'gradientConfig'
+  > & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
     /** Whether the icon is active */
@@ -76,7 +79,7 @@ export const IconButton: IconButtonComponent = memo(
         color,
         borderColor,
         borderRadius = 1000,
-        borderWidth = 100,
+        borderWidth = variant === 'gradient' ? undefined : 100,
         alignItems = 'center',
         justifyContent = 'center',
         // TO DO: fix this when removing interactableHeight
@@ -89,6 +92,8 @@ export const IconButton: IconButtonComponent = memo(
         loading,
         accessibilityLabel,
         accessibilityHint,
+        gradient,
+        gradientConfig,
         ...props
       }: IconButtonProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -107,6 +112,7 @@ export const IconButton: IconButtonComponent = memo(
         [iconSizeValue],
       );
 
+      const isGradientVariant = variant === 'gradient';
       const variantMap = transparent ? transparentVariants : variants;
       const variantStyle = variantMap[variant];
 
@@ -137,6 +143,8 @@ export const IconButton: IconButtonComponent = memo(
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
+          gradient={isGradientVariant ? gradient : undefined}
+          gradientConfig={isGradientVariant ? gradientConfig : undefined}
           height={height}
           justifyContent={justifyContent}
           loading={loading}

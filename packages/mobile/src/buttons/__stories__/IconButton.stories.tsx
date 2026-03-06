@@ -3,8 +3,12 @@ import type { GestureResponderEvent } from 'react-native';
 import { names } from '@coinbase/cds-icons/names';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { RadialGradientFill } from '../../gradients/RadialGradientFill';
+import { useTheme } from '../../hooks/useTheme';
 import { HStack } from '../../layout';
 import { Box } from '../../layout/Box';
+import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultGradientTheme } from '../../themes/gradients/defaultGradientTheme';
 import { Text } from '../../typography/Text';
 import { IconButton, type IconButtonProps } from '../IconButton';
 
@@ -65,6 +69,8 @@ const variants = [
 ];
 
 const IconButtonScreen = () => {
+  const theme = useTheme();
+
   return (
     <ExampleScreen>
       <Example inline title="Default">
@@ -103,6 +109,60 @@ const IconButtonScreen = () => {
             </Box>
           );
         })}
+        <ThemeProvider activeColorScheme={theme.activeColorScheme} theme={defaultGradientTheme}>
+          <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+            <IconButton gradient="brand" name="arrowsHorizontal" variant="gradient" />
+            <Text font="body">Gradient (theme preset)</Text>
+          </Box>
+          <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+            <IconButton
+              accessibilityLabel="Diagonal multi-color gradient"
+              gradientConfig={{
+                colors: [
+                  theme.color.bgWarning,
+                  theme.color.accentBoldRed,
+                  theme.color.accentBoldYellow,
+                ],
+                stops: [0, 0.5, 1],
+                angle: 135,
+              }}
+              name="star"
+              variant="gradient"
+            />
+            <Text font="body">Gradient (custom config)</Text>
+          </Box>
+          <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+            <IconButton
+              accessibilityLabel="Radial gradient node"
+              gradientNode={
+                <RadialGradientFill
+                  colors={[theme.color.accentBoldBlue, theme.color.accentBoldPurple]}
+                />
+              }
+              name="star"
+              variant="gradient"
+            />
+            <Text font="body">Gradient (custom node)</Text>
+          </Box>
+          <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+            <IconButton
+              accessibilityLabel="Press state gradient"
+              blendStyles={{
+                backgroundGradient: {
+                  colors: [theme.color.accentBoldBlue, theme.color.accentBoldPurple],
+                  angle: 135,
+                },
+                pressedBackgroundGradient: {
+                  colors: [theme.color.accentBoldPurple, theme.color.accentBoldBlue],
+                  angle: 135,
+                },
+              }}
+              name="arrowsHorizontal"
+              variant="gradient"
+            />
+            <Text font="body">Gradient (interactive state)</Text>
+          </Box>
+        </ThemeProvider>
       </Example>
       <Example title="All">
         {names.map((name) => {

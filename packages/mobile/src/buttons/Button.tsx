@@ -115,9 +115,6 @@ export type ButtonProps = ButtonBaseProps;
 export const Button = memo(
   forwardRef(function Button(
     {
-      gradient,
-      gradientConfig,
-      gradientNode,
       variant = 'primary',
       loading,
       transparent,
@@ -149,6 +146,9 @@ export const Button = memo(
       borderRadius = compact ? 700 : 900,
       accessibilityLabel,
       accessibilityHint,
+      gradient,
+      gradientConfig,
+      gradientNode,
       ...props
     }: ButtonProps,
     ref: React.ForwardedRef<View>,

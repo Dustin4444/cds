@@ -313,9 +313,9 @@ export const Interactable: InteractableComponent = forwardRef<
         )}
         data-disabled={disabled}
         disabled={disabled}
+        style={interactableStyle}
         {...(gradient && { gradient })}
         {...(gradientConfig && { gradientConfig })}
-        style={interactableStyle}
         {...props}
       />
     );

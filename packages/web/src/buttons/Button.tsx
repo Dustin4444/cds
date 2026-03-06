@@ -118,7 +118,7 @@ export const buttonDefaultElement = 'button';
 export type ButtonDefaultElement = typeof buttonDefaultElement;
 
 export type ButtonBaseProps = Polymorphic.ExtendableProps<
-  PressableBaseProps,
+  Omit<PressableBaseProps, 'gradient' | 'gradientConfig'>,
   SharedProps &
     Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
       /**
@@ -201,8 +201,6 @@ export const Button: ButtonComponent = memo(
     <AsComponent extends React.ElementType>(
       {
         as,
-        gradient,
-        gradientConfig,
         variant = 'primary',
         loading,
         transparent,
@@ -236,6 +234,8 @@ export const Button: ButtonComponent = memo(
         paddingX = padding ?? (compact ? 2 : 4),
         margin = 0,
         minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
+        gradient,
+        gradientConfig,
         ...props
       }: ButtonProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,

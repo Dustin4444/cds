@@ -12,8 +12,18 @@ import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import type { ButtonBaseProps } from './Button';
 
 export type IconButtonBaseProps = SharedProps &
-  Omit<PressableBaseProps, 'children'> &
-  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush' | 'loading'> & {
+  Omit<PressableBaseProps, 'children' | 'gradient' | 'gradientConfig' | 'gradientNode'> &
+  Pick<
+    ButtonBaseProps,
+    | 'disabled'
+    | 'transparent'
+    | 'compact'
+    | 'flush'
+    | 'loading'
+    | 'gradient'
+    | 'gradientConfig'
+    | 'gradientNode'
+  > & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
     /** Whether the icon is active */
@@ -36,7 +46,7 @@ export const IconButton = memo(function IconButton({
   background,
   color,
   borderColor,
-  borderWidth = 100,
+  borderWidth = variant === 'gradient' ? undefined : 100,
   borderRadius = 1000,
   feedback = compact ? 'light' : 'normal',
   flush,
@@ -44,10 +54,14 @@ export const IconButton = memo(function IconButton({
   style,
   accessibilityHint,
   accessibilityLabel,
+  gradient,
+  gradientConfig,
+  gradientNode,
   ...props
 }: IconButtonProps) {
   const theme = useTheme();
   const iconSize = compact ? 's' : 'm';
+  const isGradientVariant = variant === 'gradient';
 
   const variantMap = transparent ? transparentVariants : variants;
   const variantStyle = variantMap[variant];
@@ -88,6 +102,9 @@ export const IconButton = memo(function IconButton({
       borderRadius={borderRadius}
       borderWidth={borderWidth}
       feedback={feedback}
+      gradient={isGradientVariant ? gradient : undefined}
+      gradientConfig={isGradientVariant ? gradientConfig : undefined}
+      gradientNode={isGradientVariant ? gradientNode : undefined}
       loading={loading}
       marginEnd={marginEnd}
       marginStart={marginStart}

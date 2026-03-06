@@ -23,10 +23,6 @@ const GradientButtonExamples = () => {
     <>
       <Example title="Theme Gradient Presets">
         <Button color="fgInverse" gradient="brand" onPress={() => {}} variant="gradient">
-          Brand Preset
-        </Button>
-
-        <Button color="fgInverse" gradient="premium" onPress={() => {}} variant="gradient">
           Premium Preset
         </Button>
 
@@ -48,10 +44,6 @@ const GradientButtonExamples = () => {
           Full Width Brand Gradient
         </Button>
 
-        <Button block color="fgInverse" gradient="premium" onPress={() => {}} variant="gradient">
-          Full Width Premium Gradient
-        </Button>
-
         <Button
           block
           color="fgInverse"
@@ -61,6 +53,12 @@ const GradientButtonExamples = () => {
           variant="gradient"
         >
           Positive with Icon
+        </Button>
+      </Example>
+
+      <Example title="Theme Gradient Presets (Compact)">
+        <Button compact color="fgInverse" gradient="brand" onPress={() => {}} variant="gradient">
+          Compact Brand Gradient
         </Button>
       </Example>
 
