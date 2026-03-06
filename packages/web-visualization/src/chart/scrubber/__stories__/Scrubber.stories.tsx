@@ -814,7 +814,6 @@ const HideOverlay = () => {
 const TwoLineScrubberLabel = () => {
   const theme = useTheme();
   const [alignment, setAlignment] = useState<'left' | 'center' | 'right'>('center');
-
   const formatPrice = useCallback((price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -847,6 +846,24 @@ const TwoLineScrubberLabel = () => {
         return centerLayout;
       }
 
+      const resolveThemeFontValue = (value: unknown, fallback: string): string => {
+        const rawValue = String(value ?? '').trim();
+        const cssVarMatch = rawValue.match(/^var\((--[^,\s)]+)(?:,\s*([^)]+))?\)$/);
+        if (!cssVarMatch) {
+          return rawValue.length > 0 ? rawValue : fallback;
+        }
+
+        const resolvedValue = getComputedStyle(document.documentElement)
+          .getPropertyValue(cssVarMatch[1])
+          .trim();
+        if (resolvedValue.length > 0) {
+          return resolvedValue;
+        }
+
+        const inlineFallback = cssVarMatch[2]?.trim();
+        return inlineFallback && inlineFallback.length > 0 ? inlineFallback : fallback;
+      };
+
       const measureText = (
         {
           fontSize,
@@ -863,22 +880,19 @@ const TwoLineScrubberLabel = () => {
         return context.measureText(label).width;
       };
 
-      const priceWidth = measureText(
-        {
-          fontWeight: String(theme.fontWeight.headline ?? '600'),
-          fontSize: String(theme.fontSize.headline ?? '16px'),
-          fontFamily: String(theme.fontFamily.headline ?? 'Inter, sans-serif'),
-        },
-        priceLabel,
-      );
-      const dayWidth = measureText(
-        {
-          fontWeight: String(theme.fontWeight.legal ?? '400'),
-          fontSize: String(theme.fontSize.legal ?? '13px'),
-          fontFamily: String(theme.fontFamily.legal ?? 'Inter, sans-serif'),
-        },
-        dayLabel,
-      );
+      const headlineFont = {
+        fontWeight: resolveThemeFontValue(theme.fontWeight.headline, '600'),
+        fontSize: resolveThemeFontValue(theme.fontSize.headline, '16px'),
+        fontFamily: resolveThemeFontValue(theme.fontFamily.headline, 'Inter, sans-serif'),
+      };
+      const legalFont = {
+        fontWeight: resolveThemeFontValue(theme.fontWeight.legal, '400'),
+        fontSize: resolveThemeFontValue(theme.fontSize.legal, '13px'),
+        fontFamily: resolveThemeFontValue(theme.fontFamily.legal, 'Inter, sans-serif'),
+      };
+
+      const priceWidth = measureText(headlineFont, priceLabel);
+      const dayWidth = measureText(legalFont, dayLabel);
       const maxLineWidth = Math.max(priceWidth, dayWidth);
 
       if (alignment === 'left') {
