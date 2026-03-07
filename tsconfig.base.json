@@ -30,6 +30,12 @@
       "@coinbase/cds-common/*": [
         "packages/common/src/*"
       ],
+      "@coinbase/cds-cli": [
+        "packages/cds-cli/src"
+      ],
+      "@coinbase/cds-cli/*": [
+        "packages/cds-cli/src/*"
+      ],
       "@coinbase/cds-icons": [
         "packages/icons/src"
       ],

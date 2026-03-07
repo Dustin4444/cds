@@ -10,7 +10,7 @@
   "exclude": [],
   "references": [
     {
-      "path": "../../packages/icons"
+      "path": "../../packages/mcp-server"
     }
   ]
 }

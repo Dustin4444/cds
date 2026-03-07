@@ -1,17 +1,16 @@
 {
-  "name": "@coinbase/cds-mcp-server",
-  "version": "8.50.0",
-  "description": "Coinbase Design System - MCP Server",
+  "name": "@coinbase/cds-cli",
+  "version": "8.49.0",
+  "description": "Coinbase Design System - CLI",
   "repository": {
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",
-    "directory": "packages/mcp-server"
+    "directory": "packages/cds-cli"
   },
   "type": "module",
   "bin": {
-    "cds-mcp": "./esm/server.js",
-    "cds-mcp-server": "./esm/server.js",
-    "cds-mcp-setup": "./esm/setup.js"
+    "cds": "./esm/cli.js",
+    "cds-cli": "./esm/cli.js"
   },
   "main": "./esm/index.js",
   "types": "./dts/index.d.ts",
@@ -26,14 +25,10 @@
   "files": [
     "dts",
     "esm",
-    "mcp-docs",
     "CHANGELOG"
   ],
   "dependencies": {
-    "@coinbase/cds-icons": "workspace:^",
-    "@inquirer/prompts": "^7.5.3",
-    "@modelcontextprotocol/sdk": "^1.13.1",
-    "zod": "^3.23.8"
+    "@coinbase/cds-mcp-server": "workspace:^"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

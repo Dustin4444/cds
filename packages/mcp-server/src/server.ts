@@ -10,6 +10,7 @@ import { z } from 'zod';
 import pkg from '../package.json' with { type: 'json' };
 
 import { postMetric } from './analytics.js';
+import { searchIcons } from './iconSearch.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DOCS_PATH = path.join(__dirname, '../mcp-docs');
@@ -90,6 +91,37 @@ server.tool(
 
     return {
       content: [{ type: 'text', text: content }],
+    };
+  },
+);
+
+server.tool(
+  'search-icons',
+  'search CDS icons by name or description keywords',
+  {
+    query: z.string().describe('The text query used to search icon names and icon keywords'),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(100)
+      .optional()
+      .describe('Maximum number of icons to return. Defaults to 20.'),
+  } as const,
+  ({ query, limit }) => {
+    postMetric('cdsMcp', { command: 'search-icons' });
+
+    if (!query.trim()) {
+      return {
+        content: [{ type: 'text', text: 'Error: query cannot be empty' }],
+        isError: true,
+      };
+    }
+
+    const searchResponse = searchIcons(query, limit);
+
+    return {
+      content: [{ type: 'text', text: JSON.stringify(searchResponse, null, 2) }],
     };
   },
 );
