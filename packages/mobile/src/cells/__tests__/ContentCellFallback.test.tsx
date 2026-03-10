@@ -29,7 +29,7 @@ describe('ContentCellFallback', () => {
         <ContentCellFallback media="image" />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('MediaFallback image')).toBeDefined();
+    expect(screen.getByText('MediaFallback image', { includeHiddenElements: true })).toBeDefined();
   });
 
   it('should render description fallback', () => {
@@ -38,7 +38,7 @@ describe('ContentCellFallback', () => {
         <ContentCellFallback description disableRandomRectWidth rectWidthVariant={1} />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Fallback')).toBeDefined();
+    expect(screen.getByText('Fallback', { includeHiddenElements: true })).toBeDefined();
     expect(Fallback).toHaveBeenCalledWith(
       expect.objectContaining({
         disableRandomRectWidth: true,
@@ -74,7 +74,7 @@ describe('ContentCellFallback', () => {
         <ContentCellFallback disableRandomRectWidth title rectWidthVariant={1} />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Fallback')).toBeDefined();
+    expect(screen.getByText('Fallback', { includeHiddenElements: true })).toBeDefined();
     expect(Fallback).toHaveBeenCalledWith(
       expect.objectContaining({
         disableRandomRectWidth: true,
@@ -92,7 +92,7 @@ describe('ContentCellFallback', () => {
         <ContentCellFallback disableRandomRectWidth subtitle rectWidthVariant={1} />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Fallback')).toBeDefined();
+    expect(screen.getByText('Fallback', { includeHiddenElements: true })).toBeDefined();
     expect(Fallback).toHaveBeenCalledWith(
       expect.objectContaining({
         disableRandomRectWidth: true,

@@ -47,12 +47,12 @@ export const LottieStatusAnimation = memo(
 
     return (
       <Lottie
-        {...otherProps}
         accessible
         accessibilityLabel={label}
         accessibilityLiveRegion="polite"
         onAnimationFinish={handlePolling}
         testID={testID}
+        {...otherProps}
       />
     );
   },
