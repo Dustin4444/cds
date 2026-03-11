@@ -130,6 +130,7 @@ export const Path = memo<PathProps>(
     const context = useCartesianChartContext();
     const rect = clipRect !== undefined ? clipRect : context.drawingArea;
     const animate = animateProp ?? context.animate;
+    const clipPath = rect !== null ? `url(#${clipPathId})` : undefined;
 
     const enterTransition = useMemo(
       () => getTransition(transitions?.enter, animate, defaultPathEnterTransition),
@@ -153,20 +154,26 @@ export const Path = memo<PathProps>(
     const totalOffset = clipOffset * 2; // Applied on both sides
 
     const clipPathAnimation = useMemo(() => {
-      if (rect === null || !shouldAnimateClip) return;
+      if (rect === null) return;
+      const categoryAxisIsX = context.layout !== 'horizontal';
+      const fullWidth = rect.width + totalOffset;
+      const fullHeight = rect.height + totalOffset;
+
       return {
-        hidden: { width: 0 },
+        hidden: {
+          width: categoryAxisIsX ? 0 : fullWidth,
+          height: categoryAxisIsX ? fullHeight : 0,
+        },
         visible: {
-          width: rect.width + totalOffset,
-          transition: enterTransition,
+          width: fullWidth,
+          height: fullHeight,
+          transition: {
+            type: 'timing',
+            duration: pathEnterTransitionDuration,
+          },
         },
       };
-    }, [rect, totalOffset, enterTransition, shouldAnimateClip]);
-
-    const clipPath = useMemo(
-      () => (rect !== null ? `url(#${clipPathId})` : undefined),
-      [rect, clipPathId],
-    );
+    }, [rect, totalOffset, context.layout]);
 
     return (
       <>
@@ -179,6 +186,7 @@ export const Path = memo<PathProps>(
                   height={rect.height + totalOffset}
                   initial="hidden"
                   variants={clipPathAnimation}
+                  width={rect.width + totalOffset}
                   x={rect.x - clipOffset}
                   y={rect.y - clipOffset}
                 />
