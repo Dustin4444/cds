@@ -1,5 +1,5 @@
 import React, { isValidElement, memo } from 'react';
-import type { PressableProps } from 'react-native';
+import type { DimensionValue, PressableProps } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { upsellCardDefaultWidth, upsellCardMinHeight } from '@coinbase/cds-common/tokens/card';
 import type {
@@ -98,7 +98,7 @@ export const UpsellCard = memo(
         minHeight={upsellCardMinHeight}
         style={style}
         testID={testID}
-        width={width}
+        width={width as DimensionValue}
       >
         <HStack
           alignContent="space-between"

@@ -1,9 +1,8 @@
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
-import { Modal as RNModal } from 'react-native';
+import { Modal as RNModal, type ViewStyle } from 'react-native';
 import type {
   ButtonVariant,
   IllustrationPictogramNames,
-  PositionStyles,
   SharedProps,
 } from '@coinbase/cds-common/types';
 
@@ -17,7 +16,6 @@ import { Overlay } from './overlay/Overlay';
 import { useAlertAnimation } from './useAlertAnimation';
 
 export type AlertBaseProps = SharedProps &
-  Pick<PositionStyles, 'zIndex'> &
   Pick<ModalBaseProps, 'onRequestClose' | 'visible' | 'onDidClose'> & {
     /**
      * Alert title
@@ -57,6 +55,7 @@ export type AlertBaseProps = SharedProps &
      * @default horizontal
      */
     actionLayout?: 'horizontal' | 'vertical';
+    zIndex?: ViewStyle['zIndex'];
   };
 
 export type AlertProps = AlertBaseProps;

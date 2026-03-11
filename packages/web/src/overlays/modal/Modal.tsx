@@ -11,8 +11,7 @@ import {
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
-import type { Position } from '@coinbase/cds-common/types/Position';
+import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
@@ -22,6 +21,7 @@ import { Box } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 import { media } from '../../styles/media';
+import type { PositionStyles } from '../../styles/styleProps';
 import { FocusTrap } from '../FocusTrap';
 
 import type { ModalWrapperProps } from './ModalWrapper';
@@ -94,7 +94,7 @@ export type ModalBaseProps = SharedProps &
      * Set the position for the modal dialogue
      * @danger This is a migration escape hatch. It is not intended to be used normally.
      */
-    dangerouslySetPosition?: Position;
+    dangerouslySetPosition?: React.CSSProperties['position'];
     /**
      * Set disableFocusTrap to disable keyboard listeners responsible for focus trap behavior
      * This can be useful for scenarios like Yubikey 2fa

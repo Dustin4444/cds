@@ -136,7 +136,7 @@ const ContainedAssetCardScreen = () => {
         />
       </Example>
       <Example title="ContainedAssetCard with no max width">
-        <ContainedAssetCard {...exampleProps} maxWidth="none" />
+        <ContainedAssetCard {...exampleProps} maxWidth={null} />
       </Example>
     </ExampleScreen>
   );

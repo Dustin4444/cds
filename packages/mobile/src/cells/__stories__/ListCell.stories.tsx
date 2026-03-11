@@ -894,7 +894,7 @@ const CustomSpacing = () => (
 const CondensedListCell = () => {
   const theme = useTheme();
   return (
-    <VStack width="360px">
+    <VStack>
       <ListCell
         accessory="more"
         description="Description"
@@ -1130,7 +1130,7 @@ const UseCaseShowcase = () => {
   }, []);
 
   return (
-    <VStack width="360px">
+    <VStack>
       <ListCell
         accessibilityLabel={`BTC, value ${currency.format(btcPrice)}, amount ${btcAmt.toLocaleString()} BTC`}
         // If you need to pass non-string values to the detail or subdetail,
