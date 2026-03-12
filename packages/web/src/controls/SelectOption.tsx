@@ -109,6 +109,7 @@ export type SelectOptionBaseProps = Omit<CellBaseProps, 'children' | 'selected'>
 
 export type SelectOptionProps = SelectOptionBaseProps;
 
+/** @deprecated Please use the new Select alpha component instead. */
 export const SelectOption = memo(
   ({
     title,

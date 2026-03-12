@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import { selectCellMobileSpacingConfig } from '@coinbase/cds-common/tokens/select';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
@@ -25,6 +25,7 @@ export type SelectOptionBaseProps = Omit<CellBaseProps, 'children' | 'selected'>
 
 export type SelectOptionProps = SelectOptionBaseProps;
 
+/** @deprecated Please use the new Select alpha component instead. */
 export const SelectOption = memo(function SelectOption({
   title,
   description,

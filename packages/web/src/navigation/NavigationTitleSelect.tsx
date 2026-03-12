@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { selectCellSpacingConfig } from '@coinbase/cds-common/tokens/select';
 
-import { SelectOption } from '../controls/SelectOption';
+import { Cell } from '../cells/Cell';
 import { Dropdown } from '../dropdown/Dropdown';
 import type { DropdownRef } from '../dropdown/DropdownProps';
 import { useA11yControlledVisibility } from '../hooks/useA11yControlledVisibility';
@@ -45,10 +46,19 @@ export const NavigationTitleSelect = memo(
     }, []);
 
     const dropdownContent = useMemo(() => {
-      return options.map((option) => (
-        <SelectOption key={option.id} title={option.label} value={option.id} />
+      return options.map(({ id, label: title }) => (
+        <Cell
+          borderRadius={0}
+          onClick={() => onChange(id)}
+          selected={value === id}
+          {...selectCellSpacingConfig}
+        >
+          <Text font="headline" overflow="truncate">
+            {title}
+          </Text>
+        </Cell>
       ));
-    }, [options]);
+    }, [onChange, options, value]);
 
     const label = useMemo(() => {
       return options.find((option) => option.id === value)?.label;
