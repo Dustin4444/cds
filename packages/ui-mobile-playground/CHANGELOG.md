@@ -8,6 +8,30 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.12.0 (3/11/2026 PST)
+
+#### 🚀 Updates
+
+- Update mobile routes. [[#492](https://github.com/coinbase/cds/pull/492)]
+
+## 4.11.0 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- Add new route for Fallback component. [[#388](https://github.com/coinbase/cds/pull/388)]
+
+## 4.10.0 (3/9/2026 PST)
+
+#### 🚀 Updates
+
+- Update icons. [[#486](https://github.com/coinbase/cds/pull/486)]
+
+## 4.9.0 (2/20/2026 PST)
+
+#### 🚀 Updates
+
+- Add new mobile routes. [[#400](https://github.com/coinbase/cds/pull/400)]
+
 ## 4.8.0 (2/6/2026 PST)
 
 #### 🚀 Updates

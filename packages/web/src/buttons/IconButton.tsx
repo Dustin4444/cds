@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import type { IconButtonVariant, IconName } from '@coinbase/cds-common/types';
+import type { IconButtonVariant, IconName, IconSize } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -31,6 +31,11 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
   Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush'> & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
+    /**
+     * Size for the icon rendered inside the button.
+     * @default compact ? 's' : 'm'
+     */
+    iconSize?: IconSize;
     /** Whether the icon is active */
     active?: boolean;
     /**
@@ -90,6 +95,7 @@ export const IconButton: IconButtonComponent = memo(
         width,
         className,
         name,
+        iconSize = compact ? 's' : 'm',
         active,
         flush,
         loading,
@@ -100,7 +106,6 @@ export const IconButton: IconButtonComponent = memo(
 
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
 
-      const iconSize = compact ? 's' : 'm';
       const iconSizeValue = theme.iconSize[iconSize];
 
       const spinnerSizeStyles = useMemo(

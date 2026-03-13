@@ -2,7 +2,8 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { getBarPath } from '../utils';
+import { useCartesianChartContext } from '../ChartProvider';
+import { type BarTransition, getBarPath } from '../utils';
 
 import { DefaultBar } from './';
 
@@ -37,10 +38,11 @@ export type BarBaseProps = {
    */
   roundBottom?: boolean;
   /**
-   * Y coordinate of the baseline/origin for animations.
-   * Used to calculate initial animation state.
+   * Coordinate of the baseline/origin for animations.
+   * For vertical layout (bars grow up), this is the Y coordinate.
+   * For horizontal layout (bars grow sideways), this is the X coordinate.
    */
-  originY?: number;
+  origin?: number;
   /**
    * The x-axis data value for this bar.
    */
@@ -77,7 +79,37 @@ export type BarBaseProps = {
 
 export type BarProps = BarBaseProps & {
   /**
-   * Transition configuration for animation.
+   * Transition configuration for enter and update animations.
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
+   * }}
+   *
+   * @example
+   * // Custom staggered enter and spring update
+   * transitions={{ enter: { type: 'tween', duration: 0.5, staggerDelay: 0.3 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: BarTransition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: BarTransition | null;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
@@ -109,7 +141,7 @@ export const Bar = memo<BarProps>(
     y,
     width,
     height,
-    originY,
+    origin: originProp,
     dataX,
     dataY,
     seriesId,
@@ -121,13 +153,18 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transitions,
     transition,
   }) => {
-    const barPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
-    }, [x, y, width, height, borderRadius, roundTop, roundBottom]);
+    const { layout } = useCartesianChartContext();
 
-    const effectiveOriginY = originY ?? y + height;
+    const barPath = useMemo(() => {
+      return getBarPath(x, y, width, height, borderRadius, !!roundTop, !!roundBottom, layout);
+    }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
+
+    const origin = useMemo(() => {
+      return originProp ?? (layout === 'horizontal' ? x : y + height);
+    }, [originProp, layout, x, y, height]);
 
     if (!barPath) {
       return null;
@@ -142,13 +179,14 @@ export const Bar = memo<BarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}
-        originY={effectiveOriginY}
+        origin={origin}
         roundBottom={roundBottom}
         roundTop={roundTop}
         seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         width={width}
         x={x}
         y={y}

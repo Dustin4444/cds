@@ -8,6 +8,28 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.13.0 (3/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-03-11. [[#496](https://github.com/coinbase/cds/pull/496)]
+
+##### ⭐️ Updated (1)
+
+- ideal
+
+## 5.12.0 (3/2/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-03-03.
+
+##### ⭐️ Added (3)
+
+- usdc
+- filterLineStack
+- pieChartWithArrow
+
 ## 5.11.0 (2/5/2026 PST)
 
 #### 🚀 Updates

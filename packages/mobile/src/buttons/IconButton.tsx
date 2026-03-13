@@ -2,7 +2,12 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { ActivityIndicator, type PressableStateCallbackType, type ViewStyle } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type { IconButtonVariant, IconName, SharedProps } from '@coinbase/cds-common/types';
+import type {
+  IconButtonVariant,
+  IconName,
+  IconSize,
+  SharedProps,
+} from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -17,6 +22,11 @@ export type IconButtonBaseProps = SharedProps &
   Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush' | 'loading'> & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
+    /**
+     * Size for the icon rendered inside the button.
+     * @default compact ? 's' : 'm'
+     */
+    iconSize?: IconSize;
     /** Whether the icon is active */
     active?: boolean;
     /**
@@ -40,6 +50,7 @@ export const IconButton = memo(function IconButton(_props: IconButtonProps) {
     background,
     color,
     borderColor,
+    iconSize = compact ? 's' : 'm',
     borderWidth = 100,
     borderRadius = 1000,
     feedback = compact ? 'light' : 'normal',
@@ -50,7 +61,6 @@ export const IconButton = memo(function IconButton(_props: IconButtonProps) {
     accessibilityLabel,
     ...props
   } = mergedProps;
-  const iconSize = compact ? 's' : 'm';
 
   const variantMap = transparent ? transparentVariants : variants;
   const variantStyle = variantMap[variant];

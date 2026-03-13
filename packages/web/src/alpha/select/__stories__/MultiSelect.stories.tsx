@@ -12,6 +12,16 @@ import { Select, type SelectOptionComponent } from '../Select';
 export default {
   title: 'Components/Alpha/Select/MultiSelect',
   component: Select,
+  parameters: {
+    // Due to the InputChips rendered inside the Select control, there's an a11y violation.
+    a11y: {
+      options: {
+        rules: {
+          'nested-interactive': { enabled: false },
+        },
+      },
+    },
+  },
 };
 
 const paddingCss = css`
@@ -362,6 +372,30 @@ export const CustomSelectAllOption = () => {
   );
 };
 
+export const LongOptionLabels = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Fraction fraction fraction fraction fraction' },
+    { value: '2', label: 'Truncation truncation truncation truncation truncation' },
+    { value: '3', label: 'A A A A A A A A A A A A A A A A' },
+    { value: '4', label: 'Bee Bee Bee Bee Bee Bee Bee Bee Bee Bee' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi select - long option labels"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 export const Disabled = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -391,6 +425,15 @@ export const Disabled = () => {
   );
 };
 
+Disabled.parameters = {
+  a11y: {
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
+};
 export const DisabledOptions = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

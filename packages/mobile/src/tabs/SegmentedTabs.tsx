@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import type { View } from 'react-native';
+import type { StyleProp, View, ViewStyle } from 'react-native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 
@@ -10,7 +10,17 @@ import { Tabs, type TabsProps } from './Tabs';
 export type SegmentedTabsProps<TabId extends string = string> = Partial<
   Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
 > &
-  Omit<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>;
+  Omit<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles'> & {
+    /** Custom styles for individual elements of the SegmentedTabs component */
+    styles?: {
+      /** Root container element */
+      root?: StyleProp<ViewStyle>;
+      /** Tab element */
+      tab?: StyleProp<ViewStyle>;
+      /** Active indicator element */
+      activeIndicator?: StyleProp<ViewStyle>;
+    };
+  };
 
 type SegmentedTabsFC = <TabId extends string = string>(
   props: SegmentedTabsProps<TabId> & { ref?: React.ForwardedRef<View> },
@@ -25,7 +35,7 @@ const SegmentedTabsComponent = memo(
         TabsActiveIndicatorComponent = SegmentedTabsActiveIndicator,
         activeBackground = 'bgInverse',
         background = 'bgSecondary',
-        borderRadius = 1000,
+        borderRadius = 700,
         ...props
       } = mergedProps;
 

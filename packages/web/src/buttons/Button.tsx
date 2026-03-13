@@ -192,10 +192,14 @@ export const Button: ButtonComponent = memo(
         flush,
         noScaleOnPress,
         numberOfLines,
+        font = 'headline',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
         background,
         color,
         className,
-        font = 'headline',
         height,
         borderColor,
         borderWidth = 0,
@@ -281,7 +285,16 @@ export const Button: ButtonComponent = memo(
                 <Spinner color="currentColor" size={spinnerHeight} style={spinnerStyle} />
               </span>
             )}
-            <Text color="currentColor" display="inline" numberOfLines={numberOfLines}>
+            <Text
+              color="currentColor"
+              display="inline"
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
+              numberOfLines={numberOfLines}
+            >
               <span className={cx(loading && hiddenCss)}>{children}</span>
             </Text>
           </span>

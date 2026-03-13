@@ -65,6 +65,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     borderRadius = 200,
     background = 'bg',
     borderColor = 'bgLine',
+    controlColor,
     accessibilityLabel,
     accessibilityHint,
     testID,
@@ -220,6 +221,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
           <Checkbox
             accessible={false}
             checked={!!checked}
+            controlColor={controlColor}
             disabled={disabled}
             indeterminate={indeterminate}
             pointerEvents="none"

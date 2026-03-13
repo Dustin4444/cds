@@ -1110,6 +1110,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/done-4.js').content,
     dark: () => require('../svgJs/dark/done-4.js').content,
   },
+  download: {
+    light: () => require('../svgJs/light/download-0.js').content,
+    dark: () => require('../svgJs/dark/download-0.js').content,
+  },
   driversLicense: {
     light: () => require('../svgJs/light/driversLicense-3.js').content,
     dark: () => require('../svgJs/dark/driversLicense-3.js').content,
@@ -1573,6 +1577,14 @@ const svgJsMap = {
   pieChartData: {
     light: () => require('../svgJs/light/pieChartData-0.js').content,
     dark: () => require('../svgJs/dark/pieChartData-0.js').content,
+  },
+  pieChartWithArrow: {
+    light: () => require('../svgJs/light/pieChartWithArrow-0.js').content,
+    dark: () => require('../svgJs/dark/pieChartWithArrow-0.js').content,
+  },
+  pieChartWithArrowBlue: {
+    light: () => require('../svgJs/light/pieChartWithArrowBlue-0.js').content,
+    dark: () => require('../svgJs/dark/pieChartWithArrowBlue-0.js').content,
   },
   pizza: {
     light: () => require('../svgJs/light/pizza-3.js').content,

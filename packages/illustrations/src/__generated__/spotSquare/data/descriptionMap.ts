@@ -1066,6 +1066,8 @@ const descriptionMap: Record<string, string[]> = {
     'baseCreatorCoin',
     'coinbaseUnlockOffers',
     'baseQuickBuy',
+    'pieChartWithArrow',
+    'pieChartWithArrowBlue',
   ],
   xtz: ['coinbaseOneStaking'],
   yield: [

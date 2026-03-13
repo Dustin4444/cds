@@ -397,6 +397,82 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
   );
 };
 
+// Custom Background Color (use styles.root for non-interactive, blendStyles.background for interactive)
+export const CustomBackgroundColor = (): JSX.Element => {
+  return (
+    <VStack gap={2}>
+      <MessagingCard
+        {...exampleProps}
+        renderAsPressable
+        aria-label="View card details"
+        blendStyles={{ background: 'rgb(var(--blue80))' }}
+        description="Pressable card with custom background via blendStyles.background"
+        media={
+          <RemoteImage
+            alt="Coinbase One promotional image"
+            height={150}
+            resizeMode="cover"
+            shape="rectangle"
+            source={coinbaseOneLogo}
+          />
+        }
+        mediaPlacement="end"
+        onClick={() => alert('Card clicked!')}
+        title="Pressable with Custom Background"
+        type="upsell"
+        width={320}
+      />
+      <MessagingCard
+        {...exampleProps}
+        renderAsPressable
+        aria-label="View nudge details"
+        as="a"
+        blendStyles={{ background: 'rgb(var(--yellow20))' }}
+        description="Link card with custom background via blendStyles.background"
+        href="https://www.coinbase.com"
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+        target="_blank"
+        title="Link with Custom Background"
+        type="nudge"
+        width={320}
+      />
+      <MessagingCard
+        {...exampleProps}
+        as="article"
+        description="Non-pressable card with custom background via styles.root"
+        media={
+          <RemoteImage
+            alt="Coinbase One promotional image"
+            height={150}
+            resizeMode="cover"
+            shape="rectangle"
+            source={coinbaseOneLogo}
+          />
+        }
+        mediaPlacement="end"
+        renderAsPressable={false}
+        styles={{ root: { backgroundColor: 'rgb(var(--blue80))' } }}
+        title="Non-pressable with Custom Background"
+        type="upsell"
+        width={320}
+      />
+      <MessagingCard
+        {...exampleProps}
+        as="article"
+        description="Non-pressable nudge with custom background via styles.root"
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+        renderAsPressable={false}
+        styles={{ root: { backgroundColor: 'rgb(var(--yellow20))' } }}
+        title="Non-pressable Nudge with Custom Background"
+        type="nudge"
+        width={320}
+      />
+    </VStack>
+  );
+};
+
 // Text Content
 export const TextContent = (): JSX.Element => {
   return (
@@ -539,62 +615,71 @@ export const MultipleCards = (): JSX.Element => {
   return (
     <Carousel styles={{ carousel: { gap: 16 } }}>
       <CarouselItem id="card1">
-        <MessagingCard
-          as="article"
-          {...exampleProps}
-          description="Non-interactive card"
-          media={
-            <RemoteImage
-              alt="Coinbase One promotional image"
-              height={108}
-              resizeMode="cover"
-              shape="rectangle"
-              source={coinbaseOneLogo}
-            />
-          }
-          mediaPlacement="end"
-          title="Card 1"
-          type="upsell"
-        />
+        {({ isVisible }) => (
+          <MessagingCard
+            as="article"
+            {...exampleProps}
+            description="Non-interactive card"
+            media={
+              <RemoteImage
+                alt="Coinbase One promotional image"
+                height={108}
+                resizeMode="cover"
+                shape="rectangle"
+                source={coinbaseOneLogo}
+              />
+            }
+            mediaPlacement="end"
+            tabIndex={isVisible ? 0 : -1}
+            title="Card 1"
+            type="upsell"
+          />
+        )}
       </CarouselItem>
       <CarouselItem id="card2">
-        <MessagingCard
-          ref={ref1}
-          renderAsPressable
-          aria-label="View Card 2 details"
-          as="a"
-          description="Clickable card with href"
-          href="https://www.google.com"
-          media={<Pictogram dimension="64x64" name="addToWatchlist" />}
-          mediaPlacement="end"
-          tag="Link"
-          target="_blank"
-          title="Card 2"
-          type="nudge"
-        />
+        {({ isVisible }) => (
+          <MessagingCard
+            ref={ref1}
+            renderAsPressable
+            aria-label="View Card 2 details"
+            as="a"
+            description="Clickable card with href"
+            href="https://www.google.com"
+            media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+            mediaPlacement="end"
+            tabIndex={isVisible ? 0 : -1}
+            tag="Link"
+            target="_blank"
+            title={isVisible ? 'Card 2' : undefined}
+            type="nudge"
+          />
+        )}
       </CarouselItem>
       <CarouselItem id="card3">
-        <MessagingCard
-          ref={ref2}
-          renderAsPressable
-          aria-label="View Card 3 details"
-          as="button"
-          description="Card with onClick handler"
-          media={
-            <RemoteImage
-              alt="Coinbase One promotional image"
-              height={108}
-              resizeMode="cover"
-              shape="rectangle"
-              source={coinbaseOneLogo}
-            />
-          }
-          mediaPlacement="end"
-          onClick={() => console.log('clicked')}
-          tag="Action"
-          title="Card 3"
-          type="upsell"
-        />
+        {({ isVisible }) => (
+          <MessagingCard
+            ref={ref2}
+            renderAsPressable
+            aria-label="View Card 3 details"
+            as="button"
+            description="Card with onClick handler"
+            media={
+              <RemoteImage
+                alt="Coinbase One promotional image"
+                height={108}
+                resizeMode="cover"
+                shape="rectangle"
+                source={coinbaseOneLogo}
+              />
+            }
+            mediaPlacement="end"
+            onClick={() => console.log('clicked')}
+            tabIndex={isVisible ? 0 : -1}
+            tag="Action"
+            title={isVisible ? 'Card 3' : undefined}
+            type="upsell"
+          />
+        )}
       </CarouselItem>
     </Carousel>
   );

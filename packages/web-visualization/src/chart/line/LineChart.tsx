@@ -7,7 +7,7 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
+import { type CartesianAxisConfigProps, type Series } from '../utils';
 
 import { Line, type LineProps } from './Line';
 
@@ -28,6 +28,7 @@ export type LineSeries = Series &
       | 'opacity'
       | 'points'
       | 'connectNulls'
+      | 'transitions'
       | 'transition'
       | 'onPointClick'
     >
@@ -46,6 +47,7 @@ export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
     | 'strokeWidth'
     | 'strokeOpacity'
     | 'connectNulls'
+    | 'transitions'
     | 'transition'
     | 'onPointClick'
     | 'opacity'
@@ -68,13 +70,13 @@ export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type LineChartProps = LineChartBaseProps &
@@ -96,6 +98,7 @@ export const LineChart = memo(
         strokeWidth,
         strokeOpacity,
         connectNulls,
+        transitions,
         transition,
         opacity,
         showXAxis,
@@ -108,8 +111,6 @@ export const LineChart = memo(
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
-
       // Convert LineSeries to Series for Chart context
       const chartSeries = useMemo(() => {
         return series?.map(
@@ -118,6 +119,7 @@ export const LineChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            xAxisId: s.xAxisId,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
             gradient: s.gradient,
@@ -134,6 +136,7 @@ export const LineChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
 
@@ -148,7 +151,7 @@ export const LineChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType,
         data: xData,
         categoryPadding: xCategoryPadding,
@@ -157,7 +160,7 @@ export const LineChart = memo(
         range: xRange,
       };
 
-      const yAxisConfig: Partial<AxisConfigProps> = {
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,
@@ -170,16 +173,16 @@ export const LineChart = memo(
         <CartesianChart
           {...chartProps}
           ref={ref}
-          inset={calculatedInset}
+          inset={inset}
           series={chartSeries}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
           {/* Render axes first for grid lines to appear behind everything else */}
-          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           {series?.map(
-            ({ id, data, label, color, yAxisId, legendShape, ...linePropsFromSeries }) => (
+            ({ id, data, label, color, xAxisId, yAxisId, legendShape, ...linePropsFromSeries }) => (
               <Line
                 key={id}
                 AreaComponent={AreaComponent}
@@ -194,7 +197,8 @@ export const LineChart = memo(
                 showArea={showArea}
                 strokeOpacity={strokeOpacity}
                 strokeWidth={strokeWidth}
-                transition={linePropsFromSeries.transition ?? transition}
+                transition={transition}
+                transitions={transitions}
                 type={type}
                 {...linePropsFromSeries}
               />

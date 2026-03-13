@@ -8,6 +8,131 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Deprecate SegmentedControl. [[#493](https://github.com/coinbase/cds/pull/493)]
+
+## 8.52.2 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Configure control borderWidth and controlColor. [[#457](https://github.com/coinbase/cds/pull/457)]
+
+## 8.52.1 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Add keyboard scroll support to FocusTrap, Tray, and Modal. [[#481](https://github.com/coinbase/cds/pull/481)]
+
+## 8.52.0 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- A11y improvements to Fallback, Spinner, and LottieStatusAnimation. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Simplify the ProgressBar component implementation. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Use shapeBorderRadius tokens in RemoteImage/RemoteImageGroup. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Removed useFallbackShape implementation from web and reuse the same hook defined in common. [[#388](https://github.com/coinbase/cds/pull/388)]
+
+## 8.51.0 (3/9/2026 PST)
+
+#### 🚀 Updates
+
+- Added hasInteractiveContent prop to Tooltip to correctly handle keyboard navigation when content includes interactive elements. [[#469](https://github.com/coinbase/cds/pull/469)] [DX-5097]
+
+#### 🐞 Fixes
+
+- Fixed issue when tooltip does not announce its content when content is a React Node instead of a string. [[#469](https://github.com/coinbase/cds/pull/469)]
+
+## 8.50.0 (3/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: iconSize customization for IconButton. [[#474](https://github.com/coinbase/cds/pull/474)]
+
+## 8.49.2 (3/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Feat: improve deprecation notice in ListCell. [[#411](https://github.com/coinbase/cds/pull/411)]
+
+## 8.49.1 (3/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: spread tabs props at end for Tabs. [[#472](https://github.com/coinbase/cds/pull/472)]
+
+## 8.49.0 (2/26/2026 PST)
+
+#### 🚀 Updates
+
+- Add styles and classnames props to Tab components. [[#438](https://github.com/coinbase/cds/pull/438)]
+
+## 8.48.3 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: allow arrow up/down keys within focus trapped text area. [[#417](https://github.com/coinbase/cds/pull/417)]
+
+## 8.48.2 ((2/25/2026, 04:21 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.1 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Truncate text mid-word in multi-select chips. [[#412](https://github.com/coinbase/cds/pull/412)]
+
+## 8.48.0 (2/24/2026 PST)
+
+#### 🚀 Updates
+
+- Add start/end icon/node support to Tag. [[#421](https://github.com/coinbase/cds/pull/421)]
+
+## 8.47.4 ((2/23/2026, 03:04 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.3 (2/20/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove behavior of scrolling inside TextInput updating numeric values. [[#413](https://github.com/coinbase/cds/pull/413)]
+
+## 8.47.2 ((2/19/2026, 03:18 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.1 ((2/19/2026, 01:18 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.0 (2/19/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: enable Button text customization via font props. [[#408](https://github.com/coinbase/cds/pull/408)]
+
+## 8.46.1 (2/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: (DX-5052) use previous active step value for calculating remaining steps to animate to for a completed stepper. [[#397](https://github.com/coinbase/cds/pull/397)] [DX-5052]
+
+## 8.46.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add open/close visibility delays to Tooltip. [[#234](https://github.com/coinbase/cds/pull/234)]
+
+## 8.45.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add reduce motion support for Tray. [[#386](https://github.com/coinbase/cds/pull/386)]
+
 ## 8.44.2 (2/10/2026 PST)
 
 #### 🐞 Fixes
@@ -353,7 +478,7 @@ This is an artificial version bump with no new change.
 
 #### 🐞 Fixes
 
-- Improve keyboard navigation for Tabs components and upadate ARIA roles. [[#96](https://github.com/coinbase/cds/pull/96)]
+- Improve keyboard navigation for Tabs components and update ARIA roles. [[#96](https://github.com/coinbase/cds/pull/96)]
 
 ## 8.25.0 (12/1/2025 PST)
 
@@ -435,7 +560,7 @@ This is an artificial version bump with no new change.
 
 - Fixed select alpha dropdown zIndex. [[#161](https://github.com/coinbase/cds/pull/161)]
 - Corrected ListCell spacingVariant jsdoc. [[#161](https://github.com/coinbase/cds/pull/161)]
-- Updated docs of FullscreenMoal and FullscreenModalLayout to show a more precise 3-column layout example. [[#161](https://github.com/coinbase/cds/pull/161)]
+- Updated docs of FullscreenModal and FullscreenModalLayout to show a more precise 3-column layout example. [[#161](https://github.com/coinbase/cds/pull/161)]
 
 ## 8.21.0 (11/12/2025 PST)
 

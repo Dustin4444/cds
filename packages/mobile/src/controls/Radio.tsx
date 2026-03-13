@@ -1,6 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import { Animated, type ColorValue, StyleSheet, type View } from 'react-native';
 import { Circle, Svg } from 'react-native-svg';
+import type { ThemeVars } from '@coinbase/cds-common';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -16,7 +17,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export type RadioBaseProps<RadioValue extends string> = ControlBaseProps<RadioValue>;
+export type RadioBaseProps<RadioValue extends string> = Omit<
+  ControlBaseProps<RadioValue>,
+  'controlColor'
+> & {
+  /**
+   * Sets the checked/active color of the radio.
+   * @default bgPrimary
+   */
+  controlColor?: ThemeVars.Color;
+  /**
+   * Sets the border width of the radio.
+   * @default 100
+   */
+  borderWidth?: ThemeVars.BorderWidth;
+};
 
 export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
@@ -34,6 +49,7 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
   checked,
   background = 'bg',
   borderRadius = 1000,
+  borderWidth = 100,
   elevation,
   animatedScaleValue,
   animatedOpacityValue,
@@ -49,7 +65,7 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
       background={background}
       borderColor={borderColor}
       borderRadius={borderRadius}
-      borderWidth={100}
+      borderWidth={borderWidth}
       disabled={disabled}
       elevation={elevation}
       pressed={pressed}

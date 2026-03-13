@@ -65,6 +65,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string
     borderRadius = 200,
     background = 'bg',
     borderColor = 'bgLine',
+    controlColor,
     accessibilityLabel,
     accessibilityHint,
     testID,
@@ -219,6 +220,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string
           <Radio
             accessible={false}
             checked={!!checked}
+            controlColor={controlColor}
             disabled={disabled}
             pointerEvents="none"
             readOnly={readOnly}

@@ -8,7 +8,46 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 3.4.0-beta.24 (3/12/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 3.4.0-beta.23 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- Add layout prop on CartesianChart. [[#483](https://github.com/coinbase/cds/pull/483)]
+
+## 3.4.0-beta.22 (3/4/2026 PST)
+
+#### 🚀 Updates
+
+- Improve PeriodSelector types. [[#464](https://github.com/coinbase/cds/pull/464)]
+- Skip null path transitions. [[#464](https://github.com/coinbase/cds/pull/464)]
+
+## 3.4.0-beta.21 (3/2/2026 PST)
+
+#### 🚀 Updates
+
+- Fix styles props on Scrubber. [[#463](https://github.com/coinbase/cds/pull/463)]
+- Fix text elevation background. [[#463](https://github.com/coinbase/cds/pull/463)]
+
+## 3.4.0-beta.20 (2/27/2026 PST)
+
+#### 🚀 Updates
+
+- Add classnames and styles props to PeriodSelector. [[#438](https://github.com/coinbase/cds/pull/438/)]
+
+#### 📘 Misc
+
+- Clarify framer-motion is a peerDependency. [[#437](https://github.com/coinbase/cds/pull/437)]
+- Update oudated doc links. [[#440](https://github.com/coinbase/cds/pull/440)]
+
+## 3.4.0-beta.19 (2/20/2026 PST)
+
+#### 🚀 Updates
+
+- Support custom enter transitions [[#400](https://github.com/coinbase/cds/pull/400/)]
 
 #### 📘 Misc
 

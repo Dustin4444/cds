@@ -8,6 +8,36 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.33.0 (3/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-03-11. [[#495](https://github.com/coinbase/cds/pull/495)]
+
+##### ⭐️ Added (1)
+
+###### Pictogram (1)
+
+- download
+
+## 4.32.0 (3/3/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-03-03. [[#466](https://github.com/coinbase/cds/pull/466)]
+
+##### ⭐️ Added (4)
+
+###### Pictogram (2)
+
+- pieChartWithArrow
+- pieChartWithArrowBlue
+
+###### SpotSquare (2)
+
+- pieChartWithArrow
+- pieChartWithArrowBlue
+
 ## 4.31.0 (2/3/2026 PST)
 
 #### 🚀 Updates
