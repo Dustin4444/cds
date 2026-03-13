@@ -1,0 +1,477 @@
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+
+import { useCartesianChartContext } from './ChartProvider';
+import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from './utils';
+import type { HighlightedItem, HighlightScope } from './utils/highlight';
+
+/**
+ * Context value for chart highlight state.
+ */
+export type HighlightContextValue = {
+  /**
+   * Whether highlighting is enabled.
+   */
+  enabled: boolean;
+  /**
+   * The highlight scope configuration.
+   */
+  scope: HighlightScope;
+  /**
+   * The currently highlighted items.
+   */
+  highlight: HighlightedItem[];
+  /**
+   * Callback to replace the entire highlight state.
+   * Used by keyboard navigation and external consumers.
+   */
+  setHighlight: (items: HighlightedItem[]) => void;
+  /**
+   * Merge a partial update into a specific pointer's highlight entry.
+   * Only updates the fields provided, leaving other fields untouched.
+   * Used by bar elements to set/clear seriesId on pointer enter/leave.
+   */
+  updatePointerHighlight: (pointerId: number, partial: Partial<HighlightedItem>) => void;
+  /**
+   * Remove a specific pointer's entry from highlight state.
+   * Used when a pointer leaves the chart or is released.
+   */
+  removePointer: (pointerId: number) => void;
+};
+
+const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
+
+/**
+ * Hook to access the highlight context.
+ * @throws Error if used outside of a HighlightProvider
+ */
+export const useHighlightContext = (): HighlightContextValue => {
+  const context = useContext(HighlightContext);
+  if (!context) {
+    throw new Error('useHighlightContext must be used within a HighlightProvider');
+  }
+  return context;
+};
+
+/**
+ * Props for configuring chart highlight behavior.
+ * Used by CartesianChart and other chart components.
+ */
+export type HighlightProps = {
+  /**
+   * Whether highlighting is enabled.
+   */
+  enableHighlighting?: boolean;
+  /**
+   * Controls what aspects of the data can be highlighted.
+   */
+  highlightScope?: HighlightScope;
+  /**
+   * Pass a value to override the internal highlight state.
+   */
+  highlight?: HighlightedItem[];
+  /**
+   * Callback fired when the highlight changes during interaction.
+   */
+  onHighlightChange?: (items: HighlightedItem[]) => void;
+};
+
+export type HighlightProviderProps = HighlightProps & {
+  children: React.ReactNode;
+  /**
+   * A reference to the root SVG element, where interaction event handlers will be attached.
+   */
+  svgRef: React.RefObject<SVGSVGElement> | null;
+  /**
+   * Accessibility label for the chart.
+   * - When a string: Used as a static label for the chart element
+   * - When a function: Called with the highlighted item to generate dynamic labels during interaction
+   */
+  accessibilityLabel?: string | ((item: HighlightedItem) => string);
+};
+
+const DEFAULT_ITEM: HighlightedItem = { dataIndex: null, seriesId: null };
+
+/**
+ * HighlightProvider manages chart highlight state and input handling.
+ * Uses Pointer Events for unified mouse/touch interaction with per-pointer state tracking.
+ */
+export const HighlightProvider: React.FC<HighlightProviderProps> = ({
+  children,
+  svgRef,
+  enableHighlighting: enableHighlightingProp,
+  highlightScope: scopeProp,
+  highlight: controlledHighlight,
+  onHighlightChange,
+  accessibilityLabel,
+}) => {
+  const chartContext = useCartesianChartContext();
+
+  if (!chartContext) {
+    throw new Error('HighlightProvider must be used within a ChartContext');
+  }
+
+  const { getXScale, getXAxis, series } = chartContext;
+
+  const enabled = enableHighlightingProp ?? false;
+
+  const scope: HighlightScope = useMemo(
+    () => ({
+      dataIndex: scopeProp?.dataIndex ?? false,
+      series: scopeProp?.series ?? false,
+    }),
+    [scopeProp],
+  );
+
+  const isControlled = controlledHighlight !== undefined;
+
+  // Per-pointer state keyed by pointerId.
+  // Each pointer event (mouse or touch) independently tracks its own HighlightedItem entry.
+  // The functional updater bails out (returns prev) when nothing changed, so React
+  // skips re-renders for redundant pointermove events within the same data index.
+  const [pointerMap, setPointerMap] = useState<Record<number, HighlightedItem>>({});
+
+  // Derived array from per-pointer map
+  const internalHighlight = useMemo(() => Object.values(pointerMap), [pointerMap]);
+
+  const highlight: HighlightedItem[] = useMemo(() => {
+    if (isControlled) {
+      return controlledHighlight;
+    }
+    return internalHighlight;
+  }, [isControlled, controlledHighlight, internalHighlight]);
+
+  // Fire onHighlightChange when internal highlight state changes.
+  // Uses ref comparison to skip the initial render and avoid firing when
+  // onHighlightChange itself changes.
+  const prevInternalHighlightRef = useRef(internalHighlight);
+  useEffect(() => {
+    if (prevInternalHighlightRef.current === internalHighlight) return;
+    prevInternalHighlightRef.current = internalHighlight;
+    onHighlightChange?.(internalHighlight);
+  }, [internalHighlight, onHighlightChange]);
+
+  // Full replacement of highlight state.
+  // Used by keyboard navigation, ScrubberContext bridge, and external consumers.
+  const setHighlight = useCallback((items: HighlightedItem[]) => {
+    const newMap: Record<number, HighlightedItem> = {};
+    items.forEach((item, i) => {
+      newMap[i] = item;
+    });
+    setPointerMap(newMap);
+  }, []);
+
+  // Partial merge into a specific pointer's entry.
+  // Only re-renders when the values actually change for that pointer.
+  const updatePointerHighlight = useCallback(
+    (pointerId: number, partial: Partial<HighlightedItem>) => {
+      setPointerMap((prev) => {
+        const current = prev[pointerId] ?? DEFAULT_ITEM;
+        const updated = { ...current, ...partial };
+        if (current.dataIndex === updated.dataIndex && current.seriesId === updated.seriesId) {
+          return prev;
+        }
+        return { ...prev, [pointerId]: updated };
+      });
+    },
+    [],
+  );
+
+  // Remove a pointer entirely from highlight state.
+  const removePointer = useCallback((pointerId: number) => {
+    setPointerMap((prev) => {
+      if (!(pointerId in prev)) return prev;
+      const { [pointerId]: _, ...rest } = prev;
+      return rest;
+    });
+  }, []);
+
+  // Convert X coordinate to data index
+  const getDataIndexFromX = useCallback(
+    (mouseX: number): number => {
+      const xScale = getXScale();
+      const xAxis = getXAxis();
+
+      if (!xScale || !xAxis) return 0;
+
+      if (isCategoricalScale(xScale)) {
+        const categories = xScale.domain?.() ?? xAxis.data ?? [];
+        const bandwidth = xScale.bandwidth?.() ?? 0;
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+        for (let i = 0; i < categories.length; i++) {
+          const xPos = xScale(i);
+          if (xPos !== undefined) {
+            const distance = Math.abs(mouseX - (xPos + bandwidth / 2));
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestIndex = i;
+            }
+          }
+        }
+        return closestIndex;
+      } else {
+        const axisData = xAxis.data;
+        if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
+          const numericData = axisData as number[];
+          let closestIndex = 0;
+          let closestDistance = Infinity;
+
+          for (let i = 0; i < numericData.length; i++) {
+            const xValue = numericData[i];
+            const xPos = xScale(xValue);
+            if (xPos !== undefined) {
+              const distance = Math.abs(mouseX - xPos);
+              if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = i;
+              }
+            }
+          }
+          return closestIndex;
+        } else {
+          const xValue = xScale.invert(mouseX);
+          const dataIndex = Math.round(xValue);
+          const domain = xAxis.domain;
+          return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
+        }
+      }
+    },
+    [getXScale, getXAxis],
+  );
+
+  // --- Pointer Event handlers ---
+
+  const handlePointerDown = useCallback(
+    (event: PointerEvent) => {
+      if (!enabled) return;
+      // Release pointer capture so pointerenter/pointerleave fire on bar elements
+      // as the touch drags across them (same technique used by MUI X Charts).
+      if (event.target instanceof Element) {
+        try {
+          event.target.releasePointerCapture(event.pointerId);
+        } catch {
+          // releasePointerCapture throws if the element doesn't have capture — safe to ignore
+        }
+      }
+    },
+    [enabled],
+  );
+
+  const handlePointerMove = useCallback(
+    (event: PointerEvent) => {
+      if (!enabled || !series || series.length === 0) return;
+      const svg = event.currentTarget as SVGSVGElement;
+      const rect = svg.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const dataIndex = scope.dataIndex ? getDataIndexFromX(x) : null;
+      updatePointerHighlight(event.pointerId, { dataIndex });
+    },
+    [enabled, series, scope.dataIndex, getDataIndexFromX, updatePointerHighlight],
+  );
+
+  const handlePointerUp = useCallback(
+    (event: PointerEvent) => {
+      if (!enabled) return;
+      removePointer(event.pointerId);
+    },
+    [enabled, removePointer],
+  );
+
+  const handlePointerLeave = useCallback(
+    (event: PointerEvent) => {
+      if (!enabled) return;
+      removePointer(event.pointerId);
+    },
+    [enabled, removePointer],
+  );
+
+  // --- Keyboard navigation ---
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!enabled) return;
+
+      const xScale = getXScale();
+      const xAxis = getXAxis();
+
+      if (!xScale || !xAxis) return;
+
+      const isBand = isCategoricalScale(xScale);
+
+      let minIndex: number;
+      let maxIndex: number;
+
+      if (isBand) {
+        const categories = xScale.domain?.() ?? xAxis.data ?? [];
+        minIndex = 0;
+        maxIndex = Math.max(0, categories.length - 1);
+      } else {
+        const axisData = xAxis.data;
+        if (axisData && Array.isArray(axisData)) {
+          minIndex = 0;
+          maxIndex = Math.max(0, axisData.length - 1);
+        } else {
+          const domain = xAxis.domain;
+          minIndex = domain.min ?? 0;
+          maxIndex = domain.max ?? 0;
+        }
+      }
+
+      const currentItem = highlight[0] ?? DEFAULT_ITEM;
+      const currentIndex = currentItem.dataIndex ?? minIndex;
+      const dataRange = maxIndex - minIndex;
+
+      const multiSkip = event.shiftKey;
+      const stepSize = multiSkip ? Math.min(10, Math.max(1, Math.floor(dataRange * 0.1))) : 1;
+
+      let newIndex: number | undefined;
+
+      switch (event.key) {
+        case 'ArrowLeft':
+          event.preventDefault();
+          newIndex = Math.max(minIndex, currentIndex - stepSize);
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          newIndex = Math.min(maxIndex, currentIndex + stepSize);
+          break;
+        case 'Home':
+          event.preventDefault();
+          newIndex = minIndex;
+          break;
+        case 'End':
+          event.preventDefault();
+          newIndex = maxIndex;
+          break;
+        case 'Escape':
+          event.preventDefault();
+          setHighlight([]);
+          return;
+        default:
+          return;
+      }
+
+      if (newIndex !== currentItem.dataIndex) {
+        const newItem: HighlightedItem = {
+          dataIndex: newIndex,
+          seriesId: currentItem.seriesId,
+        };
+        setHighlight([newItem]);
+      }
+    },
+    [enabled, getXScale, getXAxis, highlight, setHighlight],
+  );
+
+  const handleBlur = useCallback(() => {
+    if (!enabled || highlight.length === 0) return;
+    setHighlight([]);
+  }, [enabled, highlight, setHighlight]);
+
+  // --- Attach event listeners ---
+
+  useEffect(() => {
+    if (!svgRef?.current || !enabled) return;
+
+    const svg = svgRef.current;
+
+    svg.addEventListener('pointerdown', handlePointerDown);
+    svg.addEventListener('pointermove', handlePointerMove);
+    svg.addEventListener('pointerup', handlePointerUp);
+    svg.addEventListener('pointercancel', handlePointerUp);
+    svg.addEventListener('pointerleave', handlePointerLeave);
+    svg.addEventListener('keydown', handleKeyDown);
+    svg.addEventListener('blur', handleBlur);
+
+    return () => {
+      svg.removeEventListener('pointerdown', handlePointerDown);
+      svg.removeEventListener('pointermove', handlePointerMove);
+      svg.removeEventListener('pointerup', handlePointerUp);
+      svg.removeEventListener('pointercancel', handlePointerUp);
+      svg.removeEventListener('pointerleave', handlePointerLeave);
+      svg.removeEventListener('keydown', handleKeyDown);
+      svg.removeEventListener('blur', handleBlur);
+    };
+  }, [
+    svgRef,
+    enabled,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+    handlePointerLeave,
+    handleKeyDown,
+    handleBlur,
+  ]);
+
+  // --- Accessibility ---
+
+  useEffect(() => {
+    if (!svgRef?.current || !accessibilityLabel) return;
+
+    const svg = svgRef.current;
+
+    if (typeof accessibilityLabel === 'string') {
+      svg.setAttribute('aria-label', accessibilityLabel);
+      return;
+    }
+
+    if (!enabled) return;
+
+    const currentItem = highlight[0];
+
+    if (currentItem && currentItem.dataIndex !== null) {
+      svg.setAttribute('aria-label', accessibilityLabel(currentItem));
+    } else {
+      svg.removeAttribute('aria-label');
+    }
+  }, [svgRef, enabled, highlight, accessibilityLabel]);
+
+  // --- Context values ---
+
+  const contextValue: HighlightContextValue = useMemo(
+    () => ({
+      enabled,
+      scope,
+      highlight,
+      setHighlight,
+      updatePointerHighlight,
+      removePointer,
+    }),
+    [enabled, scope, highlight, setHighlight, updatePointerHighlight, removePointer],
+  );
+
+  // ScrubberContext bridge for backwards compatibility
+  const scrubberPosition = useMemo(() => {
+    if (!enabled) return undefined;
+    return highlight[0]?.dataIndex ?? undefined;
+  }, [enabled, highlight]);
+
+  const scrubberContextValue: ScrubberContextValue = useMemo(
+    () => ({
+      enableScrubbing: enabled,
+      scrubberPosition,
+      onScrubberPositionChange: (index: number | undefined) => {
+        if (!enabled) return;
+        if (index === undefined) {
+          setHighlight([]);
+        } else {
+          setHighlight([{ dataIndex: index, seriesId: null }]);
+        }
+      },
+    }),
+    [enabled, scrubberPosition, setHighlight],
+  );
+
+  return (
+    <HighlightContext.Provider value={contextValue}>
+      <ScrubberContext.Provider value={scrubberContextValue}>{children}</ScrubberContext.Provider>
+    </HighlightContext.Provider>
+  );
+};

@@ -10,7 +10,11 @@ import {
   ScrubberAccessibilityView,
   type ScrubberAccessibilityViewProps,
 } from './scrubber/ScrubberAccessibilityView';
-import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
+import {
+  type HighlightProps,
+  type HighlightProviderProps,
+  HighlightProvider,
+} from './HighlightProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
@@ -23,6 +27,7 @@ import {
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
+  defaultCartesianChartHighlightScope,
   defaultHorizontalLayoutChartInset,
   defaultVerticalLayoutChartInset,
   getAxisConfig,
@@ -31,15 +36,15 @@ import {
   getCartesianAxisScale,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
+  type HighlightedItem,
+  type HighlightScope,
   type LegendPosition,
   type Series,
   useTotalAxisPadding,
 } from './utils';
 
-type ChartCanvasProps = Pick<
-  CartesianChartProps,
-  'accessible' | 'accessibilityLabel' | 'accessibilityLiveRegion'
-> & {
+type ChartCanvasProps = Pick<CartesianChartProps, 'accessible' | 'accessibilityLiveRegion'> & {
+  accessibilityLabel?: string;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 };
@@ -68,8 +73,8 @@ const ChartCanvas = memo(
   },
 );
 
-export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
-  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
+export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily' | 'accessibilityLabel'> &
+  Omit<HighlightProps, 'highlightScope'> & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
@@ -122,11 +127,42 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      * @default 'Legend'
      */
     legendAccessibilityLabel?: string;
+    /**
+     * Accessibility label for the chart.
+     * - When a string: Used as a static label for the chart element
+     * - When a function: Called with the highlighted item to generate dynamic labels during interaction
+     */
+    accessibilityLabel?: string | ((item: HighlightedItem) => string);
+    /**
+     * The accessibility mode for the chart.
+     * - 'chunked': Divides chart into N accessible regions (default for line charts)
+     * - 'item': Each data point is an accessible region (default for bar charts)
+     * @default 'chunked'
+     */
+    accessibilityMode?: 'chunked' | 'item';
+    /**
+     * Number of accessible chunks when accessibilityMode is 'chunked'.
+     * @default 10
+     */
+    accessibilityChunkCount?: number;
+    /**
+     * Controls what aspects of the data can be highlighted.
+     * @default { dataIndex: true, series: false }
+     */
+    highlightScope?: HighlightScope;
+    /**
+     * @deprecated Use `enableHighlighting` instead. Will be removed in next major version.
+     */
+    enableScrubbing?: boolean;
+    /**
+     * @deprecated Use `onHighlightChange` instead. Will be removed in next major version.
+     */
+    onScrubberPositionChange?: (index: number | undefined) => void;
   };
 
 export type CartesianChartProps = CartesianChartBaseProps &
-  Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
-  Omit<BoxProps, 'fontFamily'> & {
+  Pick<HighlightProviderProps, 'allowOverflowGestures'> &
+  Omit<BoxProps, 'fontFamily' | 'accessibilityLabel'> & {
     /**
      * Default font families to use within ChartText.
      * If not provided, will be the default for the system.
@@ -175,6 +211,14 @@ export const CartesianChart = memo(
         children,
         layout = 'vertical',
         animate = true,
+        // Highlight props
+        enableHighlighting,
+        highlightScope = defaultCartesianChartHighlightScope,
+        highlight,
+        onHighlightChange,
+        accessibilityMode,
+        accessibilityChunkCount,
+        // Legacy scrubber props
         enableScrubbing,
         getScrubberAccessibilityLabel,
         scrubberAccessibilityLabelStep,
@@ -519,6 +563,7 @@ export const CartesianChart = memo(
 
       const contextValue: CartesianChartContextValue = useMemo(
         () => ({
+          type: 'cartesian',
           layout,
           series: series ?? [],
           getSeries,
@@ -568,6 +613,25 @@ export const CartesianChart = memo(
         return [style, styles?.root];
       }, [style, styles?.root]);
 
+      // Resolve enableHighlighting (backwards compatibility with enableScrubbing).
+      const resolvedEnableHighlighting = useMemo(() => {
+        if (enableHighlighting !== undefined) return enableHighlighting;
+        if (enableScrubbing !== undefined) return enableScrubbing;
+        return false;
+      }, [enableHighlighting, enableScrubbing]);
+
+      // Wrap onHighlightChange to also call legacy onScrubberPositionChange.
+      const handleHighlightChange = useCallback(
+        (items: HighlightedItem[]) => {
+          onHighlightChange?.(items);
+
+          if (onScrubberPositionChange) {
+            onScrubberPositionChange(items[0]?.dataIndex ?? undefined);
+          }
+        },
+        [onHighlightChange, onScrubberPositionChange],
+      );
+
       const legendElement = useMemo(() => {
         if (!legend) return;
 
@@ -596,10 +660,15 @@ export const CartesianChart = memo(
 
       return (
         <CartesianChartProvider value={contextValue}>
-          <ScrubberProvider
+          <HighlightProvider
+            accessibilityChunkCount={accessibilityChunkCount}
+            accessibilityLabel={accessibilityLabel}
+            accessibilityMode={accessibilityMode}
             allowOverflowGestures={allowOverflowGestures}
-            enableScrubbing={enableScrubbing}
-            onScrubberPositionChange={onScrubberPositionChange}
+            enableHighlighting={resolvedEnableHighlighting}
+            highlight={highlight}
+            highlightScope={highlightScope}
+            onHighlightChange={handleHighlightChange}
           >
             {legend ? (
               <Box
@@ -611,7 +680,9 @@ export const CartesianChart = memo(
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
                   <ChartCanvas
-                    accessibilityLabel={accessibilityLabel}
+                    accessibilityLabel={
+                      typeof accessibilityLabel === 'string' ? accessibilityLabel : undefined
+                    }
                     accessibilityLiveRegion={accessibilityLiveRegion}
                     accessible={accessible}
                     style={styles?.chart}
@@ -628,7 +699,9 @@ export const CartesianChart = memo(
             ) : (
               <Box collapsable={collapsable} onLayout={onContainerLayout} {...rootBoxProps}>
                 <ChartCanvas
-                  accessibilityLabel={accessibilityLabel}
+                  accessibilityLabel={
+                    typeof accessibilityLabel === 'string' ? accessibilityLabel : undefined
+                  }
                   accessibilityLiveRegion={accessibilityLiveRegion}
                   accessible={accessible}
                   style={styles?.chart}
@@ -641,7 +714,7 @@ export const CartesianChart = memo(
                 />
               </Box>
             )}
-          </ScrubberProvider>
+          </HighlightProvider>
         </CartesianChartProvider>
       );
     },

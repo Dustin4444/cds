@@ -5,8 +5,8 @@ import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
-import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { CartesianChartProvider } from './ChartProvider';
+import { type HighlightProps, HighlightProvider } from './HighlightProvider';
 import { Legend } from './legend';
 import {
   type AxisConfig,
@@ -16,6 +16,7 @@ import {
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
+  defaultCartesianChartHighlightScope,
   defaultHorizontalLayoutChartInset,
   defaultVerticalLayoutChartInset,
   getAxisConfig,
@@ -24,6 +25,8 @@ import {
   getCartesianAxisScale,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
+  type HighlightedItem,
+  type HighlightScope,
   type LegendPosition,
   type Series,
   useTotalAxisPadding,
@@ -39,8 +42,8 @@ const focusStylesCss = css`
   }
 `;
 
-export type CartesianChartBaseProps = BoxBaseProps &
-  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
+export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> &
+  Omit<HighlightProps, 'highlightScope'> & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
@@ -93,9 +96,28 @@ export type CartesianChartBaseProps = BoxBaseProps &
      * @default 'Legend'
      */
     legendAccessibilityLabel?: string;
+    /**
+     * Accessibility label for the chart.
+     * - When a string: Used as a static label for the chart element
+     * - When a function: Called with the highlighted item to generate dynamic labels during interaction
+     */
+    accessibilityLabel?: string | ((item: HighlightedItem) => string);
+    /**
+     * Controls what aspects of the data can be highlighted.
+     * @default { dataIndex: true, series: false }
+     */
+    highlightScope?: HighlightScope;
+    /**
+     * @deprecated Use `enableHighlighting={false}` instead. Will be removed in next major version.
+     */
+    enableScrubbing?: boolean;
+    /**
+     * @deprecated Use `onHighlightChange` instead. Will be removed in next major version.
+     */
+    onScrubberPositionChange?: (index: number | undefined) => void;
   };
 
-export type CartesianChartProps = Omit<BoxProps<'div'>, 'title'> &
+export type CartesianChartProps = Omit<BoxProps<'div'>, 'title' | 'accessibilityLabel'> &
   CartesianChartBaseProps & {
     /**
      * Custom class name for the root element.
@@ -141,9 +163,15 @@ export const CartesianChart = memo(
         children,
         layout = 'vertical',
         animate = true,
+        // Highlight props
+        enableHighlighting,
+        highlightScope = defaultCartesianChartHighlightScope,
+        highlight,
+        onHighlightChange,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
+        // Legacy scrubber props
         enableScrubbing,
         onScrubberPositionChange,
         legend,
@@ -435,6 +463,7 @@ export const CartesianChart = memo(
 
       const contextValue: CartesianChartContextValue = useMemo(
         () => ({
+          type: 'cartesian',
           layout,
           series: series ?? [],
           getSeries,
@@ -477,6 +506,25 @@ export const CartesianChart = memo(
         [className, classNames],
       );
       const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
+
+      // Resolve enableHighlighting (backwards compatibility with enableScrubbing).
+      const resolvedEnableHighlighting = useMemo(() => {
+        if (enableHighlighting !== undefined) return enableHighlighting;
+        if (enableScrubbing !== undefined) return enableScrubbing;
+        return false;
+      }, [enableHighlighting, enableScrubbing]);
+
+      // Wrap onHighlightChange to also call legacy onScrubberPositionChange.
+      const handleHighlightChange = useCallback(
+        (items: HighlightedItem[]) => {
+          onHighlightChange?.(items);
+
+          if (onScrubberPositionChange) {
+            onScrubberPositionChange(items[0]?.dataIndex ?? undefined);
+          }
+        },
+        [onHighlightChange, onScrubberPositionChange],
+      );
 
       const legendElement = useMemo(() => {
         if (!legend) return;
@@ -526,13 +574,15 @@ export const CartesianChart = memo(
                 }
               }
             }}
-            accessibilityLabel={accessibilityLabel}
+            accessibilityLabel={
+              typeof accessibilityLabel === 'string' ? accessibilityLabel : undefined
+            }
             aria-live="polite"
             as="svg"
-            className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
+            className={cx(resolvedEnableHighlighting && focusStylesCss, classNames?.chart)}
             height="100%"
             style={styles?.chart}
-            tabIndex={enableScrubbing ? 0 : undefined}
+            tabIndex={resolvedEnableHighlighting ? 0 : undefined}
             width="100%"
           >
             {children}
@@ -542,9 +592,12 @@ export const CartesianChart = memo(
 
       return (
         <CartesianChartProvider value={contextValue}>
-          <ScrubberProvider
-            enableScrubbing={!!enableScrubbing}
-            onScrubberPositionChange={onScrubberPositionChange}
+          <HighlightProvider
+            accessibilityLabel={accessibilityLabel}
+            enableHighlighting={resolvedEnableHighlighting}
+            highlight={highlight}
+            highlightScope={highlightScope}
+            onHighlightChange={handleHighlightChange}
             svgRef={svgRef}
           >
             {legend ? (
@@ -561,7 +614,7 @@ export const CartesianChart = memo(
             ) : (
               <Box {...rootBoxProps}>{chartContent}</Box>
             )}
-          </ScrubberProvider>
+          </HighlightProvider>
         </CartesianChartProvider>
       );
     },

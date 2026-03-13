@@ -15,11 +15,17 @@ import type { ChartScaleFunction, SerializableScale } from './scale';
  */
 export type CartesianChartLayout = 'horizontal' | 'vertical';
 
+export type ChartType = 'cartesian';
+
 /**
  * Context value for Cartesian (X/Y) coordinate charts.
  * Contains axis-specific methods and properties for rectangular coordinate systems.
  */
 export type CartesianChartContextValue = {
+  /**
+   * The chart type.
+   */
+  type: ChartType;
   /**
    * Chart layout - describes the direction bars/areas grow.
    * @default 'vertical'
@@ -119,6 +125,8 @@ export type CartesianChartContextValue = {
    */
   getAxisBounds: (id: string) => Rect | undefined;
 };
+
+export type ChartContextValue = CartesianChartContextValue;
 
 export type ScrubberContextValue = {
   /**

@@ -37,6 +37,7 @@ export type BarChartBaseProps = Omit<
     | 'stackMinSize'
     | 'transitions'
     | 'transition'
+    | 'fadeOnHighlight'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -112,6 +113,7 @@ export const BarChart = memo(
         stackMinSize,
         transitions,
         transition,
+        fadeOnHighlight,
         ...chartProps
       },
       ref,
@@ -221,6 +223,7 @@ export const BarChart = memo(
             barMinSize={barMinSize}
             barPadding={barPadding}
             borderRadius={borderRadius}
+            fadeOnHighlight={fadeOnHighlight}
             fillOpacity={fillOpacity}
             roundBaseline={roundBaseline}
             seriesIds={seriesIds}

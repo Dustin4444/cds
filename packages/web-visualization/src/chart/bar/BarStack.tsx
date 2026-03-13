@@ -23,7 +23,7 @@ export type BarSeries = Series & {
 
 export type BarStackBaseProps = Pick<
   BarBaseProps,
-  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
+  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'fadeOnHighlight'
 > & {
   /**
    * Array of series configurations that belong to this stack.
@@ -172,6 +172,7 @@ export const BarStack = memo<BarStackProps>(
     roundBaseline,
     transitions,
     transition,
+    fadeOnHighlight,
   }) => {
     const { layout, getSeriesData, getXAxis, getSeries } = useCartesianChartContext();
 
@@ -548,6 +549,7 @@ export const BarStack = memo<BarStackProps>(
         borderRadius={borderRadius}
         dataX={barsGrowVertically ? dataX : (bar.dataValue as any)} // This is a bit loose, depends on Bar implementation
         dataY={barsGrowVertically ? (bar.dataValue as any) : dataX}
+        fadeOnHighlight={fadeOnHighlight}
         fill={bar.fill}
         fillOpacity={bar.fillOpacity ?? defaultFillOpacity}
         height={barsGrowVertically ? bar.length : thickness}

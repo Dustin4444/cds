@@ -3,8 +3,18 @@ import type { AnimatedProp } from '@shopify/react-native-skia';
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
 import type { GradientDefinition } from './gradient';
+import type { HighlightScope } from './highlight';
 
 export const defaultStackId = 'DEFAULT_STACK_ID';
+
+/**
+ * Default highlight scope for cartesian charts.
+ * Highlights by data index (x-axis position), not by series.
+ */
+export const defaultCartesianChartHighlightScope: HighlightScope = {
+  dataIndex: true,
+  series: false,
+};
 
 /**
  * Shape variants available for legend items.
@@ -350,6 +360,11 @@ export const defaultHorizontalLayoutChartInset: ChartInset = {
   bottom: 16,
   right: 48,
 };
+
+/**
+ * Backwards-compatible alias used by legacy tests/docs.
+ */
+export const defaultCartesianChartInset: ChartInset = defaultVerticalLayoutChartInset;
 
 /**
  * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or

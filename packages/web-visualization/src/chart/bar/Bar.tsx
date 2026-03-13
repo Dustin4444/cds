@@ -44,7 +44,7 @@ export type BarBaseProps = {
    */
   origin?: number;
   /**
-   * The x-axis data value for this bar.
+   * The x-axis data index for this bar.
    */
   dataX?: number | string;
   /**
@@ -75,6 +75,11 @@ export type BarBaseProps = {
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
+  /**
+   * Whether non-highlighted bars should fade when highlighting is active.
+   * @default false
+   */
+  fadeOnHighlight?: boolean;
 };
 
 export type BarProps = BarBaseProps & {
@@ -155,6 +160,7 @@ export const Bar = memo<BarProps>(
     roundBottom = true,
     transitions,
     transition,
+    fadeOnHighlight,
   }) => {
     const { layout } = useCartesianChartContext();
 
@@ -176,6 +182,7 @@ export const Bar = memo<BarProps>(
         d={barPath}
         dataX={dataX}
         dataY={dataY}
+        fadeOnHighlight={fadeOnHighlight}
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}
