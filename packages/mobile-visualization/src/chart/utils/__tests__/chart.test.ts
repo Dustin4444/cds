@@ -166,7 +166,7 @@ describe('getStackedSeriesData', () => {
   });
 
   it('should not stack series with different xAxisId', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3], stackId: 'stack1', xAxisId: 'top' },
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1', xAxisId: 'bottom' },
     ];

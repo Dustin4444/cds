@@ -6,7 +6,7 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type CartesianAxisConfigProps, defaultStackId, type Series } from '../utils';
+import { type CartesianAxisConfigProps, defaultStackId } from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 import type { BarSeries } from './BarStack';

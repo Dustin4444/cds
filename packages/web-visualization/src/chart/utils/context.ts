@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 
 import type { AxisConfig } from './axis';
-import type { Series } from './chart';
+import type { CartesianSeries } from './chart';
 import type { ChartScaleFunction } from './scale';
 
 /**
@@ -34,12 +34,12 @@ export type CartesianChartContextValue = {
   /**
    * The series data for the chart.
    */
-  series: Series[];
+  series: CartesianSeries[];
   /**
    * Returns the series which matches the seriesId or undefined.
    * @param seriesId - A series' id
    */
-  getSeries: (seriesId?: string) => Series | undefined;
+  getSeries: (seriesId?: string) => CartesianSeries | undefined;
   /**
    * Returns the data for a series
    * @param seriesId - A series' id

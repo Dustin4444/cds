@@ -7,7 +7,6 @@ import {
   type ChartScaleFunction,
   evaluateGradientAtValue,
   getGradientConfig,
-  type Series,
   useScrubberContext,
 } from '../utils';
 

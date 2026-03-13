@@ -28,7 +28,7 @@ import {
   type HighlightedItem,
   type HighlightScope,
   type LegendPosition,
-  type Series,
+  type CartesianSeries,
   useTotalAxisPadding,
 } from './utils';
 
@@ -48,7 +48,7 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> &
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
      */
-    series?: Array<Series>;
+    series?: Array<CartesianSeries>;
     /**
      * Chart layout - describes the direction bars/areas grow.
      * - 'vertical' (default): Bars grow vertically. X is category axis, Y is value axis.

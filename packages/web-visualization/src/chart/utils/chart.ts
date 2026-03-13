@@ -42,7 +42,11 @@ export type AxisBounds = {
 export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds =>
   bounds.min !== undefined && bounds.max !== undefined;
 
-export type Series = {
+/**
+ * Series model for Cartesian charts.
+ * Designed to remain cartesian-specific as the codebase expands to other chart families (e.g. polar).
+ */
+export type CartesianSeries = {
   /**
    * Id of the series.
    */
@@ -98,11 +102,17 @@ export type Series = {
 };
 
 /**
+ * Backwards-compatible alias for legacy imports.
+ * @deprecated Prefer `CartesianSeries` in cartesian chart APIs.
+ */
+export type Series = CartesianSeries;
+
+/**
  * Calculates the domain of a chart from series data.
  * Domain represents the range of x-values from the data.
  */
 export const getChartDomain = (
-  series: Series[],
+  series: CartesianSeries[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {
@@ -131,7 +141,7 @@ export const getChartDomain = (
  * Creates a composite stack key that includes stack ID and axis IDs.
  * This ensures series with different scales don't get stacked together.
  */
-const createStackKey = (series: Series): string | undefined => {
+const createStackKey = (series: CartesianSeries): string | undefined => {
   if (series.stackId === undefined) return undefined;
 
   // Include axis IDs to prevent cross-scale stacking
@@ -148,7 +158,7 @@ const createStackKey = (series: Series): string | undefined => {
  * @returns Map of series ID to stacked data arrays
  */
 export const getStackedSeriesData = (
-  series: Series[],
+  series: CartesianSeries[],
 ): Map<string, Array<[number, number] | null>> => {
   const stackedDataMap = new Map<string, Array<[number, number] | null>>();
 
@@ -258,7 +268,7 @@ export const getLineData = (
  * Handles stacking by transforming data when series have stack properties.
  */
 export const getChartRange = (
-  series: Series[],
+  series: CartesianSeries[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {

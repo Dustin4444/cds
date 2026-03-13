@@ -82,7 +82,8 @@ export const DefaultBar = memo<DefaultBarProps>(
         const indexMatch = !highlightByDataIndex || item.dataIndex === dataIndex;
         // When seriesId is null (pointer between bars), all series at this index match.
         // Only narrow to a specific series when one is identified.
-        const seriesMatch = !highlightBySeries || item.seriesId === null || item.seriesId === seriesId;
+        const seriesMatch =
+          !highlightBySeries || item.seriesId === null || item.seriesId === seriesId;
         return indexMatch && seriesMatch;
       });
 

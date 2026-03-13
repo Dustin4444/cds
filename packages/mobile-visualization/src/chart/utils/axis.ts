@@ -4,10 +4,10 @@ import type { Rect } from '@coinbase/cds-common/types';
 
 import {
   type AxisBounds,
+  type CartesianSeries,
   getChartDomain,
   getChartRange,
   isValidBounds,
-  type Series,
 } from './chart';
 import type { CartesianChartLayout } from './context';
 import { getPointOnScale } from './point';
@@ -278,7 +278,7 @@ export const getAxisConfig = (
  */
 export const getCartesianAxisDomain = (
   axisParam: CartesianAxisConfigProps,
-  series: Series[],
+  series: CartesianSeries[],
   axisType: 'x' | 'y',
   layout: CartesianChartLayout = 'vertical',
 ): AxisBounds => {

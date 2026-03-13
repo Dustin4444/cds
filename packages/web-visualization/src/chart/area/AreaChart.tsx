@@ -7,11 +7,11 @@ import {
   type CartesianChartProps,
 } from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
-import { type CartesianAxisConfigProps, defaultStackId, type Series } from '../utils';
+import { type CartesianAxisConfigProps, type CartesianSeries, defaultStackId } from '../utils';
 
 import { Area, type AreaProps } from './Area';
 
-export type AreaSeries = Series &
+export type AreaSeries = CartesianSeries &
   Partial<
     Pick<
       AreaProps,
@@ -122,10 +122,10 @@ export const AreaChart = memo(
       },
       ref,
     ) => {
-      // Convert AreaSeries to Series for Chart context
+      // Convert AreaSeries to CartesianSeries for Chart context.
       const chartSeries = useMemo(() => {
         return series?.map(
-          (s): Series => ({
+          (s): CartesianSeries => ({
             id: s.id,
             data: s.data,
             label: s.label,
