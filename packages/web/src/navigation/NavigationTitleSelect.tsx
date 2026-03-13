@@ -45,11 +45,19 @@ export const NavigationTitleSelect = memo(
       setVisible(true);
     }, []);
 
+    const handleOptionClick = useCallback(
+      (id: string) => {
+        onChange(id);
+        dropdownRef.current?.closeMenu();
+      },
+      [onChange],
+    );
+
     const dropdownContent = useMemo(() => {
       return options.map(({ id, label: title }) => (
         <Cell
           borderRadius={0}
-          onClick={() => onChange(id)}
+          onClick={() => handleOptionClick(id)}
           selected={value === id}
           {...selectCellSpacingConfig}
         >
@@ -58,7 +66,7 @@ export const NavigationTitleSelect = memo(
           </Text>
         </Cell>
       ));
-    }, [onChange, options, value]);
+    }, [handleOptionClick, options, value]);
 
     const label = useMemo(() => {
       return options.find((option) => option.id === value)?.label;
