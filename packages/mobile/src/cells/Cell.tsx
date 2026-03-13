@@ -1,5 +1,11 @@
 import React, { memo, useMemo } from 'react';
-import { type StyleProp, StyleSheet, type ViewProps, type ViewStyle } from 'react-native';
+import {
+  type DimensionValue,
+  type StyleProp,
+  StyleSheet,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { CellPriority, SharedProps } from '@coinbase/cds-common/types';
 import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
@@ -58,7 +64,7 @@ export type CellBaseProps = SharedProps &
     /**
      * @deprecated Use `styles.end` instead. This prop will be removed in a future version.
      */
-    detailWidth?: number | string;
+    detailWidth?: DimensionValue;
     /** Is the cell disabled? Will apply opacity and disable interaction. */
     disabled?: boolean;
     /** Which piece of content has the highest priority in regards to text truncation, growing, and shrinking. */

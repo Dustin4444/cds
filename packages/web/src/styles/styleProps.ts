@@ -160,6 +160,12 @@ export type ResponsiveProps<T> = {
 
 export type StyleProps = ResponsiveProps<StaticStyleProps> & ResponsiveProps<DynamicStyleProps>;
 
+/** Position-related style props using CSS types. Use this instead of common's PositionStyles for web. */
+export type PositionStyles = Pick<
+  StyleProps,
+  'position' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex'
+>;
+
 export const getStyles = (styleProps: StyleProps, inlineStyle?: React.CSSProperties) => {
   const style: Record<string, unknown> = {};
   let className = '';

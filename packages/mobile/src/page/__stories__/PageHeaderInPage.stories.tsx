@@ -29,17 +29,16 @@ const PageHeaderInPage = () => {
           <PageHeader
             background="bg"
             end={<IconButton name="close" testID="header-back-button" />}
-            position="sticky"
             start={exampleProps.start}
             title={exampleProps.title}
-            top="0"
+            top={0}
           />
           <VStack
             alignContent="center"
             alignItems="center"
             flexGrow={1}
             flexShrink={1}
-            height="500px"
+            height={500}
             justifyContent="center"
             padding={10}
             style={{ backgroundColor: '#FADADD' }}

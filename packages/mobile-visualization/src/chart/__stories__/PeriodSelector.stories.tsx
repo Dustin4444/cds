@@ -56,7 +56,7 @@ const MinWidthPeriodSelectorExample = () => {
       gap={0.5}
       onChange={(tab) => setActiveTab(tab)}
       tabs={tabs}
-      width="fit-content"
+      width={null}
     />
   );
 };
@@ -75,7 +75,7 @@ const PaddedPeriodSelectorExample = () => {
       onChange={(tab) => setActiveTab(tab)}
       padding={3}
       tabs={tabs}
-      width="fit-content"
+      width={null}
     />
   );
 };
@@ -148,7 +148,7 @@ const TooManyPeriodsSelectorExample = () => {
           justifyContent="flex-start"
           onChange={setActiveTab}
           tabs={tabs}
-          width="fit-content"
+          width={null}
         />
       </ScrollView>
       <IconButton
@@ -341,7 +341,7 @@ function IconsPeriodSelectorExample() {
         activeIndicator: { borderRadius: theme.borderRadius[200] },
       }}
       tabs={tabs}
-      width="fit-content"
+      width={null}
     />
   );
 }

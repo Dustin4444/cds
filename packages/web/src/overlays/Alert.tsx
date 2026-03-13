@@ -2,7 +2,6 @@ import { forwardRef, memo, useCallback, useMemo } from 'react';
 import type {
   ButtonVariant,
   IllustrationPictogramNames,
-  PositionStyles,
   SharedProps,
   ValidateProps,
 } from '@coinbase/cds-common/types';
@@ -11,6 +10,7 @@ import { Button } from '../buttons';
 import { useA11yLabels } from '../hooks/useA11yLabels';
 import { Pictogram } from '../illustrations';
 import { Box } from '../layout/Box';
+import type { PositionStyles } from '../styles/styleProps';
 import { Text } from '../typography/Text';
 
 import { Modal, type ModalBaseProps, type ModalRefBaseProps } from './modal/Modal';
