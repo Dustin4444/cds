@@ -42,6 +42,7 @@ const scaleOut = convertMotionConfig(scaleOutConfig);
 export const LikeButton = memo(function LikeButton({
   count = 0,
   compact = true,
+  padding = compact ? 1.5 : 2, // mirror IconButton's padding
   flush,
   liked = false,
   onPress,

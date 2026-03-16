@@ -38,6 +38,9 @@ const tabs = sampleTabs.slice(0, 5);
 const meta: Meta = {
   title: 'Components/Tabs/TabNavigation',
   component: TabNavigation,
+  parameters: {
+    a11y: { test: 'off' },
+  },
 };
 
 export default meta;

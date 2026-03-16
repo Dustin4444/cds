@@ -29,6 +29,7 @@ export type LikeButtonProps = LikeButtonBaseProps & PressableProps<PressableDefa
 export const LikeButton = memo(function LikeButton({
   count = 0,
   compact = true,
+  padding = compact ? 1.5 : 2, // mirror IconButton's padding
   flush,
   liked = false,
   ...props
@@ -45,7 +46,7 @@ export const LikeButton = memo(function LikeButton({
   );
 
   return (
-    <Pressable background="transparent" {...props}>
+    <Pressable background="transparent" padding={padding} {...props}>
       <HStack
         alignItems="center"
         flexShrink={0}

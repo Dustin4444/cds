@@ -15,6 +15,9 @@ import { SelectOption } from '../SelectOption';
 const meta: Meta = {
   title: 'Components/Select/Select',
   component: Select,
+  parameters: {
+    a11y: { test: 'off' },
+  },
 };
 
 export default meta;

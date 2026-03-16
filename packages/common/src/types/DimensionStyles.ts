@@ -1,8 +1,12 @@
+/** @deprecated Use the dimension props (e.g. `width`, `height`) directly with values of type `'auto' | number | string`. This type will be removed in a future major release. */
 export type FixedValue = number | string; // px
+/** @deprecated Use the dimension props (e.g. `width`, `height`) directly with values of type `'auto' | number | string`. This type will be removed in a future major release. */
 export type PercentageValue = string;
+/** @deprecated Use the dimension props (e.g. `width`, `height`) directly with values of type `'auto' | number | string`. This type will be removed in a future major release. */
 export type DimensionValue = 'auto' | FixedValue | PercentageValue;
 export type ResizeMode = 'cover' | 'contain';
 
+/** @deprecated Use the dimension props (e.g. `width`, `height`) directly with values of type `'auto' | number | string`. This type will be removed in a future major release. */
 export type DimensionStyles = {
   /** Set a fixed height. */
   height?: DimensionValue;

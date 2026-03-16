@@ -11,8 +11,7 @@ import {
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
-import type { Position } from '@coinbase/cds-common/types/Position';
+import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
@@ -22,7 +21,8 @@ import { Box } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 import { media } from '../../styles/media';
-import { FocusTrap } from '../FocusTrap';
+import type { PositionStyles } from '../../styles/styleProps';
+import { FocusTrap, type FocusTrapProps } from '../FocusTrap';
 
 import type { ModalWrapperProps } from './ModalWrapper';
 import { ModalWrapper } from './ModalWrapper';
@@ -78,7 +78,11 @@ type ModalChildrenRenderProps = { closeModal: () => void };
 export type ModalBaseProps = SharedProps &
   ModalContextValue &
   Pick<PositionStyles, 'zIndex'> &
-  Omit<ModalWrapperProps, 'onOverlayPress'> & {
+  Omit<ModalWrapperProps, 'onOverlayPress'> &
+  Pick<
+    FocusTrapProps,
+    'disableFocusTrap' | 'focusTabIndexElements' | 'disableArrowKeyNavigation'
+  > & {
     /** Component to render as the Modal content */
     children?: React.ReactNode | ((props: ModalChildrenRenderProps) => React.ReactNode);
     /**
@@ -94,19 +98,7 @@ export type ModalBaseProps = SharedProps &
      * Set the position for the modal dialogue
      * @danger This is a migration escape hatch. It is not intended to be used normally.
      */
-    dangerouslySetPosition?: Position;
-    /**
-     * Set disableFocusTrap to disable keyboard listeners responsible for focus trap behavior
-     * This can be useful for scenarios like Yubikey 2fa
-     * @default false
-     */
-    disableFocusTrap?: boolean;
-    /**
-     * Allow any element with `tabIndex` attribute to be focusable in FocusTrap, rather than only focusing specific interactive element types like button.
-     * This can be useful when having long content in a Modal.
-     * @default false
-     */
-    focusTabIndexElements?: boolean;
+    dangerouslySetPosition?: React.CSSProperties['position'];
     /**
      * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
      *
@@ -134,6 +126,7 @@ export const Modal = memo(
         accessibilityLabel,
         focusTabIndexElements = false,
         restoreFocusOnUnmount = true,
+        disableArrowKeyNavigation,
         width,
         dangerouslyDisableResponsiveness = false,
         dangerouslySetPosition,
@@ -210,6 +203,7 @@ export const Modal = memo(
               width={width ?? defaultWidth}
             >
               <FocusTrap
+                disableArrowKeyNavigation={disableArrowKeyNavigation}
                 disableFocusTrap={disableFocusTrap}
                 focusTabIndexElements={focusTabIndexElements}
                 onEscPress={shouldCloseOnEscPress ? handleClose : undefined}

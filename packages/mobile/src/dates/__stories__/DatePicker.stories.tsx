@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { DimensionValue } from '@coinbase/cds-common';
+import type { DimensionValue } from 'react-native';
 import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 
 import { InputLabel } from '../../controls/InputLabel';
@@ -106,22 +106,22 @@ export const FullExample = () => {
           }
         />
       </Example>
-      <Example title="DatePicker fit-content width">
+      <Example title="DatePicker width=null">
         <HStack flexWrap="wrap" gap={2}>
           <ExampleDatePicker
             calendarIconButtonAccessibilityLabel="Example calendar"
             label="Example Date"
-            width="fit-content"
+            width={null}
           />
           <ExampleDatePicker
             calendarIconButtonAccessibilityLabel="Example calendar 2"
             label="Example Date 2"
-            width="fit-content"
+            width={null}
           />
           <ExampleDatePicker
             calendarIconButtonAccessibilityLabel="Example calendar 3"
             label="Example Date 3"
-            width="fit-content"
+            width={null}
           />
         </HStack>
       </Example>
