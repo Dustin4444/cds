@@ -39,6 +39,7 @@ export type ContentCellFallbackProps = FallbackRectWidthProps &
     title?: boolean;
   };
 
+/** @deprecated Please use the new ListCellFallback component instead. */
 export const ContentCellFallback = memo(function ContentCellFallback({
   accessory,
   accessoryNode,

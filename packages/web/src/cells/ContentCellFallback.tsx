@@ -55,6 +55,7 @@ const fullWidthStyle = { width: '100%', display: 'block' } as const;
 
 const floatStyle = { float: 'right', width: '30%' } as const;
 
+/** @deprecated Use `ListCellFallback` instead. */
 export const ContentCellFallback = memo(function ContentCellFallback({
   accessory,
   accessoryNode,

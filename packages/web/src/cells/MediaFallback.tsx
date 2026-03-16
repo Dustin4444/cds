@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { imageSize, mediaSize } from '@coinbase/cds-common/tokens/cell';
 
 import { Fallback, type fallbackDefaultElement, type FallbackProps } from '../layout/Fallback';
