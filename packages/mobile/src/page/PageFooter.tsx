@@ -1,7 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { Box, type BoxProps } from '../layout/Box';
@@ -22,17 +21,23 @@ export type PageFooterProps = PageFooterBaseProps & BoxProps;
 
 export const PageFooter = memo(
   forwardRef(function PageFooter(
-    { action, ...props }: PageFooterProps,
+    {
+      action,
+      paddingX = 3,
+      paddingY = 1.5,
+      alignItems = 'center',
+      accessibilityRole = 'toolbar',
+      ...props
+    }: PageFooterProps,
     ref: React.ForwardedRef<View>,
   ) {
     return (
       <Box
         ref={ref}
-        accessibilityRole="toolbar"
-        alignItems="center"
-        height={pageFooterHeight}
-        paddingX={3}
-        paddingY={1.5}
+        accessibilityRole={accessibilityRole}
+        alignItems={alignItems}
+        paddingX={paddingX}
+        paddingY={paddingY}
         {...props}
       >
         {action}

@@ -1,6 +1,5 @@
 import React, { forwardRef, memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -38,7 +37,6 @@ export const PageFooter = memo(
   forwardRef(function PageFooter(
     {
       action,
-      height = pageFooterHeight,
       justifyContent = pageFooterJustifyContent,
       paddingX = pageFooterPaddingX,
       paddingY = 1.5,
@@ -50,7 +48,6 @@ export const PageFooter = memo(
     return (
       <Box
         ref={ref}
-        height={height}
         justifyContent={justifyContent}
         paddingX={paddingX}
         paddingY={paddingY}

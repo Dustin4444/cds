@@ -1,6 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { pageHeaderHeight } from '@coinbase/cds-common/tokens/page';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
@@ -37,6 +36,8 @@ export const pageHeaderEndPaddingX: ResponsiveProps<StaticStyleProps>['paddingX'
   tablet: 4,
   desktop: 4,
 } as const;
+
+export const pageHeaderPaddingY: ResponsiveProps<StaticStyleProps>['paddingY'] = 2;
 
 export type PageHeaderBaseProps = SharedProps &
   PositionStyles & {
@@ -166,9 +167,9 @@ export const PageHeader = memo(
           <Box
             alignItems="center"
             className={classNames?.start}
-            height={pageHeaderHeight}
             paddingEnd={3}
             paddingStart={pageHeaderStartPaddingStart}
+            paddingY={pageHeaderPaddingY}
             style={styles?.start}
           >
             {start}
@@ -180,11 +181,12 @@ export const PageHeader = memo(
             className={cx(start && end ? gridStylesMobileTitleCss : undefined, classNames?.title)}
             justifyContent="flex-start"
             paddingStart={titleResponsivePaddingLeft}
+            paddingY={pageHeaderPaddingY}
             style={styles?.title}
             testID="responsive-title-container"
           >
             {typeof title === 'string' ? (
-              <Text as="h1" display="block" font="title1">
+              <Text as="h1" display="block" font="title1" paddingY={0.25}>
                 {title}
               </Text>
             ) : (
@@ -196,9 +198,9 @@ export const PageHeader = memo(
           <Box
             alignItems="center"
             className={cx(gridStylesMobileEndCss, classNames?.end)}
-            height={pageHeaderHeight}
             justifyContent="flex-end"
             paddingX={pageHeaderEndPaddingX}
+            paddingY={pageHeaderPaddingY}
             style={styles?.end}
             testID="responsive-end-container"
           >
