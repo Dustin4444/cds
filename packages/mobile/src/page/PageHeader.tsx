@@ -1,7 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { pageHeaderHeight } from '@coinbase/cds-common/tokens/page';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { Box, type BoxProps } from '../layout/Box';
@@ -57,7 +56,6 @@ export const PageHeader = memo(
       <VStack ref={ref} accessibilityRole="header" {...props}>
         <HStack
           alignItems="center"
-          height={pageHeaderHeight}
           justifyContent={isMultiRow ? 'space-between' : undefined}
           paddingY={1}
           style={[style, styles?.root]}
