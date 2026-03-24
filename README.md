@@ -1,4 +1,4 @@
-# Coinbase Design System
+# Coinbase Design System 2
 
 <p align="center">
   <img src="apps/docs/static/img/docusaurus-social-card.jpg" alt="Coinbase Design System">
