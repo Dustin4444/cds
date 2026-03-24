@@ -14,6 +14,8 @@ type Prettify<T> = {
 export type ColorScheme = 'dark' | 'light';
 export type ColorSchemePreference = ColorScheme | 'system';
 
+// Trigger Visreg
+
 /**
  * This is the default set of Theme variables available to all CDS components.
  * Only the interface keys are used to define the available Theme variables.
