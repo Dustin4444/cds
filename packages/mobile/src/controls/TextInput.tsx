@@ -55,6 +55,7 @@ export type TextInputBaseProps = SharedProps &
     | 'disabled'
     | 'borderRadius'
     | 'enableColorSurge'
+    | 'focusedBorderWidth'
     | 'labelVariant'
     | 'inputBackground'
   > & {
@@ -90,6 +91,12 @@ export type TextInputBaseProps = SharedProps &
      * @note if both labelNode and label are provided, label will still be used as accessibility label for the input if no accessibilityLabel is provided.
      */
     labelNode?: React.ReactNode;
+    /**
+     * Determines if the input should have a border.
+     * When set to `false`, focus border styling is disabled by default.
+     * @default true
+     */
+    bordered?: boolean;
   };
 
 export type TextInputProps = TextInputBaseProps &
@@ -107,11 +114,6 @@ export type TextInputProps = TextInputBaseProps &
      * Use this to workaround the issue where long text does not ellipsis in TextInput
      */
     textAlign?: RNTextInputProps['textAlign'] | 'unset';
-    /**
-     * Determines if the input should have a border
-     * @default true
-     */
-    bordered?: boolean;
   };
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
@@ -144,6 +146,7 @@ export const TextInput = memo(
         enableColorSurge = false,
         helperTextErrorIconAccessibilityLabel = 'error',
         bordered = true,
+        focusedBorderWidth,
         labelVariant = 'outside',
         labelNode,
         inputBackground,
@@ -161,6 +164,8 @@ export const TextInput = memo(
         variant,
         focusedVariant,
         bordered,
+        bordered ? 100 : 0,
+        focusedBorderWidth,
       );
 
       const editableInputAddonProps: TextInputProps = {
@@ -234,6 +239,7 @@ export const TextInput = memo(
           borderFocusedStyle={borderFocusedStyle}
           borderRadius={borderRadius}
           borderStyle={borderUnfocusedStyle}
+          borderWidth={bordered ? 100 : 0}
           disabled={disabled}
           enableColorSurge={enableColorSurge}
           endNode={
@@ -263,6 +269,7 @@ export const TextInput = memo(
             )
           }
           focused={focused}
+          focusedBorderWidth={focusedBorderWidth}
           helperTextNode={
             !!helperText &&
             (typeof helperText === 'string' ? (

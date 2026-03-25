@@ -52,13 +52,16 @@ type DefaultSelectControlBase = <
   Type extends SelectType,
   SelectOptionValue extends string = string,
 >(
-  props: SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLElement> },
+  props: SelectControlProps<Type, SelectOptionValue> & {
+    ref?: React.Ref<HTMLElement>;
+  },
 ) => React.ReactElement;
 
 const DefaultSelectControlComponent = memo(
   forwardRef(
     <Type extends SelectType, SelectOptionValue extends string = string>(
       {
+        role = 'button',
         type,
         options,
         value,
@@ -101,7 +104,6 @@ const DefaultSelectControlComponent = memo(
       // multi-selects render their label outside of the control unless labelVariant is set to 'inside'
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
-
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
       const optionsMap = useMemo(() => {
@@ -347,12 +349,13 @@ const DefaultSelectControlComponent = memo(
 
       const inputNode = useMemo(
         () => (
-          // We don't offer control over setting the role since this must always be a button
           <Pressable
             ref={controlPressableRef}
             noScaleOnPress
             accessibilityLabel={computedControlAccessibilityLabel}
+            aria-expanded={open}
             aria-haspopup={ariaHaspopup}
+            as={role === 'combobox' ? 'div' : 'button'}
             background="transparent"
             blendStyles={interactableBlendStyles}
             borderWidth={0}
@@ -363,6 +366,7 @@ const DefaultSelectControlComponent = memo(
             focusable={false}
             minWidth={0}
             onClick={() => setOpen((s) => !s)}
+            role={role}
             style={styles?.controlInputNode}
             tabIndex={tabIndex}
           >
@@ -415,6 +419,8 @@ const DefaultSelectControlComponent = memo(
         [
           computedControlAccessibilityLabel,
           ariaHaspopup,
+          open,
+          role,
           interactableBlendStyles,
           classNames?.controlInputNode,
           classNames?.controlStartNode,
