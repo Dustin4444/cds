@@ -1,4 +1,9 @@
 name: Accessibility Scanner
+permissions:
+  actions: write
+  contents: write
+  issues: write
+  pull-requests: write
 on: workflow_dispatch
 
 jobs:
