@@ -7,7 +7,7 @@ description: |
 license: Apache-2.0
 metadata:
   author: ruikun.hao@coinbase.com
-  version: "1.0.0"
+  version: '1.0.0'
 ---
 
 # CDS Code
@@ -139,16 +139,16 @@ Before adding any property to a `style` prop, check whether the component alread
 
 Common props that are frequently misused via `style` instead of the proper prop:
 
-| Instead of `style` | Use the prop |
-|---|---|
-| `style={{ color: "var(--color-fgMuted)" }}` | `color="fgMuted"` |
-| `style={{ fontSize: 12, fontWeight: 500, lineHeight: "16px" }}` | `font="caption"` (or the matching CDS font token) |
-| `style={{ textAlign: "center" }}` | `textAlign="center"` |
-| `style={{ textTransform: "uppercase" }}` | `textTransform="uppercase"` |
-| `style={{ display: "flex", flexDirection: "column" }}` | Use `VStack`, or `flexDirection="column"` on `Box` |
-| `style={{ gap: 8 }}` | `gap={1}` |
-| `style={{ padding: 16 }}` | `padding={2}` |
-| `style={{ backgroundColor: "..." }}` | `background="bgAlternate"` (or semantic token) |
+| Instead of `style`                                              | Use the prop                                       |
+| --------------------------------------------------------------- | -------------------------------------------------- |
+| `style={{ color: "var(--color-fgMuted)" }}`                     | `color="fgMuted"`                                  |
+| `style={{ fontSize: 12, fontWeight: 500, lineHeight: "16px" }}` | `font="caption"` (or the matching CDS font token)  |
+| `style={{ textAlign: "center" }}`                               | `textAlign="center"`                               |
+| `style={{ textTransform: "uppercase" }}`                        | `textTransform="uppercase"`                        |
+| `style={{ display: "flex", flexDirection: "column" }}`          | Use `VStack`, or `flexDirection="column"` on `Box` |
+| `style={{ gap: 8 }}`                                            | `gap={1}`                                          |
+| `style={{ padding: 16 }}`                                       | `padding={2}`                                      |
+| `style={{ backgroundColor: "..." }}`                            | `background="bgAlternate"` (or semantic token)     |
 
 **Why this matters:** When you set `font`, `color`, `textAlign`, or other typography properties through `style` instead of props, the component loses its connection to the CDS theme. For example, setting `fontSize` and `fontWeight` via `style` without a `font` prop means the CDS font family never applies -- the text falls back to `inherit` and may render in the wrong typeface.
 
@@ -167,10 +167,10 @@ Avoid:
   style={{
     fontSize: 10,
     fontWeight: 500,
-    lineHeight: "12px",
-    textTransform: "uppercase",
-    textAlign: "center",
-    color: "var(--color-fgMuted)",
+    lineHeight: '12px',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    color: 'var(--color-fgMuted)',
   }}
 >
   Label
@@ -244,7 +244,7 @@ import { Box } from '@coinbase/cds-web/layout/Box';
 <HStack gap={2} alignItems="center">
   <Box background="bgAlternate" padding={2} borderRadius={200} />
   <VStack gap={0.5} flexGrow={1} />
-</HStack>
+</HStack>;
 ```
 
 Avoid:

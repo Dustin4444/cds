@@ -7,7 +7,7 @@ description: |
 license: Apache-2.0
 metadata:
   author: ruikun.hao@coinbase.com
-  version: "1.0.0"
+  version: '1.0.0'
 ---
 
 # CDS Design To Code
@@ -133,11 +133,11 @@ This is the core translation step. The Figma MCP response is a mixed-confidence 
 
 **Confidence hierarchy:**
 
-| Source | Confidence | How to use |
-|--------|-----------|------------|
-| `CodeConnectSnippet` | Highest | Preserve the component choice. It maps to a real component chosen by the design system team. Keep the composition close to the snippet after fixing imports, props, and data wiring. |
-| Screenshot | High | Use for layout hierarchy, spacing rhythm, and visual intent verification. |
-| Default HTML / Tailwind classes | Lower | Structural hints that must be adapted into CDS components. Never ship raw Figma HTML in a CDS app. |
+| Source                          | Confidence | How to use                                                                                                                                                                           |
+| ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `CodeConnectSnippet`            | Highest    | Preserve the component choice. It maps to a real component chosen by the design system team. Keep the composition close to the snippet after fixing imports, props, and data wiring. |
+| Screenshot                      | High       | Use for layout hierarchy, spacing rhythm, and visual intent verification.                                                                                                            |
+| Default HTML / Tailwind classes | Lower      | Structural hints that must be adapted into CDS components. Never ship raw Figma HTML in a CDS app.                                                                                   |
 
 **CDS doc lookup:** Follow the `cds-code` skill's setup and component selection steps to discover and read CDS docs before choosing imports, props, or composition patterns.
 
