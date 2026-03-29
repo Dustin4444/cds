@@ -82,7 +82,8 @@
     "ip": "^2.0.1",
     "minimatch": "^10.2.4",
     "koa": "^3.1.2",
-    "tar": "^7.5.12"
+    "tar": "^7.5.12",
+    "bn.js": "^5.2.3"
   },
   "resolutionComments": {
     "@types/react": "Forces a single version across all packages to prevent dual React types. Without this, dependencies like @docusaurus/types resolve a nested @types/react@18 which conflicts with React 19 types.",
@@ -100,7 +101,8 @@
     "ip": "Request from Coinbase Security team to fix security vulnerability",
     "minimatch": "Request from Coinbase Security team to fix security vulnerability",
     "koa": "Request from Coinbase Security team to fix security vulnerability",
-    "tar": "Request from Coinbase Security team to fix security vulnerability"
+    "tar": "Request from Coinbase Security team to fix security vulnerability",
+    "bn.js": "Request from Coinbase Security team to fix security vulnerability"
   },
   "workspaces": [
     "actions/*",
