@@ -11,6 +11,7 @@ on:
 
 jobs:
   accessibility_scanner:
+    name: Run accessibility scanner
     runs-on: ubuntu-latest
     steps:
       - uses: github/accessibility-scanner@v2
