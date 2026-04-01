@@ -1,21 +1,19 @@
-import fs from 'fs';
-import path from 'path';
+import { applyTransform } from 'jscodeshift/src/testUtils';
 
-const { applyTransform } = require('jscodeshift/src/testUtils');
+import { readTransformFixture } from '../../../test-utils/readTransformFixture';
+import transform from '../button-variant-values';
 
-const transform = require('../button-variant-values');
+const FIXTURE_SUITE = 'button-variant-values';
 
-const PARSER_OPTIONS = { parser: 'tsx' };
-
-function applyButtonVariantTransform(source: string) {
-  return applyTransform(transform, {}, { source }, PARSER_OPTIONS);
+function applyButtonVariantTransform(
+  source: string,
+  jscodeshiftOptions: Record<string, unknown> = {},
+) {
+  return applyTransform(transform, jscodeshiftOptions, { source }, { parser: 'tsx' });
 }
 
 function readFixture(name: string) {
-  return fs.readFileSync(
-    path.join(__dirname, '..', '__testfixtures__', 'button-variant-values', `${name}.tsx`),
-    'utf8',
-  );
+  return readTransformFixture(__dirname, FIXTURE_SUITE, `${name}.tsx`);
 }
 
 describe('button-variant-values', () => {
@@ -38,6 +36,24 @@ const App = () => <Button variant="foregroundMuted">Click</Button>;
       const output = applyButtonVariantTransform(input);
       expect(output).toContain('variant="secondary"');
       expect(output).not.toContain('variant="foregroundMuted"');
+    });
+
+    it('rewrites variant="tertiary" to variant="inverse" on Button from a non-@coinbase scope', () => {
+      const input = `
+import { Button } from '@example/cds-web';
+const App = () => <Button variant="tertiary">Click</Button>;
+`;
+      const output = applyButtonVariantTransform(input);
+      expect(output).toContain('variant="inverse"');
+      expect(output).not.toContain('variant="tertiary"');
+    });
+
+    it('skips non-matching scope when --package-scope is set', () => {
+      const input = `
+import { Button } from '@example/cds-web';
+const App = () => <Button variant="tertiary">Click</Button>;
+`;
+      expect(applyButtonVariantTransform(input, { packageScope: '@coinbase' })).toBe('');
     });
 
     it('rewrites variant="tertiary" to variant="inverse" on IconButton from @coinbase/cds-mobile', () => {
