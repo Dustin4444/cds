@@ -9,7 +9,7 @@ export const customComponentConfig: ComponentConfig = {
 
   Button: (props) => {
     /* @ts-expect-error - data-pagenumber is a custom prop */
-    if (!!props['data-pagenumber']) return { height: 24 };
+    if (props['data-pagenumber']) return { height: 24 };
 
     return {
       borderRadius: 200,

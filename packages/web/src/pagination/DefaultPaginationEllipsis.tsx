@@ -1,4 +1,5 @@
 import { css } from '@linaria/core';
+
 import { Text, type TextProps } from '../typography/Text';
 
 import type { PaginationEllipsisProps } from './Pagination';
