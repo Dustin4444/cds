@@ -5,7 +5,10 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { HStackDefaultElement, HStackProps } from '../layout/HStack';
 import { HStack } from '../layout/HStack';
 
-import { DefaultPaginationEllipsis } from './DefaultPaginationEllipsis';
+import {
+  DefaultPaginationEllipsis,
+  type DefaultPaginationEllipsisProps,
+} from './DefaultPaginationEllipsis';
 import { DefaultPaginationNavigationButton } from './DefaultPaginationNavigationButton';
 import { DefaultPaginationNavigationTextButton } from './DefaultPaginationNavigationTextButton';
 import { DefaultPaginationPageButton } from './DefaultPaginationPageButton';
@@ -178,7 +181,7 @@ export const Pagination = (_props: PaginationProps) => {
       accessibilityLabel={accessibilityLabel}
       alignItems="center"
       as="nav"
-      gap={0.5}
+      gap={2}
       justifyContent="center"
       testID={testID}
       {...props}

@@ -2,14 +2,14 @@ import { forwardRef, useCallback } from 'react';
 import { css } from '@linaria/core';
 
 import { Button } from '../buttons/Button';
-import { cx } from '../cx';
 
 import type { PaginationPageButtonProps } from './Pagination';
 
-const circularButtonCss = css`
-  width: 40px;
-  height: 40px;
-  aspect-ratio: 1/1;
+const pageLabelCss = css`
+  min-width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const DefaultPaginationPageButton = forwardRef(
@@ -26,7 +26,6 @@ export const DefaultPaginationPageButton = forwardRef(
     ref: React.ForwardedRef<HTMLButtonElement>,
   ) => {
     const handleClick = useCallback(() => onClick(page), [onClick, page]);
-    const isSingleDigit = page < 10;
 
     return (
       <Button
@@ -34,15 +33,15 @@ export const DefaultPaginationPageButton = forwardRef(
         compact
         accessibilityLabel={accessibilityLabel}
         aria-current={isCurrentPage ? 'page' : undefined}
-        className={cx(isSingleDigit && circularButtonCss)}
         disabled={disabled}
+        font="headline"
         onClick={handleClick}
         testID={testID}
         transparent={!isCurrentPage}
         variant={isCurrentPage ? 'primary' : 'secondary'}
         {...props}
       >
-        {page}
+        <span className={pageLabelCss}>{page}</span>
       </Button>
     );
   },
