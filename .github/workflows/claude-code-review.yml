@@ -1,0 +1,52 @@
+name: Claude Code Review
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+concurrency:
+  group: claude-review-${{github.event.pull_request.number || github.run_id}}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: Review PR
+    # Skip fork PRs because org secrets and internal runner access are unavailable.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on:
+      group: claude-code-reviewer
+    steps:
+      - name: Harden the runner (Block unauthorized outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            bun.sh:443
+            github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            release-assets.githubusercontent.com:443
+            ${{ vars.LLM_GATEWAY_HOSTNAME }}:443
+
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        uses: anthropics/claude-code-action@1b8ee3b94104046d71fde52ec3557651ad8c0d71 # v1.0.29
+        env:
+          ANTHROPIC_BASE_URL: https://${{ vars.LLM_GATEWAY_HOSTNAME }}
+        with:
+          anthropic_api_key: ${{ secrets.LLM_GATEWAY_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          track_progress: false
+          prompt: |
+            Review this pull request for correctness, regressions, security, and maintainability.
+            Focus on actionable findings. Do not add style-only feedback covered by linters/formatters.
