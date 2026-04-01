@@ -333,17 +333,17 @@ describe('Pagination', () => {
   it('renders ellipsis with correct properties', () => {
     renderComponent({ totalPages: 20 });
 
-    const ellipsis = screen.getByText('...');
+    const ellipsisContent = screen.getByText('...');
+    const ellipsis = ellipsisContent.closest('[aria-hidden="true"]');
 
     // Verify accessibility
     expect(ellipsis).toHaveAttribute('aria-hidden', 'true');
 
     // Verify it's not a button (non-interactive)
-    expect(ellipsis.tagName).not.toBe('BUTTON');
+    expect(ellipsis?.tagName).not.toBe('BUTTON');
 
     // Verify correct styling
-    const parentElement = ellipsis.parentElement;
-    expect(parentElement).toHaveStyle('color: var(--color-fgMuted)');
+    expect(ellipsis).toHaveStyle('color: var(--color-fgMuted)');
   });
 
   it('supports polymorphic as prop', () => {
