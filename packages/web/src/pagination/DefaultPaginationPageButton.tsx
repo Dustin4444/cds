@@ -10,6 +10,7 @@ const pageLabelCss = css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  vertical-align: middle;
 `;
 
 export const DefaultPaginationPageButton = forwardRef(

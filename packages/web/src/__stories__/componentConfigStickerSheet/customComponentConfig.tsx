@@ -7,12 +7,17 @@ export const customComponentConfig: ComponentConfig = {
     borderRadius: 0,
   },
 
-  Button: (props) => ({
-    borderRadius: 200,
-    height: props.compact ? 24 : 32,
-    font: props.compact ? 'label1' : 'headline',
-    progressCircleSize: props.compact ? 16 : 24,
-  }),
+  Button: (props) => {
+    /* @ts-expect-error - data-pagenumber is a custom prop */
+    if (props['data-pagenumber'] !== null) return { height: 24 };
+
+    return {
+      borderRadius: 200,
+      height: props.compact ? 24 : 32,
+      font: props.compact ? 'label1' : 'headline',
+      progressCircleSize: props.compact ? 16 : 24,
+    };
+  },
 
   IconButton: (props) => {
     const isCompact = props.compact ?? true;
