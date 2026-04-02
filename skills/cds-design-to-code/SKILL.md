@@ -7,7 +7,7 @@ description: |
 license: Apache-2.0
 metadata:
   author: ruikun.hao@coinbase.com
-  version: '1.0.1'
+  version: '1.0.2'
 ---
 
 # CDS Design To Code
