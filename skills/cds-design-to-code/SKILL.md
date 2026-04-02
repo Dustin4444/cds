@@ -21,12 +21,12 @@ The goal is not to copy the Figma output literally. The goal is to use Figma MCP
 - Use when the user shares a Figma URL like `figma.com/design/...?node-id=...` and wants it implemented.
 - Use when translating a Figma design into CDS-first React or React Native code.
 - Use when the user asks to "implement this design" or "build this from Figma."
-- Do not use when there is no Figma design to reference -- use the `cds-code` skill instead for general CDS UI work.
+- Do not use when there is no Figma design to reference -- use the CDS Code skill (installed as `cds-code` or `frontend-cds-public-cds-code`) instead for general CDS UI work.
 - Do not use for design feedback or critique without an implementation request.
 
 ## Prerequisites
 
-- **`cds-code` skill** -- this skill depends on `cds-code` for component selection, styling rules, doc lookup workflow, and code quality standards. If `cds-code` is not installed, tell the user to install it first.
+- **CDS Code skill** (installed as `cds-code` or `frontend-cds-public-cds-code`) -- this skill depends on the CDS Code skill for component selection, styling rules, doc lookup workflow, and code quality standards. If it is not installed, tell the user to install it first.
 - **Figma MCP server** must be connected and accessible. Verify by checking whether `get_design_context` is available as an MCP tool.
 - **CDS MCP server** must be connected for doc lookups via `list-cds-routes` and `get-cds-doc`.
 - User must provide a Figma URL in the format: `https://figma.com/design/:fileKey/:fileName?node-id=1-2`
@@ -125,7 +125,7 @@ Do not guess the platform from the Figma design alone when the repo tells you mo
 
 If both web and mobile exist and the target is genuinely ambiguous, ask one concise clarifying question.
 
-**Read the CDS coding standards:** Before writing any CDS code, read the `cds-code` skill for the full set of CDS-first coding standards including layout defaults, styling defaults, component selection guidance, package mapping, and theme usage. That skill is the canonical reference for how to write CDS code -- this skill focuses on the Figma-to-CDS bridge.
+**Read the CDS coding standards:** Before writing any CDS code, read the CDS Code skill (installed as `cds-code` or `frontend-cds-public-cds-code`) for the full set of CDS-first coding standards including layout defaults, styling defaults, component selection guidance, package mapping, and theme usage. That skill is the canonical reference for how to write CDS code -- this skill focuses on the Figma-to-CDS bridge.
 
 ### Step 6: Translate to CDS Components
 
@@ -139,7 +139,7 @@ This is the core translation step. The Figma MCP response is a mixed-confidence 
 | Screenshot                      | High       | Use for layout hierarchy, spacing rhythm, and visual intent verification.                                                                                                            |
 | Default HTML / Tailwind classes | Lower      | Structural hints that must be adapted into CDS components. Never ship raw Figma HTML in a CDS app.                                                                                   |
 
-**CDS doc lookup:** Follow the `cds-code` skill's setup and component selection steps to discover and read CDS docs before choosing imports, props, or composition patterns.
+**CDS doc lookup:** Follow the CDS Code skill's (installed as `cds-code` or `frontend-cds-public-cds-code`) setup and component selection steps to discover and read CDS docs before choosing imports, props, or composition patterns.
 
 **Translating fallback HTML and Tailwind classes:**
 
@@ -167,7 +167,7 @@ When translating Figma values to CDS code, always check the target component's p
 
 For example, Figma may output a label with `font-size: 10px`, `font-weight: 500`, `text-transform: uppercase`, `color: var(--palette/foregroundmuted)`. The correct translation is to find the matching CDS `font` token (e.g. `font="caption"`), then use `color="fgMuted"` and `textTransform="uppercase"` as props -- not to dump everything into `style`. Using `style` for these values bypasses the CDS font family and theme wiring, causing the text to render in the wrong typeface.
 
-Only use `style` for values that have no CDS prop equivalent (e.g. `cursor`, `transform`, `letterSpacing`, exact pixel dimensions). See the "Avoid unnecessary `style` overrides" section in the `cds-code` skill for the full rule and examples.
+Only use `style` for values that have no CDS prop equivalent (e.g. `cursor`, `transform`, `letterSpacing`, exact pixel dimensions). See the "Avoid unnecessary `style` overrides" section in the CDS Code skill (installed as `cds-code` or `frontend-cds-public-cds-code`) for the full rule and examples.
 
 ### Step 7: Achieve Visual Parity
 
@@ -194,7 +194,7 @@ Pay special attention to:
 
 Prefer a short corrective loop: implement, visually compare, correct the largest differences, re-check once more.
 
-Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it. If inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design. See the `Step 4: Verify visually` in the `cds-code` skill for the full workflow.
+Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it. If inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design. See "Step 4: Verify visually" in the CDS Code skill (installed as `cds-code` or `frontend-cds-public-cds-code`) for the full workflow.
 
 ### Step 8: Validate Against Figma
 
@@ -217,7 +217,7 @@ Before marking complete, validate the implementation against the Figma screensho
 
 ## Implementation Rules
 
-Follow the `cds-code` skill for all component selection, styling, and code quality rules. When a Code Connect snippet already uses CDS components cleanly, preserve that mapping rather than re-deriving it.
+Follow the CDS Code skill (installed as `cds-code` or `frontend-cds-public-cds-code`) for all component selection, styling, and code quality rules. When a Code Connect snippet already uses CDS components cleanly, preserve that mapping rather than re-deriving it.
 
 ## Common Issues and Solutions
 

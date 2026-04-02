@@ -14,15 +14,15 @@ This skill provides a structured workflow for translating Figma designs into rea
 
 ## Dependencies
 
-| Dependency           | Required | Purpose                                                                                                                           |
-| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **`cds-code` skill** | Yes      | Provides component selection, styling rules, doc lookup workflow, and code quality standards. This skill must be installed first. |
-| **CDS MCP server**   | Yes      | Provides `list-cds-routes` and `get-cds-doc` tools for looking up component docs, props, and examples at runtime.                 |
-| **Figma MCP server** | Yes      | Provides `get_design_context`, `get_metadata`, and `get_screenshot` tools for fetching design data from Figma files.              |
+| Dependency           | Required | Purpose                                                                                                                                                                                      |
+| -------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CDS Code skill**   | Yes      | Provides component selection, styling rules, doc lookup workflow, and code quality standards. This skill must be installed first. Installed as `cds-code` or `frontend-cds-public-cds-code`. |
+| **CDS MCP server**   | Yes      | Provides `list-cds-routes` and `get-cds-doc` tools for looking up component docs, props, and examples at runtime.                                                                            |
+| **Figma MCP server** | Yes      | Provides `get_design_context`, `get_metadata`, and `get_screenshot` tools for fetching design data from Figma files.                                                                         |
 
-### Installing the cds-code skill
+### Installing the CDS Code skill
 
-Install via your organization's skill registry. The `cds-code` skill must be installed before using this skill.
+Install via your organization's skill registry. The CDS Code skill must be installed before using this skill.
 
 ### Installing the CDS MCP server
 
@@ -64,5 +64,5 @@ Paste it directly into the Cursor chat. The `@https://www.figma.com/...` part is
 
 ## When NOT to use
 
-- You're writing CDS UI without a Figma design -- use the `cds-code` skill instead.
+- You're writing CDS UI without a Figma design -- use the CDS Code skill instead.
 - You only need design feedback or a critique, not an implementation.
