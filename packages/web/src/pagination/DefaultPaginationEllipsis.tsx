@@ -1,15 +1,12 @@
 import { css } from '@linaria/core';
 
+import { cx } from '../cx';
 import { Text, type TextProps } from '../typography/Text';
 
 import type { PaginationEllipsisProps } from './Pagination';
 
-const ellipsisLabelCss = css`
-  min-width: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
+const contentBoxCss = css`
+  box-sizing: content-box;
 `;
 
 export type DefaultPaginationEllipsisProps = PaginationEllipsisProps &
@@ -17,9 +14,18 @@ export type DefaultPaginationEllipsisProps = PaginationEllipsisProps &
 
 export const DefaultPaginationEllipsis = ({
   content = '...',
+  className,
   ...props
 }: DefaultPaginationEllipsisProps) => (
-  <Text noWrap aria-hidden="true" font="headline" paddingX={2} {...props}>
-    <span className={ellipsisLabelCss}>{content}</span>
+  <Text
+    noWrap
+    aria-hidden="true"
+    className={cx(contentBoxCss, className)}
+    font="headline"
+    minWidth={20}
+    paddingX={2}
+    {...props}
+  >
+    {content}
   </Text>
 );

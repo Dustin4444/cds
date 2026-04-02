@@ -1,19 +1,25 @@
 import { forwardRef, useCallback } from 'react';
 import { css } from '@linaria/core';
 
-import { Button } from '../buttons/Button';
+import { Button, type ButtonBaseProps } from '../buttons/Button';
+import { cx } from '../cx';
 
 import type { PaginationPageButtonProps } from './Pagination';
 
-const pageLabelCss = css`
-  min-width: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
+const contentBoxCss = css`
+  box-sizing: content-box;
 `;
 
-export const DefaultPaginationPageButton = forwardRef(
+export type DefaultPaginationPageButtonProps = PaginationPageButtonProps &
+  Omit<ButtonBaseProps, keyof PaginationPageButtonProps | 'children' | 'onClick'> & {
+    className?: string;
+    style?: React.CSSProperties;
+  };
+
+export const DefaultPaginationPageButton = forwardRef<
+  HTMLButtonElement,
+  DefaultPaginationPageButtonProps
+>(
   (
     {
       page,
@@ -22,8 +28,9 @@ export const DefaultPaginationPageButton = forwardRef(
       disabled,
       accessibilityLabel,
       testID,
+      className,
       ...props
-    }: PaginationPageButtonProps,
+    }: DefaultPaginationPageButtonProps,
     ref: React.ForwardedRef<HTMLButtonElement>,
   ) => {
     const handleClick = useCallback(() => onClick(page), [onClick, page]);
@@ -34,15 +41,17 @@ export const DefaultPaginationPageButton = forwardRef(
         compact
         accessibilityLabel={accessibilityLabel}
         aria-current={isCurrentPage ? 'page' : undefined}
+        className={cx(contentBoxCss, className)}
         disabled={disabled}
         font="headline"
+        minWidth={20}
         onClick={handleClick}
         testID={testID}
         transparent={!isCurrentPage}
         variant={isCurrentPage ? 'primary' : 'secondary'}
         {...props}
       >
-        <span className={pageLabelCss}>{page}</span>
+        {page}
       </Button>
     );
   },
