@@ -7,6 +7,7 @@ import type { SpringConfig } from '@react-spring/core';
 import type { Transition } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { IconProps } from '../icons/Icon';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { VStack, type VStackBaseProps, type VStackProps } from '../layout/VStack';
@@ -316,7 +317,11 @@ type StepperComponent = <Metadata extends Record<string, unknown> = Record<strin
 const StepperBase = memo(
   forwardRef(
     <Metadata extends Record<string, unknown> = Record<string, unknown>>(
-      {
+      _props: StepperProps<Metadata>,
+      ref: React.Ref<HTMLDivElement>,
+    ) => {
+      const mergedProps = useComponentConfig('Stepper', _props);
+      const {
         direction,
         activeStepId,
         steps,
@@ -350,9 +355,7 @@ const StepperBase = memo(
         animate = true,
         disableAnimateOnMount,
         ...props
-      }: StepperProps<Metadata>,
-      ref: React.Ref<HTMLDivElement>,
-    ) => {
+      } = mergedProps;
       const flatStepIds = useMemo(() => flattenSteps(steps).map((step) => step.id), [steps]);
 
       // Derive activeStep from activeStepId

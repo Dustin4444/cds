@@ -20,6 +20,7 @@ import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
 import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
@@ -116,27 +117,99 @@ export type BannerProps = BannerBaseProps &
   Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
 
 export const Banner = memo(
-  forwardRef(
-    (
-      {
-        variant,
-        startIcon,
-        startIconActive,
-        onClose,
-        primaryAction,
-        secondaryAction,
-        title,
-        children,
-        showDismiss = false,
-        testID,
-        style,
-        className,
-        numberOfLines = 3,
-        label,
-        styleVariant = 'contextual',
-        startIconAccessibilityLabel,
-        closeAccessibilityLabel = 'close',
-        borderRadius = styleVariant === 'contextual' ? 400 : undefined,
+  forwardRef((_props: BannerProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('Banner', _props);
+    const {
+      variant,
+      startIcon,
+      startIconActive,
+      onClose,
+      primaryAction,
+      secondaryAction,
+      title,
+      children,
+      showDismiss = false,
+      testID,
+      style,
+      className,
+      numberOfLines = 3,
+      label,
+      styleVariant = 'contextual',
+      startIconAccessibilityLabel,
+      closeAccessibilityLabel = 'close',
+      borderRadius = styleVariant === 'contextual' ? 400 : undefined,
+      margin,
+      marginY,
+      marginX,
+      marginTop,
+      marginBottom,
+      marginStart,
+      marginEnd,
+      width = '100%',
+      classNames,
+      styles,
+      ...props
+    } = mergedProps;
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const titleId = useId();
+
+    const accessibilityLabelledBy = typeof title === 'string' ? titleId : undefined;
+
+    // Setup color configs
+    const {
+      iconColor,
+      textColor,
+      background,
+      primaryActionColor,
+      secondaryActionColor,
+      iconButtonColor,
+      borderColor,
+    }: BannerVariantStyle = variants[variant];
+
+    // Events
+    const handleOnDismiss = useCallback(() => {
+      setIsCollapsed(true);
+      onClose?.();
+    }, [onClose]);
+
+    const clonedPrimaryAction = useMemo(() => {
+      if (!isValidElement<LinkProps<LinkDefaultElement>>(primaryAction)) return null;
+
+      if (primaryAction.type === Link) {
+        return React.cloneElement(primaryAction, {
+          font: 'label1',
+          color: primaryActionColor,
+          testID: `${testID}-action--primary`,
+          ...primaryAction.props,
+        });
+      } else {
+        return React.cloneElement(primaryAction, {
+          testID: `${testID}-action--primary`,
+          ...primaryAction.props,
+        });
+      }
+    }, [primaryAction, primaryActionColor, testID]);
+
+    const clonedSecondaryAction = useMemo(() => {
+      if (!isValidElement<LinkProps<LinkDefaultElement>>(secondaryAction)) return null;
+
+      if (secondaryAction.type === Link) {
+        return React.cloneElement(secondaryAction, {
+          font: 'label1',
+          color: secondaryActionColor,
+          testID: `${testID}-action--secondary`,
+          ...secondaryAction.props,
+        });
+      } else {
+        return React.cloneElement(secondaryAction, {
+          testID: `${testID}-action--secondary`,
+          ...secondaryAction.props,
+        });
+      }
+    }, [secondaryAction, secondaryActionColor, testID]);
+
+    const marginStyles = useMemo(
+      () => ({
         margin,
         marginY,
         marginX,
@@ -144,228 +217,153 @@ export const Banner = memo(
         marginBottom,
         marginStart,
         marginEnd,
-        width = '100%',
-        classNames,
-        styles,
-        ...props
-      }: BannerProps,
-      ref: React.ForwardedRef<HTMLDivElement>,
-    ) => {
-      const [isCollapsed, setIsCollapsed] = useState(false);
-      const titleId = useId();
+      }),
+      [margin, marginX, marginY, marginStart, marginEnd, marginTop, marginBottom],
+    );
 
-      const accessibilityLabelledBy = typeof title === 'string' ? titleId : undefined;
+    const borderBox = useMemo(
+      () => <Box background={borderColor} pin="left" width={4} />,
+      [borderColor],
+    );
 
-      // Setup color configs
-      const {
-        iconColor,
-        textColor,
-        background,
-        primaryActionColor,
-        secondaryActionColor,
-        iconButtonColor,
-        borderColor,
-      }: BannerVariantStyle = variants[variant];
-
-      // Events
-      const handleOnDismiss = useCallback(() => {
-        setIsCollapsed(true);
-        onClose?.();
-      }, [onClose]);
-
-      const clonedPrimaryAction = useMemo(() => {
-        if (!isValidElement<LinkProps<LinkDefaultElement>>(primaryAction)) return null;
-
-        if (primaryAction.type === Link) {
-          return React.cloneElement(primaryAction, {
-            font: 'label1',
-            color: primaryActionColor,
-            testID: `${testID}-action--primary`,
-            ...primaryAction.props,
-          });
-        } else {
-          return React.cloneElement(primaryAction, {
-            testID: `${testID}-action--primary`,
-            ...primaryAction.props,
-          });
-        }
-      }, [primaryAction, primaryActionColor, testID]);
-
-      const clonedSecondaryAction = useMemo(() => {
-        if (!isValidElement<LinkProps<LinkDefaultElement>>(secondaryAction)) return null;
-
-        if (secondaryAction.type === Link) {
-          return React.cloneElement(secondaryAction, {
-            font: 'label1',
-            color: secondaryActionColor,
-            testID: `${testID}-action--secondary`,
-            ...secondaryAction.props,
-          });
-        } else {
-          return React.cloneElement(secondaryAction, {
-            testID: `${testID}-action--secondary`,
-            ...secondaryAction.props,
-          });
-        }
-      }, [secondaryAction, secondaryActionColor, testID]);
-
-      const marginStyles = useMemo(
-        () => ({
-          margin,
-          marginY,
-          marginX,
-          marginTop,
-          marginBottom,
-          marginStart,
-          marginEnd,
-        }),
-        [margin, marginX, marginY, marginStart, marginEnd, marginTop, marginBottom],
-      );
-
-      const borderBox = useMemo(
-        () => <Box background={borderColor} pin="left" width={4} />,
-        [borderColor],
-      );
-
-      const content = (
-        <HStack
-          ref={ref}
-          background={background}
-          borderRadius={borderRadius}
-          className={cx(bannerClassNames.content, className, classNames?.content)}
-          flexGrow={1}
-          gap={1}
-          minWidth={bannerMinWidth}
-          paddingX={styleVariant === 'contextual' ? 2 : 3}
-          paddingY={2}
-          style={{ ...style, ...styles?.content }}
-          testID={testID}
-          {...props}
+    const content = (
+      <HStack
+        ref={ref}
+        background={background}
+        borderRadius={borderRadius}
+        className={cx(bannerClassNames.content, className, classNames?.content)}
+        flexGrow={1}
+        gap={1}
+        minWidth={bannerMinWidth}
+        paddingX={styleVariant === 'contextual' ? 2 : 3}
+        paddingY={2}
+        style={{ ...style, ...styles?.content }}
+        testID={testID}
+        {...props}
+      >
+        {/** Start */}
+        <Box
+          className={cx(bannerClassNames.start, classNames?.start)}
+          paddingX={0.5}
+          paddingY={0.25}
+          style={styles?.start}
         >
-          {/** Start */}
-          <Box
-            className={cx(bannerClassNames.start, classNames?.start)}
-            paddingX={0.5}
-            paddingY={0.25}
-            style={styles?.start}
-          >
-            <Icon
-              accessibilityLabel={startIconAccessibilityLabel}
-              active={startIconActive}
-              color={iconColor}
-              name={startIcon}
-              size="s"
-              testID={`${testID}-icon`}
-            />
-          </Box>
+          <Icon
+            accessibilityLabel={startIconAccessibilityLabel}
+            active={startIconActive}
+            color={iconColor}
+            name={startIcon}
+            size="s"
+            testID={`${testID}-icon`}
+          />
+        </Box>
+        <VStack
+          className={cx(bannerClassNames.body, classNames?.body)}
+          flexDirection={contentResponsiveConfig}
+          flexGrow={1}
+          gap={2}
+          justifyContent="space-between"
+          style={styles?.body}
+          testID={`${testID}-inner-end-box`}
+        >
+          {/** Middle */}
           <VStack
-            className={cx(bannerClassNames.body, classNames?.body)}
-            flexDirection={contentResponsiveConfig}
-            flexGrow={1}
+            className={cx(bannerClassNames.middle, classNames?.middle)}
             gap={2}
-            justifyContent="space-between"
-            style={styles?.body}
-            testID={`${testID}-inner-end-box`}
+            style={styles?.middle}
+            testID={`${testID}-content-box`}
           >
-            {/** Middle */}
-            <VStack
-              className={cx(bannerClassNames.middle, classNames?.middle)}
-              gap={2}
-              style={styles?.middle}
-              testID={`${testID}-content-box`}
-            >
-              <VStack gap={0.5}>
-                {typeof title === 'string' ? (
-                  <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
-                    {title}
-                  </Text>
-                ) : (
-                  title
-                )}
-                {typeof children === 'string' ? (
-                  <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
-                    {children}
-                  </Text>
-                ) : (
-                  children
-                )}
-              </VStack>
-              {typeof label === 'string' ? (
-                <Text
-                  className={cx(bannerClassNames.label, classNames?.label)}
-                  color="fgMuted"
-                  font="legal"
-                  numberOfLines={2}
-                  style={styles?.label}
-                >
-                  {label}
+            <VStack gap={0.5}>
+              {typeof title === 'string' ? (
+                <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
+                  {title}
                 </Text>
               ) : (
-                label
+                title
+              )}
+              {typeof children === 'string' ? (
+                <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
+                  {children}
+                </Text>
+              ) : (
+                children
               )}
             </VStack>
-            {/** Actions */}
-            {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
-              <HStack
-                alignItems="center"
-                className={cx(actionContainerCss, bannerClassNames.actions, classNames?.actions)}
-                gap={2}
-                style={styles?.actions}
-                testID={`${testID}-action`}
+            {typeof label === 'string' ? (
+              <Text
+                className={cx(bannerClassNames.label, classNames?.label)}
+                color="fgMuted"
+                font="legal"
+                numberOfLines={2}
+                style={styles?.label}
               >
-                {clonedPrimaryAction}
-                {clonedSecondaryAction}
-              </HStack>
+                {label}
+              </Text>
+            ) : (
+              label
             )}
           </VStack>
-          {/** Dismissable action */}
-          {showDismiss && (
-            <Box
-              alignItems="flex-start"
-              className={cx(bannerClassNames.dismiss, classNames?.dismiss)}
-              padding={0.5}
-              style={styles?.dismiss}
+          {/** Actions */}
+          {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
+            <HStack
+              alignItems="center"
+              className={cx(actionContainerCss, bannerClassNames.actions, classNames?.actions)}
+              gap={2}
+              style={styles?.actions}
+              testID={`${testID}-action`}
             >
-              <Pressable
-                accessibilityLabel={closeAccessibilityLabel}
-                background="transparent"
-                borderRadius={1000}
-                onClick={handleOnDismiss}
-                role="button"
-                testID={`${testID}-dismiss-btn`}
-              >
-                <Icon color={iconButtonColor} name="close" size="s" />
-              </Pressable>
-            </Box>
+              {clonedPrimaryAction}
+              {clonedSecondaryAction}
+            </HStack>
           )}
-        </HStack>
-      );
+        </VStack>
+        {/** Dismissable action */}
+        {showDismiss && (
+          <Box
+            alignItems="flex-start"
+            className={cx(bannerClassNames.dismiss, classNames?.dismiss)}
+            padding={0.5}
+            style={styles?.dismiss}
+          >
+            <Pressable
+              accessibilityLabel={closeAccessibilityLabel}
+              background="transparent"
+              borderRadius={1000}
+              onClick={handleOnDismiss}
+              role="button"
+              testID={`${testID}-dismiss-btn`}
+            >
+              <Icon color={iconButtonColor} name="close" size="s" />
+            </Pressable>
+          </Box>
+        )}
+      </HStack>
+    );
 
-      return (
-        <Box
-          className={cx(bannerClassNames.root, classNames?.root)}
-          display="block"
-          height="fit-content"
-          position="relative"
-          {...marginStyles}
-          style={styles?.root}
-          width={width}
-        >
-          {showDismiss ? (
-            <Collapsible
-              accessibilityLabelledBy={accessibilityLabelledBy}
-              collapsed={isCollapsed}
-              id={`${titleId}--controller`}
-              testID={`${testID}-collapsible`}
-            >
-              {content}
-            </Collapsible>
-          ) : (
-            content
-          )}
-          {styleVariant === 'global' && borderBox}
-        </Box>
-      );
-    },
-  ),
+    return (
+      <Box
+        className={cx(bannerClassNames.root, classNames?.root)}
+        display="block"
+        height="fit-content"
+        position="relative"
+        {...marginStyles}
+        style={styles?.root}
+        width={width}
+      >
+        {showDismiss ? (
+          <Collapsible
+            accessibilityLabelledBy={accessibilityLabelledBy}
+            collapsed={isCollapsed}
+            id={`${titleId}--controller`}
+            testID={`${testID}-collapsible`}
+          >
+            {content}
+          </Collapsible>
+        ) : (
+          content
+        )}
+        {styleVariant === 'global' && borderBox}
+      </Box>
+    );
+  }),
 );

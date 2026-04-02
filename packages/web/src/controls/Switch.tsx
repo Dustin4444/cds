@@ -5,6 +5,7 @@ import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { convertTransition } from '../motion/utils';
@@ -52,7 +53,14 @@ const thumbCss = css`
   left: 1px;
 `;
 
-export type SwitchProps = ControlBaseProps<string> &
+export type SwitchBaseProps = ControlBaseProps<string> & {
+  /** Sets the checked/active color of the control.
+   * @default bgPrimary
+   */
+  controlColor?: ThemeVars.Color;
+};
+
+export type SwitchProps = SwitchBaseProps &
   StylesAndClassNames<typeof switchClassNames> & {
     /**
      * Label content rendered next to the switch control.
@@ -63,10 +71,6 @@ export type SwitchProps = ControlBaseProps<string> &
      * ```
      */
     children?: React.ReactNode;
-    /** Sets the checked/active color of the control.
-     * @default bgPrimary
-     */
-    controlColor?: ThemeVars.Color;
   };
 
 const MotionBox = motion(Box);
@@ -80,83 +84,84 @@ const thumbMotionVariants = {
   },
 };
 
-const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchWithRef(
-  {
-    children,
-    checked,
-    disabled,
-    elevation,
-    controlColor,
-    background = checked ? 'bgPrimary' : 'bgTertiary',
-    borderColor,
-    borderRadius = 1000,
-    borderWidth,
-    value,
-    className,
-    style,
-    classNames,
-    styles,
-    ...props
-  },
-  ref,
-) {
-  const { activeColorScheme } = useTheme();
-  const defaultControlColor = activeColorScheme === 'dark' ? 'fg' : 'fgInverse';
-  const switchNode = (
-    <Control
-      ref={ref}
-      borderRadius={1000}
-      checked={checked}
-      className={cx(switchClassNames.control, classNames?.control)}
-      disabled={disabled}
-      label={children}
-      role="switch"
-      style={{ ...style, ...styles?.control }}
-      type="checkbox"
-      value={value}
-      {...props}
-    >
-      <Box
-        alignItems="center"
-        background={background}
-        borderColor={borderColor}
-        borderRadius={borderRadius}
-        borderWidth={borderWidth}
-        className={cx(trackCss, switchClassNames.track, classNames?.track)}
-        data-filled={checked}
-        justifyContent="flex-start"
-        style={styles?.track}
-        testID="switch-track"
+const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(
+  function SwitchWithRef(_props, ref) {
+    const mergedProps = useComponentConfig('Switch', _props);
+    const {
+      children,
+      checked,
+      disabled,
+      elevation,
+      controlColor,
+      background = checked ? 'bgPrimary' : 'bgTertiary',
+      borderColor,
+      borderRadius = 1000,
+      borderWidth,
+      value,
+      className,
+      style,
+      classNames,
+      styles,
+      ...props
+    } = mergedProps;
+    const { activeColorScheme } = useTheme();
+    const defaultControlColor = activeColorScheme === 'dark' ? 'fg' : 'fgInverse';
+    const switchNode = (
+      <Control
+        ref={ref}
+        borderRadius={1000}
+        checked={checked}
+        className={cx(switchClassNames.control, classNames?.control)}
+        disabled={disabled}
+        label={children}
+        role="switch"
+        style={{ ...style, ...styles?.control }}
+        type="checkbox"
+        value={value}
+        {...props}
       >
-        <MotionBox
-          animate={checked ? 'checked' : 'unchecked'}
-          background={controlColor ?? defaultControlColor}
-          borderRadius={1000}
-          className={cx(thumbCss, switchClassNames.thumb, classNames?.thumb)}
-          data-testid="switch-thumb"
-          elevation={elevation}
-          initial={false}
-          style={styles?.thumb}
-          testID="switch-thumb"
-          transition={convertTransition(switchTransitionConfig)}
-          variants={thumbMotionVariants}
-        />
-      </Box>
-    </Control>
-  );
+        <Box
+          alignItems="center"
+          background={background}
+          borderColor={borderColor}
+          borderRadius={borderRadius}
+          borderWidth={borderWidth}
+          className={cx(trackCss, switchClassNames.track, classNames?.track)}
+          data-filled={checked}
+          justifyContent="flex-start"
+          style={styles?.track}
+          testID="switch-track"
+        >
+          <MotionBox
+            animate={checked ? 'checked' : 'unchecked'}
+            background={controlColor ?? defaultControlColor}
+            borderRadius={1000}
+            className={cx(thumbCss, switchClassNames.thumb, classNames?.thumb)}
+            data-testid="switch-thumb"
+            elevation={elevation}
+            initial={false}
+            style={styles?.thumb}
+            testID="switch-thumb"
+            transition={convertTransition(switchTransitionConfig)}
+            variants={thumbMotionVariants}
+          />
+        </Box>
+      </Control>
+    );
 
-  return (
-    <Box
-      alignItems={children ? 'center' : undefined}
-      className={cx(switchClassNames.root, className, classNames?.root)}
-      minHeight={children ? 'var(--controlSize-switchHeight)' : undefined}
-      role="presentation"
-      style={styles?.root}
-      width="fit-content"
-    >
-      {switchNode}
-    </Box>
-  );
-});
+    return (
+      <Box
+        alignItems={children ? 'center' : undefined}
+        className={cx(switchClassNames.root, className, classNames?.root)}
+        minHeight={children ? 'var(--controlSize-switchHeight)' : undefined}
+        role="presentation"
+        style={styles?.root}
+        width="fit-content"
+      >
+        {switchNode}
+      </Box>
+    );
+  },
+);
 
 export const Switch = memo(SwitchWithRef);

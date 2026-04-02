@@ -103,7 +103,6 @@ export const SlideButtonHandleChecked = memo(
 
 export const SlideButtonHandleUnchecked = memo(
   ({ start, compact }: SlideButtonHandleUncheckedProps) => {
-    const theme = useTheme();
     const iconSize = compact ? 's' : 'm';
 
     return (

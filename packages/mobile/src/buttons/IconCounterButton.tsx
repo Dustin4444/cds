@@ -5,6 +5,7 @@ import type { IconSize, ValidateProps } from '@coinbase/cds-common/types';
 import { formatCount } from '@coinbase/cds-common/utils/formatCount';
 import type { IconName } from '@coinbase/cds-icons';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons';
 import { HStack } from '../layout';
 import type { PressableProps } from '../system';
@@ -47,7 +48,11 @@ export type IconCounterButtonProps = IconCounterButtonBaseProps &
 
 export const IconCounterButton = memo(
   forwardRef(function IconCounterButton(
-    {
+    _props: IconCounterButtonProps,
+    ref: React.ForwardedRef<View>,
+  ) {
+    const mergedProps = useComponentConfig('IconCounterButton', _props);
+    const {
       icon,
       iconSize = 's',
       size = iconSize,
@@ -58,9 +63,8 @@ export const IconCounterButton = memo(
       styles,
       style,
       ...props
-    }: IconCounterButtonProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
+
     const rootStyleOverride = styles?.root;
 
     const rootStyle = useMemo<PressableProps['style']>(() => {

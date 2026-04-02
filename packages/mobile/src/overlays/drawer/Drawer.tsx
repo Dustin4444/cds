@@ -29,6 +29,7 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { useHasNotch } from '../../hooks/useHasNotch';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { HandleBar, type HandleBarProps } from '../handlebar/HandleBar';
@@ -137,8 +138,9 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Drawer = memo(
-  forwardRef<DrawerRefBaseProps, DrawerProps>(function Drawer(
-    {
+  forwardRef<DrawerRefBaseProps, DrawerProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('Drawer', _props);
+    const {
       children,
       pin = 'bottom',
       onCloseComplete,
@@ -160,9 +162,7 @@ export const Drawer = memo(
       animationType = 'none',
       disableSafeAreaPaddingBottom,
       ...props
-    },
-    ref,
-  ) {
+    } = mergedProps;
     const theme = useTheme();
     const { width, height } = useWindowDimensions();
     const isAndroid = Platform.OS === 'android';

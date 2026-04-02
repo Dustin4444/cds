@@ -9,6 +9,7 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
@@ -18,8 +19,6 @@ import { Text } from '../typography/Text';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 const defaultProgressCircleSize = 24;
-
-const defaultLoadingSpinnerSize = 24;
 
 export const styles = StyleSheet.create({
   inline: {
@@ -92,8 +91,9 @@ export type ButtonBaseProps = SharedProps &
 export type ButtonProps = ButtonBaseProps;
 
 export const Button = memo(
-  forwardRef(function Button(
-    {
+  forwardRef(function Button(_props: ButtonProps, ref: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('Button', _props);
+    const {
       variant = 'primary',
       loading,
       progressCircleSize = defaultProgressCircleSize,
@@ -125,10 +125,15 @@ export const Button = memo(
       borderRadius = compact ? 700 : 900,
       accessibilityLabel,
       accessibilityHint,
+      padding,
+      paddingStart,
+      paddingEnd,
+      paddingTop,
+      paddingBottom,
+      paddingX = compact ? 2 : 4,
+      paddingY = compact ? 1 : 2,
       ...props
-    }: ButtonProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const theme = useTheme();
     const iconSize = compact ? 's' : 'm';
     const hasIcon = Boolean(startIcon || endIcon);
@@ -144,8 +149,6 @@ export const Button = memo(
     const sizingStyle = block ? styles.block : styles.inline;
     const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
 
-    const paddingX = compact ? 2 : 4;
-    const paddingY = compact ? 1 : 2;
     const flushMargin = flush ? (-paddingX as NegativeSpace) : undefined;
 
     const pressableStyle = useCallback(
@@ -205,6 +208,11 @@ export const Button = memo(
           alignItems="center"
           flexWrap="nowrap"
           justifyContent={justifyContent}
+          padding={padding}
+          paddingBottom={paddingBottom}
+          paddingEnd={paddingEnd}
+          paddingStart={paddingStart}
+          paddingTop={paddingTop}
           paddingX={paddingX}
           paddingY={paddingY}
           style={sizingStyle}

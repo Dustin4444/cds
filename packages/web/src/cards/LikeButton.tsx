@@ -3,6 +3,7 @@ import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { useTheme } from '../hooks/useTheme';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
@@ -26,14 +27,16 @@ export type LikeButtonBaseProps = Pick<
 
 export type LikeButtonProps = LikeButtonBaseProps & PressableProps<PressableDefaultElement>;
 
-export const LikeButton = memo(function LikeButton({
-  count = 0,
-  compact = true,
-  padding = compact ? 1.5 : 2, // mirror IconButton's padding
-  flush,
-  liked = false,
-  ...props
-}: LikeButtonProps) {
+export const LikeButton = memo(function LikeButton(_props: LikeButtonProps) {
+  const mergedProps = useComponentConfig('LikeButton', _props);
+  const {
+    count = 0,
+    compact = true,
+    flush,
+    liked = false,
+    padding = compact ? 1.5 : 2, // mirror IconButton's padding
+    ...props
+  } = mergedProps;
   const theme = useTheme();
   const iconSize = compact ? 's' : 'm';
 

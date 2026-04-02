@@ -10,6 +10,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
@@ -157,10 +158,8 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
     }
 >;
 
-export type ButtonProps<AsComponent extends React.ElementType> = Polymorphic.Props<
-  AsComponent,
-  ButtonBaseProps
->;
+export type ButtonProps<AsComponent extends React.ElementType = ButtonDefaultElement> =
+  Polymorphic.Props<AsComponent, ButtonBaseProps>;
 
 type ButtonComponent = (<AsComponent extends React.ElementType = ButtonDefaultElement>(
   props: ButtonProps<AsComponent>,
@@ -170,7 +169,11 @@ type ButtonComponent = (<AsComponent extends React.ElementType = ButtonDefaultEl
 export const Button: ButtonComponent = memo(
   forwardRef<React.ReactElement<ButtonBaseProps>, ButtonBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: ButtonProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('Button', _props);
+      const {
         as,
         variant = 'primary',
         loading,
@@ -207,9 +210,7 @@ export const Button: ButtonComponent = memo(
         minWidth = 'auto',
         style,
         ...props
-      }: ButtonProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const theme = useTheme();
       const Component = (as ?? buttonDefaultElement) satisfies React.ElementType;
       const iconSize = compact ? 's' : 'm';

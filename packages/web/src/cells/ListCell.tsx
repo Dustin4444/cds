@@ -4,6 +4,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
@@ -201,7 +202,11 @@ type ListCellComponent = (<AsComponent extends React.ElementType = ListCellDefau
 export const ListCell: ListCellComponent = memo(
   forwardRef<React.ReactElement<ListCellBaseProps>, ListCellBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: ListCellProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('ListCell', _props);
+      const {
         as,
         accessory,
         accessoryNode,
@@ -237,9 +242,7 @@ export const ListCell: ListCellComponent = memo(
         subtitleNode,
         minHeight: minHeightProp,
         ...props
-      }: ListCellProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? listCellDefaultElement) satisfies React.ElementType;
 
       // we need to maintain fixed min-heights for the different cell style variants until they are dropped in a breaking change

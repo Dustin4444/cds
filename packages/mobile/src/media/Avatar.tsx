@@ -13,6 +13,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
@@ -61,8 +62,9 @@ export type AvatarBaseProps = SharedProps &
 
 export type AvatarProps = AvatarBaseProps & Omit<BoxProps, 'children'>;
 
-export const Avatar = memo(
-  ({
+export const Avatar = memo((_props: AvatarProps) => {
+  const mergedProps = useComponentConfig('Avatar', _props);
+  const {
     alt,
     src,
     shape = 'circle',
@@ -75,160 +77,159 @@ export const Avatar = memo(
     accessibilityLabel,
     style,
     ...props
-  }: AvatarProps) => {
-    const imgSrc = src ?? fallbackImageSrc;
-    const shapeStyle = shapeStyles[shape];
-    const theme = useTheme();
-    const avatarSize = theme.avatarSize[size];
-    const placeholderLetter = name?.charAt(0);
-    const isLargestSize = size.includes('xx');
-    const isCustomSize = typeof dangerouslySetSize !== 'undefined';
-    const isCustomSizeAndSmall = isCustomSize && dangerouslySetSize <= smallAvatarSize;
-    const shouldUseSmallFont = isCustomSizeAndSmall || size === 's' || size === 'm';
-    const spectrumColor = colorSchemeMap[colorScheme];
-    const colorSchemeRgb = `rgb(${theme.spectrum[spectrumColor]})`;
+  } = mergedProps;
+  const imgSrc = src ?? fallbackImageSrc;
+  const shapeStyle = shapeStyles[shape];
+  const theme = useTheme();
+  const avatarSize = theme.avatarSize[size];
+  const placeholderLetter = name?.charAt(0);
+  const isLargestSize = size.includes('xx');
+  const isCustomSize = typeof dangerouslySetSize !== 'undefined';
+  const isCustomSizeAndSmall = isCustomSize && dangerouslySetSize <= smallAvatarSize;
+  const shouldUseSmallFont = isCustomSizeAndSmall || size === 's' || size === 'm';
+  const spectrumColor = colorSchemeMap[colorScheme];
+  const colorSchemeRgb = `rgb(${theme.spectrum[spectrumColor]})`;
 
-    const fallbackTextColor = useMemo(
-      () => getAccessibleColor({ background: colorSchemeRgb }),
-      [colorSchemeRgb],
-    );
+  const fallbackTextColor = useMemo(
+    () => getAccessibleColor({ background: colorSchemeRgb }),
+    [colorSchemeRgb],
+  );
 
-    const computedSize = dangerouslySetSize ?? avatarSize;
-    const shouldShowAvatarImage = !!src || !name;
-    // only show a border for normal and fallback image treatments
-    const hasBorder = shouldShowAvatarImage && borderColor && shape !== 'hexagon';
+  const computedSize = dangerouslySetSize ?? avatarSize;
+  const shouldShowAvatarImage = !!src || !name;
+  // only show a border for normal and fallback image treatments
+  const hasBorder = shouldShowAvatarImage && borderColor && shape !== 'hexagon';
 
-    const containerStyle = useMemo(
-      () => [hasBorder && styles.border, shapeStyle, style],
-      [hasBorder, shapeStyle, style],
-    );
+  const containerStyle = useMemo(
+    () => [hasBorder && styles.border, shapeStyle, style],
+    [hasBorder, shapeStyle, style],
+  );
 
-    const avatarText = useMemo(() => {
-      if (isLargestSize || (isCustomSize && !isCustomSizeAndSmall)) {
-        return (
-          <Text
-            align="center"
-            font="title2"
-            style={{ color: fallbackTextColor }}
-            textTransform="uppercase"
-          >
-            {placeholderLetter}
-          </Text>
-        );
-      }
-      if (shouldUseSmallFont) {
-        return (
-          <Text
-            align="center"
-            font="caption"
-            style={{ color: fallbackTextColor }}
-            textTransform="uppercase"
-          >
-            {placeholderLetter}
-          </Text>
-        );
-      }
-
+  const avatarText = useMemo(() => {
+    if (isLargestSize || (isCustomSize && !isCustomSizeAndSmall)) {
       return (
         <Text
           align="center"
-          font="body"
+          font="title2"
           style={{ color: fallbackTextColor }}
           textTransform="uppercase"
         >
           {placeholderLetter}
         </Text>
       );
-    }, [
-      isLargestSize,
-      isCustomSize,
-      isCustomSizeAndSmall,
-      fallbackTextColor,
-      placeholderLetter,
-      shouldUseSmallFont,
-    ]);
-
-    const coloredFallback = useMemo(
-      () => (
-        <Box
-          alignItems="center"
-          height="100%"
-          justifyContent="center"
-          style={[shapeStyle, { backgroundColor: colorSchemeRgb }]}
-          testID={coloredFallbackTestID}
-          width="100%"
+    }
+    if (shouldUseSmallFont) {
+      return (
+        <Text
+          align="center"
+          font="caption"
+          style={{ color: fallbackTextColor }}
+          textTransform="uppercase"
         >
-          {avatarText}
-        </Box>
-      ),
-      [avatarText, shapeStyle, colorSchemeRgb],
-    );
-
-    const hexagonColoredFallback = useMemo(
-      () => (
-        <Box
-          alignItems="center"
-          height="100%"
-          justifyContent="center"
-          testID={coloredFallbackTestID}
-          width="100%"
-        >
-          <Svg height="100%" viewBox="0 0 16 16" width="100%">
-            <Defs>
-              <ClipPath id={avatarHexagonClipPathId}>
-                <Path d={hexagonShapePath} />
-              </ClipPath>
-            </Defs>
-            <Rect
-              clipPath={`url(#${avatarHexagonClipPathId})`}
-              fill={colorSchemeRgb}
-              height={16}
-              width={16}
-              x={0}
-              y={0}
-            />
-          </Svg>
-          <Box style={styles.hexagonFallbackLabel}>{avatarText}</Box>
-        </Box>
-      ),
-      [avatarText, colorSchemeRgb],
-    );
+          {placeholderLetter}
+        </Text>
+      );
+    }
 
     return (
-      <Box
-        accessibilityLabel={accessibilityLabel}
-        borderColor={borderColor}
-        flexGrow={0}
-        flexShrink={0}
-        height={computedSize}
-        overflow="hidden"
-        position="relative"
-        style={containerStyle}
-        testID={testID}
-        width={computedSize}
-        {...props}
+      <Text
+        align="center"
+        font="body"
+        style={{ color: fallbackTextColor }}
+        textTransform="uppercase"
       >
-        <Box style={styles.contentWrapper}>
-          {shouldShowAvatarImage ? (
-            <RemoteImage
-              alt={alt}
-              height={computedSize}
-              resizeMode="cover"
-              shape={shape}
-              source={{ uri: imgSrc }}
-              testID={`${testID ?? ''}-image`}
-              width={computedSize}
-            />
-          ) : shape === 'hexagon' ? (
-            hexagonColoredFallback
-          ) : (
-            coloredFallback
-          )}
-        </Box>
-      </Box>
+        {placeholderLetter}
+      </Text>
     );
-  },
-);
+  }, [
+    isLargestSize,
+    isCustomSize,
+    isCustomSizeAndSmall,
+    fallbackTextColor,
+    placeholderLetter,
+    shouldUseSmallFont,
+  ]);
+
+  const coloredFallback = useMemo(
+    () => (
+      <Box
+        alignItems="center"
+        height="100%"
+        justifyContent="center"
+        style={[shapeStyle, { backgroundColor: colorSchemeRgb }]}
+        testID={coloredFallbackTestID}
+        width="100%"
+      >
+        {avatarText}
+      </Box>
+    ),
+    [avatarText, shapeStyle, colorSchemeRgb],
+  );
+
+  const hexagonColoredFallback = useMemo(
+    () => (
+      <Box
+        alignItems="center"
+        height="100%"
+        justifyContent="center"
+        testID={coloredFallbackTestID}
+        width="100%"
+      >
+        <Svg height="100%" viewBox="0 0 16 16" width="100%">
+          <Defs>
+            <ClipPath id={avatarHexagonClipPathId}>
+              <Path d={hexagonShapePath} />
+            </ClipPath>
+          </Defs>
+          <Rect
+            clipPath={`url(#${avatarHexagonClipPathId})`}
+            fill={colorSchemeRgb}
+            height={16}
+            width={16}
+            x={0}
+            y={0}
+          />
+        </Svg>
+        <Box style={styles.hexagonFallbackLabel}>{avatarText}</Box>
+      </Box>
+    ),
+    [avatarText, colorSchemeRgb],
+  );
+
+  return (
+    <Box
+      accessibilityLabel={accessibilityLabel}
+      borderColor={borderColor}
+      flexGrow={0}
+      flexShrink={0}
+      height={computedSize}
+      overflow="hidden"
+      position="relative"
+      style={containerStyle}
+      testID={testID}
+      width={computedSize}
+      {...props}
+    >
+      <Box style={styles.contentWrapper}>
+        {shouldShowAvatarImage ? (
+          <RemoteImage
+            alt={alt}
+            height={computedSize}
+            resizeMode="cover"
+            shape={shape}
+            source={{ uri: imgSrc }}
+            testID={`${testID ?? ''}-image`}
+            width={computedSize}
+          />
+        ) : shape === 'hexagon' ? (
+          hexagonColoredFallback
+        ) : (
+          coloredFallback
+        )}
+      </Box>
+    </Box>
+  );
+});
 
 const styles = StyleSheet.create({
   border: {

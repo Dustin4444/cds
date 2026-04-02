@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Avatar, type AvatarBaseProps } from '../media';
-import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 
 import type { ButtonBaseProps } from './Button';
 
@@ -93,22 +94,27 @@ type DeprecatedAvatarButtonBorderProps = {
   borderedVertical?: PressableBaseProps['borderedVertical'];
 };
 
-export type AvatarButtonProps = PressableBaseProps &
+export type AvatarButtonBaseProps = PressableBaseProps &
   DeprecatedAvatarButtonBorderProps &
   Pick<ButtonBaseProps, 'compact'> &
   Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
 
-export const AvatarButton = memo(function AvatarButton({
-  accessibilityLabel,
-  feedback = 'light',
-  src,
-  compact,
-  shape,
-  colorScheme,
-  borderColor,
-  name,
-  ...pressableProps
-}: AvatarButtonProps) {
+export type AvatarButtonProps = AvatarButtonBaseProps & PressableProps;
+
+export const AvatarButton = memo((_props: AvatarButtonProps) => {
+  const mergedProps = useComponentConfig('AvatarButton', _props);
+  const {
+    accessibilityLabel,
+    feedback = 'light',
+    src,
+    compact,
+    shape,
+    colorScheme,
+    borderColor,
+    name,
+    ...props
+  } = mergedProps;
+
   return (
     <Pressable
       accessibilityHint={accessibilityLabel}
@@ -116,7 +122,7 @@ export const AvatarButton = memo(function AvatarButton({
       background="transparent"
       borderWidth={0} // remove Pressable's default transparent border
       feedback={feedback}
-      {...pressableProps}
+      {...props}
     >
       <Avatar
         borderColor={borderColor}

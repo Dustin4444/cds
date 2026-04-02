@@ -20,6 +20,7 @@ import { m as motion } from 'framer-motion';
 
 import { NewAnimatePresence } from '../animation/NewAnimatePresence';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { useMotionProps } from '../motion/useMotionProps';
 import { Text } from '../typography/Text';
@@ -109,8 +110,9 @@ export type DotCountProps = DotCountBaseProps & {
   };
 };
 
-export const DotCount = memo(
-  ({
+export const DotCount = memo((_props: DotCountProps) => {
+  const mergedProps = useComponentConfig('DotCount', _props);
+  const {
     children,
     pin,
     variant = 'negative',
@@ -126,72 +128,71 @@ export const DotCount = memo(
     style,
     styles,
     ...props
-  }: DotCountProps) => {
-    const { color } = useTheme();
-    const pinStyles = getTransform(pin, overlap);
+  } = mergedProps;
+  const { color } = useTheme();
+  const pinStyles = getTransform(pin, overlap);
 
-    const containerStyles = useMemo(() => {
-      const variantColor = variantColorMap[variant];
-      return {
-        height,
-        minWidth: height,
-        width,
-        backgroundColor: color[variantColor],
-        borderColor: color.bgSecondary,
-        ...pinStyles,
-        ...styles?.container,
-      };
-    }, [height, width, color, pinStyles, styles?.container, variant]);
+  const containerStyles = useMemo(() => {
+    const variantColor = variantColorMap[variant];
+    return {
+      height,
+      minWidth: height,
+      width,
+      backgroundColor: color[variantColor],
+      borderColor: color.bgSecondary,
+      ...pinStyles,
+      ...styles?.container,
+    };
+  }, [height, width, color, pinStyles, styles?.container, variant]);
 
-    const motionProps = useMotionProps({
-      enterConfigs: [dotOpacityEnterConfig, dotScaleEnterConfig],
-      exitConfigs: [dotOpacityExitConfig, dotScaleExitConfig],
-      exit: 'exit',
-    });
+  const motionProps = useMotionProps({
+    enterConfigs: [dotOpacityEnterConfig, dotScaleEnterConfig],
+    exitConfigs: [dotOpacityExitConfig, dotScaleExitConfig],
+    exit: 'exit',
+  });
 
-    const rootStyles = useMemo(
-      () => ({
-        ...style,
-        ...styles?.root,
-      }),
-      [styles?.root, style],
-    );
+  const rootStyles = useMemo(
+    () => ({
+      ...style,
+      ...styles?.root,
+    }),
+    [styles?.root, style],
+  );
 
-    return (
-      <div
-        aria-label={accessibilityLabel}
-        className={cx(baseCss, className, classNames?.root)}
-        data-testid={testID}
-        style={rootStyles}
-        {...props}
-      >
-        {children}
-        <NewAnimatePresence>
-          {count > 0 && (
-            // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
-            <motion.div
-              {...({
-                ...motionProps,
-                className: cx(dotCountContentCss, classNames?.container),
-                'data-testid': 'dotcount-container',
-                style: containerStyles,
-              } as React.ComponentProps<typeof motion.div>)}
+  return (
+    <div
+      aria-label={accessibilityLabel}
+      className={cx(baseCss, className, classNames?.root)}
+      data-testid={testID}
+      style={rootStyles}
+      {...props}
+    >
+      {children}
+      <NewAnimatePresence>
+        {count > 0 && (
+          // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
+          <motion.div
+            {...({
+              ...motionProps,
+              className: cx(dotCountContentCss, classNames?.container),
+              'data-testid': 'dotcount-container',
+              style: containerStyles,
+            } as React.ComponentProps<typeof motion.div>)}
+          >
+            <Text
+              as="p"
+              className={classNames?.text}
+              color="fgInverse"
+              display="block"
+              font="caption"
+              style={styles?.text}
+              textAlign="center"
             >
-              <Text
-                as="p"
-                className={classNames?.text}
-                color="fgInverse"
-                display="block"
-                font="caption"
-                style={styles?.text}
-                textAlign="center"
-              >
-                {parseDotCountMaxOverflow(count, max)}
-              </Text>
-            </motion.div>
-          )}
-        </NewAnimatePresence>
-      </div>
-    );
-  },
-);
+              {parseDotCountMaxOverflow(count, max)}
+            </Text>
+          </motion.div>
+        )}
+      </NewAnimatePresence>
+    </div>
+  );
+});

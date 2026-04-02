@@ -1,9 +1,10 @@
-import React, { cloneElement } from 'react';
+import React, { cloneElement, memo } from 'react';
 import type { PressableProps } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 
 import type { ButtonBaseProps } from '../../buttons/Button';
 import { ButtonGroup, type ButtonGroupProps } from '../../buttons/ButtonGroup';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, type BoxBaseProps, type BoxProps } from '../../layout/Box';
 
 export type ModalFooterBaseProps = Omit<BoxBaseProps, 'children'> &
@@ -18,14 +19,16 @@ export type ModalFooterBaseProps = Omit<BoxBaseProps, 'children'> &
 
 export type ModalFooterProps = ModalFooterBaseProps & Omit<BoxProps, 'children'>;
 
-export const ModalFooter = ({
-  primaryAction,
-  secondaryAction,
-  direction = 'horizontal',
-  paddingX = 3,
-  paddingY = 2,
-  ...props
-}: ModalFooterProps) => {
+export const ModalFooter = memo((_props: ModalFooterProps) => {
+  const mergedProps = useComponentConfig('ModalFooter', _props);
+  const {
+    primaryAction,
+    secondaryAction,
+    direction = 'horizontal',
+    paddingX = 3,
+    paddingY = 2,
+    ...props
+  } = mergedProps;
   const { hideDividers = false } = useModalContext();
   const actions = [secondaryAction, primaryAction].filter(
     (action): action is NonNullable<typeof action> => Boolean(action),
@@ -47,4 +50,4 @@ export const ModalFooter = ({
       </ButtonGroup>
     </Box>
   );
-};
+});

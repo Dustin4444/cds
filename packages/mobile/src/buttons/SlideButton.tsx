@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { ButtonVariant } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import type { PressableProps } from '../system/Pressable';
 
@@ -17,7 +18,7 @@ import { DefaultSlideButtonBackground } from './DefaultSlideButtonBackground';
 import { DefaultSlideButtonHandle, slideButtonSpringConfig } from './DefaultSlideButtonHandle';
 
 export const slideButtonTestID = 'slide-button';
-//
+
 export const DEFAULT_COMPACT_HEIGHT = 40;
 export const DEFAULT_REGULAR_HEIGHT = 56;
 
@@ -162,197 +163,194 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
 export type SlideButtonProps = SlideButtonBaseProps;
 
 export const SlideButton = memo(
-  forwardRef(
-    (
-      {
+  forwardRef((_props: SlideButtonProps, ref: ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('SlideButton', _props);
+    const {
+      checked,
+      compact,
+      borderRadius = compact ? 700 : 900,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      uncheckedLabel,
+      checkedLabel,
+      onSlideStart,
+      onSlideCancel,
+      onSlideEnd,
+      onSlideComplete,
+      onChange,
+      disabled,
+      height = compact ? DEFAULT_COMPACT_HEIGHT : DEFAULT_REGULAR_HEIGHT,
+      checkThreshold = 0.7,
+      SlideButtonHandleComponent = DefaultSlideButtonHandle,
+      SlideButtonBackgroundComponent = DefaultSlideButtonBackground,
+      styles,
+      testID = slideButtonTestID,
+      autoCompleteSlideOnThresholdMet,
+      variant = 'primary',
+      startUncheckedNode,
+      endCheckedNode,
+      ...props
+    } = mergedProps;
+    const labelId = useId();
+    const [containerSize, onLayout] = useLayout();
+
+    const progress = useSharedValue(checked ? 1 : 0);
+
+    useEffect(() => {
+      progress.value = withSpring(checked ? 1 : 0, slideButtonSpringConfig);
+    }, [checked, progress]);
+
+    const buttonMinWidth = height;
+
+    const handleComplete = useCallback(() => {
+      progress.value = withSpring(1, slideButtonSpringConfig);
+      onChange?.(true);
+      onSlideComplete?.();
+      onSlideEnd?.();
+    }, [progress, onSlideComplete, onChange, onSlideEnd]);
+
+    const handleAccessibilityAction = useCallback(
+      (event: AccessibilityActionEvent) => {
+        if (event.nativeEvent.actionName === 'activate' && !checked && !disabled) {
+          handleComplete();
+        }
+      },
+      [checked, disabled, handleComplete],
+    );
+
+    const accessibilityActions = useMemo(
+      () => (!checked && !disabled ? [{ name: 'activate' }] : undefined),
+      [checked, disabled],
+    );
+
+    const accessibilityLabel = useMemo(
+      () => (checked ? checkedLabel : uncheckedLabel),
+      [checked, checkedLabel, uncheckedLabel],
+    );
+
+    const panGesture = useMemo(
+      () =>
+        Gesture.Pan()
+          .onStart(() => {
+            if (checked || disabled) return;
+            onSlideStart?.();
+          })
+          .onUpdate(({ translationX }) => {
+            if (checked || disabled) return;
+
+            const newWidth = (buttonMinWidth + translationX) / containerSize.width;
+            const thresholdReached = newWidth >= checkThreshold;
+
+            if (thresholdReached && autoCompleteSlideOnThresholdMet) {
+              handleComplete();
+              return;
+            }
+
+            const progressValue = autoCompleteSlideOnThresholdMet
+              ? newWidth
+              : Math.min(1, newWidth);
+            progress.value = progressValue;
+          })
+          .onEnd(({ translationX }) => {
+            if (checked || disabled) return;
+
+            const newWidth = (buttonMinWidth + translationX) / containerSize.width;
+
+            if (newWidth >= checkThreshold) {
+              handleComplete();
+              return;
+            }
+
+            progress.value = withSpring(0, slideButtonSpringConfig);
+            onSlideCancel?.();
+            onSlideEnd?.();
+          })
+          .withTestId(testID)
+          .runOnJS(true),
+      [
+        testID,
         checked,
-        compact,
-        borderRadius = compact ? 700 : 900,
-        borderTopLeftRadius,
-        borderTopRightRadius,
-        borderBottomLeftRadius,
-        borderBottomRightRadius,
-        uncheckedLabel,
-        checkedLabel,
+        disabled,
         onSlideStart,
+        buttonMinWidth,
+        containerSize.width,
+        autoCompleteSlideOnThresholdMet,
+        checkThreshold,
+        handleComplete,
+        progress,
         onSlideCancel,
         onSlideEnd,
-        onSlideComplete,
-        onChange,
-        disabled,
-        height = compact ? DEFAULT_COMPACT_HEIGHT : DEFAULT_REGULAR_HEIGHT,
-        checkThreshold = 0.7,
-        SlideButtonHandleComponent = DefaultSlideButtonHandle,
-        SlideButtonBackgroundComponent = DefaultSlideButtonBackground,
-        styles,
-        testID = slideButtonTestID,
-        autoCompleteSlideOnThresholdMet,
-        variant = 'primary',
-        startUncheckedNode,
-        endCheckedNode,
-        ...props
-      }: SlideButtonProps,
-      ref: ForwardedRef<View>,
-    ) => {
-      const labelId = useId();
-      const [containerSize, onLayout] = useLayout();
+      ],
+    );
 
-      const progress = useSharedValue(checked ? 1 : 0);
+    const containerStyle = useMemo(
+      () => [{ height, width: '100%', position: 'relative' } as const, styles?.container],
+      [height, styles?.container],
+    );
 
-      useEffect(() => {
-        progress.value = withSpring(checked ? 1 : 0, slideButtonSpringConfig);
-      }, [checked, progress]);
+    const animatedWidthStyle = useAnimatedStyle(
+      () => ({
+        width: `${progress.value * 100}%`,
+      }),
+      [progress],
+    );
 
-      const buttonMinWidth = height;
+    const staticHandleStyle = useMemo(
+      () => ({
+        position: 'absolute' as const,
+        height,
+        minWidth: buttonMinWidth,
+      }),
+      [height, buttonMinWidth],
+    );
 
-      const handleComplete = useCallback(() => {
-        progress.value = withSpring(1, slideButtonSpringConfig);
-        onChange?.(true);
-        onSlideComplete?.();
-        onSlideEnd?.();
-      }, [progress, onSlideComplete, onChange, onSlideEnd]);
-
-      const handleAccessibilityAction = useCallback(
-        (event: AccessibilityActionEvent) => {
-          if (event.nativeEvent.actionName === 'activate' && !checked && !disabled) {
-            handleComplete();
-          }
-        },
-        [checked, disabled, handleComplete],
-      );
-
-      const accessibilityActions = useMemo(
-        () => (!checked && !disabled ? [{ name: 'activate' }] : undefined),
-        [checked, disabled],
-      );
-
-      const accessibilityLabel = useMemo(
-        () => (checked ? checkedLabel : uncheckedLabel),
-        [checked, checkedLabel, uncheckedLabel],
-      );
-
-      const panGesture = useMemo(
-        () =>
-          Gesture.Pan()
-            .onStart(() => {
-              if (checked || disabled) return;
-              onSlideStart?.();
-            })
-            .onUpdate(({ translationX }) => {
-              if (checked || disabled) return;
-
-              const newWidth = (buttonMinWidth + translationX) / containerSize.width;
-              const thresholdReached = newWidth >= checkThreshold;
-
-              if (thresholdReached && autoCompleteSlideOnThresholdMet) {
-                handleComplete();
-                return;
-              }
-
-              const progressValue = autoCompleteSlideOnThresholdMet
-                ? newWidth
-                : Math.min(1, newWidth);
-              progress.value = progressValue;
-            })
-            .onEnd(({ translationX }) => {
-              if (checked || disabled) return;
-
-              const newWidth = (buttonMinWidth + translationX) / containerSize.width;
-
-              if (newWidth >= checkThreshold) {
-                handleComplete();
-                return;
-              }
-
-              progress.value = withSpring(0, slideButtonSpringConfig);
-              onSlideCancel?.();
-              onSlideEnd?.();
-            })
-            .withTestId(testID)
-            .runOnJS(true),
-        [
-          testID,
-          checked,
-          disabled,
-          onSlideStart,
-          buttonMinWidth,
-          containerSize.width,
-          autoCompleteSlideOnThresholdMet,
-          checkThreshold,
-          handleComplete,
-          progress,
-          onSlideCancel,
-          onSlideEnd,
-        ],
-      );
-
-      const containerStyle = useMemo(
-        () => [{ height, width: '100%', position: 'relative' } as const, styles?.container],
-        [height, styles?.container],
-      );
-
-      const animatedWidthStyle = useAnimatedStyle(
-        () => ({
-          width: `${progress.value * 100}%`,
-        }),
-        [progress],
-      );
-
-      const staticHandleStyle = useMemo(
-        () => ({
-          position: 'absolute' as const,
-          height,
-          minWidth: buttonMinWidth,
-        }),
-        [height, buttonMinWidth],
-      );
-
-      return (
-        <View ref={ref} id={labelId} onLayout={onLayout} style={containerStyle} testID={testID}>
-          <SlideButtonBackgroundComponent
-            borderBottomLeftRadius={borderBottomLeftRadius}
-            borderBottomRightRadius={borderBottomRightRadius}
-            borderRadius={borderRadius}
-            borderTopLeftRadius={borderTopLeftRadius}
-            borderTopRightRadius={borderTopRightRadius}
-            checked={checked}
-            compact={compact}
-            disabled={disabled}
-            progress={progress}
-            style={styles?.background}
-            uncheckedLabel={uncheckedLabel}
-            variant={variant}
-          />
-          <GestureDetector gesture={panGesture}>
-            <Animated.View style={[staticHandleStyle, animatedWidthStyle]}>
-              <SlideButtonHandleComponent
-                accessible
-                accessibilityActions={accessibilityActions}
-                {...(typeof accessibilityLabel === 'string'
-                  ? { accessibilityLabel }
-                  : { accessibilityLabelledBy: labelId })}
-                borderBottomLeftRadius={borderBottomLeftRadius}
-                borderBottomRightRadius={borderBottomRightRadius}
-                borderRadius={borderRadius}
-                borderTopLeftRadius={borderTopLeftRadius}
-                borderTopRightRadius={borderTopRightRadius}
-                checked={checked}
-                checkedLabel={checkedLabel}
-                compact={compact}
-                disabled={disabled}
-                endCheckedNode={endCheckedNode}
-                onAccessibilityAction={handleAccessibilityAction}
-                progress={progress}
-                startUncheckedNode={startUncheckedNode}
-                style={styles?.handle}
-                testID={`${testID}-handle`}
-                variant={variant}
-                {...props}
-              />
-            </Animated.View>
-          </GestureDetector>
-        </View>
-      );
-    },
-  ),
+    return (
+      <View ref={ref} id={labelId} onLayout={onLayout} style={containerStyle} testID={testID}>
+        <SlideButtonBackgroundComponent
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
+          checked={checked}
+          compact={compact}
+          disabled={disabled}
+          progress={progress}
+          style={styles?.background}
+          uncheckedLabel={uncheckedLabel}
+          variant={variant}
+        />
+        <GestureDetector gesture={panGesture}>
+          <Animated.View style={[staticHandleStyle, animatedWidthStyle]}>
+            <SlideButtonHandleComponent
+              accessible
+              accessibilityActions={accessibilityActions}
+              {...(typeof accessibilityLabel === 'string'
+                ? { accessibilityLabel }
+                : { accessibilityLabelledBy: labelId })}
+              borderBottomLeftRadius={borderBottomLeftRadius}
+              borderBottomRightRadius={borderBottomRightRadius}
+              borderRadius={borderRadius}
+              borderTopLeftRadius={borderTopLeftRadius}
+              borderTopRightRadius={borderTopRightRadius}
+              checked={checked}
+              checkedLabel={checkedLabel}
+              compact={compact}
+              disabled={disabled}
+              endCheckedNode={endCheckedNode}
+              onAccessibilityAction={handleAccessibilityAction}
+              progress={progress}
+              startUncheckedNode={startUncheckedNode}
+              style={styles?.handle}
+              testID={`${testID}-handle`}
+              variant={variant}
+              {...props}
+            />
+          </Animated.View>
+        </GestureDetector>
+      </View>
+    );
+  }),
 );

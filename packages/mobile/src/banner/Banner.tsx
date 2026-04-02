@@ -10,6 +10,7 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { Collapsible } from '../collapsible/Collapsible';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons';
 import type { HStackProps } from '../layout';
@@ -113,8 +114,9 @@ export type BannerProps = BannerBaseProps &
 export type MobileBannerProps = BannerProps;
 
 export const Banner = memo(
-  forwardRef(function Banner(
-    {
+  forwardRef(function Banner(_props: BannerProps, forwardedRef: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('Banner', _props);
+    const {
       variant,
       startIcon,
       startIconActive,
@@ -141,9 +143,7 @@ export const Banner = memo(
       marginStart,
       styles,
       ...props
-    }: BannerProps,
-    forwardedRef: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const [isCollapsed, setIsCollapsed] = useState(false);
     const theme = useTheme();
 

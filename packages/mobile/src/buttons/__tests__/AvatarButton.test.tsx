@@ -1,6 +1,8 @@
 import { Animated } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import type { ComponentConfig } from '../../core/componentConfig';
+import { ComponentConfigProvider } from '../../system/ComponentConfigProvider';
 import { debounce } from '../../utils/debounce';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { AvatarButton } from '../AvatarButton';

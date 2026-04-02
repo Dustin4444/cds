@@ -6,6 +6,7 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 import { Cell, type CellBaseProps } from '../cells/Cell';
 import { CellAccessory } from '../cells/CellAccessory';
 import type { ListCellBaseProps } from '../cells/ListCell';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
@@ -29,16 +30,18 @@ export type SelectOptionProps = SelectOptionBaseProps;
  * @deprecated Please use the new Select alpha component instead. If you are using this component outside of Select, we recommend replacing it with ListCell. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
-export const SelectOption = memo(function SelectOption({
-  title,
-  description,
-  multiline,
-  onPress,
-  value,
-  accessibilityLabel,
-  accessibilityHint,
-  ...props
-}: SelectOptionProps) {
+export const SelectOption = memo((_props: SelectOptionProps) => {
+  const mergedProps = useComponentConfig('SelectOption', _props);
+  const {
+    title,
+    description,
+    multiline,
+    onPress,
+    value,
+    accessibilityLabel,
+    accessibilityHint,
+    ...props
+  } = mergedProps;
   const { value: selectedValue, onChange, handleClose } = useSelectContext();
 
   const selected = value === selectedValue;
