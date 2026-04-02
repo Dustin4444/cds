@@ -295,6 +295,7 @@ const DefaultSelectDropdownComponent = memo(
             >
               <FocusTrap
                 disableAutoFocus
+                disableTypeFocus
                 focusTabIndexElements
                 includeTriggerInFocusTrap
                 respectNegativeTabIndex

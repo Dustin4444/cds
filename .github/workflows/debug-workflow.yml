@@ -20,34 +20,11 @@ on:
   # Manual trigger for testing
   workflow_dispatch:
 
-concurrency:
-  group: Visreg-Mobile-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
-permissions:
-  contents: read
-  actions: read
-  pull-requests: write
-
-env:
-  CI: true
-
 jobs:
-  ios:
-    name: Visreg iOS
-    runs-on: macos-latest
-    environment: production
-    outputs:
-      percy_url: ${{ steps.percy-upload.outputs.percy_url }}
+  test-local:
+    runs-on: [small, default-config]
     steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          fetch-depth: 1
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup
 
