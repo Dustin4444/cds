@@ -28,8 +28,8 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
-import { useHasNotch } from '../../hooks/useHasNotch';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
+import { useHasNotch } from '../../hooks/useHasNotch';
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { HandleBar, type HandleBarProps } from '../handlebar/HandleBar';

@@ -11,8 +11,8 @@ import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
-import { useTheme } from '../hooks/useTheme';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
 import { TextIcon } from '../icons/TextIcon';
 import { HStack } from '../layout/HStack';
 import type { PressableProps } from '../system/Pressable';

@@ -4,8 +4,8 @@ import type { IconSize, ValidateProps } from '@coinbase/cds-common/types';
 import { formatCount } from '@coinbase/cds-common/utils/formatCount';
 import type { IconName } from '@coinbase/cds-icons';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';

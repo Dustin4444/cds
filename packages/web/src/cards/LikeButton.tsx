@@ -2,8 +2,8 @@ import { memo, useMemo } from 'react';
 import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
-import { useTheme } from '../hooks/useTheme';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
