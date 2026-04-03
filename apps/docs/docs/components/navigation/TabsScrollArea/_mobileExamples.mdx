@@ -38,14 +38,15 @@ function Example() {
 
 ## Overflow indicator
 
-On React Native, the default **`TabsScrollAreaOverflowIndicator`** renders an **`OverflowGradient`** at each edge when there is offscreen content. **`TabsScrollArea`** passes **`onPress`** so a custom indicator can scroll (the default gradient is visual-only; users typically pan the **`ScrollView`**).
+On React Native, the default **`TabsScrollAreaOverflowIndicator`** renders an **`OverflowGradient`** at each edge when there is offscreen content. Scrolling is **gesture-based** (horizontal pan on the **`ScrollView`**); the default gradient is **visual-only** and does not receive press handlers from **`TabsScrollArea`**.
 
 ### Custom `OverflowIndicatorComponent`
 
-Swap in your own component that satisfies **`TabsScrollAreaOverflowIndicatorProps`**: **`pin`** (`'left'` \| `'right'`), **`show`**, optional **`onPress`**, **`style`**, and **`testID`**. The snippet below uses **`IconButton`** at each edge for tap targets (replacing the default gradient).
+Provide a component that satisfies **`TabsScrollAreaOverflowIndicatorProps`**: **`direction`** (`'left'` \| `'right'`), **`show`**, optional **`style`**, and **`testID`**. The default implementation maps **`direction`** to **`OverflowGradient`**’s **`pin`**.
+
+The example below replaces the gradient with a simple edge strip (visual-only; no scroll wiring).
 
 ```tsx
-import { IconButton } from '@coinbase/cds-mobile/buttons';
 import { Box } from '@coinbase/cds-mobile/layout';
 import {
   DefaultTab,
@@ -56,36 +57,31 @@ import {
 } from '@coinbase/cds-mobile/tabs';
 
 function CustomOverflowIndicator({
-  pin,
+  direction,
   show,
   style,
-  onPress,
   testID,
 }: TabsScrollAreaOverflowIndicatorProps) {
   if (!show) {
     return null;
   }
+  const isLeft = direction === 'left';
   return (
     <Box
-      alignItems="center"
-      justifyContent="center"
+      background="fgMuted"
+      borderRadius={200}
+      height={32}
       position="absolute"
       style={[
         {
           top: '50%',
-          ...(pin === 'left' ? { left: 0 } : { right: 0 }),
+          ...(isLeft ? { left: 4 } : { right: 4 }),
         },
         style,
       ]}
       testID={testID}
-    >
-      <IconButton
-        accessibilityLabel={pin === 'left' ? 'Previous tabs' : 'Next tabs'}
-        name={pin === 'left' ? 'caretLeft' : 'caretRight'}
-        onPress={onPress}
-        variant="primary"
-      />
-    </Box>
+      width={4}
+    />
   );
 }
 
