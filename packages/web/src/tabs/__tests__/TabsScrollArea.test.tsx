@@ -59,7 +59,7 @@ const MockTabsScrollArea = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
     <TabsScrollArea testID="tabs-scroll-area">
-      {({ onActiveTabElementChange: onActiveTab, ...tabsA11y }) => (
+      {({ onActiveTabElementChange: onActiveTab }) => (
         <Tabs
           activeTab={activeTab}
           onActiveTabElementChange={onActiveTab}
@@ -67,7 +67,6 @@ const MockTabsScrollArea = () => {
             if (tab) setActiveTab(tab);
           }}
           tabs={tabs}
-          {...tabsA11y}
         />
       )}
     </TabsScrollArea>
@@ -115,17 +114,16 @@ describe('TabsScrollArea', () => {
     ).toThrow('TabsScrollArea expects a function child');
   });
 
-  it('merges accessibility props onto the root', () => {
+  it('forwards accessibilityLabel to the root', () => {
     render(
       <DefaultThemeProvider>
         <TabsScrollArea accessibilityLabel="Scrollable tab list" testID="tabs-scroll-area">
-          {({ onActiveTabElementChange: onActiveTab, ...tabsA11y }) => (
+          {({ onActiveTabElementChange: onActiveTab }) => (
             <Tabs
               activeTab={tabs[0]}
               onActiveTabElementChange={onActiveTab}
               onChange={NoopFn}
               tabs={tabs}
-              {...tabsA11y}
             />
           )}
         </TabsScrollArea>

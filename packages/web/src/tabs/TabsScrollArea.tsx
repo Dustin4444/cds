@@ -27,8 +27,7 @@ export type TabsScrollAreaRenderProps = {
 export type TabsScrollAreaBaseProps = Omit<BoxBaseProps, 'children' | 'style'> &
   Pick<SharedAccessibilityProps, 'id' | 'accessibilityLabelId' | 'accessibilityDescriptionId'> & {
     /**
-     * Render function that receives `onActiveTab` (wire to `Tabs` as `onActiveTabElementChange`)
-     * and `SharedAccessibilityProps` merged from the parent.
+     * Render function that receives `onActiveTabElementChange` (wire to `Tabs` as `onActiveTabElementChange`).
      */
     children: (props: TabsScrollAreaRenderProps) => React.ReactNode;
     previousArrowAccessibilityLabel?: string;

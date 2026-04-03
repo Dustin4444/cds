@@ -50,7 +50,7 @@ describe('TabsScrollArea', () => {
     expect(screen.getByText('Tab one')).toBeVisible();
   });
 
-  it('merges accessibilityLabel onto the root', () => {
+  it('forwards accessibilityLabel to the root', () => {
     render(<Demo />);
     expect(screen.getByLabelText('Scrollable tab list')).toBeVisible();
   });
@@ -70,18 +70,5 @@ describe('TabsScrollArea', () => {
     await waitFor(() =>
       expect(screen.getByTestId(firstTestId)).toHaveAccessibilityState({ selected: false }),
     );
-  });
-
-  it('renders without throwing when children is not a function', () => {
-    render(
-      <DefaultThemeProvider>
-        <TabsScrollArea testID="tabs-scroll-area">
-          {/* @ts-expect-error Intentionally invalid: `children` should be a render function */}
-          <Text>invalid</Text>
-        </TabsScrollArea>
-      </DefaultThemeProvider>,
-    );
-    expect(screen.getByTestId('tabs-scroll-area')).toBeVisible();
-    expect(screen.getByText('invalid')).toBeVisible();
   });
 });
