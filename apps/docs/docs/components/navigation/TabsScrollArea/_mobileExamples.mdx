@@ -70,16 +70,11 @@ function CustomOverflowIndicator({
     <Box
       background="fgMuted"
       borderRadius={200}
-      height={32}
+      bottom={8}
       position="absolute"
-      style={[
-        {
-          top: '50%',
-          ...(isLeft ? { left: 4 } : { right: 4 }),
-        },
-        style,
-      ]}
+      style={[isLeft ? { left: 4 } : { right: 4 }, style]}
       testID={testID}
+      top={8}
       width={4}
     />
   );
