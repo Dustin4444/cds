@@ -67,6 +67,7 @@ import type { StepperBaseProps } from '../stepper/Stepper';
 import type { SegmentedTabBaseProps } from '../tabs/SegmentedTab';
 import type { SegmentedTabsBaseProps } from '../tabs/SegmentedTabs';
 import type { TabsBaseProps } from '../tabs/Tabs';
+import type { TabsScrollAreaBaseProps } from '../tabs/TabsScrollArea';
 import type { TagBaseProps } from '../tag/Tag';
 import type { TourBaseProps } from '../tour/Tour';
 import type { LinkBaseProps } from '../typography/Link';
@@ -157,6 +158,7 @@ export type ComponentConfig = {
   Stepper?: ConfigResolver<StepperBaseProps>;
   Switch?: ConfigResolver<SwitchBaseProps<string>>;
   Tabs?: ConfigResolver<TabsBaseProps>;
+  TabsScrollArea?: ConfigResolver<TabsScrollAreaBaseProps>;
   Tag?: ConfigResolver<TagBaseProps>;
   TextInput?: ConfigResolver<TextInputBaseProps>;
   Toast?: ConfigResolver<ToastBaseProps>;

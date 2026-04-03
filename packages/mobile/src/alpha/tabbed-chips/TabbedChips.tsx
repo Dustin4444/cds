@@ -1,5 +1,5 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
-import { ScrollView, type StyleProp, type View, type ViewStyle } from 'react-native';
+import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
@@ -7,9 +7,8 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { Box, type BoxProps, OverflowGradient } from '../../layout';
-import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs';
+import { type BoxProps } from '../../layout';
+import { Tabs, type TabsBaseProps, type TabsProps, TabsScrollArea } from '../../tabs';
 
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',
@@ -31,7 +30,7 @@ const DefaultTabComponent = <TabId extends string = string>({
   );
 };
 
-const TabsActiveIndicatorComponent = () => {
+const DefaultTabsActiveIndicatorComponent = () => {
   return null;
 };
 
@@ -76,12 +75,16 @@ export type TabbedChipsProps<TabId extends string = string> = TabbedChipsBasePro
     gap?: ThemeVars.Space;
     /**
      * The width of the scroll container, defaults to 100% of the parent container
-     * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
+     * If the tabs are wider than the width of the container, overflow gradients are shown at the edges.
      */
     width?: BoxProps['width'];
     styles?: {
       /** Root container element */
       root?: StyleProp<ViewStyle>;
+      /** Horizontal scroll region wrapping the tab row (aligned with {@link TabsScrollArea}). */
+      scrollContainer?: StyleProp<ViewStyle>;
+      /** Single overflow affordance (gradient); applied to both edges (aligned with {@link TabsScrollArea}). */
+      overflowIndicator?: StyleProp<ViewStyle>;
       /** Tabs root element */
       tabs?: StyleProp<ViewStyle>;
     };
@@ -102,6 +105,7 @@ const TabbedChipsComponent = memo(
       activeTab = tabs[0],
       testID = 'tabbed-chips',
       TabComponent = DefaultTabComponent,
+      TabsActiveIndicatorComponent = DefaultTabsActiveIndicatorComponent,
       onChange,
       width,
       gap = 1,
@@ -110,16 +114,6 @@ const TabbedChipsComponent = memo(
       autoScrollOffset = 30,
       ...accessibilityProps
     } = mergedProps;
-    const [scrollTarget, setScrollTarget] = useState<View | null>(null);
-    const {
-      scrollRef,
-      isScrollContentOverflowing,
-      isScrollContentOffscreenLeft,
-      isScrollContentOffscreenRight,
-      handleScroll,
-      handleScrollContainerLayout,
-      handleScrollContentSizeChange,
-    } = useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
 
     const TabComponentWithCompact = useCallback(
       (props: TabValue<TabId>) => {
@@ -128,42 +122,37 @@ const TabbedChipsComponent = memo(
       [TabComponent, compact],
     );
 
+    const tabsScrollAreaStyles = useMemo(
+      () => ({
+        root: styles?.root,
+        scrollContainer: styles?.scrollContainer,
+        overflowIndicator: styles?.overflowIndicator,
+      }),
+      [styles],
+    );
+
     return (
-      <Box
+      <TabsScrollArea
         ref={ref}
-        overflow={isScrollContentOverflowing ? undefined : 'visible'}
-        style={styles?.root}
+        autoScrollOffset={autoScrollOffset}
+        styles={tabsScrollAreaStyles}
         testID={testID}
         width={width}
+        {...accessibilityProps}
       >
-        <ScrollView
-          ref={scrollRef}
-          horizontal
-          onContentSizeChange={handleScrollContentSizeChange}
-          onLayout={handleScrollContainerLayout}
-          onScroll={handleScroll}
-          scrollEventThrottle={1}
-          showsHorizontalScrollIndicator={false}
-        >
+        {(props) => (
           <Tabs
             TabComponent={TabComponentWithCompact}
             TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             gap={gap}
-            onActiveTabElementChange={setScrollTarget}
             onChange={onChange}
             style={styles?.tabs}
             tabs={tabs}
-            {...accessibilityProps}
+            {...props}
           />
-        </ScrollView>
-        {isScrollContentOverflowing && isScrollContentOffscreenLeft && (
-          <OverflowGradient pin="left" />
         )}
-        {isScrollContentOverflowing && isScrollContentOffscreenRight && (
-          <OverflowGradient pin="right" />
-        )}
-      </Box>
+      </TabsScrollArea>
     );
   }),
 );
