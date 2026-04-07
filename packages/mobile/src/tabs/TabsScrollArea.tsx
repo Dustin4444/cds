@@ -25,11 +25,6 @@ export type TabsScrollAreaRenderProps = {
 export type TabsScrollAreaBaseProps = Omit<BoxBaseProps, 'children' | 'ref'> &
   SharedAccessibilityProps & {
     /**
-     * Render function that receives `onActiveTabElementChange` (wire to `Tabs` as
-     * `onActiveTabElementChange`).
-     */
-    children: (props: TabsScrollAreaRenderProps) => React.ReactNode;
-    /**
      * Horizontal offset when auto-scrolling to the active tab (e.g. so the active tab is not under the overflow gradient).
      * @default 30
      */
@@ -42,6 +37,11 @@ export type TabsScrollAreaBaseProps = Omit<BoxBaseProps, 'children' | 'ref'> &
   };
 
 export type TabsScrollAreaProps = TabsScrollAreaBaseProps & {
+  /**
+   * Render function that receives `onActiveTabElementChange` (wire to `Tabs` as
+   * `onActiveTabElementChange`).
+   */
+  children: (props: TabsScrollAreaRenderProps) => React.ReactNode;
   styles?: {
     /** Root layout element */
     root?: StyleProp<ViewStyle>;

@@ -7,6 +7,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
 import { HStack } from '../layout';
 import type { BoxBaseProps } from '../layout/Box';
+import type { StylesAndClassNames } from '../types';
 
 import {
   TabsScrollAreaOverflowIndicator,
@@ -24,12 +25,27 @@ export type TabsScrollAreaRenderProps = {
   onActiveTabElementChange: (element: HTMLElement | null) => void;
 };
 
+/**
+ * Static class names for TabsScrollArea component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const tabsScrollAreaClassNames = {
+  /** Root layout element */
+  root: 'cds-TabsScrollArea',
+  /** Horizontal scroll region wrapping `Tabs` */
+  scrollContainer: 'cds-TabsScrollArea-scrollContainer',
+  /** Applied to each overflow indicator's root */
+  overflowIndicator: 'cds-TabsScrollArea-overflowIndicator',
+  /** Applied to each overflow indicator's icon button */
+  overflowIndicatorButton: 'cds-TabsScrollArea-overflowIndicatorButton',
+  /** Applied to each overflow indicator's icon button container */
+  overflowIndicatorButtonContainer: 'cds-TabsScrollArea-overflowIndicatorButtonContainer',
+  /** Applied to each overflow indicator's gradient */
+  overflowIndicatorGradient: 'cds-TabsScrollArea-overflowIndicatorGradient',
+} as const;
+
 export type TabsScrollAreaBaseProps = Omit<BoxBaseProps, 'children' | 'style'> &
   Pick<SharedAccessibilityProps, 'id' | 'accessibilityLabelId' | 'accessibilityDescriptionId'> & {
-    /**
-     * Render function that receives `onActiveTabElementChange` (wire to `Tabs` as `onActiveTabElementChange`).
-     */
-    children: (props: TabsScrollAreaRenderProps) => React.ReactNode;
     previousArrowAccessibilityLabel?: string;
     nextArrowAccessibilityLabel?: string;
     /**
@@ -48,36 +64,17 @@ export type TabsScrollAreaBaseProps = Omit<BoxBaseProps, 'children' | 'style'> &
     OverflowIndicatorComponent?: React.FC<TabsScrollAreaOverflowIndicatorProps>;
   };
 
-export type TabsScrollAreaProps = TabsScrollAreaBaseProps & {
-  /** Merged with the root `HStack`. */
-  style?: React.CSSProperties;
-  /** Merged with the root `HStack`. */
-  className?: string;
-  styles?: {
-    /** Root layout element */
-    root?: React.CSSProperties;
-    /** Horizontal scroll region wrapping `Tabs` */
-    scrollContainer?: React.CSSProperties;
-    /** Applied to each overflow indicator's root (`style` / `className` on the rendered component) */
-    overflowIndicator?: React.CSSProperties;
-    overflowIndicatorButton?: React.CSSProperties;
-    overflowIndicatorButtonContainer?: React.CSSProperties;
-    overflowIndicatorGradient?: React.CSSProperties;
+export type TabsScrollAreaProps = TabsScrollAreaBaseProps &
+  StylesAndClassNames<typeof tabsScrollAreaClassNames> & {
+    /**
+     * Render function that receives `onActiveTabElementChange` (wire to `Tabs` as `onActiveTabElementChange`).
+     */
+    children: (props: TabsScrollAreaRenderProps) => React.ReactNode;
+    /** Merged with the root `HStack`. */
+    style?: React.CSSProperties;
+    /** Merged with the root `HStack`. */
+    className?: string;
   };
-  classNames?: {
-    root?: string;
-    /** Horizontal scroll region wrapping `Tabs` */
-    scrollContainer?: string;
-    /** Applied to each overflow indicator's root */
-    overflowIndicator?: string;
-    /** Applied to each overflow indicator's icon button */
-    overflowIndicatorButton?: string;
-    /** Applied to each overflow indicator's icon button container */
-    overflowIndicatorButtonContainer?: string;
-    /** Applied to each overflow indicator's gradient */
-    overflowIndicatorGradient?: string;
-  };
-};
 
 const containerCss = css`
   isolation: isolate;
@@ -102,23 +99,9 @@ export const TabsScrollArea = memo(function TabsScrollArea(_props: TabsScrollAre
     compact,
     OverflowIndicatorComponent = TabsScrollAreaOverflowIndicator,
     style,
-    styles: {
-      root: rootStyle,
-      scrollContainer: scrollContainerStyle,
-      overflowIndicator: overflowIndicatorStyle,
-      overflowIndicatorButton: overflowIndicatorButtonStyle,
-      overflowIndicatorButtonContainer: overflowIndicatorButtonContainerStyle,
-      overflowIndicatorGradient: overflowIndicatorGradientStyle,
-    } = {},
+    styles,
     className,
-    classNames: {
-      root: rootClassName,
-      scrollContainer: scrollContainerClassName,
-      overflowIndicator: overflowIndicatorClassName,
-      overflowIndicatorButton: overflowIndicatorButtonClassName,
-      overflowIndicatorButtonContainer: overflowIndicatorButtonContainerClassName,
-      overflowIndicatorGradient: overflowIndicatorGradientClassName,
-    } = {},
+    classNames,
     ...props
   } = mergedProps;
 
@@ -152,40 +135,49 @@ export const TabsScrollArea = memo(function TabsScrollArea(_props: TabsScrollAre
 
   const overflowIndicatorClassNames = useMemo(
     () => ({
-      root: overflowIndicatorClassName,
-      button: overflowIndicatorButtonClassName,
-      buttonContainer: overflowIndicatorButtonContainerClassName,
-      gradient: overflowIndicatorGradientClassName,
+      root: cx(tabsScrollAreaClassNames.overflowIndicator, classNames?.overflowIndicator),
+      button: cx(
+        tabsScrollAreaClassNames.overflowIndicatorButton,
+        classNames?.overflowIndicatorButton,
+      ),
+      buttonContainer: cx(
+        tabsScrollAreaClassNames.overflowIndicatorButtonContainer,
+        classNames?.overflowIndicatorButtonContainer,
+      ),
+      gradient: cx(
+        tabsScrollAreaClassNames.overflowIndicatorGradient,
+        classNames?.overflowIndicatorGradient,
+      ),
     }),
     [
-      overflowIndicatorClassName,
-      overflowIndicatorButtonClassName,
-      overflowIndicatorButtonContainerClassName,
-      overflowIndicatorGradientClassName,
+      classNames?.overflowIndicator,
+      classNames?.overflowIndicatorButton,
+      classNames?.overflowIndicatorButtonContainer,
+      classNames?.overflowIndicatorGradient,
     ],
   );
 
   const overflowIndicatorStyles = useMemo(
     () => ({
-      root: overflowIndicatorStyle,
-      button: overflowIndicatorButtonStyle,
-      buttonContainer: overflowIndicatorButtonContainerStyle,
-      gradient: overflowIndicatorGradientStyle,
+      root: styles?.overflowIndicator,
+      button: styles?.overflowIndicatorButton,
+      buttonContainer: styles?.overflowIndicatorButtonContainer,
+      gradient: styles?.overflowIndicatorGradient,
     }),
     [
-      overflowIndicatorStyle,
-      overflowIndicatorButtonStyle,
-      overflowIndicatorButtonContainerStyle,
-      overflowIndicatorGradientStyle,
+      styles?.overflowIndicator,
+      styles?.overflowIndicatorButton,
+      styles?.overflowIndicatorButtonContainer,
+      styles?.overflowIndicatorGradient,
     ],
   );
 
   return (
     <HStack
       alignItems="center"
-      className={cx(containerCss, className, rootClassName)}
+      className={cx(containerCss, tabsScrollAreaClassNames.root, className, classNames?.root)}
       position={position}
-      style={{ ...style, ...rootStyle }}
+      style={{ ...style, ...styles?.root }}
       testID={testID}
       width={width}
       {...props}
@@ -202,17 +194,20 @@ export const TabsScrollArea = memo(function TabsScrollArea(_props: TabsScrollAre
       <HStack
         ref={scrollRef}
         alignItems="center"
-        className={cx(scrollContainerCss, scrollContainerClassName)}
+        className={cx(
+          scrollContainerCss,
+          tabsScrollAreaClassNames.scrollContainer,
+          classNames?.scrollContainer,
+        )}
         minWidth={0}
         onScroll={handleScroll}
         overflow="auto"
-        style={scrollContainerStyle}
+        style={styles?.scrollContainer}
       >
         {renderedChildren}
       </HStack>
       <OverflowIndicatorComponent
         accessibilityLabel={nextArrowAccessibilityLabel}
-        className={overflowIndicatorClassName}
         classNames={overflowIndicatorClassNames}
         compact={compact}
         direction="right"
