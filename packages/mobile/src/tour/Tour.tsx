@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useMemo } from 'react';
-import { Modal, Platform, View, type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
+import React, { useCallback, useMemo,useRef } from 'react';
+import { Modal, Platform, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
   OverlayContentContext,
