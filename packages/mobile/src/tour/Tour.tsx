@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo,useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { Modal, Platform, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
