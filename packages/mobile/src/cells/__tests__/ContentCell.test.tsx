@@ -1,6 +1,9 @@
 import { Text, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
+import { VStack } from '../../layout';
+import { Text as TypographyText } from '../../typography/Text';
+import { toBeAccessibleIgnoreEngineDisabledOptions } from '../../utils/a11yTestHelpers';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Cell } from '../Cell';
 import { CellMedia } from '../CellMedia';
@@ -78,6 +81,9 @@ describe('ContentCell', () => {
     );
 
     expect(screen.getByTestId('cell-standalone')).toBeAccessible();
+    expect(screen.getByTestId('cell-standalone-cell-pressable')).toBeAccessible(
+      toBeAccessibleIgnoreEngineDisabledOptions,
+    );
   });
 
   it('renders a subtitle', () => {

@@ -90,6 +90,7 @@ const DefaultSelectControlComponent = memo(
         accessibilityLabel,
         ariaHaspopup,
         tabIndex = 0,
+        onKeyDown,
         styles,
         classNames,
         ...props
@@ -368,6 +369,7 @@ const DefaultSelectControlComponent = memo(
             focusable={false}
             minWidth={0}
             onClick={() => setOpen((s) => !s)}
+            onKeyDown={onKeyDown}
             role={role}
             style={styles?.controlInputNode}
             tabIndex={tabIndex}
@@ -432,6 +434,7 @@ const DefaultSelectControlComponent = memo(
           styles?.controlStartNode,
           styles?.controlValueNode,
           tabIndex,
+          onKeyDown,
           startNode,
           shouldShowCompactLabel,
           labelNode,

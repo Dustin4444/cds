@@ -32,6 +32,10 @@ export type TourStepArrowData = {
   alignmentOffset?: number;
 };
 
+/**
+ * @deprecated Import from `@coinbase/cds-web` or `@coinbase/cds-mobile` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TourStepArrowComponentProps = {
   /** Arrow coordinates and offsets for positioning the arrow element. */
   arrow?: TourStepArrowData;
@@ -41,8 +45,10 @@ export type TourStepArrowComponentProps = {
 };
 
 /**
- * The TourStepArrowComponent must forwardRef onto the underlying element for the positioning
- * library to correctly position the element.
+ * The TourStepArrowComponent forwards a ref to the underlying element.
+ * This is required for the positioning library to work correctly.
+ * @deprecated Import from `@coinbase/cds-web` or `@coinbase/cds-mobile` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
  */
 export type TourStepArrowComponent = React.ForwardRefExoticComponent<
   TourStepArrowComponentProps & { ref?: React.Ref<any> }
@@ -50,9 +56,6 @@ export type TourStepArrowComponent = React.ForwardRefExoticComponent<
 
 export type TourStepComponent = React.FC<Omit<TourStepValue, 'Component'>>;
 
-/**
- * Web only.
- */
 export type TourScrollOptions = {
   behavior?: ScrollBehavior;
   marginX?: number;
@@ -105,7 +108,9 @@ export type TourStepValue<TourStepId extends string = string> = {
    */
   tourMaskBorderRadius?: string | number;
   /**
-   * Add styles to the TourStepArrowComponent for this tour step.
+   * Add styles to the TourStepArrowComponent for this tour step. Use `styles.arrow` instead.
+   * @deprecated Use Tour's `styles.stepArrow` prop instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   arrowStyle?: Record<string, string | number>;
   /**
@@ -152,7 +157,10 @@ export type TourApi<TourStepId extends string = string, TTarget = unknown> = Omi
   goPreviousTourStep: () => void;
 };
 
-/** A controlled hook for managing tour state, such as the currently active tour step. */
+/**
+ * A controlled hook for managing tour state, such as the currently active tour step.
+ * @see {@link https://linear.app/coinbase/issue/CDS-1878 CDS-1878} for planned refactor to make this API platform agnostic.
+ */
 export const useTour = <TourStepId extends string = string, TTarget = unknown>({
   steps,
   activeTourStep,
