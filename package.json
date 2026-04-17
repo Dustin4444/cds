@@ -60,7 +60,6 @@
     "clean": "yarn clean-nx-dir && yarn clean-packemon-outs && yarn clean-dist-outs && yarn reset-nx-daemon",
     "release": "tsx tools/ci/validators/validateVersioned.ts && yarn nx run codegen:update-packages-generic-bump && tsx ./tools/validateCDSVersions.ts",
     "generate-tarballs": "node tools/generateTarballs.mjs",
-    "generate-cbhq-tarballs": "node tools/generateCbhqTarballs.mjs",
     "audit-figma-integration": "node scripts/auditFigmaIntegration/index.mjs",
     "code-connect:publish": "yarn code-connect:publish:web && yarn code-connect:publish:mobile",
     "code-connect:publish:web": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files --batch-size 50",
