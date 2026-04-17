@@ -1,5 +1,5 @@
 {
-  "import": "import { PercentageBarChart } from '@coinbase/cds-mobile-visualization'",
+  "import": "import { PercentageBarChart } from '@coinbase/cds-mobile/visualizations/chart'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/bar/PercentageBarChart.tsx",
   "description": "A bar chart component for comparing share or mix across categories as percentages. Supports horizontal and vertical orientations, 100% stacked bars, and a fixed 0–100% value axis.",
   "relatedComponents": [
