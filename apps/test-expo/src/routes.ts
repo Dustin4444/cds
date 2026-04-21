@@ -529,7 +529,7 @@ export const routes = [
   {
     key: 'PercentageBarChart',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/bar/__stories__/PercentageBarChart.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/bar/__stories__/PercentageBarChart.stories')
         .default,
   },
   {
