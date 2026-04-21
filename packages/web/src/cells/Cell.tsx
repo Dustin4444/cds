@@ -470,7 +470,6 @@ export const Cell: CellComponent = memo(
         <Box
           ref={ref}
           alignItems="stretch"
-          aria-selected={!linkable ? selected : undefined}
           as={Component}
           className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
           maxHeight={maxHeight}
