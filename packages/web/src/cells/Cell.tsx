@@ -416,6 +416,7 @@ export const Cell: CellComponent = memo(
           accessibilityHint,
           accessibilityLabel,
           accessibilityLabelledBy,
+          'aria-selected': selected,
           background: 'bg' as const,
           borderRadius,
           className: cx(pressCss, insetFocusRingCss, classNames?.pressable),
@@ -454,6 +455,7 @@ export const Cell: CellComponent = memo(
         onClick,
         onKeyDown,
         onKeyUp,
+        selected,
         tabIndex,
         testID,
         styles?.pressable,
@@ -468,6 +470,7 @@ export const Cell: CellComponent = memo(
         <Box
           ref={ref}
           alignItems="stretch"
+          aria-selected={!linkable ? selected : undefined}
           as={Component}
           className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
           maxHeight={maxHeight}
