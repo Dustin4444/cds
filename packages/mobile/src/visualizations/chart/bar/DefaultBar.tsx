@@ -78,6 +78,7 @@ export const DefaultBar = memo<DefaultBarProps>(
         staggerDelay: enterOpacityTransition.staggerDelay ?? enterTransition?.staggerDelay,
       };
     }, [transitions?.enterOpacity, animate, enterTransition]);
+
     const enterOpacityTransitionWithStagger = useMemo(
       () => withStaggerDelayTransition(enterOpacityTransition, normalizedStagger),
       [enterOpacityTransition, normalizedStagger],

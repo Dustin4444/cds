@@ -4,7 +4,7 @@ import { Group, Path as SkiaPath, Skia } from '@shopify/react-native-skia';
 
 import { IconButton } from '../../../../buttons';
 import { Switch } from '../../../../controls';
-import { ExampleScreen } from '../../../../examples/ExampleScreen';
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
 import { useTheme } from '../../../../hooks/useTheme';
 import { Box, HStack, VStack } from '../../../../layout';
 import { RollingNumber } from '../../../../numbers';
@@ -764,7 +764,7 @@ function ExampleNavigator() {
             variant="secondary"
           />
         </HStack>
-        <Box padding={1}>{currentExample.component}</Box>
+        <Example>{currentExample.component}</Example>
       </VStack>
     </ExampleScreen>
   );

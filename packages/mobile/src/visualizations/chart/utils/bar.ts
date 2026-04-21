@@ -89,6 +89,7 @@ export const defaultBarEnterTransition: BarTransition = {
 export const defaultBarEnterOpacityTransition: BarTransition = {
   type: 'timing',
   duration: 200,
+  // staggerDelay: 250,
 };
 
 /**
