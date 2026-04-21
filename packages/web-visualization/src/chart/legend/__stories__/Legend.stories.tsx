@@ -10,7 +10,7 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { LineChart } from '../../line';
 import { Scrubber } from '../../scrubber';
 import { useScrubberContext } from '../../utils';
-import type { LegendShapeVariant,Series } from '../../utils/chart';
+import type { LegendShapeVariant, Series } from '../../utils/chart';
 import { DefaultLegendShape } from '../DefaultLegendShape';
 import { Legend, type LegendEntryProps } from '../Legend';
 

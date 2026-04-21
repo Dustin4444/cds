@@ -15,8 +15,17 @@ export type HighlightScope = {
 };
 
 /**
- * Represents a single highlighted item.
- * `null` values mean the user is interacting but not over a specific item/series.
+ * Default highlight scope for cartesian charts.
+ * Highlights by data index (x-axis position), not by series.
+ */
+export const defaultCartesianChartHighlightScope: HighlightScope = {
+  dataIndex: true,
+  series: false,
+};
+
+/**
+ * Represents a single highlighted item during interaction.
+ * - `null` values mean the user is interacting but not over a specific item/series
  */
 export type HighlightedItem = {
   /**

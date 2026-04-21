@@ -44,13 +44,13 @@ export type PathBaseProps = {
    */
   fill?: string;
   /**
-   * Opacity for the path fill. Accepts a static number or a SharedValue for animated opacity.
+   * Opacity for the path fill.
    */
   fillOpacity?: AnimatedProp<number>;
   /**
    * Stroke color for the path.
-   * When provided, will render a fill with the given color.
-   * If not provided, will not render a fill.
+   * When provided, will render a stroke with the given color.
+   * If not provided, will not render a stroke.
    */
   stroke?: string;
   /**

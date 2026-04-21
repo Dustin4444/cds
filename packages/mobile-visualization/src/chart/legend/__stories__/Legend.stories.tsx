@@ -14,7 +14,7 @@ import { BarChart, BarPlot, DefaultBar } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { LineChart } from '../../line';
 import { Scrubber } from '../../scrubber';
-import type { LegendShapeVariant,Series } from '../../utils/chart';
+import type { LegendShapeVariant, Series } from '../../utils/chart';
 import { getDottedAreaPath } from '../../utils/path';
 import { DefaultLegendShape } from '../DefaultLegendShape';
 import { Legend, type LegendEntryProps } from '../Legend';

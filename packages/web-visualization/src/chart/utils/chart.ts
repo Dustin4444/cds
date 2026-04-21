@@ -1,18 +1,8 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
 import type { GradientDefinition } from './gradient';
-import type { HighlightScope } from './highlight';
 
 export const defaultStackId = 'DEFAULT_STACK_ID';
-
-/**
- * Default highlight scope for cartesian charts.
- * Highlights by data index (x-axis position), not by series.
- */
-export const defaultCartesianChartHighlightScope: HighlightScope = {
-  dataIndex: true,
-  series: false,
-};
 
 /**
  * Shape variants available for legend items.
@@ -43,14 +33,57 @@ export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds
   bounds.min !== undefined && bounds.max !== undefined;
 
 export type Series = {
+  /**
+   * Id of the series.
+   */
   id: string;
+  /**
+   * Data array for this series. Use null values to create gaps in the visualization.
+   *
+   * Can be either:
+   * - Array of numbers: `[10, -5, 20]`
+   * - Array of tuples: `[[0, 10], [0, -5], [0, 20]]` [baseline, value] pairs
+   */
   data?: Array<number | null> | Array<[number, number] | null>;
+  /**
+   * Label of the series.
+   * Used for scrubber beacon labels.
+   */
   label?: string;
+  /**
+   * Color for the series.
+   * If gradient is provided, that will be used for chart components.
+   * Color will still be used by scrubber beacon labels.
+   */
   color?: string;
+  /**
+   * Color gradient configuration.
+   * Takes precedence over color except for scrubber beacon labels.
+   */
   gradient?: GradientDefinition;
+  /**
+   * Id of the x-axis this series uses.
+   * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
   xAxisId?: string;
+  /**
+   * Id of the y-axis this series uses.
+   * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
+   */
   yAxisId?: string;
+  /**
+   * Id of the stack group this series belongs to.
+   * Series with the same stackId value will be stacked together.
+   * If not specified, the series will not be stacked.
+   */
   stackId?: string;
+  /**
+   * Shape of the legend item for this series.
+   * Can be a preset shape variant or a custom ReactNode.
+   * @default 'circle'
+   */
   legendShape?: LegendShape;
 };
 
@@ -317,23 +350,12 @@ export const defaultHorizontalLayoutChartInset: ChartInset = {
 };
 
 /**
- * Backwards-compatible alias used by legacy tests/docs.
- */
-export const defaultCartesianChartInset: ChartInset = defaultVerticalLayoutChartInset;
-
-/**
- * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or
+ * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts, or
  * `defaultHorizontalLayoutChartInset` for horizontal layout charts. This will be removed in a future major release.
  * @deprecationExpectedRemoval v4
  */
 export const defaultChartInset: ChartInset = defaultVerticalLayoutChartInset;
 
-/**
- * Normalize padding to include all sides with a value.
- * @param padding - The padding to get.
- * @param defaults - Optional complete default values to use instead of 0.
- * @returns The calculated padding.
- */
 /**
  * Normalize inset to include all sides with a value.
  * @param inset - The inset to get.

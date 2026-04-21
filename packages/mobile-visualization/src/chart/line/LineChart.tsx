@@ -125,6 +125,7 @@ export const LineChart = memo(
       },
       ref,
     ) => {
+      // Convert LineSeries to Series for Chart context
       const chartSeries = useMemo(() => {
         return series?.map(
           (s): Series => ({

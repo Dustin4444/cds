@@ -26,7 +26,8 @@ export type PathBaseProps = SharedProps & {
    */
   initialPath?: string;
   /**
-   * Fill color for the path.
+   * Fill color for the path (SVG `fill` on the rendered `<path>`).
+   * When omitted, standard SVG fill defaults apply.
    */
   fill?: string;
   /**
