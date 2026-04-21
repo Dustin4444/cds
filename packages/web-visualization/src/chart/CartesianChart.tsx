@@ -13,6 +13,7 @@ import {
   type CartesianAxisConfigProps,
   type CartesianChartContextValue,
   type CartesianChartLayout,
+  type CartesianSeries,
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
@@ -28,7 +29,6 @@ import {
   type HighlightedItem,
   type HighlightScope,
   type LegendPosition,
-  type CartesianSeries,
   useTotalAxisPadding,
 } from './utils';
 
@@ -108,11 +108,13 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> &
      */
     highlightScope?: HighlightScope;
     /**
-     * @deprecated Use `enableHighlighting={false}` instead. Will be removed in next major version.
+     * @deprecated Use `enableHighlighting={false}` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v5
      */
     enableScrubbing?: boolean;
     /**
-     * @deprecated Use `onHighlightChange` instead. Will be removed in next major version.
+     * @deprecated Use `onHighlightChange` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v5
      */
     onScrubberPositionChange?: (index: number | undefined) => void;
   };

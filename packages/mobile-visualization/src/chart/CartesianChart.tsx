@@ -10,20 +10,21 @@ import {
   ScrubberAccessibilityView,
   type ScrubberAccessibilityViewProps,
 } from './scrubber/ScrubberAccessibilityView';
-import {
-  type HighlightProps,
-  type HighlightProviderProps,
-  HighlightProvider,
-} from './HighlightProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
+import {
+  type HighlightProps,
+  HighlightProvider,
+  type HighlightProviderProps,
+} from './HighlightProvider';
 import { Legend } from './legend';
 import {
   type AxisConfig,
   type CartesianAxisConfigProps,
   type CartesianChartContextValue,
   type CartesianChartLayout,
+  type CartesianSeries,
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
@@ -39,7 +40,6 @@ import {
   type HighlightedItem,
   type HighlightScope,
   type LegendPosition,
-  type CartesianSeries,
   useTotalAxisPadding,
 } from './utils';
 
@@ -151,11 +151,13 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily' | 'accessi
      */
     highlightScope?: HighlightScope;
     /**
-     * @deprecated Use `enableHighlighting` instead. Will be removed in next major version.
+     * @deprecated Use `enableHighlighting` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v5
      */
     enableScrubbing?: boolean;
     /**
-     * @deprecated Use `onHighlightChange` instead. Will be removed in next major version.
+     * @deprecated Use `onHighlightChange` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v5
      */
     onScrubberPositionChange?: (index: number | undefined) => void;
   };

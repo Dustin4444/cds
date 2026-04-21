@@ -1,5 +1,4 @@
-import React, { memo, useMemo } from 'react';
-import { useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { css } from '@linaria/core';
 
 import { useCartesianChartContext } from '../ChartProvider';

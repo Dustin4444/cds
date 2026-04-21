@@ -8,9 +8,9 @@ import React, {
   useState,
 } from 'react';
 
+import type { HighlightedItem, HighlightScope } from './utils/highlight';
 import { useCartesianChartContext } from './ChartProvider';
 import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from './utils';
-import type { HighlightedItem, HighlightScope } from './utils/highlight';
 
 /**
  * Context value for chart highlight state.

@@ -105,7 +105,8 @@ export type CartesianSeries = {
 
 /**
  * Backwards-compatible alias for legacy imports.
- * @deprecated Prefer `CartesianSeries` in cartesian chart APIs.
+ * @deprecated Prefer `CartesianSeries` in cartesian chart APIs. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v5
  */
 export type Series = CartesianSeries;
 

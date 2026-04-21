@@ -8,9 +8,9 @@ import { XAxis, YAxis } from '../axis';
 import { BarChart, BarPlot } from '../bar';
 import { CartesianChart } from '../CartesianChart';
 import { useCartesianChartContext } from '../ChartProvider';
+import { useHighlightContext } from '../HighlightProvider';
 import { Line, LineChart, ReferenceLine, SolidLine } from '../line';
 import { Scrubber } from '../scrubber';
-import { useHighlightContext } from '../HighlightProvider';
 import type { HighlightedItem } from '../utils';
 import { useScrubberContext } from '../utils';
 
