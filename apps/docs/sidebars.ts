@@ -24,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'getting-started/templates/templates',
         // 'getting-started/api-overview/api-overview',
         'getting-started/theming/theming',
+        'getting-started/colors',
         'getting-started/styling/styling',
         'getting-started/playground',
         'getting-started/ai-overview',
@@ -486,6 +487,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/overlay/PopoverPanel/popoverPanel',
+              label: 'PopoverPanel',
+            },
+            {
+              type: 'doc',
               id: 'components/overlay/PortalProvider/portalProvider',
               label: 'PortalProvider',
             },
@@ -623,6 +629,11 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'components/charts/BarChart/barChart',
               label: 'BarChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/charts/PercentageBarChart/percentageBarChart',
+              label: 'PercentageBarChart',
             },
             {
               type: 'doc',
@@ -827,43 +838,41 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
-    // {
-    //   type: 'category',
-    //   label: 'Guides',
-    //   customProps: {
-    //     icon: 'application',
-    //     kbar: {
-    //       description: 'Guides for using CDS',
-    //     },
-    //   },
-    //   items: [
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/polymorphic-components',
-    //     //   label: 'Polymorphic Components',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/integrate-with-build-tools',
-    //     //   label: 'Integrate with Build Tools',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/build-new-components',
-    //     //   label: 'Build New Components',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/contribute-guidelines',
-    //     //   label: 'Contribute Guidelines',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/advanced-customization',
-    //     //   label: 'Advanced Customization',
-    //     // },
-    //   ],
-    // },
+    {
+      type: 'category',
+      label: 'Guides',
+      customProps: {
+        icon: 'application',
+        kbar: {
+          description: 'Guides for using CDS',
+        },
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'guides/v8-migration-guide',
+          label: 'v8 Migration Guide',
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Extras',
+      customProps: {
+        icon: 'sparkle',
+        kbar: {
+          icon: 'sparkle',
+          description: 'Extra tools and resources',
+        },
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'extras/color-pairing-tool',
+          label: 'Color Pairing Tool',
+        },
+      ],
+    },
     {
       type: 'category',
       label: `Changelogs`,

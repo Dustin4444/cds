@@ -3,6 +3,8 @@ import { useModal } from '@coinbase/cds-common/overlays/useModal';
 
 import { Button } from '../../buttons/Button';
 import { LoremIpsum } from '../../layout/__stories__/LoremIpsum';
+import { HStack } from '../../layout/HStack';
+import { Text } from '../../typography/Text';
 import { Modal, type ModalProps } from '../modal/Modal';
 import { ModalBody } from '../modal/ModalBody';
 import { ModalFooter } from '../modal/ModalFooter';
@@ -182,6 +184,37 @@ export const PortalModal = () => {
   );
 };
 
+export const CustomPaddingModal = () => {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          paddingX={0}
+          paddingY={0}
+          title="Custom Padding Modal"
+        />
+        <ModalBody paddingX={0} paddingY={0} tabIndex={0} testID="modal-body">
+          <LoremIpsum />
+        </ModalBody>
+        <ModalFooter
+          paddingX={0}
+          paddingY={0}
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+};
+
 export const ChainedModals = () => {
   const { triggerRef } = useTriggerFocus();
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(true);
@@ -253,6 +286,71 @@ export const ChainedModals = () => {
           primaryAction={<Button onClick={closeSecondModal}>Close</Button>}
           secondaryAction={
             <Button onClick={closeSecondModal} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+};
+
+export const CustomFontModal = () => {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          font="title1"
+          fontSize="display2"
+          title="Large Title Modal"
+        />
+        <ModalBody tabIndex={0} testID="modal-body">
+          <LoremIpsum />
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+};
+
+export const ReactNodeTitleModal = () => {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          title={
+            <HStack alignItems="center" gap={1} justifyContent="center">
+              <Text as="h2" color="fgPrimary" display="block" font="title2">
+                Custom Title
+              </Text>
+              <Text as="span" color="fgMuted" display="block" font="caption">
+                with subtitle
+              </Text>
+            </HStack>
+          }
+        />
+        <ModalBody tabIndex={0} testID="modal-body">
+          <LoremIpsum />
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
               Cancel
             </Button>
           }

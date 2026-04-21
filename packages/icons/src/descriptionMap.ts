@@ -866,7 +866,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'socialShare',
     'socialReshare',
     'beginningArrow',
-    'endArrow'
+    'endArrow',
+    'overPredictions',
+    'underPredictions'
   ],
   'reverse': [
     'undo',
@@ -1019,7 +1021,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'pillCapsule',
     'singlecloud',
     'rain',
-    'autoCar'
+    'autoCar',
+    'column'
   ],
   'profile': [
     'account',
@@ -2233,7 +2236,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   '🔐': [
     'setPinCode',
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   'order': [
     'orderHistory',
@@ -4570,32 +4574,39 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'lock': [
     'lock',
-    'key'
+    'key',
+    'baseLock'
   ],
   'no access': [
-    'lock'
+    'lock',
+    'baseLock'
   ],
   'latch': [
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   'blocked': [
     'lock',
-    'block'
+    'block',
+    'baseLock'
   ],
   '🔒': [
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   '🔑': [
     'lock',
     'unlock',
     'key',
-    'securityKey'
+    'securityKey',
+    'baseLock'
   ],
   '🗝': [
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   'peer to peer': [
     'blockchain'
@@ -6545,5 +6556,21 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'stocks': [
     'pieChartWithArrow'
+  ],
+  'over': [
+    'overPredictions'
+  ],
+  'predictions': [
+    'overPredictions',
+    'underPredictions'
+  ],
+  'column': [
+    'column'
+  ],
+  'editing': [
+    'column'
+  ],
+  'under': [
+    'underPredictions'
   ]
 };

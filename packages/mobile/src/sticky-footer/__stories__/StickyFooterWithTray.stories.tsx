@@ -14,7 +14,7 @@ import { StickyFooter } from '../StickyFooter';
 const options: string[] = prices.slice(0, 20);
 
 const StickyFooterWithTray = ({ title }: { title?: string }) => {
-  const [isTrayVisible, setIsTrayVisible] = useState(true);
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
   const setIsTrayVisibleToFalse = useCallback(() => setIsTrayVisible(false), []);
   const setIsTrayVisibleToTrue = useCallback(() => setIsTrayVisible(true), []);
   const [value, setValue] = useState<string>();
@@ -46,39 +46,28 @@ const StickyFooterWithTray = ({ title }: { title?: string }) => {
         <Tray
           ref={trayRef}
           disableCapturePanGestureToDismiss
+          footer={({ handleClose }) => (
+            <StickyFooter>
+              <HStack alignItems="center" gap={1} justifyContent="center" width="100%">
+                <Box flexGrow={1}>
+                  <Button block onPress={handleClose} variant="secondary">
+                    Cancel
+                  </Button>
+                </Box>
+                <Box flexGrow={1}>
+                  <Button block>Primary</Button>
+                </Box>
+              </HStack>
+            </StickyFooter>
+          )}
+          handleBarVariant="inside"
           onCloseComplete={setIsTrayVisibleToFalse}
           title={title}
           verticalDrawerPercentageOfView={0.75}
         >
-          {({ handleClose }) => (
-            <TrayStickyFooter>
-              <ScrollView>
-                <Menu onChange={setValue} value={value}>
-                  <FlatList data={options} renderItem={renderItem} scrollEnabled={false} />
-                </Menu>
-              </ScrollView>
-              <StickyFooter elevated>
-                <HStack
-                  alignContent="center"
-                  alignItems="center"
-                  gap={1}
-                  justifyContent="center"
-                  width="100%"
-                >
-                  <Box flexGrow={1}>
-                    <Button block variant="secondary">
-                      Secondary
-                    </Button>
-                  </Box>
-                  <Box flexGrow={1}>
-                    <Button block onPress={handleClose}>
-                      Primary
-                    </Button>
-                  </Box>
-                </HStack>
-              </StickyFooter>
-            </TrayStickyFooter>
-          )}
+          <Menu onChange={setValue} value={value}>
+            <FlatList data={options} renderItem={renderItem} />
+          </Menu>
         </Tray>
       )}
     </>

@@ -8,6 +8,52 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.6.2 (4/20/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 3.6.1 (4/16/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support strict mode on charts. [[#618](https://github.com/coinbase/cds/pull/618)]
+
+## 3.6.0 (4/13/2026 PST)
+
+#### 🚀 Updates
+
+- Add PercentageBarChart component. [[#550](https://github.com/coinbase/cds/pull/550)]
+
+## 3.5.0 (4/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add enter opacity transition to bars. [[#612](https://github.com/coinbase/cds/pull/612)]
+
+## 3.4.0 (4/1/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove usage of Array.prototype.at(). [[#575](https://github.com/coinbase/cds/pull/575)]
+
+## 3.4.0-beta.27 (4/1/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 3.4.0-beta.26 (3/31/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 3.4.0-beta.25 (3/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix bar enter and update animation. [[#540](https://github.com/coinbase/cds/pull/540)]
+
+#### 📘 Misc
+
+- Chore: Updated numerous deprecation annotation messages.
+
 ## 3.4.0-beta.24 (3/12/2026 PST)
 
 This is an artificial version bump with no new change.

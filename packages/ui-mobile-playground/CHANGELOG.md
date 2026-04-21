@@ -8,6 +8,60 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.19.0 (4/20/2026 PST)
+
+#### 🚀 Updates
+
+- Update icon svg map. [[#629](https://github.com/coinbase/cds/pull/629)]
+
+## 4.18.0 (4/13/2026 PST)
+
+#### 🚀 Updates
+
+- Add route for PercentageBarChart. [[#550](https://github.com/coinbase/cds/pull/550)]
+
+## 4.17.0 (4/9/2026 PST)
+
+#### 🚀 Updates
+
+- Update svg map for latest icon release.
+
+## 4.16.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Add mobile component config route. [[#507](https://github.com/coinbase/cds/pull/507)]
+
+## 4.15.2 (3/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fit lint errors. [[#528](https://github.com/coinbase/cds/pull/528)]
+
+## 4.15.1 (3/26/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove detox dependency. [[#517](https://github.com/coinbase/cds/pull/517)]
+
+## 4.15.0 (3/23/2026 PST)
+
+#### 🚀 Updates
+
+- Add custom modal padding route. [[#534](https://github.com/coinbase/cds/pull/534)]
+
+## 4.14.0 (3/18/2026 PST)
+
+#### 🚀 Updates
+
+- Add a route for new Calendar component. [[#139](https://github.com/coinbase/cds/pull/139)]
+
+## 4.13.0 (3/17/2026 PST)
+
+#### 🚀 Updates
+
+- Update svg map for new illustrations. [[#511](https://github.com/coinbase/cds/pull/511)]
+
 ## 4.12.0 (3/11/2026 PST)
 
 #### 🚀 Updates

@@ -13,7 +13,7 @@ import { zIndex as zIndexTokens } from '@coinbase/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
-import { Box } from '../../layout/Box';
+import { Box, type BoxBaseProps } from '../../layout/Box';
 import { useMotionProps } from '../../motion/useMotionProps';
 import { Text } from '../../typography/Text';
 
@@ -33,10 +33,28 @@ const textCss = css`
   overflow-wrap: anywhere;
 `;
 
+export type TooltipContentBaseProps = PopperTooltipProps &
+  Pick<BoxBaseProps, 'background' | 'borderRadius' | 'maxWidth' | 'paddingX' | 'paddingY'>;
+
+export type TooltipContentProps = TooltipContentBaseProps;
+
 export const TooltipContent = memo(
   forwardRef(
     (
-      { content, elevation, gap, testID, zIndex, tooltipId, placement = 'top' }: PopperTooltipProps,
+      {
+        content,
+        elevation,
+        gap,
+        testID,
+        zIndex,
+        tooltipId,
+        placement = 'top',
+        background = 'bg',
+        borderRadius = 200,
+        maxWidth = tooltipMaxWidth,
+        paddingX = tooltipPaddingX,
+        paddingY = tooltipPaddingY,
+      }: TooltipContentProps,
       ref: React.ForwardedRef<HTMLDivElement>,
     ) => {
       const outerStyle = useMemo(
@@ -61,20 +79,22 @@ export const TooltipContent = memo(
         <motion.div {...motionProps} data-testid={`${testID}-motion`}>
           <Box
             ref={ref}
-            background="bg"
-            borderRadius={200}
+            background={background}
+            borderRadius={borderRadius}
             data-testid={testID}
             elevation={elevation}
-            maxWidth={tooltipMaxWidth}
-            paddingX={tooltipPaddingX}
-            paddingY={tooltipPaddingY}
+            id={tooltipId}
+            maxWidth={maxWidth}
+            paddingX={paddingX}
+            paddingY={paddingY}
+            role="tooltip"
           >
             {typeof content === 'string' ? (
-              <Text className={textCss} color="fg" font="label2" id={tooltipId}>
+              <Text className={textCss} color="fg" font="label2">
                 {content}
               </Text>
             ) : (
-              <div id={tooltipId}>{content}</div>
+              <div>{content}</div>
             )}
           </Box>
         </motion.div>

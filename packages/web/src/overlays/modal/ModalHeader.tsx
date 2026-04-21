@@ -1,22 +1,24 @@
 import React from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type {
-  SharedAccessibilityProps,
-  SharedProps,
-  ValidateProps,
-} from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import { IconButton } from '../../buttons/IconButton';
-import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
-import { HStack } from '../../layout/HStack';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
+import { Box } from '../../layout/Box';
+import {
+  HStack,
+  type HStackBaseProps,
+  type HStackDefaultElement,
+  type HStackProps,
+} from '../../layout/HStack';
 import { Text } from '../../typography/Text';
 
-export type ModalHeaderBaseProps = {
+export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children' | 'title'> & {
   /** Handles back button press */
   onBackButtonClick?: React.MouseEventHandler;
   /** Title of the Modal */
-  title?: string;
+  title?: React.ReactNode;
   /**
    * Sets an accessible label for the back button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
@@ -51,22 +53,26 @@ export type ModalHeaderBaseProps = {
    * @link https://reactnative.dev/docs/accessibility#accessibilityhint
    */
   closeAccessibilityHint?: SharedAccessibilityProps['accessibilityHint'];
-} & SharedProps;
+};
 
-export type ModalHeaderProps = ModalHeaderBaseProps & BoxProps<BoxDefaultElement>;
+export type ModalHeaderProps = ModalHeaderBaseProps &
+  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
 
-export const ModalHeader = ({
-  alignItems = 'center',
-  paddingX = 3,
-  paddingY = 2,
-  title,
-  onBackButtonClick,
-  backAccessibilityLabel,
-  backAccessibilityHint,
-  closeAccessibilityLabel,
-  closeAccessibilityHint,
-  ...props
-}: ModalHeaderProps) => {
+export const ModalHeader = (_props: ModalHeaderProps) => {
+  const mergedProps = useComponentConfig('ModalHeader', _props);
+  const {
+    alignItems = 'center',
+    paddingX = 3,
+    paddingY = 2,
+    font = 'headline',
+    title,
+    onBackButtonClick,
+    backAccessibilityLabel,
+    backAccessibilityHint,
+    closeAccessibilityLabel,
+    closeAccessibilityHint,
+    ...props
+  } = mergedProps;
   const { onRequestClose, accessibilityLabelledBy, hideCloseButton, hideDividers } =
     useModalContext();
 
@@ -81,12 +87,10 @@ export const ModalHeader = ({
     <HStack
       alignItems={alignItems}
       borderedBottom={!hideDividers}
+      font={font}
       paddingX={paddingX}
       paddingY={paddingY}
-      {...(props satisfies ValidateProps<
-        typeof props,
-        Omit<ModalHeaderProps, keyof BoxProps<BoxDefaultElement>>
-      >)}
+      {...props}
     >
       {onBackButtonClick ? (
         <Box>
@@ -103,17 +107,20 @@ export const ModalHeader = ({
         emptyPlaceholder
       )}
       <Box alignItems="center" flexGrow={1} justifyContent="center" paddingX={2}>
-        {title && (
-          <Text
-            as="h2"
-            display="block"
-            font="headline"
-            id={accessibilityLabelledBy}
-            textAlign="center"
-          >
-            {title}
-          </Text>
-        )}
+        {title &&
+          (typeof title === 'string' ? (
+            <Text
+              as="h2"
+              display="block"
+              font="inherit"
+              id={accessibilityLabelledBy}
+              textAlign="center"
+            >
+              {title}
+            </Text>
+          ) : (
+            title
+          ))}
       </Box>
       {!hideCloseButton && (
         <Box justifyContent="flex-end">

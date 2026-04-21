@@ -6,12 +6,14 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { useHighlightContext } from '../HighlightProvider';
 import { Path } from '../Path';
 import {
+  defaultBarEnterOpacityTransition,
   defaultBarEnterTransition,
   defaultTransition,
   getBarPath,
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
+import { type BarTransition, getNormalizedStagger } from '../utils/bar';
 
 import type { BarComponentProps } from './Bar';
 
@@ -53,6 +55,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     dataX,
     dataY,
     seriesId,
+    minSize = 1,
     transitions,
     transition,
     fadeOnHighlight,
@@ -121,22 +124,44 @@ export const DefaultBar = memo<DefaultBarProps>(
       ? [className, fadeTransitionCss].filter(Boolean).join(' ')
       : className;
 
-    // For vertical layout, stagger by x (category axis). For horizontal, stagger by y (category axis).
-    const normalizedStagger = useMemo(() => {
-      const barsGrowVertically = layout !== 'horizontal';
-      if (barsGrowVertically) {
-        return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-      }
-      return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-    }, [layout, x, y, drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height]);
+    const normalizedStagger = useMemo(
+      () => getNormalizedStagger(layout, x, y, drawingArea),
+      [layout, x, y, drawingArea],
+    );
 
     const enterTransition = useMemo(
       () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedStagger,
-        ),
-      [transitions?.enter, animate, normalizedStagger],
+        getTransition(
+          transitions?.enter,
+          animate,
+          defaultBarEnterTransition,
+        ) as BarTransition | null,
+      [transitions?.enter, animate],
+    );
+    const enterTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterTransition, normalizedStagger),
+      [enterTransition, normalizedStagger],
+    );
+    const enterOpacityTransition = useMemo(() => {
+      if (transitions?.enterOpacity === undefined && enterTransition === null) return null;
+
+      const enterOpacityTransition: BarTransition | null = getTransition(
+        transitions?.enterOpacity,
+        animate,
+        defaultBarEnterOpacityTransition,
+      );
+
+      if (!enterOpacityTransition) return null;
+
+      return {
+        ...enterOpacityTransition,
+        delay: enterOpacityTransition.delay ?? enterTransition?.delay,
+        staggerDelay: enterOpacityTransition.staggerDelay ?? enterTransition?.staggerDelay,
+      };
+    }, [transitions?.enterOpacity, animate, enterTransition]);
+    const enterOpacityTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterOpacityTransition, normalizedStagger),
+      [enterOpacityTransition, normalizedStagger],
     );
     const updateTransition = useMemo(
       () =>
@@ -152,27 +177,38 @@ export const DefaultBar = memo<DefaultBarProps>(
     );
 
     const initialPath = useMemo(() => {
-      if (!animate) return undefined;
+      if (!animate) return;
+      const isHorizontalLayout = layout === 'horizontal';
+      const baseline = origin ?? (isHorizontalLayout ? x : y + height);
 
-      const minSize = 1;
-      const barsGrowVertically = layout !== 'horizontal';
-
-      const initialX = barsGrowVertically ? x : (origin ?? x);
-      const initialY = barsGrowVertically ? (origin ?? y + height) : y;
-      const initialWidth = barsGrowVertically ? width : minSize;
-      const initialHeight = barsGrowVertically ? minSize : height;
+      const initialX = isHorizontalLayout ? baseline : x;
+      const initialY = isHorizontalLayout ? y : baseline;
+      const initialWidth = isHorizontalLayout ? minSize : width;
+      const initialHeight = isHorizontalLayout ? height : minSize;
 
       return getBarPath(
         initialX,
         initialY,
         initialWidth,
         initialHeight,
-        borderRadius ?? 0,
+        borderRadius,
         !!roundTop,
         !!roundBottom,
         layout,
       );
-    }, [animate, layout, x, y, origin, width, height, borderRadius, roundTop, roundBottom]);
+    }, [
+      animate,
+      layout,
+      x,
+      y,
+      origin,
+      width,
+      height,
+      borderRadius,
+      roundTop,
+      roundBottom,
+      minSize,
+    ]);
 
     return (
       <Path
@@ -188,7 +224,8 @@ export const DefaultBar = memo<DefaultBarProps>(
         onPointerLeave={highlightEnabled && highlightBySeries ? handlePointerLeave : undefined}
         style={resolvedStyle}
         transitions={{
-          enter: enterTransition,
+          enter: enterTransitionWithStagger,
+          enterOpacity: enterOpacityTransitionWithStagger,
           update: updateTransition,
         }}
       />

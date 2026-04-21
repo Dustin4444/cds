@@ -29,6 +29,7 @@ import {
 
 import { IconButton } from '../../buttons';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useDimensions } from '../../hooks/useDimensions';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
 import { useTheme } from '../../hooks/useTheme';
@@ -152,6 +153,8 @@ export type TrayBaseProps = Pick<
   onClose?: () => void;
   /** Action that will happen when tray is dismissed */
   onCloseComplete: () => void;
+  /** Callback fired when the open animation completes. */
+  onOpenComplete?: () => void;
   /**
    * Optional callback that, if provided, will be triggered when the Tray is toggled open/ closed
    * If used for analytics, context ('visible' | 'hidden') can be bundled with the event info to track whether the
@@ -244,8 +247,9 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Tray = memo(
-  forwardRef<TrayRefProps, TrayProps>(function Tray(
-    {
+  forwardRef<TrayRefProps, TrayProps>(function Tray(_props, ref) {
+    const mergedProps = useComponentConfig('Tray', _props);
+    const {
       children,
       header,
       footer,
@@ -255,6 +259,7 @@ export const Tray = memo(
       onBlur,
       onClose,
       onCloseComplete,
+      onOpenComplete,
       preventDismiss,
       id,
       role = 'dialog',
@@ -272,9 +277,7 @@ export const Tray = memo(
       pin = 'bottom',
       showHandleBar,
       hideCloseButton,
-    },
-    ref,
-  ) {
+    } = mergedProps;
     const theme = useTheme();
     const [isOpen, setIsOpen] = useState(true);
     const [hasScrolledDown, setHasScrolledDown] = useState(false);
@@ -282,6 +285,7 @@ export const Tray = memo(
     const trayRef = useRef<HTMLDivElement>(null);
     const { observe: observeTraySize, height: trayHeight } = useDimensions<HTMLDivElement>();
     const contentRef = useRef<HTMLDivElement>(null);
+    const hasCalledOnOpenComplete = useRef(false);
     const [scope, animate] = useAnimate();
     const dragControls = useDragControls();
 
@@ -361,6 +365,12 @@ export const Tray = memo(
       },
       [trayHeight, handleSwipeClose, animate, scope],
     );
+
+    const handleOpenComplete = useCallback(() => {
+      if (hasCalledOnOpenComplete.current) return;
+      hasCalledOnOpenComplete.current = true;
+      onOpenComplete?.();
+    }, [onOpenComplete]);
 
     const initialAnimationValue = useMemo(() => {
       if (reduceMotion) {
@@ -476,6 +486,7 @@ export const Tray = memo(
                     elevation={2}
                     id={id}
                     initial={initialAnimationValue}
+                    onAnimationComplete={handleOpenComplete}
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
                     onDragEnd={!preventDismiss ? handleDragEnd : undefined}
                     pin={pin}

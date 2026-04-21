@@ -10,6 +10,7 @@ import type {
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
@@ -66,16 +67,18 @@ const excessContainerCss = css`
   box-sizing: content-box;
 `;
 
-export const RemoteImageGroup = ({
-  children,
-  size = 'm',
-  max = 4,
-  shape = 'circle',
-  testID,
-  borderWidth,
-  borderColor = borderWidth ? 'bg' : undefined,
-  ...props
-}: RemoteImageGroupProps) => {
+export const RemoteImageGroup = (_props: RemoteImageGroupProps) => {
+  const mergedProps = useComponentConfig('RemoteImageGroup', _props);
+  const {
+    children,
+    size = 'm',
+    max = 4,
+    shape = 'circle',
+    testID,
+    borderWidth,
+    borderColor = borderWidth ? 'bg' : undefined,
+    ...props
+  } = mergedProps;
   const { avatarSize } = useTheme();
 
   const sizeAsNumber = typeof size === 'number' ? size : avatarSize[size];
@@ -139,7 +142,7 @@ export const RemoteImageGroup = ({
       {excess > 0 && (
         <Box
           alignItems="center"
-          background="bgOverlay"
+          background="bgSecondary"
           borderColor={borderColor}
           borderWidth={borderWidth}
           className={cx(excessContainerCss, borderRadiusCss[shape])}

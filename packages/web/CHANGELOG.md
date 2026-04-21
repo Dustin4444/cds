@@ -8,7 +8,158 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.66.0 (4/16/2026 PST)
+
+#### 🚀 Updates
+
+- Deprecate Dropdown and add PopoverPanel component. [[#566](https://github.com/coinbase/cds/pull/566)]
+
+## 8.65.0 (4/16/2026 PST)
+
+#### 🚀 Updates
+
+- Add customization to text for ModalHeader. [[#613](https://github.com/coinbase/cds/pull/613)]
+
+## 8.64.5 (4/16/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: remove extra padding on combobox input. [[#617](https://github.com/coinbase/cds/pull/617)]
+
+## 8.64.4 (4/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Toast enter animation in React 19 StrictMode. [[#607](https://github.com/coinbase/cds/pull/607)]
+
+## 8.64.3 (4/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Stepper animation with react-spring ^10.0.1. [[#603](https://github.com/coinbase/cds/pull/603)]
+
+## 8.64.2 ((4/8/2026, 11:26 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.64.1 (4/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: Add styles and classNames APIs to Tour and TourStep components. [[#592](https://github.com/coinbase/cds/pull/592)]
+
+## 8.64.0 (4/2/2026 PST)
+
+#### 🚀 Updates
+
+- Added DefaultTab and DefaultTabActiveIndicator and deprecate types used by TabNavigation. [[#558](https://github.com/coinbase/cds/pull/558)]
+
+## 8.63.0 (4/1/2026 PST)
+
+#### 🚀 Updates
+
+- Add type focus to Select. [[#571](https://github.com/coinbase/cds/pull/571)]
+
+## 8.62.1 (4/1/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove usage of Array.prototype.at(). [[#575](https://github.com/coinbase/cds/pull/575)]
+
+## 8.62.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Add ComponentConfigProvider. [[#507](https://github.com/coinbase/cds/pull/507)]
+
+## 8.61.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support SearchInput height customization. [[#565](https://github.com/coinbase/cds/pull/565)]
+
+#### 📘 Misc
+
+- Deprecate Card and its sub-components. [[#562](https://github.com/coinbase/cds/pull/562)]
+
+#### 📘 Misc
+
+- Chore: deprecate CardGroup. [[#560](https://github.com/coinbase/cds/pull/560)]
+
+## 8.60.0 (3/29/2026 PST)
+
+#### 🚀 Updates
+
+- Add indeterminate ProgressCircle. [[#501](https://github.com/coinbase/cds/pull/501)]
+
+## 8.59.0 (3/27/2026 PST)
+
+#### 🚀 Updates
+
+- Suppoer controlSize on Checkbox and Radio. [[#546](https://github.com/coinbase/cds/pull/546)]
+
+## 8.58.0 (3/25/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support font prop on inputs. [[#545](https://github.com/coinbase/cds/pull/545)]
+- Feat: support borderRadius on SearchInput. [[#545](https://github.com/coinbase/cds/pull/545)]
+
+## 8.57.1 (3/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Use aria-describedby for all tooltip's triggers. [[#541](https://github.com/coinbase/cds/pull/541)]
+
+## 8.57.0 (3/24/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support focusedBorderWidth on TextInput. [[#537](https://github.com/coinbase/cds/pull/537)]
+
+## 8.56.1 (3/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Fixed issue when typing space in combobox input closes the popover by mistake. [[#523](https://github.com/coinbase/cds/pull/523)]
+
+## 8.56.0 (3/23/2026 PST)
+
+#### 🚀 Updates
+
+- Support modal subcomponent props. [[#534](https://github.com/coinbase/cds/pull/534)]
+
+#### 📘 Misc
+
+- Chore: Updated numerous deprecation annotation messages.
+
+## 8.55.1 (3/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix icon inconsistent rendering. [[#527](https://github.com/coinbase/cds/pull/527)]
+
+## 8.55.0 ((3/19/2026, 01:41 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.54.0 (3/18/2026 PST)
+
+#### 🚀 Updates
+
+- Add component styling, improve a11y for Calendar and DatePicker. [[#139](https://github.com/coinbase/cds/pull/139)]
+
+## 8.53.1 (3/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: update RemoteImageGroup excess bg color. [[#512](https://github.com/coinbase/cds/pull/512)]
+
+## 8.53.0 (3/16/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update Checkbox borderRadius to match design. [[#509](https://github.com/coinbase/cds/pull/509)]
 
 #### 📘 Misc
 
