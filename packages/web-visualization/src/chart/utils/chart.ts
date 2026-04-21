@@ -42,79 +42,24 @@ export type AxisBounds = {
 export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds =>
   bounds.min !== undefined && bounds.max !== undefined;
 
-/**
- * Series model for Cartesian charts.
- * Designed to remain cartesian-specific as the codebase expands to other chart families (e.g. polar).
- */
-export type CartesianSeries = {
-  /**
-   * Id of the series.
-   */
+export type Series = {
   id: string;
-  /**
-   * Data array for this series. Use null values to create gaps in the visualization.
-   *
-   * Can be either:
-   * - Array of numbers: `[10, -5, 20]`
-   * - Array of tuples: `[[0, 10], [0, -5], [0, 20]]` [baseline, value] pairs
-   */
   data?: Array<number | null> | Array<[number, number] | null>;
-  /**
-   * Label of the series.
-   * Used for scrubber beacon labels.
-   */
   label?: string;
-  /**
-   * Color of the series.
-   * If gradient is provided, that will be used for chart components
-   * Color will still be used by scrubber beacon labels
-   */
   color?: string;
-  /**
-   * Color gradient configuration.
-   * Takes precedence over color except for scrubber beacon labels.
-   */
   gradient?: GradientDefinition;
-  /**
-   * Id of the x-axis this series uses.
-   * Defaults to defaultAxisId if not specified.
-   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
-   */
   xAxisId?: string;
-  /**
-   * Id of the y-axis this series uses.
-   * Defaults to defaultAxisId if not specified.
-   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
-   */
   yAxisId?: string;
-  /**
-   * Id of the stack group this series belongs to.
-   * Series with the same stackId value will be stacked together.
-   * If not specified, the series will not be stacked.
-   */
   stackId?: string;
-  /**
-   * Shape of the legend item for this series.
-   * Can be a preset shape variant or a custom ReactNode.
-   * @default 'circle'
-   */
   legendShape?: LegendShape;
 };
-
-/**
- * Backwards-compatible alias for legacy imports.
- *
- * @deprecated Prefer `CartesianSeries` in cartesian chart APIs. This will be removed in a future major release.
- * @deprecationExpectedRemoval v5
- */
-export type Series = CartesianSeries;
 
 /**
  * Calculates the domain of a chart from series data.
  * Domain represents the range of x-values from the data.
  */
 export const getChartDomain = (
-  series: CartesianSeries[],
+  series: Series[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {
@@ -143,7 +88,7 @@ export const getChartDomain = (
  * Creates a composite stack key that includes stack ID and axis IDs.
  * This ensures series with different scales don't get stacked together.
  */
-const createStackKey = (series: CartesianSeries): string | undefined => {
+const createStackKey = (series: Series): string | undefined => {
   if (series.stackId === undefined) return undefined;
 
   // Include axis IDs to prevent cross-scale stacking
@@ -160,7 +105,7 @@ const createStackKey = (series: CartesianSeries): string | undefined => {
  * @returns Map of series ID to stacked data arrays
  */
 export const getStackedSeriesData = (
-  series: CartesianSeries[],
+  series: Series[],
 ): Map<string, Array<[number, number] | null>> => {
   const stackedDataMap = new Map<string, Array<[number, number] | null>>();
 
@@ -270,7 +215,7 @@ export const getLineData = (
  * Handles stacking by transforming data when series have stack properties.
  */
 export const getChartRange = (
-  series: CartesianSeries[],
+  series: Series[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {

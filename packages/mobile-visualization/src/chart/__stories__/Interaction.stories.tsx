@@ -358,9 +358,9 @@ const HighlightingDisabled = () => {
       </Text>
 
       <LineChart
-        enableHighlighting={false}
         showArea
         showYAxis
+        enableHighlighting={false}
         height={250}
         series={[{ id: 'price', data: samplePrices, color: theme.color.fgPrimary }]}
       />

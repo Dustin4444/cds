@@ -10,12 +10,12 @@ import {
 } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  type CartesianSeries,
   type ChartInset,
   type ChartScaleFunction,
   defaultAccessoryEnterTransition,
   getPointOnScale,
   getTransition,
+  type Series,
   useScrubberContext,
 } from '../utils';
 
@@ -45,7 +45,7 @@ export type ScrubberBeaconBaseProps = {
   /**
    * Id of the series.
    */
-  seriesId: CartesianSeries['id'];
+  seriesId: Series['id'];
   /**
    * Color of the series.
    */
@@ -132,7 +132,7 @@ export type ScrubberBeaconComponent = React.FC<
   ScrubberBeaconProps & { ref?: React.Ref<ScrubberBeaconRef> }
 >;
 
-export type ScrubberBeaconLabelProps = Pick<CartesianSeries, 'color'> &
+export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
   Pick<
     ChartTextProps,
     | 'x'
@@ -152,7 +152,7 @@ export type ScrubberBeaconLabelProps = Pick<CartesianSeries, 'color'> &
     /**
      * Id of the series.
      */
-    seriesId: CartesianSeries['id'];
+    seriesId: Series['id'];
     /**
      * Transition configuration for position animations.
      * When provided, the label component should animate its y position using this transition.

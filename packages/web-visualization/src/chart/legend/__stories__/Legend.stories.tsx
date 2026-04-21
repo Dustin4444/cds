@@ -10,7 +10,7 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { LineChart } from '../../line';
 import { Scrubber } from '../../scrubber';
 import { useScrubberContext } from '../../utils';
-import type { CartesianSeries, LegendShapeVariant } from '../../utils/chart';
+import type { LegendShapeVariant,Series } from '../../utils/chart';
 import { DefaultLegendShape } from '../DefaultLegendShape';
 import { Legend, type LegendEntryProps } from '../Legend';
 
@@ -345,7 +345,7 @@ const DynamicData = () => {
     'Dec',
   ];
 
-  const series: CartesianSeries[] = [
+  const series: Series[] = [
     {
       id: 'candidate-a',
       label: 'Candidate A',
