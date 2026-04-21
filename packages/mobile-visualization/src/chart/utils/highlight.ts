@@ -3,20 +3,19 @@
  */
 export type HighlightScope = {
   /**
-   * Whether highlighting tracks data index (x-axis position).
+   * Whether highlighting tracks data index.
    * @default true
    */
   dataIndex?: boolean;
   /**
    * Whether highlighting tracks specific series.
-   * @default false
    */
   series?: boolean;
 };
 
 /**
  * Default highlight scope for cartesian charts.
- * Highlights by data index (x-axis position), not by series.
+ * Highlights by data index, not by series.
  */
 export const defaultCartesianChartHighlightScope: HighlightScope = {
   dataIndex: true,
@@ -29,7 +28,7 @@ export const defaultCartesianChartHighlightScope: HighlightScope = {
  */
 export type HighlightedItem = {
   /**
-   * The data index (x-axis position) being highlighted.
+   * The data index being highlighted.
    * `null` when interacting but not over a data point.
    */
   dataIndex: number | null;

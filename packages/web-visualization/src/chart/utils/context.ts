@@ -15,26 +15,37 @@ export type CartesianChartLayout = 'horizontal' | 'vertical';
 
 export type ChartType = 'cartesian';
 
-/**
- * Context value for Cartesian (X/Y) coordinate charts.
- * Contains axis-specific methods and properties for rectangular coordinate systems.
- */
-export type CartesianChartContextValue = {
+export type ChartContextValue = {
+  /**
+   * Whether to animate the chart.
+   */
+  animate: boolean;
   /**
    * The chart type.
    */
   type: ChartType;
   /**
-   * Chart layout - describes the direction bars/areas grow.
-   * @default 'vertical'
-   * - 'vertical': Bars grow vertically (up/down). X is category axis, Y is value axis.
-   * - 'horizontal': Bars grow horizontally (left/right). Y is category axis, X is value axis.
-   */
-  layout: CartesianChartLayout;
-  /**
    * The series data for the chart.
    */
   series: Series[];
+  /**
+   * Width of the chart SVG.
+   */
+  width: number;
+  /**
+   * Height of the chart SVG.
+   */
+  height: number;
+  /**
+   * Drawing area of the chart.
+   */
+  drawingArea: Rect;
+  /**
+   * Length of the data domain.
+   * This is equal to the length of xAxis.data or the longest series data length
+   * This equals the number of possible scrubber positions
+   */
+  dataLength: number;
   /**
    * Returns the series which matches the seriesId or undefined.
    * @param seriesId - A series' id
@@ -46,18 +57,18 @@ export type CartesianChartContextValue = {
    * @returns data for series, if series exists
    */
   getSeriesData: (seriesId?: string) => Array<[number, number] | null> | undefined;
+};
+
+/**
+ * Context value for Cartesian (X/Y) coordinate charts.
+ * Contains axis-specific methods and properties for rectangular coordinate systems.
+ */
+export type CartesianChartContextValue = ChartContextValue & {
   /**
-   * Whether to animate the chart.
+   * Chart layout - describes the direction bars/areas grow.
+   * @default 'vertical'
    */
-  animate: boolean;
-  /**
-   * Width of the chart SVG.
-   */
-  width: number;
-  /**
-   * Height of the chart SVG.
-   */
-  height: number;
+  layout: CartesianChartLayout;
   /**
    * Get x-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
@@ -79,16 +90,6 @@ export type CartesianChartContextValue = {
    */
   getYScale: (id?: string) => ChartScaleFunction | undefined;
   /**
-   * Drawing area of the chart.
-   */
-  drawingArea: Rect;
-  /**
-   * Length of the data domain.
-   * This is equal to the length of xAxis.data or the longest series data length
-   * This equals the number of possible scrubber positions
-   */
-  dataLength: number;
-  /**
    * Registers an axis.
    * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
    * @param id - The axis ID
@@ -106,8 +107,6 @@ export type CartesianChartContextValue = {
    */
   getAxisBounds: (id: string) => Rect | undefined;
 };
-
-export type ChartContextValue = CartesianChartContextValue;
 
 export type ScrubberContextValue = {
   /**
