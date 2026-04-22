@@ -80,6 +80,7 @@ module.exports = {
     'chart/PeriodSelector',
     'chart/point/Point',
     'chart/scrubber/Scrubber',
+    'chart/tooltip/ChartTooltip',
     'chips/Chip',
     'chips/InputChip',
     'chips/MediaChip',

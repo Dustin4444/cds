@@ -1,0 +1,40 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { ChartTooltip, LineChart, Scrubber } from '@coinbase/cds-web-visualization';
+
+import webStylesData from ':docgen/web-visualization/chart/tooltip/ChartTooltip/styles-data';
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <LineChart
+      enableHighlighting
+      showArea
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'Prices',
+        },
+        {
+          id: 'volume',
+          data: [3, 5, 6, 10, 8, 7, 4, 9, 11, 6, 8, 5, 4, 7],
+          label: 'Volume',
+          color: 'var(--color-accentBoldGreen)',
+        },
+      ]}
+      xAxis={{
+        data: ['M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S'],
+      }}
+    >
+      <Scrubber hideBeaconLabels />
+      <ChartTooltip classNames={classNames} />
+    </LineChart>
+  )}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="ChartTooltip" styles={webStylesData} />

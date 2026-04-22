@@ -647,6 +647,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/charts/ChartTooltip/chartTooltip',
+              label: 'ChartTooltip',
+            },
+            {
+              type: 'doc',
               id: 'components/charts/LineChart/lineChart',
               label: 'LineChart',
             },

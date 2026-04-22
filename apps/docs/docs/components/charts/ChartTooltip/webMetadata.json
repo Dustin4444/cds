@@ -1,0 +1,26 @@
+{
+  "import": "import { ChartTooltip } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/tooltip/ChartTooltip.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chart-charttooltip--basic",
+  "description": "An interactive chart tooltip for Cartesian charts that follows highlighted data points and displays configurable series values.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/charts/CartesianChart/"
+    },
+    {
+      "label": "Legend",
+      "url": "/components/charts/Legend/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/charts/Scrubber/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@floating-ui/react-dom",
+      "version": "^2.1.1"
+    }
+  ]
+}

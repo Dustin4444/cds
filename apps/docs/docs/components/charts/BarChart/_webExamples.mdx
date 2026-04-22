@@ -108,7 +108,9 @@ You can also provide multiple series of data to the chart. Series will have thei
     showGrid: true,
     showTickMarks: true,
   }}
-/>
+>
+  <ChartTooltip />
+</BarChart>
 ```
 
 ## Series Stacking
@@ -144,7 +146,9 @@ You can also configure stacking for your chart using the `stacked` prop.
     showGrid: true,
     showTickMarks: true,
   }}
-/>
+>
+  <ChartTooltip />
+</BarChart>
 ```
 
 You can also configure multiple stacks by setting the `stackId` prop on each series.
@@ -334,8 +338,8 @@ function PositiveAndNegativeCashFlow() {
     0, 0, 0, -12, -10,
   ];
   const series = [
-    { id: 'gains', data: gains, color: 'var(--color-fgPositive)' },
-    { id: 'losses', data: losses, color: 'var(--color-fgNegative)' },
+    { id: 'gains', label: 'Gains', data: gains, color: 'var(--color-fgPositive)' },
+    { id: 'losses', label: 'Losses', data: losses, color: 'var(--color-fgNegative)' },
   ];
 
   return (
@@ -354,7 +358,17 @@ function PositiveAndNegativeCashFlow() {
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: (value) => `$${value}M`,
       }}
-    />
+    >
+      <ChartTooltip
+        label={(dataIndex) => `March ${dataIndex + 1}`}
+        valueFormatter={(value) => {
+          if (value === null || value === undefined) return '$0M';
+          if (Array.isArray(value)) return `${value[0]}-${value[1]}`;
+          const sign = value > 0 ? '+' : value < 0 ? '-' : '';
+          return `${sign}$${Math.abs(value)}M`;
+        }}
+      />
+    </BarChart>
   );
 }
 ```
@@ -465,6 +479,12 @@ You can pass in `[min, max]` tuples as data points to render bars that span a ra
 function PriceRange() {
   const candles = btcCandles.slice(0, 180).reverse();
   const data = candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]);
+  const dates = candles.map((candle) =>
+    new Date(Number(candle.start) * 1000).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    }),
+  );
 
   const min = Math.min(...data.map(([low]) => low));
   const max = Math.max(...data.map(([, high]) => high));
@@ -484,11 +504,19 @@ function PriceRange() {
     <BarChart
       enableHighlighting
       fadeOnHighlight
-      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      series={[{ id: 'prices', label: 'Daily price range', data, color: assets.btc.color }]}
       showYAxis
+      xAxis={{ data: dates }}
       yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
       height={250}
-    />
+    >
+      <ChartTooltip
+        valueFormatter={(value) => {
+          if (!Array.isArray(value)) return value ?? '-';
+          return `${tickFormatter(value[0])} - ${tickFormatter(value[1])}`;
+        }}
+      />
+    </BarChart>
   );
 }
 ```

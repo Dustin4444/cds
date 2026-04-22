@@ -13,5 +13,6 @@ export * from './PeriodSelector';
 export * from './point/index';
 export * from './scrubber/index';
 export * from './text/index';
+export * from './tooltip/index';
 export * from './utils/index';
 // codegen:end
