@@ -39,7 +39,6 @@ export type BarBaseProps = Rect & {
   minSize?: number;
   /**
    * Whether non-highlighted bars should fade when highlighting is active.
-   * @default false
    */
   fadeOnHighlight?: boolean;
 };
