@@ -416,7 +416,6 @@ export const Cell: CellComponent = memo(
           accessibilityHint,
           accessibilityLabel,
           accessibilityLabelledBy,
-          'aria-selected': selected,
           background: 'bg' as const,
           borderRadius,
           className: cx(pressCss, insetFocusRingCss, classNames?.pressable),
@@ -431,14 +430,20 @@ export const Cell: CellComponent = memo(
         };
         if (isAnchor)
           return (
-            <Pressable as="a" href={href} target={target} {...pressableSharedProps}>
+            <Pressable
+              aria-current={selected ? 'true' : undefined}
+              as="a"
+              href={href}
+              target={target}
+              {...pressableSharedProps}
+            >
               {content}
             </Pressable>
           );
 
         if (isButton)
           return (
-            <Pressable as="button" {...pressableSharedProps}>
+            <Pressable aria-pressed={selected} as="button" {...pressableSharedProps}>
               {content}
             </Pressable>
           );

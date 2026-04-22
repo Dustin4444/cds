@@ -283,7 +283,7 @@ describe('Cell', () => {
     expect(onKeyDownSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('sets aria-selected on the pressable element when selected and interactive', () => {
+  it('sets aria-pressed on the button when selected', () => {
     render(
       <DefaultThemeProvider>
         <Cell selected onClick={noop}>
@@ -292,32 +292,20 @@ describe('Cell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByRole('button')).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('does not set aria-selected on the pressable element when not selected', () => {
+  it('does not set aria-pressed on the button when not selected', () => {
     render(
       <DefaultThemeProvider>
         <Cell onClick={noop}>{CELL_TEXT}</Cell>
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByRole('button')).not.toHaveAttribute('aria-selected');
+    expect(screen.getByRole('button')).not.toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('sets aria-selected on the root element when selected and not interactive', () => {
-    render(
-      <DefaultThemeProvider>
-        <Cell selected testID="cell">
-          {CELL_TEXT}
-        </Cell>
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.getByTestId('cell')).toHaveAttribute('aria-selected', 'true');
-  });
-
-  it('sets aria-selected on the link element when selected and linkable', () => {
+  it('sets aria-current on the link when selected', () => {
     render(
       <DefaultThemeProvider>
         <Cell selected href={URL}>
@@ -326,6 +314,16 @@ describe('Cell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByRole('link')).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('link')).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('does not set aria-current on the link when not selected', () => {
+    render(
+      <DefaultThemeProvider>
+        <Cell href={URL}>{CELL_TEXT}</Cell>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('link')).not.toHaveAttribute('aria-current');
   });
 });
