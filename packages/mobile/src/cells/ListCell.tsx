@@ -164,14 +164,10 @@ export const ListCell = memo(function ListCell(_props: ListCellProps) {
     detail,
     detailNode,
     detailWidth,
-    intermediary,
-    priority,
     innerSpacing,
     outerSpacing,
-    disabled,
     disableSelectionAccessory,
     helperText,
-    media,
     multiline,
     selected,
     subdetail,
@@ -228,19 +224,15 @@ export const ListCell = memo(function ListCell(_props: ListCellProps) {
       borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
       bottomContent={helperText}
       detailWidth={detailWidth}
-      disabled={disabled}
       end={end}
       innerSpacing={
         innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
       }
-      intermediary={intermediary}
-      media={media}
       minHeight={minHeight}
       onPress={onPress}
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
       }
-      priority={priority}
       selected={selected}
       style={[style, styles?.root]}
       styles={{

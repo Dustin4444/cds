@@ -218,18 +218,14 @@ export const ListCell: ListCellComponent = memo(
         descriptionNode,
         detailNode,
         detail,
-        disabled,
         disableMultilineTitle = false,
         disableSelectionAccessory,
         helperText,
-        media,
         multiline,
         selected,
         subdetailNode,
         subdetail,
         variant,
-        intermediary,
-        priority,
         innerSpacing,
         outerSpacing,
         spacingVariant = compact ? 'compact' : 'normal',
@@ -294,18 +290,14 @@ export const ListCell: ListCellComponent = memo(
             pressable: classNames?.pressable,
             topContent: classNames?.mainContent,
           }}
-          disabled={disabled}
           end={end}
           innerSpacing={
             innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
           }
-          intermediary={intermediary}
-          media={media}
           minHeight={minHeight}
           outerSpacing={
             outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
           }
-          priority={priority}
           selected={selected}
           style={{ ...style, ...styles?.root }}
           styles={{
