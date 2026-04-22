@@ -32,7 +32,7 @@ export type DefaultBarProps = BarComponentProps & {
 };
 
 /**
- * Default bar component that renders a solid bar with animation.
+ * Default bar component that renders a solid bar with animation and highlighting support.
  */
 export const DefaultBar = memo<DefaultBarProps>(
   ({
