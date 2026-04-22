@@ -9,7 +9,6 @@ export const CartesianChartContext = createContext<CartesianChartContextValue | 
 /**
  * Hook to access the generic chart context.
  * Works with any chart type (cartesian, polar, etc.).
- * Use this when you only need base chart properties like series, dimensions, etc.
  */
 export const useChartContext = (): ChartContextValue => {
   const context = useContext(CartesianChartContext);
@@ -23,7 +22,7 @@ export const useChartContext = (): ChartContextValue => {
 
 /**
  * Hook to access the cartesian chart context.
- * Provides access to cartesian-specific features like axes and scales.
+ * Provides access to cartesian-specific features.
  */
 export const useCartesianChartContext = (): CartesianChartContextValue => {
   const context = useContext(CartesianChartContext);

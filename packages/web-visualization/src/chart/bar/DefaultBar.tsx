@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { cx } from '@coinbase/cds-web';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { useHighlightContext } from '../HighlightProvider';
@@ -18,7 +18,7 @@ import { type BarTransition, getNormalizedStagger } from '../utils/bar';
 import type { BarComponentProps } from './Bar';
 
 const fadeOpacity = 0.3;
-const fadeTransition = { duration: 0.1, ease: 'easeOut' as const };
+const fadeTransition: Transition = { duration: 0.1, ease: 'easeOut' };
 
 export type DefaultBarProps = BarComponentProps & {
   /**
@@ -33,8 +33,6 @@ export type DefaultBarProps = BarComponentProps & {
 
 /**
  * Default bar component that renders a solid bar with animation.
- * Uses pointer events to report series identity to the highlight system
- * when `highlightScope.series` is enabled.
  */
 export const DefaultBar = memo<DefaultBarProps>(
   ({

@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo } from 'react';
-import { Easing, useDerivedValue, withTiming } from 'react-native-reanimated';
+import { Easing, useDerivedValue } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Group } from '@shopify/react-native-skia';
 
@@ -13,14 +13,23 @@ import {
   withStaggerDelayTransition,
 } from '../utils';
 import { type BarTransition, getNormalizedStagger } from '../utils/bar';
-import { defaultTransition, getTransition } from '../utils/transition';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+} from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
 export type DefaultBarProps = BarComponentProps;
 
 const fadeOpacity = 0.3;
-const fadeTransition = { duration: 100, easing: Easing.out(Easing.ease) };
+const fadeTransition: Transition = {
+  type: 'timing',
+  duration: 100,
+  easing: Easing.out(Easing.ease),
+};
 
 /**
  * Default bar component that renders a solid bar with animation support.
@@ -113,7 +122,7 @@ export const DefaultBar = memo<DefaultBarProps>(
         opacity = isHighlighted ? 1 : fadeOpacity;
       }
 
-      return withTiming(opacity, fadeTransition);
+      return buildTransition(opacity, fadeTransition);
     }, [
       fadeOnHighlight,
       highlightEnabled,
