@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { css } from '@linaria/core';
+import { cx } from '@coinbase/cds-web';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { useHighlightContext } from '../HighlightProvider';
@@ -16,11 +17,8 @@ import { type BarTransition, getNormalizedStagger } from '../utils/bar';
 
 import type { BarComponentProps } from './Bar';
 
-const fadeTransitionCss = css`
-  transition: fill-opacity 250ms ease-in-out;
-`;
-
-const FADED_OPACITY_FACTOR = 0.3;
+const fadeOpacity = 0.3;
+const fadeTransition = { duration: 0.1, ease: 'easeOut' as const };
 
 export type DefaultBarProps = BarComponentProps & {
   /**
@@ -58,8 +56,6 @@ export const DefaultBar = memo<DefaultBarProps>(
     transitions,
     transition,
     fadeOnHighlight,
-    className,
-    style,
     ...props
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
@@ -75,26 +71,26 @@ export const DefaultBar = memo<DefaultBarProps>(
     const highlightByDataIndex = scope.dataIndex ?? false;
     const highlightBySeries = scope.series ?? false;
 
-    const effectiveOpacity = useMemo(() => {
-      if (!fadeOnHighlight || !highlightEnabled || highlight.length === 0) {
-        return fillOpacity;
+    const highlightOpacity = useMemo(() => {
+      if (!fadeOnHighlight || !highlightEnabled) return 1;
+
+      let opacity = 1;
+      if (highlight.length > 0) {
+        const isHighlighted = highlight.some((item) => {
+          const indexMatch = !highlightByDataIndex || item.dataIndex === dataIndex;
+          // When seriesId is null (pointer between bars), all series at this index match.
+          // Only narrow to a specific series when one is identified.
+          const seriesMatch =
+            !highlightBySeries || item.seriesId === null || item.seriesId === seriesId;
+          return indexMatch && seriesMatch;
+        });
+        opacity = isHighlighted ? 1 : fadeOpacity;
       }
-
-      const isHighlighted = highlight.some((item) => {
-        const indexMatch = !highlightByDataIndex || item.dataIndex === dataIndex;
-        // When seriesId is null (pointer between bars), all series at this index match.
-        // Only narrow to a specific series when one is identified.
-        const seriesMatch =
-          !highlightBySeries || item.seriesId === null || item.seriesId === seriesId;
-        return indexMatch && seriesMatch;
-      });
-
-      return isHighlighted ? fillOpacity : fillOpacity * FADED_OPACITY_FACTOR;
+      return opacity;
     }, [
       fadeOnHighlight,
       highlightEnabled,
       highlight,
-      fillOpacity,
       highlightByDataIndex,
       highlightBySeries,
       dataIndex,
@@ -116,12 +112,6 @@ export const DefaultBar = memo<DefaultBarProps>(
       },
       [highlightContext, highlightEnabled, highlightBySeries],
     );
-
-    const resolvedStyle =
-      highlightEnabled && highlightBySeries ? { ...style, cursor: 'pointer' } : style;
-    const resolvedClassName = fadeOnHighlight
-      ? [className, fadeTransitionCss].filter(Boolean).join(' ')
-      : className;
 
     const normalizedStagger = useMemo(
       () => getNormalizedStagger(layout, x, y, drawingArea),
@@ -209,19 +199,17 @@ export const DefaultBar = memo<DefaultBarProps>(
       minSize,
     ]);
 
-    return (
+    const path = (
       <Path
         {...props}
         animate={animate}
-        className={resolvedClassName}
         clipRect={null}
         d={d}
         fill={fill}
-        fillOpacity={effectiveOpacity}
+        fillOpacity={fillOpacity}
         initialPath={initialPath}
         onPointerEnter={highlightEnabled && highlightBySeries ? handlePointerEnter : undefined}
         onPointerLeave={highlightEnabled && highlightBySeries ? handlePointerLeave : undefined}
-        style={resolvedStyle}
         transitions={{
           enter: enterTransitionWithStagger,
           enterOpacity: enterOpacityTransitionWithStagger,
@@ -229,5 +217,19 @@ export const DefaultBar = memo<DefaultBarProps>(
         }}
       />
     );
+
+    if (fadeOnHighlight) {
+      return (
+        <motion.g
+          animate={{ opacity: highlightOpacity }}
+          initial={false}
+          transition={fadeTransition}
+        >
+          {path}
+        </motion.g>
+      );
+    }
+
+    return path;
   },
 );

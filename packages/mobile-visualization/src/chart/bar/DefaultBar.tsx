@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo } from 'react';
 import { Easing, useDerivedValue, withTiming } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { useHighlightContext } from '../HighlightProvider';
@@ -18,8 +19,8 @@ import type { BarComponentProps } from './Bar';
 
 export type DefaultBarProps = BarComponentProps;
 
-const FADED_OPACITY_FACTOR = 0.3;
-const FADE_ANIMATION_CONFIG = { duration: 250, easing: Easing.inOut(Easing.ease) };
+const fadeOpacity = 0.3;
+const fadeTransition = { duration: 100, easing: Easing.out(Easing.ease) };
 
 /**
  * Default bar component that renders a solid bar with animation support.
@@ -96,11 +97,11 @@ export const DefaultBar = memo<DefaultBarProps>(
     const highlightByDataIndex = scope.dataIndex ?? false;
     const highlightBySeries = scope.series ?? false;
 
-    const effectiveOpacity = useDerivedValue(() => {
-      if (!fadeOnHighlight || !highlightEnabled) return fillOpacity;
+    const highlightOpacity = useDerivedValue(() => {
+      if (!fadeOnHighlight || !highlightEnabled) return 1;
 
       const items = highlightContext.highlight.value;
-      let targetOpacity = fillOpacity;
+      let opacity = 1;
 
       if (items.length > 0) {
         const isHighlighted = items.some((item) => {
@@ -109,15 +110,13 @@ export const DefaultBar = memo<DefaultBarProps>(
             !highlightBySeries || item.seriesId === null || item.seriesId === seriesId;
           return indexMatch && seriesMatch;
         });
-
-        targetOpacity = isHighlighted ? fillOpacity : fillOpacity * FADED_OPACITY_FACTOR;
+        opacity = isHighlighted ? 1 : fadeOpacity;
       }
 
-      return withTiming(targetOpacity, FADE_ANIMATION_CONFIG);
+      return withTiming(opacity, fadeTransition);
     }, [
       fadeOnHighlight,
       highlightEnabled,
-      fillOpacity,
       highlightByDataIndex,
       highlightBySeries,
       dataIndex,
@@ -210,13 +209,13 @@ export const DefaultBar = memo<DefaultBarProps>(
       minSize,
     ]);
 
-    return (
+    const path = (
       <Path
         animate={animate}
         clipPath={null}
         d={d}
         fill={stroke ? 'none' : defaultFill}
-        fillOpacity={fadeOnHighlight ? effectiveOpacity : fillOpacity}
+        fillOpacity={fillOpacity}
         initialPath={initialPath}
         stroke={stroke}
         strokeWidth={strokeWidth}
@@ -227,5 +226,9 @@ export const DefaultBar = memo<DefaultBarProps>(
         }}
       />
     );
+
+    if (fadeOnHighlight) return <Group opacity={highlightOpacity}>{path}</Group>;
+
+    return path;
   },
 );
