@@ -635,6 +635,8 @@ export const All = () => {
       <VStack gap={2}>
         <Example title="Basic">
           <BarChart
+            enableHighlighting
+            fadeOnHighlight
             showXAxis
             showYAxis
             height={400}

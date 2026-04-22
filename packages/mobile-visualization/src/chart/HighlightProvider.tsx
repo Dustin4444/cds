@@ -142,7 +142,24 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     throw new Error('HighlightProvider must be used within a ChartContext');
   }
 
-  const { getXSerializableScale, getXAxis, dataLength } = chartContext;
+  const {
+    layout,
+    getXSerializableScale,
+    getYSerializableScale,
+    getXAxis,
+    getYAxis,
+    dataLength,
+  } = chartContext;
+
+  const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
+  const categoryAxis = useMemo(
+    () => (categoryAxisIsX ? getXAxis() : getYAxis()),
+    [categoryAxisIsX, getXAxis, getYAxis],
+  );
+  const categoryScale = useMemo(
+    () => (categoryAxisIsX ? getXSerializableScale() : getYSerializableScale()),
+    [categoryAxisIsX, getXSerializableScale, getYSerializableScale],
+  );
 
   const scope: HighlightScope = useMemo(
     () => ({
@@ -210,26 +227,22 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     return internalHighlight;
   }, [isControlled, controlledHighlight, internalHighlight]);
 
-  const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-  const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-
-  // Convert X coordinate to data index (worklet-compatible)
-  const getDataIndexFromX = useCallback(
-    (touchX: number): number => {
+  const getDataIndexFromCategoryAxisPosition = useCallback(
+    (touchPosition: number): number => {
       'worklet';
 
-      if (!xScale || !xAxis) return 0;
+      if (!categoryScale || !categoryAxis) return 0;
 
-      if (xScale.type === 'band') {
-        const [domainMin, domainMax] = xScale.domain;
+      if (categoryScale.type === 'band') {
+        const [domainMin, domainMax] = categoryScale.domain;
         const categoryCount = domainMax - domainMin + 1;
         let closestIndex = 0;
         let closestDistance = Infinity;
 
         for (let i = 0; i < categoryCount; i++) {
-          const xPos = getPointOnSerializableScale(i, xScale);
-          if (xPos !== undefined) {
-            const distance = Math.abs(touchX - xPos);
+          const categoryPos = getPointOnSerializableScale(i, categoryScale);
+          if (categoryPos !== undefined) {
+            const distance = Math.abs(touchPosition - categoryPos);
             if (distance < closestDistance) {
               closestDistance = distance;
               closestIndex = i;
@@ -237,34 +250,34 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
           }
         }
         return closestIndex;
-      } else {
-        const axisData = xAxis.data;
-        if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
-          const numericData = axisData as number[];
-          let closestIndex = 0;
-          let closestDistance = Infinity;
+      }
 
-          for (let i = 0; i < numericData.length; i++) {
-            const xValue = numericData[i];
-            const xPos = getPointOnSerializableScale(xValue, xScale);
-            if (xPos !== undefined) {
-              const distance = Math.abs(touchX - xPos);
-              if (distance < closestDistance) {
-                closestDistance = distance;
-                closestIndex = i;
-              }
+      const axisData = categoryAxis.data;
+      if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
+        const numericData = axisData as number[];
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        for (let i = 0; i < numericData.length; i++) {
+          const dataValue = numericData[i];
+          const categoryPos = getPointOnSerializableScale(dataValue, categoryScale);
+          if (categoryPos !== undefined) {
+            const distance = Math.abs(touchPosition - categoryPos);
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestIndex = i;
             }
           }
-          return closestIndex;
-        } else {
-          const xValue = invertSerializableScale(touchX, xScale);
-          const dataIndex = Math.round(xValue);
-          const domain = xAxis.domain;
-          return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
         }
+        return closestIndex;
       }
+
+      const dataValue = invertSerializableScale(touchPosition, categoryScale);
+      const dataIndex = Math.round(dataValue);
+      const domain = categoryAxis.domain;
+      return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
     },
-    [xAxis, xScale],
+    [categoryAxis, categoryScale],
   );
 
   // Haptic feedback
@@ -378,14 +391,20 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
           // Process initial position with sentinel ID.
           // onTouchesDown already fired but was skipped (gesture wasn't active yet).
           // This entry will be replaced once onTouchesMove fires with real IDs.
-          const dataIndex = scope.dataIndex ? getDataIndexFromX(event.x) : null;
+          const pointerPosition = categoryAxisIsX ? event.x : event.y;
+          const dataIndex = scope.dataIndex
+            ? getDataIndexFromCategoryAxisPosition(pointerPosition)
+            : null;
           runOnJS(handleTouchHighlight)(INITIAL_TOUCH_ID, event.x, event.y, dataIndex);
         })
         .onTouchesDown(function onTouchesDown(event) {
           if (!isGestureActive.value) return;
           for (let i = 0; i < event.changedTouches.length; i++) {
             const touch = event.changedTouches[i];
-            const dataIndex = scope.dataIndex ? getDataIndexFromX(touch.x) : null;
+            const pointerPosition = categoryAxisIsX ? touch.x : touch.y;
+            const dataIndex = scope.dataIndex
+              ? getDataIndexFromCategoryAxisPosition(pointerPosition)
+              : null;
             runOnJS(handleTouchHighlight)(touch.id, touch.x, touch.y, dataIndex);
           }
         })
@@ -395,7 +414,10 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
           runOnJS(handleClearInitialTouch)();
           for (let i = 0; i < event.allTouches.length; i++) {
             const touch = event.allTouches[i];
-            const dataIndex = scope.dataIndex ? getDataIndexFromX(touch.x) : null;
+            const pointerPosition = categoryAxisIsX ? touch.x : touch.y;
+            const dataIndex = scope.dataIndex
+              ? getDataIndexFromCategoryAxisPosition(pointerPosition)
+              : null;
             runOnJS(handleTouchHighlight)(touch.id, touch.x, touch.y, dataIndex);
           }
         })
@@ -419,7 +441,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
       allowOverflowGestures,
       isGestureActive,
       handleStartEndHaptics,
-      getDataIndexFromX,
+      getDataIndexFromCategoryAxisPosition,
+      categoryAxisIsX,
       scope.dataIndex,
       handleTouchHighlight,
       handleTouchRemove,

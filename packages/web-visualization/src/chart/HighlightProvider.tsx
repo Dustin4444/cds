@@ -10,7 +10,12 @@ import React, {
 
 import type { HighlightedItem, HighlightScope } from './utils/highlight';
 import { useCartesianChartContext } from './ChartProvider';
-import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from './utils';
+import {
+  type ChartScaleFunction,
+  isCategoricalScale,
+  ScrubberContext,
+  type ScrubberContextValue,
+} from './utils';
 
 /**
  * Context value for chart highlight state.
@@ -118,7 +123,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     throw new Error('HighlightProvider must be used within a ChartContext');
   }
 
-  const { getXScale, getXAxis, series } = chartContext;
+  const { layout, getXScale, getYScale, getXAxis, getYAxis, series } = chartContext;
 
   const enabled = enableHighlightingProp ?? false;
 
@@ -193,23 +198,23 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     });
   }, []);
 
-  // Convert X coordinate to data index
-  const getDataIndexFromX = useCallback(
-    (mouseX: number): number => {
-      const xScale = getXScale();
-      const xAxis = getXAxis();
+  const getDataIndexFromCategoryAxisPosition = useCallback(
+    (mousePosition: number): number => {
+      const categoryAxisIsX = layout !== 'horizontal';
+      const categoryScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+      const categoryAxis = categoryAxisIsX ? getXAxis() : getYAxis();
 
-      if (!xScale || !xAxis) return 0;
+      if (!categoryScale || !categoryAxis) return 0;
 
-      if (isCategoricalScale(xScale)) {
-        const categories = xScale.domain?.() ?? xAxis.data ?? [];
-        const bandwidth = xScale.bandwidth?.() ?? 0;
+      if (isCategoricalScale(categoryScale)) {
+        const categories = categoryScale.domain?.() ?? categoryAxis.data ?? [];
+        const bandwidth = categoryScale.bandwidth?.() ?? 0;
         let closestIndex = 0;
         let closestDistance = Infinity;
         for (let i = 0; i < categories.length; i++) {
-          const xPos = xScale(i);
-          if (xPos !== undefined) {
-            const distance = Math.abs(mouseX - (xPos + bandwidth / 2));
+          const pos = categoryScale(i);
+          if (pos !== undefined) {
+            const distance = Math.abs(mousePosition - (pos + bandwidth / 2));
             if (distance < closestDistance) {
               closestDistance = distance;
               closestIndex = i;
@@ -217,34 +222,34 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
           }
         }
         return closestIndex;
-      } else {
-        const axisData = xAxis.data;
-        if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
-          const numericData = axisData as number[];
-          let closestIndex = 0;
-          let closestDistance = Infinity;
+      }
 
-          for (let i = 0; i < numericData.length; i++) {
-            const xValue = numericData[i];
-            const xPos = xScale(xValue);
-            if (xPos !== undefined) {
-              const distance = Math.abs(mouseX - xPos);
-              if (distance < closestDistance) {
-                closestDistance = distance;
-                closestIndex = i;
-              }
+      const axisData = categoryAxis.data;
+      if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
+        const numericData = axisData as number[];
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        for (let i = 0; i < numericData.length; i++) {
+          const dataValue = numericData[i];
+          const pos = categoryScale(dataValue);
+          if (pos !== undefined) {
+            const distance = Math.abs(mousePosition - pos);
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestIndex = i;
             }
           }
-          return closestIndex;
-        } else {
-          const xValue = xScale.invert(mouseX);
-          const dataIndex = Math.round(xValue);
-          const domain = xAxis.domain;
-          return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
         }
+        return closestIndex;
       }
+
+      const dataValue = categoryScale.invert(mousePosition);
+      const dataIndexVal = Math.round(dataValue);
+      const domain = categoryAxis.domain;
+      return Math.max(domain.min ?? 0, Math.min(dataIndexVal, domain.max ?? 0));
     },
-    [getXScale, getXAxis],
+    [layout, getXScale, getYScale, getXAxis, getYAxis],
   );
 
   // --- Pointer Event handlers ---
@@ -270,11 +275,21 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
       if (!enabled || !series || series.length === 0) return;
       const svg = event.currentTarget as SVGSVGElement;
       const rect = svg.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const dataIndex = scope.dataIndex ? getDataIndexFromX(x) : null;
+      const position =
+        layout === 'horizontal' ? event.clientY - rect.top : event.clientX - rect.left;
+      const dataIndex = scope.dataIndex
+        ? getDataIndexFromCategoryAxisPosition(position)
+        : null;
       updatePointerHighlight(event.pointerId, { dataIndex });
     },
-    [enabled, series, scope.dataIndex, getDataIndexFromX, updatePointerHighlight],
+    [
+      enabled,
+      series,
+      layout,
+      scope.dataIndex,
+      getDataIndexFromCategoryAxisPosition,
+      updatePointerHighlight,
+    ],
   );
 
   const handlePointerUp = useCallback(
@@ -299,27 +314,28 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     (event: KeyboardEvent) => {
       if (!enabled) return;
 
-      const xScale = getXScale();
-      const xAxis = getXAxis();
+      const categoryAxisIsX = layout !== 'horizontal';
+      const categoryScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+      const categoryAxis = categoryAxisIsX ? getXAxis() : getYAxis();
 
-      if (!xScale || !xAxis) return;
+      if (!categoryScale || !categoryAxis) return;
 
-      const isBand = isCategoricalScale(xScale);
+      const isBand = isCategoricalScale(categoryScale);
 
       let minIndex: number;
       let maxIndex: number;
 
       if (isBand) {
-        const categories = xScale.domain?.() ?? xAxis.data ?? [];
+        const categories = categoryScale.domain?.() ?? categoryAxis.data ?? [];
         minIndex = 0;
         maxIndex = Math.max(0, categories.length - 1);
       } else {
-        const axisData = xAxis.data;
+        const axisData = categoryAxis.data;
         if (axisData && Array.isArray(axisData)) {
           minIndex = 0;
           maxIndex = Math.max(0, axisData.length - 1);
         } else {
-          const domain = xAxis.domain;
+          const domain = categoryAxis.domain;
           minIndex = domain.min ?? 0;
           maxIndex = domain.max ?? 0;
         }
@@ -335,11 +351,11 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
       let newIndex: number | undefined;
 
       switch (event.key) {
-        case 'ArrowLeft':
+        case categoryAxisIsX ? 'ArrowLeft' : 'ArrowUp':
           event.preventDefault();
           newIndex = Math.max(minIndex, currentIndex - stepSize);
           break;
-        case 'ArrowRight':
+        case categoryAxisIsX ? 'ArrowRight' : 'ArrowDown':
           event.preventDefault();
           newIndex = Math.min(maxIndex, currentIndex + stepSize);
           break;
@@ -367,7 +383,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         setHighlight([newItem]);
       }
     },
-    [enabled, getXScale, getXAxis, highlight, setHighlight],
+    [enabled, layout, getXScale, getYScale, getXAxis, getYAxis, highlight, setHighlight],
   );
 
   const handleBlur = useCallback(() => {

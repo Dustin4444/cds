@@ -7,6 +7,8 @@ To start, pass in a series of data to the chart.
 
 ```jsx
 <BarChart
+  enableHighlighting
+  fadeOnHighlight
   height={150}
   inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
@@ -45,6 +47,8 @@ function HorizontalBars() {
 
   return (
     <BarChart
+      enableHighlighting
+      fadeOnHighlight
       height={400}
       layout="horizontal"
       series={[

@@ -984,6 +984,8 @@ const HorizontalBarChart = () => {
 
   return (
     <BarChart
+      enableHighlighting
+      fadeOnHighlight
       showXAxis
       showYAxis
       height={220}
