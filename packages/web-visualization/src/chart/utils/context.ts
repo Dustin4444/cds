@@ -108,6 +108,12 @@ export type CartesianChartContextValue = ChartContextValue & {
   getAxisBounds: (id: string) => Rect | undefined;
 };
 
+/**
+ * Context value for scrubber interaction state and position.
+ *
+ * @deprecated Use `useHighlightContext` and `HighlightContext` from `HighlightProvider`, and enable chart interaction with `enableHighlighting` instead of `enableScrubbing`. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export type ScrubberContextValue = {
   /**
    * Enables scrubbing interactions.
@@ -125,8 +131,16 @@ export type ScrubberContextValue = {
   onScrubberPositionChange: (index: number | undefined) => void;
 };
 
+/**
+ * @deprecated Use `HighlightContext` from `HighlightProvider` instead. Prefer `useHighlightContext` and `enableHighlighting` over this context and `enableScrubbing`. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);
 
+/**
+ * @deprecated Use `useHighlightContext` from `HighlightProvider` instead. Prefer `enableHighlighting` over `enableScrubbing` on charts. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export const useScrubberContext = (): ScrubberContextValue => {
   const context = useContext(ScrubberContext);
   if (!context) {
