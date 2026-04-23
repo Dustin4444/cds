@@ -167,8 +167,7 @@ export type HighlightContextValue = {
    */
   highlight: HighlightedItem[];
   /**
-   * Callback to replace the entire highlight state.
-   * Used by keyboard navigation and external consumers.
+   * Set the highlighted items.
    */
   setHighlight: (items: HighlightedItem[]) => void;
   /**

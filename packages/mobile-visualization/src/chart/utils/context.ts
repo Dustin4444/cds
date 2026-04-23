@@ -183,7 +183,7 @@ export type HighlightContextValue = {
    */
   highlight: SharedValue<HighlightedItem[]>;
   /**
-   * Function to programmatically set the highlighted items.
+   * Set the highlighted items.
    */
   setHighlight: (items: HighlightedItem[]) => void;
   /**
