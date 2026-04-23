@@ -7,7 +7,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
 ```jsx live
 <VStack gap={2}>
   <AreaChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
@@ -23,7 +23,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
     <Scrubber />
   </AreaChart>
   <BarChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
@@ -39,7 +39,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
     <Scrubber hideOverlay seriesIds={[]} />
   </BarChart>
   <LineChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
@@ -89,7 +89,7 @@ function ForecastedPrice() {
   });
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
@@ -192,7 +192,7 @@ You can provide a `stackId` to stack series together.
 
 ```jsx live
 <AreaChart
-  enableScrubbing
+  enableHighlighting
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -287,7 +287,7 @@ function Insets() {
       <VStack gap={1}>
         <Text font="label1">Custom inset</Text>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           height={100}
           inset={{ left: 10, top: 16, right: 10, bottom: 10 }}
           series={[
@@ -306,7 +306,7 @@ function Insets() {
       <VStack gap={1}>
         <Text font="label1">Default inset</Text>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           height={100}
           series={[
             {
@@ -326,24 +326,24 @@ function Insets() {
 }
 ```
 
-## Scrubbing
+## Highlighting
 
-CartesianChart has built-in scrubbing functionality that can be enabled with the `enableScrubbing` prop. This will then enable the usage of `onScrubberPositionChange` to get the current position of the scrubber as the user interacts with the chart.
+CartesianChart supports data highlighting when `enableHighlighting` is true. Use `onHighlightChange` to react as the user interacts with the chart.
 
 ```jsx live
-function Scrubbing() {
+function Highlighting() {
   const [scrubIndex, setScrubIndex] = useState(undefined);
 
-  const onScrubberPositionChange = useCallback((index) => {
-    setScrubIndex(index);
+  const onHighlightChange = useCallback((items) => {
+    setScrubIndex(items[0]?.dataIndex ?? undefined);
   }, []);
 
   return (
     <VStack gap={2}>
-      <Text font="label1">Scrubber index: {scrubIndex ?? 'none'}</Text>
+      <Text font="label1">Highlighted index: {scrubIndex ?? 'none'}</Text>
       <LineChart
-        enableScrubbing
-        onScrubberPositionChange={onScrubberPositionChange}
+        enableHighlighting
+        onHighlightChange={onHighlightChange}
         height={{ base: 150, tablet: 200, desktop: 250 }}
         series={[
           {
@@ -681,6 +681,10 @@ function PriceWithVolume() {
     [btcDates, btcPrices, formatDate, formatPrice],
   );
 
+  const onHighlightChange = useCallback((items) => {
+    setScrubIndex(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   const headerId = useId();
@@ -705,8 +709,8 @@ function PriceWithVolume() {
         }
       />
       <CartesianChart
-        enableScrubbing
-        onScrubberPositionChange={setScrubIndex}
+        enableHighlighting
+        onHighlightChange={onHighlightChange}
         height={250}
         series={[
           {
