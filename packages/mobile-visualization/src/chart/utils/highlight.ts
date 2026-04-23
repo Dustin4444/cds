@@ -43,7 +43,7 @@ export type HighlightedItem = {
 
 /**
  * Bounds of a bar element for hit testing.
- * Used for coordinate-based hit testing since Skia doesn't have native touch events.
+ * @note Hit testing follows this rectangle, not the rounded bar silhouette (`borderRadius` is ignored).
  */
 export type BarBounds = {
   x: number;

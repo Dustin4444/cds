@@ -97,13 +97,11 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> &
     /**
      * Accessibility label for the chart.
      * - When a string: Used as a static label for the chart element
-     * - When a function: Called with the current highlighted items (supports multi-touch)
+     * - When a function: Called with the current highlighted items
      */
     accessibilityLabel?: string | ((items: HighlightedItem[]) => string);
     /**
-     * Controls which highlight dimensions are tracked on `HighlightedItem` payloads.
-     * When `dataIndex` is false, `dataIndex` is `undefined` (out of scope), not `null`.
-     * When `series` is true, only **bar** charts register per-series hit targets; line/area do not set `seriesId`.
+     * Controls what aspects of the data can be highlighted.
      * @default { dataIndex: true, series: false }
      */
     highlightScope?: HighlightScope;

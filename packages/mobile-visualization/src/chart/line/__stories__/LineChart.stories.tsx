@@ -56,7 +56,7 @@ import {
   projectPointWithSerializableScale,
   type Transition,
   unwrapAnimatedValue,
-  useScrubberContext,
+  useHighlightContext,
 } from '../../utils';
 import {
   DottedLine,
@@ -1764,7 +1764,12 @@ function ForecastAssetPrice() {
     );
   });
   const CustomScrubber = memo(() => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight, enabled } = useHighlightContext();
+    const scrubberPosition = useDerivedValue(() => {
+      if (!enabled) return undefined;
+      const idx = highlight.value[0]?.dataIndex;
+      return typeof idx === 'number' ? idx : undefined;
+    }, [highlight, enabled]);
 
     const idleScrubberOpacity = useDerivedValue(
       () => (scrubberPosition.value === undefined ? 1 : 0),

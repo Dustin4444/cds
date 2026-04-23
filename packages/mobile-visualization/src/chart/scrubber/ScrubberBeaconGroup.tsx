@@ -5,7 +5,7 @@ import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { evaluateGradientAtValue, getGradientStops, useScrubberContext } from '../utils';
+import { evaluateGradientAtValue, getGradientStops, useHighlightContext } from '../utils';
 import { convertToSerializableScale } from '../utils/scale';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
@@ -146,6 +146,11 @@ export type ScrubberBeaconGroupBaseProps = {
    */
   seriesIds: string[];
   /**
+   * Which touch index to follow.
+   * @default 0
+   */
+  highlightIndex?: number;
+  /**
    * Pulse the beacons while at rest.
    */
   idlePulse?: boolean;
@@ -171,11 +176,24 @@ export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
 export const ScrubberBeaconGroup = memo(
   forwardRef<ScrubberBeaconGroupRef, ScrubberBeaconGroupProps>(
     (
-      { seriesIds, idlePulse, transitions, BeaconComponent = DefaultScrubberBeacon, stroke },
+      {
+        seriesIds,
+        highlightIndex = 0,
+        idlePulse,
+        transitions,
+        BeaconComponent = DefaultScrubberBeacon,
+        stroke,
+      },
       ref,
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight, enabled } = useHighlightContext();
+      const scrubberPosition = useDerivedValue(() => {
+        if (!enabled) return undefined;
+        const items = highlight.value;
+        const idx = items[highlightIndex]?.dataIndex;
+        return typeof idx === 'number' ? idx : undefined;
+      }, [highlight, enabled, highlightIndex]);
       const { layout, getXAxis, getYAxis, series, dataLength, animate } =
         useCartesianChartContext();
 

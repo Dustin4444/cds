@@ -280,7 +280,12 @@ function CustomBeaconLabel() {
   const MyScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight, enabled } = useHighlightContext();
+      const scrubberPosition = useDerivedValue(() => {
+        if (!enabled) return undefined;
+        const idx = highlight.value[0]?.dataIndex;
+        return typeof idx === 'number' ? idx : undefined;
+      }, [highlight, enabled]);
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -649,7 +654,12 @@ You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop
 function HiddenScrubberWhenIdle() {
   const MyScrubberBeacon = memo(
     forwardRef((props: ScrubberBeaconProps, ref) => {
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight, enabled } = useHighlightContext();
+      const scrubberPosition = useDerivedValue(() => {
+        if (!enabled) return undefined;
+        const idx = highlight.value[0]?.dataIndex;
+        return typeof idx === 'number' ? idx : undefined;
+      }, [highlight, enabled]);
       const beaconOpacity = useDerivedValue(
         () => (scrubberPosition.value !== undefined ? 1 : 0),
         [scrubberPosition],
@@ -660,7 +670,12 @@ function HiddenScrubberWhenIdle() {
   );
 
   const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight, enabled } = useHighlightContext();
+    const scrubberPosition = useDerivedValue(() => {
+      if (!enabled) return undefined;
+      const idx = highlight.value[0]?.dataIndex;
+      return typeof idx === 'number' ? idx : undefined;
+    }, [highlight, enabled]);
     const labelOpacity = useDerivedValue(
       () => (scrubberPosition.value !== undefined ? 1 : 0),
       [scrubberPosition],
@@ -714,7 +729,12 @@ function PercentageBeaconLabels() {
   const PercentageScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, series, fontProvider } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight, enabled } = useHighlightContext();
+      const scrubberPosition = useDerivedValue(() => {
+        if (!enabled) return undefined;
+        const idx = highlight.value[0]?.dataIndex;
+        return typeof idx === 'number' ? idx : undefined;
+      }, [highlight, enabled]);
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -858,7 +878,12 @@ function MatchupBeaconLabels() {
   const MatchupScrubberBeaconLabel = memo(
     ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, series, fontProvider } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight, enabled } = useHighlightContext();
+      const scrubberPosition = useDerivedValue(() => {
+        if (!enabled) return undefined;
+        const idx = highlight.value[0]?.dataIndex;
+        return typeof idx === 'number' ? idx : undefined;
+      }, [highlight, enabled]);
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),

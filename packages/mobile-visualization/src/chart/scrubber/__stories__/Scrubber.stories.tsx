@@ -14,7 +14,7 @@ import {
   getLineData,
   type ScrubberLabelPosition,
   unwrapAnimatedValue,
-  useScrubberContext,
+  useHighlightContext,
 } from '../../utils';
 import {
   DefaultScrubberBeacon,
@@ -26,6 +26,16 @@ import {
   type ScrubberLabelProps,
   type ScrubberRef,
 } from '..';
+
+/** Data index for touch slot `highlightIndex`, mirroring scrubber / `ScrubberContext` bridge. */
+function useHighlightScrubberDataIndex(highlightIndex = 0) {
+  const { highlight, enabled } = useHighlightContext();
+  return useDerivedValue(() => {
+    if (!enabled) return undefined;
+    const idx = highlight.value[highlightIndex]?.dataIndex;
+    return typeof idx === 'number' ? idx : undefined;
+  }, [highlight, enabled, highlightIndex]);
+}
 
 const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
@@ -258,7 +268,7 @@ const CustomBeaconLabel = () => {
   const MyScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, series } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const scrubberPosition = useHighlightScrubberDataIndex();
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -350,7 +360,7 @@ const PercentageBeaconLabels = () => {
   const PercentageScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, series, fontProvider } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const scrubberPosition = useHighlightScrubberDataIndex();
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -712,7 +722,7 @@ const CustomLine = () => {
 
 const HiddenScrubberWhenIdle = () => {
   const MyScrubberBeacon = memo((props: ScrubberBeaconProps) => {
-    const { scrubberPosition } = useScrubberContext();
+    const scrubberPosition = useHighlightScrubberDataIndex();
     const beaconOpacity = useDerivedValue(
       () => (scrubberPosition.value !== undefined ? 1 : 0),
       [scrubberPosition],
@@ -722,7 +732,7 @@ const HiddenScrubberWhenIdle = () => {
   });
 
   const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
-    const { scrubberPosition } = useScrubberContext();
+    const scrubberPosition = useHighlightScrubberDataIndex();
     const labelOpacity = useDerivedValue(
       () => (scrubberPosition.value !== undefined ? 1 : 0),
       [scrubberPosition],
@@ -787,7 +797,7 @@ const MatchupBeaconLabels = () => {
   const MatchupScrubberBeaconLabel = memo(
     ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, series, fontProvider } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const scrubberPosition = useHighlightScrubberDataIndex();
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),

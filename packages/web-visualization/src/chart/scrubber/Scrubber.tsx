@@ -16,7 +16,7 @@ import {
   getPointOnScale,
   getTransition,
   type Series,
-  useScrubberContext,
+  useHighlightContext,
 } from '../utils';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
@@ -165,7 +165,7 @@ export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
 export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
 
 export type ScrubberBaseProps = SharedProps &
-  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> &
+  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse' | 'highlightIndex'> &
   Pick<ReferenceLineBaseProps, 'LineComponent' | 'LabelComponent' | 'labelElevated'> &
   Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
   Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
@@ -291,6 +291,7 @@ export type ScrubberRef = ScrubberBeaconGroupRef;
 
 /**
  * Unified component that manages all scrubber elements (beacons, line, labels).
+ * Must be used within a `CartesianChart` with `enableHighlighting` enabled.
  */
 export const Scrubber = memo(
   forwardRef<ScrubberRef, ScrubberProps>(
@@ -322,12 +323,17 @@ export const Scrubber = memo(
         beaconStroke,
         styles,
         classNames,
+        highlightIndex = 0,
       },
       ref,
     ) => {
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberDataIndex = useMemo(
+        () => highlight[highlightIndex]?.dataIndex ?? undefined,
+        [highlight, highlightIndex],
+      );
       const {
         layout,
         getXScale,
@@ -360,7 +366,7 @@ export const Scrubber = memo(
         const indexAxis = categoryAxisIsX ? getXAxis() : getYAxis();
         if (!indexScale) return { dataValue: undefined, dataIndex: undefined };
 
-        const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
+        const dataIndex = scrubberDataIndex ?? Math.max(0, dataLength - 1);
 
         // Convert index to actual data value if axis has data
         let dataValue: number;
@@ -376,7 +382,7 @@ export const Scrubber = memo(
         }
 
         return { dataValue, dataIndex };
-      }, [getXScale, getYScale, getXAxis, getYAxis, scrubberPosition, dataLength, layout]);
+      }, [getXScale, getYScale, getXAxis, getYAxis, scrubberDataIndex, dataLength, layout]);
 
       // Compute resolved accessibility label
       const resolvedAccessibilityLabel = useMemo(() => {
@@ -439,7 +445,7 @@ export const Scrubber = memo(
               }
             : {})}
         >
-          {!hideOverlay && scrubberPosition !== undefined && pixelPos !== undefined && (
+          {!hideOverlay && scrubberDataIndex !== undefined && pixelPos !== undefined && (
             <rect
               className={classNames?.overlay}
               fill="var(--color-bg)"
@@ -460,7 +466,7 @@ export const Scrubber = memo(
             />
           )}
           {!hideLine &&
-            scrubberPosition !== undefined &&
+            scrubberDataIndex !== undefined &&
             dataValue !== undefined &&
             dataIndex !== undefined && (
               <ReferenceLine
@@ -480,6 +486,7 @@ export const Scrubber = memo(
             ref={beaconGroupRef}
             BeaconComponent={BeaconComponent}
             className={classNames?.beacon}
+            highlightIndex={highlightIndex}
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
             stroke={beaconStroke}
@@ -491,6 +498,7 @@ export const Scrubber = memo(
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               className={classNames?.beaconLabel}
+              highlightIndex={highlightIndex}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}

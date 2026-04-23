@@ -10,7 +10,7 @@ import {
   getPointOnScale,
   getTransition,
   instantTransition,
-  useScrubberContext,
+  useHighlightContext,
 } from '../utils';
 import {
   calculateLabelYPositions,
@@ -21,6 +21,7 @@ import {
 } from '../utils/scrubber';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
+import type { ScrubberBeaconGroupBaseProps } from './ScrubberBeaconGroup';
 import type {
   ScrubberBeaconLabelComponent,
   ScrubberBeaconLabelProps,
@@ -88,7 +89,8 @@ const PositionedLabel = memo<{
   },
 );
 
-export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
+export type ScrubberBeaconLabelGroupBaseProps = SharedProps &
+  Pick<ScrubberBeaconGroupBaseProps, 'highlightIndex'> & {
   /**
    * Labels to be displayed.
    */
@@ -138,6 +140,7 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
   ({
     labels,
+    highlightIndex = 0,
     labelMinGap = 4,
     labelHorizontalOffset = 16,
     labelFont,
@@ -157,7 +160,11 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       dataLength,
       animate,
     } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(
+      () => highlight[highlightIndex]?.dataIndex ?? undefined,
+      [highlight, highlightIndex],
+    );
 
     const isIdle = scrubberPosition === undefined;
 

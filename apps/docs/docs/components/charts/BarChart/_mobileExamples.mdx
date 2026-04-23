@@ -942,7 +942,12 @@ function Candlesticks() {
 
   const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
     const { getXSerializableScale, drawingArea } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight, enabled } = useHighlightContext();
+    const scrubberPosition = useDerivedValue(() => {
+      if (!enabled) return undefined;
+      const idx = highlight.value[0]?.dataIndex;
+      return typeof idx === 'number' ? idx : undefined;
+    }, [highlight, enabled]);
     const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
 
     const rectWidth = useMemo(() => {

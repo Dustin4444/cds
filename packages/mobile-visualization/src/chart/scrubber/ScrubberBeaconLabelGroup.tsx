@@ -5,7 +5,7 @@ import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text';
-import { applySerializableScale, unwrapAnimatedValue, useScrubberContext } from '../utils';
+import { applySerializableScale, unwrapAnimatedValue, useHighlightContext } from '../utils';
 import {
   calculateLabelYPositions,
   getLabelPosition,
@@ -26,6 +26,7 @@ import type {
   ScrubberBeaconLabelProps,
   ScrubberBeaconProps,
 } from './Scrubber';
+import type { ScrubberBeaconGroupBaseProps } from './ScrubberBeaconGroup';
 
 const PositionedLabel = memo<{
   index: number;
@@ -111,7 +112,7 @@ const PositionedLabel = memo<{
   },
 );
 
-export type ScrubberBeaconLabelGroupBaseProps = {
+export type ScrubberBeaconLabelGroupBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'highlightIndex'> & {
   /**
    * Labels to be displayed.
    */
@@ -153,6 +154,7 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
   ({
     labels,
+    highlightIndex = 0,
     labelMinGap = 4,
     labelHorizontalOffset = 16,
     labelFont,
@@ -170,7 +172,13 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       dataLength,
       animate,
     } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight, enabled } = useHighlightContext();
+    const scrubberPosition = useDerivedValue(() => {
+      if (!enabled) return undefined;
+      const items = highlight.value;
+      const idx = items[highlightIndex]?.dataIndex;
+      return typeof idx === 'number' ? idx : undefined;
+    }, [highlight, enabled, highlightIndex]);
 
     const isIdle = useDerivedValue(() => {
       return scrubberPosition.value === undefined;

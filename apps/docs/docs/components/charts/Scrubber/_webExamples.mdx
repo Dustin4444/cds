@@ -286,7 +286,8 @@ function CustomBeaconLabel() {
   // This custom component label shows the percentage value of the data at the scrubber position.
   const MyScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
 
     const seriesData = useMemo(
       () => getLineData(getSeriesData(seriesId)),
@@ -558,7 +559,8 @@ You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop
 function HiddenScrubberWhenIdle() {
   const MyScrubberBeacon = memo(
     forwardRef((props, ref) => {
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = highlight[0]?.dataIndex;
       const isScrubbing = scrubberPosition !== undefined;
 
       return <DefaultScrubberBeacon ref={ref} {...props} opacity={isScrubbing ? 1 : 0} />;
@@ -566,7 +568,8 @@ function HiddenScrubberWhenIdle() {
   );
 
   const MyScrubberBeaconLabel = memo((props) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
     const isScrubbing = scrubberPosition !== undefined;
 
     return <DefaultScrubberBeaconLabel {...props} opacity={isScrubbing ? 1 : 0} />;
@@ -621,7 +624,8 @@ You can use `BeaconLabelComponent` to display a label with the percentage value 
 function PercentageBeaconLabels() {
   const PercentageScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
 
     const seriesData = useMemo(
       () => getLineData(getSeriesData(seriesId)),
@@ -825,7 +829,8 @@ function MatchupBeaconLabels() {
 
   const MatchupScrubberBeaconLabel = memo(({ seriesId, color, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
 
     const seriesData = useMemo(
       () => getLineData(getSeriesData(seriesId)),

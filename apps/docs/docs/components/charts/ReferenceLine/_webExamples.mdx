@@ -237,7 +237,8 @@ You can also optionally hide the label based on user scrubbing.
 ```jsx live
 function StartPriceReferenceLine() {
   const PriceLabel = memo((props) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
     const { getXScale, drawingArea } = useCartesianChartContext();
     const isScrubbing = scrubberPosition !== undefined;
 

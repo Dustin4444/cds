@@ -9,7 +9,7 @@ import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { LineChart } from '../../line';
 import { Scrubber } from '../../scrubber';
-import { useScrubberContext } from '../../utils';
+import { useHighlightContext } from '../../utils';
 import type { LegendShapeVariant, Series } from '../../utils/chart';
 import { DefaultLegendShape } from '../DefaultLegendShape';
 import { Legend, type LegendEntryProps } from '../Legend';
@@ -375,7 +375,11 @@ const DynamicData = () => {
     color,
     shape,
   }: LegendEntryProps) {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(
+      () => highlight[0]?.dataIndex ?? undefined,
+      [highlight],
+    );
     const { series, dataLength } = useCartesianChartContext();
 
     const dataIndex = scrubberPosition ?? dataLength - 1;

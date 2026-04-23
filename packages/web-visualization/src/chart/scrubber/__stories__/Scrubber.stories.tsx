@@ -21,7 +21,7 @@ import {
   type ScrubberLabelProps,
   type ScrubberRef,
   useCartesianChartContext,
-  useScrubberContext,
+  useHighlightContext,
 } from '../..';
 import { LineChart, SolidLine } from '../../line';
 import { Scrubber } from '../Scrubber';
@@ -236,7 +236,11 @@ const CustomBeaconLabel = () => {
   const MyScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(
+        () => highlight[0]?.dataIndex ?? undefined,
+        [highlight],
+      );
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -313,7 +317,11 @@ const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLab
   const PercentageScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(
+        () => highlight[0]?.dataIndex ?? undefined,
+        [highlight],
+      );
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -580,14 +588,22 @@ const CustomLine = () => {
 
 const HiddenScrubberWhenIdle = () => {
   const MyScrubberBeacon = memo((props: ScrubberBeaconProps) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(
+      () => highlight[0]?.dataIndex ?? undefined,
+      [highlight],
+    );
     const isScrubbing = scrubberPosition !== undefined;
 
     return <DefaultScrubberBeacon {...props} opacity={isScrubbing ? 1 : 0} />;
   });
 
   const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(
+      () => highlight[0]?.dataIndex ?? undefined,
+      [highlight],
+    );
     const isScrubbing = scrubberPosition !== undefined;
 
     return <DefaultScrubberBeaconLabel {...props} opacity={isScrubbing ? 1 : 0} />;
@@ -742,7 +758,11 @@ const MatchupBeaconLabels = () => {
   const MatchupScrubberBeaconLabel = memo(
     ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(
+        () => highlight[0]?.dataIndex ?? undefined,
+        [highlight],
+      );
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),

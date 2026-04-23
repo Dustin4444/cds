@@ -8,7 +8,7 @@ import {
   evaluateGradientAtValue,
   getGradientAxis,
   getGradientConfig,
-  useScrubberContext,
+  useHighlightContext,
 } from '../utils';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
@@ -152,6 +152,11 @@ export type ScrubberBeaconGroupBaseProps = SharedProps & {
    */
   seriesIds: string[];
   /**
+   * Which touch index to follow.
+   * @default 0
+   */
+  highlightIndex?: number;
+  /**
    * Pulse the beacons while at rest.
    */
   idlePulse?: boolean;
@@ -187,6 +192,7 @@ export const ScrubberBeaconGroup = memo(
     (
       {
         seriesIds,
+        highlightIndex = 0,
         idlePulse,
         transitions,
         BeaconComponent = DefaultScrubberBeacon,
@@ -198,7 +204,11 @@ export const ScrubberBeaconGroup = memo(
       ref,
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(
+        () => highlight[highlightIndex]?.dataIndex ?? undefined,
+        [highlight, highlightIndex],
+      );
       const { layout, getXScale, getYScale, getXAxis, getYAxis, dataLength, series, animate } =
         useCartesianChartContext();
 

@@ -42,7 +42,7 @@ import {
   type ScrubberBeaconProps,
   type ScrubberRef,
   useCartesianChartContext,
-  useScrubberContext,
+  useHighlightContext,
 } from '../..';
 import { Area, DottedArea, type DottedAreaProps, GradientArea } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
@@ -1473,7 +1473,11 @@ function ForecastAssetPrice() {
   });
 
   const CustomScrubber = memo(() => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(
+      () => highlight[0]?.dataIndex ?? undefined,
+      [highlight],
+    );
     const isScrubbing = scrubberPosition !== undefined;
     // We need a fade in animation for the Scrubber
     return (

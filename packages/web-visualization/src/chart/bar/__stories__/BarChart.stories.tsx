@@ -10,8 +10,11 @@ import { XAxis, YAxis } from '../../axis';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
-import { type HighlightedItem, isCategoricalScale, ScrubberContext } from '../../utils';
-import { useHighlightContext } from '../../utils/context';
+import {
+  type HighlightedItem,
+  isCategoricalScale,
+  useHighlightContext,
+} from '../../utils';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';
@@ -192,7 +195,11 @@ const tabs: TimePeriodTab[] = [
 
 const ScrubberRect = memo(() => {
   const { getXScale, getYScale } = useCartesianChartContext();
-  const { scrubberPosition } = React.useContext(ScrubberContext) ?? {};
+  const { highlight } = useHighlightContext();
+  const scrubberPosition = useMemo(
+    () => highlight[0]?.dataIndex ?? undefined,
+    [highlight],
+  );
   const xScale = getXScale();
   const yScale = getYScale();
 
