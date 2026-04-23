@@ -128,22 +128,23 @@ export function outputResults(results, options) {
 }
 
 /**
- * Exits with appropriate code based on CI mode and violations.
+ * Throws if CI mode is enabled and violations were found.
+ * Does not call process.exit so the caller can handle cleanup before the process terminates.
  * @param {object} results - Audit results object
  * @param {object} options - CLI options
  */
 export function exitWithCode(results, options) {
-  if (
-    options.ci &&
-    (results.missingFigmaNode.length > 0 ||
-      results.invalidFigmaNode.length > 0 ||
-      (results.invalidSourceUrl?.length || 0) > 0 ||
-      (results.invalidSourcePath?.length || 0) > 0 ||
-      results.missingCodeConnect.length > 0 ||
-      (results.missingDevResource?.length || 0) > 0 ||
-      (results.invalidDevResource?.length || 0) > 0)
-  ) {
-    process.exit(1);
+  const totalIssues =
+    results.missingFigmaNode.length +
+    results.invalidFigmaNode.length +
+    (results.invalidSourceUrl?.length || 0) +
+    (results.invalidSourcePath?.length || 0) +
+    results.missingCodeConnect.length +
+    (results.missingDevResource?.length || 0) +
+    (results.invalidDevResource?.length || 0);
+
+  if (options.ci && totalIssues > 0) {
+    throw new Error(`Figma integration audit found ${totalIssues} issue(s).`);
   }
 }
 
