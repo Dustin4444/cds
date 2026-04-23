@@ -97,11 +97,13 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> &
     /**
      * Accessibility label for the chart.
      * - When a string: Used as a static label for the chart element
-     * - When a function: Called with the highlighted item to generate dynamic labels during interaction
+     * - When a function: Called with the current highlighted items (supports multi-touch)
      */
-    accessibilityLabel?: string | ((item: HighlightedItem) => string);
+    accessibilityLabel?: string | ((items: HighlightedItem[]) => string);
     /**
-     * Controls what aspects of the data can be highlighted.
+     * Controls which highlight dimensions are tracked on `HighlightedItem` payloads.
+     * When `dataIndex` is false, `dataIndex` is `undefined` (out of scope), not `null`.
+     * When `series` is true, only **bar** charts register per-series hit targets; line/area do not set `seriesId`.
      * @default { dataIndex: true, series: false }
      */
     highlightScope?: HighlightScope;
@@ -522,7 +524,8 @@ export const CartesianChart = memo(
           onHighlightChange?.(items);
 
           if (onScrubberPositionChange) {
-            onScrubberPositionChange(items[0]?.dataIndex ?? undefined);
+            const idx = items[0]?.dataIndex;
+            onScrubberPositionChange(typeof idx === 'number' ? idx : undefined);
           }
         },
         [onHighlightChange, onScrubberPositionChange],

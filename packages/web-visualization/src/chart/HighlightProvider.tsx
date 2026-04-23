@@ -99,10 +99,10 @@ export type HighlightProviderProps = HighlightProps & {
    * - When a string: Used as a static label for the chart element
    * - When a function: Called with the highlighted item to generate dynamic labels during interaction
    */
-  accessibilityLabel?: string | ((item: HighlightedItem) => string);
+  accessibilityLabel?: string | ((items: HighlightedItem[]) => string);
 };
 
-const DEFAULT_ITEM: HighlightedItem = { dataIndex: null, seriesId: null };
+const DEFAULT_ITEM: HighlightedItem = {};
 
 /**
  * HighlightProvider manages chart highlight state and input handling.
@@ -279,7 +279,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         layout === 'horizontal' ? event.clientY - rect.top : event.clientX - rect.left;
       const dataIndex = scope.dataIndex
         ? getDataIndexFromCategoryAxisPosition(position)
-        : null;
+        : undefined;
       updatePointerHighlight(event.pointerId, { dataIndex });
     },
     [
@@ -313,6 +313,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (!enabled) return;
+      if (!scope.dataIndex) return;
 
       const categoryAxisIsX = layout !== 'horizontal';
       const categoryScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
@@ -342,7 +343,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
       }
 
       const currentItem = highlight[0] ?? DEFAULT_ITEM;
-      const currentIndex = currentItem.dataIndex ?? minIndex;
+      const currentDataIndex = currentItem.dataIndex;
+      const currentIndex = typeof currentDataIndex === 'number' ? currentDataIndex : minIndex;
       const dataRange = maxIndex - minIndex;
 
       const multiSkip = event.shiftKey;
@@ -383,7 +385,17 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         setHighlight([newItem]);
       }
     },
-    [enabled, layout, getXScale, getYScale, getXAxis, getYAxis, highlight, setHighlight],
+    [
+      enabled,
+      scope.dataIndex,
+      layout,
+      getXScale,
+      getYScale,
+      getXAxis,
+      getYAxis,
+      highlight,
+      setHighlight,
+    ],
   );
 
   const handleBlur = useCallback(() => {
@@ -440,10 +452,9 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
 
     if (!enabled) return;
 
-    const currentItem = highlight[0];
-
-    if (currentItem && currentItem.dataIndex !== null) {
-      svg.setAttribute('aria-label', accessibilityLabel(currentItem));
+    const label = accessibilityLabel(highlight);
+    if (label) {
+      svg.setAttribute('aria-label', label);
     } else {
       svg.removeAttribute('aria-label');
     }
@@ -466,7 +477,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   // ScrubberContext bridge for backwards compatibility
   const scrubberPosition = useMemo(() => {
     if (!enabled) return undefined;
-    return highlight[0]?.dataIndex ?? undefined;
+    const idx = highlight[0]?.dataIndex;
+    return typeof idx === 'number' ? idx : undefined;
   }, [enabled, highlight]);
 
   const scrubberContextValue: ScrubberContextValue = useMemo(
@@ -478,7 +490,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         if (index === undefined) {
           setHighlight([]);
         } else {
-          setHighlight([{ dataIndex: index, seriesId: null }]);
+          setHighlight([{ dataIndex: index }]);
         }
       },
     }),

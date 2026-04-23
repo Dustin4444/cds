@@ -75,11 +75,13 @@ export const DefaultBar = memo<DefaultBarProps>(
       let opacity = 1;
       if (highlight.length > 0) {
         const isHighlighted = highlight.some((item) => {
-          const indexMatch = !highlightByDataIndex || item.dataIndex === dataIndex;
-          // When seriesId is null (pointer between bars), all series at this index match.
+          const indexMatch =
+            !highlightByDataIndex ||
+            (typeof item.dataIndex === 'number' && item.dataIndex === dataIndex);
+          // When seriesId is null/undefined (pointer between bars), all series at this index match.
           // Only narrow to a specific series when one is identified.
           const seriesMatch =
-            !highlightBySeries || item.seriesId === null || item.seriesId === seriesId;
+            !highlightBySeries || item.seriesId == null || item.seriesId === seriesId;
           return indexMatch && seriesMatch;
         });
         opacity = isHighlighted ? 1 : fadeOpacity;
@@ -98,7 +100,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     const handlePointerEnter = useCallback(
       (event: React.PointerEvent<SVGPathElement>) => {
         if (!highlightEnabled || !highlightBySeries) return;
-        highlightContext.updatePointerHighlight(event.pointerId, { seriesId: seriesId ?? null });
+        highlightContext.updatePointerHighlight(event.pointerId, { seriesId });
       },
       [highlightContext, highlightEnabled, highlightBySeries, seriesId],
     );

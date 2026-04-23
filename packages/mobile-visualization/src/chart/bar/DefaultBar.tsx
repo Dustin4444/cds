@@ -112,9 +112,11 @@ export const DefaultBar = memo<DefaultBarProps>(
 
       if (items.length > 0) {
         const isHighlighted = items.some((item) => {
-          const indexMatch = !highlightByDataIndex || item.dataIndex === dataIndex;
+          const indexMatch =
+            !highlightByDataIndex ||
+            (typeof item.dataIndex === 'number' && item.dataIndex === dataIndex);
           const seriesMatch =
-            !highlightBySeries || item.seriesId === null || item.seriesId === seriesId;
+            !highlightBySeries || item.seriesId == null || item.seriesId === seriesId;
           return indexMatch && seriesMatch;
         });
         opacity = isHighlighted ? 1 : fadeOpacity;

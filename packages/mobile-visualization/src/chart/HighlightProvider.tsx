@@ -98,7 +98,7 @@ export type HighlightProviderProps = HighlightProps & {
    * - When a string: Used as a static label for the chart element
    * - When a function: Called with the highlighted item to generate dynamic labels during interaction
    */
-  accessibilityLabel?: string | ((item: HighlightedItem) => string);
+  accessibilityLabel?: string | ((items: HighlightedItem[]) => string);
   /**
    * The accessibility mode for the chart.
    * - 'chunked': Divides chart into N accessible regions (default for line charts)
@@ -113,7 +113,7 @@ export type HighlightProviderProps = HighlightProps & {
   accessibilityChunkCount?: number;
 };
 
-const DEFAULT_ITEM: HighlightedItem = { dataIndex: null, seriesId: null };
+const DEFAULT_ITEM: HighlightedItem = {};
 
 /**
  * Sentinel pointer ID used in onStart (before real touch IDs are available from onTouchesMove).
@@ -347,8 +347,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
 
   // Per-touch highlight handler (called from gesture worklets via runOnJS)
   const handleTouchHighlight = useCallback(
-    (touchId: number, x: number, y: number, dataIndex: number | null) => {
-      const seriesId = scope.series ? (findBarAtPoint(x, y)?.seriesId ?? null) : null;
+    (touchId: number, x: number, y: number, dataIndex: number | null | undefined) => {
+      const seriesId = scope.series ? (findBarAtPoint(x, y)?.seriesId ?? null) : undefined;
       updatePointerHighlight(touchId, { dataIndex, seriesId });
     },
     [scope.series, findBarAtPoint, updatePointerHighlight],
@@ -394,7 +394,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
           const pointerPosition = categoryAxisIsX ? event.x : event.y;
           const dataIndex = scope.dataIndex
             ? getDataIndexFromCategoryAxisPosition(pointerPosition)
-            : null;
+            : undefined;
           runOnJS(handleTouchHighlight)(INITIAL_TOUCH_ID, event.x, event.y, dataIndex);
         })
         .onTouchesDown(function onTouchesDown(event) {
@@ -404,7 +404,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
             const pointerPosition = categoryAxisIsX ? touch.x : touch.y;
             const dataIndex = scope.dataIndex
               ? getDataIndexFromCategoryAxisPosition(pointerPosition)
-              : null;
+              : undefined;
             runOnJS(handleTouchHighlight)(touch.id, touch.x, touch.y, dataIndex);
           }
         })
@@ -417,7 +417,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
             const pointerPosition = categoryAxisIsX ? touch.x : touch.y;
             const dataIndex = scope.dataIndex
               ? getDataIndexFromCategoryAxisPosition(pointerPosition)
-              : null;
+              : undefined;
             runOnJS(handleTouchHighlight)(touch.id, touch.x, touch.y, dataIndex);
           }
         })
@@ -478,7 +478,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   const scrubberPosition = useDerivedValue<number | undefined>(() => {
     const items = internalHighlight.value;
     if (!items || items.length === 0) return undefined;
-    return items[0]?.dataIndex ?? undefined;
+    const idx = items[0]?.dataIndex;
+    return typeof idx === 'number' ? idx : undefined;
   }, [internalHighlight]);
 
   const scrubberContextValue: ScrubberContextValue = useMemo(
@@ -490,13 +491,13 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   );
 
   // Accessibility
-  const getAccessibilityLabelForItem = useCallback(
-    (item: HighlightedItem): string => {
+  const getAccessibilityLabelForItems = useCallback(
+    (items: HighlightedItem[]): string => {
       if (typeof accessibilityLabel === 'string') {
         return accessibilityLabel;
       }
       if (typeof accessibilityLabel === 'function') {
-        return accessibilityLabel(item);
+        return accessibilityLabel(items);
       }
       return '';
     },
@@ -521,22 +522,22 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         const startIndex = i * chunkSize;
         const endIndex = Math.min((i + 1) * chunkSize, dataLength);
         const chunkLength = endIndex - startIndex;
-        const item: HighlightedItem = { dataIndex: startIndex, seriesId: null };
+        const item: HighlightedItem = { dataIndex: startIndex };
 
         regions.push({
           key: `chunk-${i}`,
           flex: chunkLength,
-          label: getAccessibilityLabelForItem(item),
+          label: getAccessibilityLabelForItems([item]),
           highlightedItem: item,
         });
       }
     } else if (accessibilityMode === 'item') {
       for (let i = 0; i < dataLength; i++) {
-        const item: HighlightedItem = { dataIndex: i, seriesId: null };
+        const item: HighlightedItem = { dataIndex: i };
         regions.push({
           key: `item-${i}`,
           flex: 1,
-          label: getAccessibilityLabelForItem(item),
+          label: getAccessibilityLabelForItems([item]),
           highlightedItem: item,
         });
       }
@@ -549,7 +550,7 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
     accessibilityMode,
     accessibilityChunkCount,
     dataLength,
-    getAccessibilityLabelForItem,
+    getAccessibilityLabelForItems,
   ]);
 
   const content = (
