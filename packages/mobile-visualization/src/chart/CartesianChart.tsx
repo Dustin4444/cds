@@ -13,11 +13,7 @@ import {
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
-import {
-  type HighlightProps,
-  HighlightProvider,
-  type HighlightProviderProps,
-} from './HighlightProvider';
+import { HighlightProvider, type HighlightProviderProps } from './HighlightProvider';
 import { Legend } from './legend';
 import {
   type CartesianAxisConfig,
@@ -74,7 +70,7 @@ const ChartCanvas = memo(
 );
 
 export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily' | 'accessibilityLabel'> &
-  Omit<HighlightProps, 'highlightScope'> & {
+  Pick<HighlightProviderProps, 'enableHighlighting' | 'highlight' | 'onHighlightChange'> & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.

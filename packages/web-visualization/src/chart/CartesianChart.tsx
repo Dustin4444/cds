@@ -6,7 +6,7 @@ import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout'
 import { css } from '@linaria/core';
 
 import { CartesianChartProvider } from './ChartProvider';
-import { type HighlightProps, HighlightProvider } from './HighlightProvider';
+import { HighlightProvider, type HighlightProviderProps } from './HighlightProvider';
 import { Legend } from './legend';
 import {
   type CartesianAxisConfig,
@@ -43,7 +43,7 @@ const focusStylesCss = css`
 `;
 
 export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel'> &
-  Omit<HighlightProps, 'highlightScope'> & {
+  Pick<HighlightProviderProps, 'enableHighlighting' | 'highlight' | 'onHighlightChange'> & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.

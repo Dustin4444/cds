@@ -11,11 +11,12 @@ import {
   type ScrubberContextValue,
 } from './utils';
 
-/**
- * Props for configuring chart highlight behavior.
- * Used by CartesianChart and other chart components.
- */
-export type HighlightProps = {
+export type HighlightProviderProps = {
+  children: React.ReactNode;
+  /**
+   * A reference to the root SVG element, where interaction event handlers will be attached.
+   */
+  svgRef: React.RefObject<SVGSVGElement> | null;
   /**
    * Whether highlighting is enabled.
    */
@@ -32,14 +33,6 @@ export type HighlightProps = {
    * Callback fired when the highlight changes during interaction.
    */
   onHighlightChange?: (items: HighlightedItem[]) => void;
-};
-
-export type HighlightProviderProps = HighlightProps & {
-  children: React.ReactNode;
-  /**
-   * A reference to the root SVG element, where interaction event handlers will be attached.
-   */
-  svgRef: React.RefObject<SVGSVGElement> | null;
   /**
    * Accessibility label for the chart.
    * - When a string: Used as a static label for the chart element
@@ -48,11 +41,8 @@ export type HighlightProviderProps = HighlightProps & {
   accessibilityLabel?: string | ((items: HighlightedItem[]) => string);
 };
 
-const DEFAULT_ITEM: HighlightedItem = {};
-
 /**
  * HighlightProvider manages chart highlight state and input handling.
- * Uses Pointer Events for unified mouse/touch interaction with per-pointer state tracking.
  */
 export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   children,
@@ -124,9 +114,12 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   const updatePointerHighlight = useCallback(
     (pointerId: number, partial: Partial<HighlightedItem>) => {
       setPointerMap((prev) => {
-        const current = prev[pointerId] ?? DEFAULT_ITEM;
-        const updated = { ...current, ...partial };
-        if (current.dataIndex === updated.dataIndex && current.seriesId === updated.seriesId) {
+        const current = prev[pointerId];
+        const updated: HighlightedItem = { ...current, ...partial };
+        if (
+          current?.dataIndex === updated.dataIndex &&
+          current?.seriesId === updated.seriesId
+        ) {
           return prev;
         }
         return { ...prev, [pointerId]: updated };
@@ -288,8 +281,8 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
         }
       }
 
-      const currentItem = highlight[0] ?? DEFAULT_ITEM;
-      const currentDataIndex = currentItem.dataIndex;
+      const currentItem = highlight[0];
+      const currentDataIndex = currentItem?.dataIndex;
       const currentIndex = typeof currentDataIndex === 'number' ? currentDataIndex : minIndex;
       const dataRange = maxIndex - minIndex;
 
@@ -323,10 +316,10 @@ export const HighlightProvider: React.FC<HighlightProviderProps> = ({
           return;
       }
 
-      if (newIndex !== currentItem.dataIndex) {
+      if (newIndex !== currentItem?.dataIndex) {
         const newItem: HighlightedItem = {
           dataIndex: newIndex,
-          seriesId: currentItem.seriesId,
+          seriesId: currentItem?.seriesId,
         };
         setHighlight([newItem]);
       }

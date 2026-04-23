@@ -21,7 +21,12 @@ import {
   type ScrubberContextValue,
 } from './utils';
 
-export type HighlightProps = {
+export type HighlightProviderProps = {
+  children: React.ReactNode;
+  /**
+   * Allows continuous gestures on the chart to continue outside the bounds of the chart element.
+   */
+  allowOverflowGestures?: boolean;
   /**
    * Whether highlighting is enabled.
    */
@@ -38,14 +43,6 @@ export type HighlightProps = {
    * Callback fired when highlighting changes during interaction.
    */
   onHighlightChange?: (items: HighlightedItem[]) => void;
-};
-
-export type HighlightProviderProps = HighlightProps & {
-  children: React.ReactNode;
-  /**
-   * Allows continuous gestures on the chart to continue outside the bounds of the chart element.
-   */
-  allowOverflowGestures?: boolean;
   /**
    * Accessibility label for the chart.
    * - When a string: Used as a static label for the chart element
