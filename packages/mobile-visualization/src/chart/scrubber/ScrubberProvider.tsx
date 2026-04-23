@@ -8,6 +8,10 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';
 
+/**
+ * @deprecated Use `HighlightProvider` props (`enableHighlighting`, `onHighlightChange`, `allowOverflowGestures`, etc.) instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableScrubbing'>> & {
   children: React.ReactNode;
   /**
@@ -24,6 +28,9 @@ export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableSc
 /**
  * A component which encapsulates the ScrubberContext.
  * It depends on a ChartContext in order to provide accurate touch tracking.
+ *
+ * @deprecated Use `HighlightProvider` with `enableHighlighting`, `onHighlightChange`, and optional `allowOverflowGestures` instead of `ScrubberProvider`. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
  */
 export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
