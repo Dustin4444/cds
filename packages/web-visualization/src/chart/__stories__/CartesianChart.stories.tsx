@@ -15,7 +15,7 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { isCategoricalScale } from '../utils';
+import { type HighlightedItem,isCategoricalScale } from '../utils';
 import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
@@ -72,7 +72,7 @@ const PredictionRow = ({
     <Text font="headline">{seriesData.label}</Text>
     <LineChart
       curve="natural"
-      enableScrubbing={false}
+      enableHighlighting={false}
       height={6}
       inset={0}
       series={[seriesData]}
@@ -187,6 +187,14 @@ const PredictionMarket = () => {
     [eaglesData.length],
   );
 
+  const onHighlightChange = useCallback(
+    (items: HighlightedItem[]) => {
+      const idx = items[0]?.dataIndex;
+      updateScrubberLabel(typeof idx === 'number' ? idx : undefined);
+    },
+    [updateScrubberLabel],
+  );
+
   const getScrubberAccessibilityLabel = useCallback(
     (dataIndex: number) => {
       const teamA = eaglesData[dataIndex];
@@ -209,11 +217,11 @@ const PredictionMarket = () => {
         </Text>
       </VStack>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         accessibilityLabel={chartAccessibilityLabel}
         height={300}
         inset={{ top: 40, right: 0, bottom: 32, left: 0 }}
-        onScrubberPositionChange={updateScrubberLabel}
+        onHighlightChange={onHighlightChange}
         paddingEnd={2}
         series={seriesConfig}
         xAxis={{
@@ -454,6 +462,10 @@ const PriceWithVolume = () => {
 
   const headerId = useId();
 
+  const onHighlightChange = useCallback((items: HighlightedItem[]) => {
+    setScrubIndex(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <SectionHeader
@@ -474,11 +486,11 @@ const PriceWithVolume = () => {
         title={<Text font="title1">Bitcoin</Text>}
       />
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         accessibilityLabel={chartAccessibilityLabel}
         aria-labelledby={headerId}
         height={250}
-        onScrubberPositionChange={setScrubIndex}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'prices',

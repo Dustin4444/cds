@@ -75,13 +75,13 @@ const ControlledState = () => {
       </Text>
 
       <HStack gap={1}>
-        <Button compact onPress={() => setHighlight([{ dataIndex: 0, seriesId: null }])}>
+        <Button compact onPress={() => setHighlight([{ dataIndex: 0 }])}>
           First
         </Button>
-        <Button compact onPress={() => setHighlight([{ dataIndex: 14, seriesId: null }])}>
+        <Button compact onPress={() => setHighlight([{ dataIndex: 14 }])}>
           Middle
         </Button>
-        <Button compact onPress={() => setHighlight([{ dataIndex: 29, seriesId: null }])}>
+        <Button compact onPress={() => setHighlight([{ dataIndex: 29 }])}>
           Last
         </Button>
         <Button compact onPress={() => setHighlight(undefined)} variant="secondary">
@@ -92,8 +92,7 @@ const ControlledState = () => {
       <Box background="bgSecondary" borderRadius={200} padding={2}>
         <Text font="body">
           Index: {highlight?.[0]?.dataIndex ?? 'none'}
-          {highlight?.[0]?.dataIndex !== undefined &&
-            highlight[0].dataIndex !== null &&
+          {typeof highlight?.[0]?.dataIndex === 'number' &&
             ` (${formatPrice(samplePrices[highlight[0].dataIndex])})`}
         </Text>
       </Box>
@@ -290,7 +289,7 @@ const SynchronizedCharts = () => {
           <Button
             key={index}
             compact
-            onPress={() => setHighlight([{ dataIndex: index, seriesId: null }])}
+            onPress={() => setHighlight([{ dataIndex: index }])}
             variant={highlight?.[0]?.dataIndex === index ? 'primary' : 'secondary'}
           >
             {label}
@@ -304,8 +303,7 @@ const SynchronizedCharts = () => {
       <Box background="bgSecondary" borderRadius={200} padding={2}>
         <Text font="body">
           Highlighted index: {highlight?.[0]?.dataIndex ?? 'none'}
-          {highlight?.[0]?.dataIndex !== null &&
-            highlight?.[0]?.dataIndex !== undefined &&
+          {typeof highlight?.[0]?.dataIndex === 'number' &&
             ` (A: ${seriesA[highlight[0].dataIndex]}, B: ${seriesB[highlight[0].dataIndex]})`}
         </Text>
       </Box>

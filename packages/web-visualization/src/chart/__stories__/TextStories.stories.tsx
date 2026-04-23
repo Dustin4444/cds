@@ -288,7 +288,6 @@ export const InteractiveChartText = () => {
       >
         <LineChart
           points
-          enableScrubbing={false}
           height={CHART_HEIGHT}
           series={[
             {
@@ -629,7 +628,6 @@ export const InteractiveChartTextGroup = () => {
         }}
       >
         <LineChart
-          enableScrubbing={false}
           height={CHART_HEIGHT}
           series={[
             {

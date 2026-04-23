@@ -45,7 +45,7 @@ function MultipleLine() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -103,7 +103,7 @@ function DataFormat() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -196,7 +196,7 @@ function LiveUpdates() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ right: 64 }}
@@ -232,7 +232,7 @@ function MissingData() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -313,24 +313,28 @@ LineChart uses `linear` scaling on axes by default, but you can also use other t
 
 ## Interaction
 
-Charts have built in functionality enabled through scrubbing, which can be used by setting `enableScrubbing` to true. You can listen to value changes through `onScrubberPositionChange`. Adding `Scrubber` to LineChart showcases the current scrubber position.
+Charts support interaction when `enableHighlighting` is true. Use `onHighlightChange` to listen for updates. Adding `Scrubber` to LineChart shows the visual scrubber for the current position.
 
 ```jsx live
 function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState();
 
+  const onHighlightChange = useCallback((items) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <Text font="label1">
         {scrubberPosition !== undefined
-          ? `Scrubber position: ${scrubberPosition}`
-          : 'Not scrubbing'}
+          ? `Highlighted index: ${scrubberPosition}`
+          : 'Not interacting'}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         height={{ base: 200, tablet: 225, desktop: 250 }}
-        onScrubberPositionChange={setScrubberPosition}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'prices',
@@ -495,7 +499,7 @@ function Transitions() {
 
     return (
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         height={{ base: 200, tablet: 250, desktop: 300 }}
         inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
         series={[
@@ -553,7 +557,7 @@ function BasicAccessible() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -601,7 +605,7 @@ function AccessibleWithHeader() {
         {displayLabel}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showYAxis
         aria-labelledby={headerId}
@@ -814,7 +818,7 @@ function GainLossChart() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
@@ -926,7 +930,7 @@ You can also add instances of [ReferenceLine](/components/charts/ReferenceLine) 
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   showArea
   height={{ base: 200, tablet: 225, desktop: 250 }}
   series={[
@@ -1019,7 +1023,7 @@ function StylingScrubber() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -1180,7 +1184,7 @@ function Compact() {
     <Box style={{ padding: 1 }}>
       <LineChart
         {...dimensions}
-        enableScrubbing={false}
+        enableHighlighting={false}
         inset={0}
         series={[
           {
@@ -1414,7 +1418,7 @@ function AssetPriceWithDottedArea() {
           title={<Text font="title1">Bitcoin</Text>}
         />
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
@@ -1534,7 +1538,7 @@ function MonotoneAssetPrice() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showYAxis
       height={{ base: 200, tablet: 250, desktop: 300 }}
       inset={{ top: 64 }}
@@ -1712,7 +1716,7 @@ function ServiceAvailability() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
@@ -1875,7 +1879,7 @@ function ForecastAssetPrice() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={{ base: 200, tablet: 225, desktop: 250 }}
       maxWidth={512}
       series={[{ id: 'price', data, color: assets.btc.color }]}

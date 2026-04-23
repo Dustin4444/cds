@@ -35,7 +35,7 @@ const getScrubberAccessibilityLabel = (index: number) => `Point ${index + 1}: ${
 const BasicScrubber = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -75,7 +75,7 @@ const SeriesFilter = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel="Chart with multiple series. Swipe to navigate."
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
@@ -113,7 +113,7 @@ const SeriesFilter = () => {
 const WithLabels = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -136,7 +136,7 @@ const IdlePulse = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -160,7 +160,7 @@ const ImperativePulse = () => {
   return (
     <VStack gap={2}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -187,7 +187,7 @@ const BeaconStroke = () => {
   return (
     <Box borderRadius={300} padding={2} style={{ backgroundColor }}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -226,7 +226,7 @@ const CustomBeacon = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -300,7 +300,7 @@ const CustomBeaconLabel = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel="Temperature chart with 6 data points. Swipe to navigate."
@@ -453,7 +453,7 @@ const PercentageBeaconLabels = () => {
     <VStack gap={4}>
       <Box borderRadius={300} padding={2} style={{ backgroundColor: background }}>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           areaType="dotted"
@@ -476,7 +476,7 @@ const PercentageBeaconLabels = () => {
       </Box>
       <Box borderRadius={300} padding={2} style={{ backgroundColor: background }}>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           areaType="dotted"
@@ -507,7 +507,7 @@ const HideBeaconLabels = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       legend
       showArea
       accessibilityLabel="Website visitors across 7 pages. Swipe to navigate."
@@ -543,7 +543,7 @@ const HideBeaconLabels = () => {
 const LabelElevated = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -584,7 +584,7 @@ const CustomLabelComponent = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -615,7 +615,7 @@ const LabelFonts = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel="BTC and ETH comparison chart. Swipe to navigate."
@@ -652,7 +652,7 @@ const LabelBoundsInset = () => {
   return (
     <VStack gap={4}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -668,7 +668,7 @@ const LabelBoundsInset = () => {
         <Scrubber label="Without bounds - text touches edge" labelBoundsInset={0} />
       </LineChart>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -693,7 +693,7 @@ const LabelBoundsInset = () => {
 const CustomLine = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -733,7 +733,7 @@ const HiddenScrubberWhenIdle = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -754,7 +754,7 @@ const HiddenScrubberWhenIdle = () => {
 const HideOverlay = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -877,7 +877,7 @@ const MatchupBeaconLabels = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel="BLUE vs RED matchup chart. Swipe to navigate."
       areaType="dotted"

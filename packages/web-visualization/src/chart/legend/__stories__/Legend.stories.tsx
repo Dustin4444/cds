@@ -80,7 +80,7 @@ const Basic = () => {
   return (
     <Example title="Basic Legend">
       <LineChart
-        enableScrubbing
+        enableHighlighting
         legend
         showArea
         showXAxis
@@ -192,7 +192,7 @@ const AutoScale = () => {
   return (
     <Example title="Auto Scale">
       <LineChart
-        enableScrubbing
+        enableHighlighting
         legend
         showArea
         showXAxis
@@ -400,7 +400,7 @@ const DynamicData = () => {
   return (
     <Example title="Dynamic Data">
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showXAxis
         showYAxis

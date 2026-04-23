@@ -8,10 +8,10 @@ import { m as motion, type Transition } from 'framer-motion';
 import { CartesianChart } from '../..';
 import { XAxis, YAxis } from '../../axis';
 import { useCartesianChartContext } from '../../ChartProvider';
-import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { useHighlightContext } from '../../HighlightProvider';
+import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
-import { Scrubber } from '../../scrubber';
-import { isCategoricalScale, ScrubberContext, useScrubberContext } from '../../utils';
+import { type HighlightedItem, isCategoricalScale, ScrubberContext } from '../../utils';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';
@@ -244,81 +244,106 @@ const Candlesticks = () => {
     .reverse();
   const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
 
-  // Custom line component that renders a rect to highlight the entire bandwidth
-  const BandwidthHighlight = memo<LineComponentProps>(({ stroke }) => {
-    const { getXScale, drawingArea } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
-    const xScale = getXScale();
-
-    if (!xScale || scrubberPosition === undefined) return null;
-
-    const xPos = xScale(scrubberPosition);
-
-    if (xPos === undefined) return null;
-
-    // Type guard to check if scale has bandwidth (band scale)
-    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
-
-    return (
-      <rect
-        fill={stroke}
-        height={drawingArea.height}
-        width={bandwidth}
-        x={xPos}
-        y={drawingArea.y}
-      />
-    );
-  });
-
   const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
     number,
     number,
   ][];
 
-  const CandlestickBarComponent = memo<BarComponentProps>(({ x, y, width, height, dataX }) => {
-    const { getYScale, drawingArea } = useCartesianChartContext();
-    const yScale = getYScale();
+  const CandlestickBarComponent = memo<BarComponentProps>(
+    ({ x, y, width, height, dataX, dataY, fadeOnHighlight, seriesId }) => {
+      const { getYScale, drawingArea } = useCartesianChartContext();
+      const highlightContext = useHighlightContext();
+      const yScale = getYScale();
 
-    const normalizedX = useMemo(
-      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
-      [x, drawingArea.x, drawingArea.width],
-    );
+      const dataIndex = useMemo(() => {
+        if (typeof dataX === 'number') return dataX;
+        if (typeof dataY === 'number') return dataY;
+        return null;
+      }, [dataX, dataY]);
 
-    const transition: Transition = useMemo(
-      () => ({
-        type: 'tween',
-        duration: 0.325,
-        delay: normalizedX * staggerDelay,
-      }),
-      [normalizedX],
-    );
+      const { enabled: highlightEnabled, highlight, scope } = highlightContext;
+      const highlightByDataIndex = scope.dataIndex ?? false;
+      const highlightBySeries = scope.series ?? false;
 
-    const wickX = x + width / 2;
+      const highlightOpacity = useMemo(() => {
+        if (!fadeOnHighlight || !highlightEnabled) return 1;
 
-    const timePeriodValue = stockData[dataX as number];
+        let opacity = 1;
+        if (highlight.length > 0) {
+          const isHighlighted = highlight.some((item) => {
+            const indexMatch =
+              !highlightByDataIndex ||
+              (typeof item.dataIndex === 'number' && item.dataIndex === dataIndex);
+            const seriesMatch =
+              !highlightBySeries || item.seriesId == null || item.seriesId === seriesId;
+            return indexMatch && seriesMatch;
+          });
+          opacity = isHighlighted ? 1 : 0.3;
+        }
+        return opacity;
+      }, [
+        fadeOnHighlight,
+        highlightEnabled,
+        highlight,
+        highlightByDataIndex,
+        highlightBySeries,
+        dataIndex,
+        seriesId,
+      ]);
 
-    const open = parseFloat(timePeriodValue.open);
-    const close = parseFloat(timePeriodValue.close);
+      const normalizedX = useMemo(
+        () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+        [x, drawingArea.x, drawingArea.width],
+      );
 
-    const bullish = open < close;
-    const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
-    const openY = yScale?.(open) ?? 0;
-    const closeY = yScale?.(close) ?? 0;
+      const transition: Transition = useMemo(
+        () => ({
+          type: 'tween',
+          duration: 0.325,
+          delay: normalizedX * staggerDelay,
+        }),
+        [normalizedX],
+      );
 
-    const bodyHeight = Math.abs(openY - closeY);
-    const bodyY = openY < closeY ? openY : closeY;
+      const fadeTransition: Transition = { duration: 0.1, ease: 'easeOut' };
 
-    return (
-      <motion.g
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 12 }}
-        transition={transition}
-      >
-        <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
-        <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-      </motion.g>
-    );
-  });
+      const wickX = x + width / 2;
+
+      const timePeriodValue = stockData[dataX as number];
+
+      const open = parseFloat(timePeriodValue.open);
+      const close = parseFloat(timePeriodValue.close);
+
+      const bullish = open < close;
+      const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+      const openY = yScale?.(open) ?? 0;
+      const closeY = yScale?.(close) ?? 0;
+
+      const bodyHeight = Math.abs(openY - closeY);
+      const bodyY = openY < closeY ? openY : closeY;
+
+      const candlestick = (
+        <motion.g
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 12 }}
+          transition={transition}
+        >
+          <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
+          <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+        </motion.g>
+      );
+
+      if (fadeOnHighlight) {
+        return (
+          <motion.g animate={{ opacity: highlightOpacity }} initial={false} transition={fadeTransition}>
+            {candlestick}
+          </motion.g>
+        );
+      }
+
+      return candlestick;
+    },
+  );
 
   const formatPrice = React.useCallback((price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -350,21 +375,28 @@ const Candlesticks = () => {
     [stockData],
   );
 
-  // Memoize the update function to avoid recreation on each render
   const updateInfoText = React.useCallback(
-    (index: number | undefined) => {
+    (items: HighlightedItem[]) => {
       if (!infoTextRef.current) return;
 
+      const fallbackText = formatPrice(parseFloat(stockData[stockData.length - 1].close));
+
+      if (items.length === 0) {
+        infoTextRef.current.textContent = fallbackText;
+        selectedIndexRef.current = undefined;
+        return;
+      }
+
+      const index = items[0]?.dataIndex;
       const text =
-        index !== undefined
+        typeof index === 'number' && index >= 0 && index < stockData.length
           ? `Open: ${formatPrice(parseFloat(stockData[index].open))}, Close: ${formatPrice(
               parseFloat(stockData[index].close),
             )}, Volume: ${formatVolume(stockData[index].volume)}`
-          : formatPrice(parseFloat(stockData[stockData.length - 1].close));
+          : fallbackText;
 
-      // Direct DOM manipulation - no React re-render
       infoTextRef.current.textContent = text;
-      selectedIndexRef.current = index;
+      selectedIndexRef.current = typeof index === 'number' ? index : undefined;
     },
     [stockData, formatPrice, formatVolume],
   );
@@ -374,7 +406,9 @@ const Candlesticks = () => {
 
   // Update text when stockData changes (on timePeriod change)
   React.useEffect(() => {
-    updateInfoText(selectedIndexRef.current);
+    updateInfoText(
+      selectedIndexRef.current !== undefined ? [{ dataIndex: selectedIndexRef.current }] : [],
+    );
   }, [stockData, updateInfoText]);
 
   const infoTextId = useId();
@@ -385,7 +419,8 @@ const Candlesticks = () => {
         <span ref={infoTextRef}>{initialInfo}</span>
       </Text>
       <BarChart
-        enableScrubbing
+        enableHighlighting
+        fadeOnHighlight
         showXAxis
         showYAxis
         BarComponent={CandlestickBarComponent}
@@ -393,7 +428,7 @@ const Candlesticks = () => {
         aria-labelledby={infoTextId}
         borderRadius={0}
         height={400}
-        onScrubberPositionChange={updateInfoText}
+        onHighlightChange={updateInfoText}
         series={[
           {
             id: 'stock-prices',
@@ -410,14 +445,7 @@ const Candlesticks = () => {
           showGrid: true,
           GridLineComponent: ThinSolidLine,
         }}
-      >
-        <Scrubber
-          hideOverlay
-          LineComponent={BandwidthHighlight}
-          lineStroke="var(--color-fgMuted)"
-          seriesIds={[]}
-        />
-      </BarChart>
+      />
       <PeriodSelector
         activeTab={timePeriod}
         justifyContent="flex-start"

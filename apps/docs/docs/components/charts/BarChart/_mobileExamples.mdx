@@ -1033,6 +1033,10 @@ function Candlesticks() {
     [stockData],
   );
 
+  const onHighlightChange = useCallback((items) => {
+    setCurrentIndex(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <Text aria-live="polite" font="headline" id={infoTextId}>
@@ -1047,7 +1051,7 @@ function Candlesticks() {
         borderRadius={0}
         height={150}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        onHighlightChange={(items) => setCurrentIndex(items[0]?.dataIndex ?? undefined)}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'stock-prices',

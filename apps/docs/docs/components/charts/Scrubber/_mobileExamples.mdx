@@ -2,11 +2,11 @@
 
 Scrubber can be used to provide horizontal interaction with a chart. As you drag over the chart, you will see a line and scrubber beacon following.
 
-The Scrubber component is optional. Charts like [BarChart](/components/charts/BarChart) can use `enableScrubbing` with `getScrubberAccessibilityLabel` for screen reader accessibility without adding Scrubber—invisible tap targets allow users to navigate segments. Add Scrubber when you want the visual beacon, overlay, and labels for touch users.
+The Scrubber component is optional. Charts like [BarChart](/components/charts/BarChart) can use `enableHighlighting` with `accessibilityLabel` for screen reader accessibility without adding Scrubber—invisible tap targets allow users to navigate segments. Add Scrubber when you want the visual beacon, overlay, and labels for touch users.
 
 ```jsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={150}
   series={[
     {
@@ -29,7 +29,7 @@ In `layout="horizontal"`, beacon labels are intentionally hidden to avoid overla
 
 ```jsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={150}
   series={[
     {
@@ -53,7 +53,7 @@ setting `label` on Scrubber displays a label above the scrubber line.
 
 ```tsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={150}
   series={[
     {
@@ -76,7 +76,7 @@ Set `idlePulse` to cause scrubber beacons to pulse when the user is not actively
 
 ```jsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={250}
   series={[
     {
@@ -104,7 +104,7 @@ function ImperativeHandle() {
   return (
     <VStack gap={2}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         height={150}
         series={[
           {
@@ -145,7 +145,7 @@ function CustomStrokeColor() {
   return (
     <Box background={backgroundColor} borderRadius="lg" padding={4}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         height={150}
         series={[
@@ -241,7 +241,7 @@ function OutlineBeacon() {
 
     return (
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showYAxis
         height={150}
@@ -313,7 +313,7 @@ function CustomBeaconLabel() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       areaType="dotted"
@@ -358,7 +358,7 @@ You can use `hideBeaconLabels` to hide beacon labels, while still being able to 
 
 ```tsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   legend
   height={200}
   series={[
@@ -386,7 +386,7 @@ Using `labelElevated` will elevate the Scrubber's reference line label with a sh
 
 ```tsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={200}
   series={[
     {
@@ -425,7 +425,7 @@ function CustomLabelComponent() {
   });
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={200}
       inset={{ top: 16, bottom: 64 }}
@@ -507,7 +507,7 @@ function TwoLineCenteredLabel() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={200}
       inset={{ top: 64 }}
@@ -540,7 +540,7 @@ function CustomLabelFonts() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       height={200}
@@ -580,7 +580,7 @@ Use `labelBoundsInset` to prevent the scrubber line label from getting too close
 function WithoutBoundsExample() {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={150}
       inset={{ left: 0, right: 0 }}
@@ -601,7 +601,7 @@ function WithoutBoundsExample() {
 function WithBoundsExample() {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={150}
       inset={{ left: 0, right: 0 }}
@@ -627,7 +627,7 @@ You can use `LineComponent` to customize Scrubber's line. In this case, as a use
 
 ```jsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={150}
   series={[
     {
@@ -671,7 +671,7 @@ function HiddenScrubberWhenIdle() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={150}
       series={[
@@ -694,7 +694,7 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
 
 ```jsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   ...
 >
   <Scrubber hideOverlay />
@@ -801,7 +801,7 @@ function PercentageBeaconLabels() {
   return (
     <Box borderRadius={300} padding={2} style={{ backgroundColor: background }}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         areaType="dotted"
         height={200}
@@ -942,7 +942,7 @@ function MatchupBeaconLabels() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       areaType="dotted"
       height={150}

@@ -52,6 +52,7 @@ import {
   type AxisBounds,
   buildTransition,
   defaultTransition,
+  type HighlightedItem,
   projectPointWithSerializableScale,
   type Transition,
   unwrapAnimatedValue,
@@ -92,7 +93,7 @@ function MultipleLine() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -144,7 +145,7 @@ function DataFormat() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       points
       showArea
       showXAxis
@@ -236,7 +237,7 @@ function LiveUpdates() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -283,7 +284,7 @@ function MissingData() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       points
       showArea
       showXAxis
@@ -332,6 +333,10 @@ function Interaction() {
     [data],
   );
 
+  const onHighlightChange = useCallback((items: HighlightedItem[]) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <Text font="label1">
@@ -340,12 +345,12 @@ function Interaction() {
           : 'Not scrubbing'}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
-        onScrubberPositionChange={setScrubberPosition}
+        onHighlightChange={onHighlightChange}
         series={[{ id: 'prices', data }]}
       >
         <Scrubber />
@@ -501,7 +506,7 @@ function Transitions() {
 
     return (
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
@@ -551,7 +556,7 @@ function BasicAccessible() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -731,7 +736,7 @@ function GainLossChart() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
@@ -815,7 +820,7 @@ function StylingScrubber() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -883,7 +888,6 @@ function Compact() {
     <Box style={{ padding: 1 }}>
       <LineChart
         {...dimensions}
-        enableScrubbing={false}
         inset={0}
         series={[
           {
@@ -1085,7 +1089,7 @@ function AssetPriceWithDottedArea() {
           title={<Text font="title1">Bitcoin</Text>}
         />
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
@@ -1233,10 +1237,10 @@ const PerformanceHeader = memo(
 const PerformanceChart = memo(
   ({
     timePeriod,
-    onScrubberPositionChange,
+    onHighlightChange,
   }: {
     timePeriod: TabValue;
-    onScrubberPositionChange: (position: number | undefined) => void;
+    onHighlightChange: (items: HighlightedItem[]) => void;
   }) => {
     const theme = useTheme();
 
@@ -1300,7 +1304,7 @@ const PerformanceChart = memo(
 
     return (
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showYAxis
         accessibilityLabel={chartAccessibilityLabel}
@@ -1308,7 +1312,7 @@ const PerformanceChart = memo(
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
-        onScrubberPositionChange={onScrubberPositionChange}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'high',
@@ -1367,13 +1371,17 @@ function Performance() {
     [tabs],
   );
 
+  const onHighlightChange = useCallback((items: HighlightedItem[]) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2} style={{ marginLeft: -8, marginRight: -8 }}>
       <PerformanceHeader
         scrubberPosition={scrubberPosition}
         sparklineTimePeriodDataValues={sparklineTimePeriodDataValues}
       />
-      <PerformanceChart onScrubberPositionChange={setScrubberPosition} timePeriod={timePeriod} />
+      <PerformanceChart onHighlightChange={onHighlightChange} timePeriod={timePeriod} />
       <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
     </VStack>
   );
@@ -1557,7 +1565,7 @@ function MonotoneAssetPrice() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -1622,7 +1630,7 @@ function ServiceAvailability() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
@@ -1799,7 +1807,7 @@ function ForecastAssetPrice() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
@@ -2143,7 +2151,7 @@ function ExampleNavigator() {
         title: 'Styling Reference Lines',
         component: (
           <LineChart
-            enableScrubbing
+            enableHighlighting
             showArea
             accessibilityLabel="Price chart with reference line. 14 data points. Swipe to navigate."
             getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}

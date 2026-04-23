@@ -355,7 +355,7 @@ const StartPriceReferenceLine = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       areaType="dotted"
       height={300}

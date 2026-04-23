@@ -515,20 +515,20 @@ describe('CartesianChart', () => {
       expect(labelledBy).toBe('chart-heading');
     });
 
-    it('adds keyboard focus tabIndex when enableScrubbing is true', () => {
+    it('adds keyboard focus tabIndex when enableHighlighting is true', () => {
       const root = renderCartesianChart({
         testID: 'cartesian-scrubbing-focus',
-        chartProps: { enableScrubbing: true },
+        chartProps: { enableHighlighting: true },
       });
       const svg = root.querySelector('svg');
       expect(svg).toBeInTheDocument();
       expect(svg?.getAttribute('tabindex')).toBe('0');
     });
 
-    it('does not add keyboard focus tabIndex when enableScrubbing is false', () => {
+    it('does not add keyboard focus tabIndex when enableHighlighting is false', () => {
       const root = renderCartesianChart({
         testID: 'cartesian-no-scrubbing-focus',
-        chartProps: { enableScrubbing: false },
+        chartProps: { enableHighlighting: false },
       });
       const svg = root.querySelector('svg');
       expect(svg).toBeInTheDocument();
@@ -682,7 +682,7 @@ describe('CartesianChart', () => {
       const svg = renderCartesianChart({
         testID: 'cartesian-scrubber-default',
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>
@@ -700,7 +700,7 @@ describe('CartesianChart', () => {
       const svg = renderCartesianChart({
         testID: 'cartesian-scrubber-no-overlay',
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>
@@ -717,7 +717,7 @@ describe('CartesianChart', () => {
         testID: 'cartesian-scrubber-series-filter',
         series: multiSeries,
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>
@@ -737,7 +737,7 @@ describe('CartesianChart', () => {
         testID: 'cartesian-scrubber-all-series',
         series: multiSeries,
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>
