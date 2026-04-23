@@ -42,10 +42,6 @@ figma.connect(
         true: 'Helper text',
         false: undefined,
       }),
-      subdetail: figma.boolean('show subdetail', {
-        true: 'SubDetail',
-        false: undefined,
-      }),
     },
     example: (props) => <ListCell {...props} />,
   },
