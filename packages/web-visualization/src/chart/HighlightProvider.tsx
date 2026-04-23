@@ -1,69 +1,15 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { HighlightedItem, HighlightScope } from './utils/highlight';
 import { useCartesianChartContext } from './ChartProvider';
 import {
   type ChartScaleFunction,
+  HighlightContext,
+  type HighlightContextValue,
   isCategoricalScale,
   ScrubberContext,
   type ScrubberContextValue,
 } from './utils';
-
-/**
- * Context value for chart highlight state.
- */
-export type HighlightContextValue = {
-  /**
-   * Whether highlighting is enabled.
-   */
-  enabled: boolean;
-  /**
-   * The highlight scope configuration.
-   */
-  scope: HighlightScope;
-  /**
-   * The currently highlighted items.
-   */
-  highlight: HighlightedItem[];
-  /**
-   * Callback to replace the entire highlight state.
-   * Used by keyboard navigation and external consumers.
-   */
-  setHighlight: (items: HighlightedItem[]) => void;
-  /**
-   * Merge a partial update into a specific pointer's highlight entry.
-   * Only updates the fields provided, leaving other fields untouched.
-   * Used by bar elements to set/clear seriesId on pointer enter/leave.
-   */
-  updatePointerHighlight: (pointerId: number, partial: Partial<HighlightedItem>) => void;
-  /**
-   * Remove a specific pointer's entry from highlight state.
-   * Used when a pointer leaves the chart or is released.
-   */
-  removePointer: (pointerId: number) => void;
-};
-
-const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
-
-/**
- * Hook to access the highlight context.
- * @throws Error if used outside of a HighlightProvider
- */
-export const useHighlightContext = (): HighlightContextValue => {
-  const context = useContext(HighlightContext);
-  if (!context) {
-    throw new Error('useHighlightContext must be used within a HighlightProvider');
-  }
-  return context;
-};
 
 /**
  * Props for configuring chart highlight behavior.

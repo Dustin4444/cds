@@ -4,7 +4,6 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { useHighlightContext } from '../HighlightProvider';
 import { Path } from '../Path';
 import {
   defaultBarEnterOpacityTransition,
@@ -13,6 +12,7 @@ import {
   withStaggerDelayTransition,
 } from '../utils';
 import { type BarTransition, getNormalizedStagger } from '../utils/bar';
+import { useHighlightContext } from '../utils/context';
 import {
   buildTransition,
   defaultTransition,

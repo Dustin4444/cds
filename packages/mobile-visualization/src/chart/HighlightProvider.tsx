@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
@@ -13,60 +13,13 @@ import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 import type { BarBounds, HighlightedItem, HighlightScope } from './utils/highlight';
 import { getPointOnSerializableScale } from './utils/point';
 import { useCartesianChartContext } from './ChartProvider';
-import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from './utils';
-
-/**
- * Context value for chart highlighting state.
- */
-export type HighlightContextValue = {
-  /**
-   * Whether highlighting is enabled.
-   */
-  enabled: boolean;
-  /**
-   * The highlight scope configuration.
-   */
-  scope: HighlightScope;
-  /**
-   * The current highlighted item(s) during interaction.
-   */
-  highlight: SharedValue<HighlightedItem[]>;
-  /**
-   * Function to programmatically set the highlighted items.
-   */
-  setHighlight: (items: HighlightedItem[]) => void;
-  /**
-   * Merge a partial update into a specific pointer's highlight entry.
-   * Only updates the fields provided, leaving other fields untouched.
-   */
-  updatePointerHighlight: (pointerId: number, partial: Partial<HighlightedItem>) => void;
-  /**
-   * Remove a specific pointer's entry from highlight state.
-   */
-  removePointer: (pointerId: number) => void;
-  /**
-   * Register a bar element for hit testing.
-   */
-  registerBar: (bounds: BarBounds) => void;
-  /**
-   * Unregister a bar element.
-   */
-  unregisterBar: (seriesId: string, dataIndex: number) => void;
-};
-
-export const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
-
-/**
- * Hook to access the highlight context.
- * @throws Error if used outside of a HighlightProvider
- */
-export const useHighlightContext = (): HighlightContextValue => {
-  const context = useContext(HighlightContext);
-  if (!context) {
-    throw new Error('useHighlightContext must be used within a HighlightProvider');
-  }
-  return context;
-};
+import {
+  HighlightContext,
+  type HighlightContextValue,
+  invertSerializableScale,
+  ScrubberContext,
+  type ScrubberContextValue,
+} from './utils';
 
 export type HighlightProps = {
   /**

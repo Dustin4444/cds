@@ -8,9 +8,8 @@ import * as React from 'react';
 import type ReactReconciler from 'react-reconciler';
 import { ThemeContext } from '@coinbase/cds-mobile/system/ThemeProvider';
 
-import { ScrubberContext } from './utils/context';
+import { HighlightContext, ScrubberContext } from './utils/context';
 import { CartesianChartContext } from './ChartProvider';
-import { HighlightContext } from './HighlightProvider';
 
 /**
  * Whitelist of contexts that should be bridged to the Skia canvas.

@@ -3,7 +3,6 @@ import { cx } from '@coinbase/cds-web';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { useHighlightContext } from '../HighlightProvider';
 import { Path } from '../Path';
 import {
   defaultBarEnterOpacityTransition,
@@ -14,6 +13,7 @@ import {
   withStaggerDelayTransition,
 } from '../utils';
 import { type BarTransition, getNormalizedStagger } from '../utils/bar';
+import { useHighlightContext } from '../utils/context';
 
 import type { BarComponentProps } from './Bar';
 

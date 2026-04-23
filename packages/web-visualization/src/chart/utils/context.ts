@@ -3,6 +3,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 
 import type { CartesianAxisConfig } from './axis';
 import type { Series } from './chart';
+import type { HighlightedItem, HighlightScope } from './highlight';
 import type { ChartScaleFunction } from './scale';
 
 /**
@@ -111,7 +112,7 @@ export type CartesianChartContextValue = ChartContextValue & {
 /**
  * Context value for scrubber interaction state and position.
  *
- * @deprecated Use `useHighlightContext` and `HighlightContext` from `HighlightProvider`, and enable chart interaction with `enableHighlighting` instead of `enableScrubbing`. This will be removed in a future major release.
+ * @deprecated Use `useHighlightContext` and `HighlightContext`, and enable chart interaction with `enableHighlighting` instead of `enableScrubbing`. This will be removed in a future major release.
  * @deprecationExpectedRemoval v4
  */
 export type ScrubberContextValue = {
@@ -132,19 +133,64 @@ export type ScrubberContextValue = {
 };
 
 /**
- * @deprecated Use `HighlightContext` from `HighlightProvider` instead. Prefer `useHighlightContext` and `enableHighlighting` over this context and `enableScrubbing`. This will be removed in a future major release.
+ * @deprecated Use `HighlightContext` instead. Prefer `useHighlightContext` and `enableHighlighting` over this context and `enableScrubbing`. This will be removed in a future major release.
  * @deprecationExpectedRemoval v4
  */
 export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);
 
 /**
- * @deprecated Use `useHighlightContext` from `HighlightProvider` instead. Prefer `enableHighlighting` over `enableScrubbing` on charts. This will be removed in a future major release.
+ * @deprecated Use `useHighlightContext` instead. Prefer `enableHighlighting` over `enableScrubbing` on charts. This will be removed in a future major release.
  * @deprecationExpectedRemoval v4
  */
 export const useScrubberContext = (): ScrubberContextValue => {
   const context = useContext(ScrubberContext);
   if (!context) {
     throw new Error('useScrubberContext must be used within a Chart component');
+  }
+  return context;
+};
+
+/**
+ * Context value for chart highlight state.
+ */
+export type HighlightContextValue = {
+  /**
+   * Whether highlighting is enabled.
+   */
+  enabled: boolean;
+  /**
+   * The highlight scope configuration.
+   */
+  scope: HighlightScope;
+  /**
+   * The currently highlighted items.
+   */
+  highlight: HighlightedItem[];
+  /**
+   * Callback to replace the entire highlight state.
+   * Used by keyboard navigation and external consumers.
+   */
+  setHighlight: (items: HighlightedItem[]) => void;
+  /**
+   * Update a highlighted item for a specific pointer.
+   */
+  updatePointerHighlight: (pointerId: number, item: HighlightedItem) => void;
+  /**
+   * Remove a specific pointer's entry from highlight state.
+   */
+  removePointer: (pointerId: number) => void;
+};
+
+export const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
+
+/**
+ * Hook to access the highlight context.
+ * @throws Error if used outside of a HighlightProvider
+ */
+export const useHighlightContext = (): HighlightContextValue => {
+  const context = useContext(HighlightContext);
+  if (!context) {
+    throw new Error('useHighlightContext must be used within a HighlightProvider');
   }
   return context;
 };
