@@ -482,10 +482,7 @@ function Performance() {
         scrubberPosition={scrubberPosition}
         sparklineTimePeriodDataValues={sparklineTimePeriodDataValues}
       />
-      <PerformanceChart
-        onHighlightChange={onHighlightChange}
-        timePeriod={timePeriod}
-      />
+      <PerformanceChart onHighlightChange={onHighlightChange} timePeriod={timePeriod} />
       <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
     </VStack>
   );
@@ -1812,17 +1809,118 @@ function ServiceAvailability() {
 
 ### Forecast Asset Price
 
-You can combine multiple lines within a series to change styles dynamically.
+You can combine multiple lines within a series to change styles dynamically. You can also control highlight state to keep the scrubber on the forecast boundary at rest and follows the pointer while scrubbing.
 
 ```tsx
+import type { HighlightedItem } from '@coinbase/cds-mobile-visualization/chart';
+
+const MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH = 3;
+const MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET = MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH;
+const MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX = 6;
+const MOBILE_FORECAST_EXAMPLE_CHART_DATA: number[] = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
+
+const MobileForecastAssetPriceHistoricalLine = memo((props: SolidLineProps) => {
+  const { drawingArea, getXScale } = useCartesianChartContext();
+  const xScale = getXScale();
+
+  const historicalClipPath = useMemo(() => {
+    if (!xScale || !drawingArea) return null;
+
+    const currentX = xScale(MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX);
+    if (currentX === undefined) return null;
+
+    const clip = Skia.Path.Make();
+    clip.addRect({
+      x: drawingArea.x - MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET,
+      y: drawingArea.y - MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET,
+      width: currentX + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET - drawingArea.x,
+      height: drawingArea.height + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET * 2,
+    });
+    return clip;
+  }, [xScale, drawingArea]);
+
+  if (!historicalClipPath) return null;
+
+  return (
+    <Group clip={historicalClipPath}>
+      <SolidLine strokeWidth={MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH} {...props} />
+    </Group>
+  );
+});
+MobileForecastAssetPriceHistoricalLine.displayName = 'MobileForecastAssetPriceHistoricalLine';
+
+const MobileForecastAssetPriceFutureLine = memo((props: DottedLineProps) => {
+  const { drawingArea, getXScale } = useCartesianChartContext();
+  const xScale = getXScale();
+
+  const forecastClipPath = useMemo(() => {
+    if (!xScale || !drawingArea) return null;
+
+    const currentX = xScale(MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX);
+    if (currentX === undefined) return null;
+
+    const clip = Skia.Path.Make();
+    clip.addRect({
+      x: currentX,
+      y: drawingArea.y - MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET,
+      width: drawingArea.x + drawingArea.width - currentX + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET * 2,
+      height: drawingArea.height + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET * 2,
+    });
+    return clip;
+  }, [xScale, drawingArea]);
+
+  if (!forecastClipPath) return null;
+
+  return (
+    <Group clip={forecastClipPath}>
+      <DottedLine
+        dashIntervals={[0, MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH * 2]}
+        strokeWidth={MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH}
+        {...props}
+      />
+    </Group>
+  );
+});
+MobileForecastAssetPriceFutureLine.displayName = 'MobileForecastAssetPriceFutureLine';
+
+const MobileForecastScrubberWrap = memo(function MobileForecastScrubberWrap({
+  hideLine,
+}: {
+  hideLine: boolean;
+}) {
+  const fadeInOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    fadeInOpacity.value = withDelay(350, withTiming(1, { duration: 150 }));
+  }, [fadeInOpacity]);
+
+  return (
+    <Group opacity={fadeInOpacity}>
+      <Scrubber hideLine={hideLine} hideOverlay />
+    </Group>
+  );
+});
+
 function ForecastAssetPrice() {
   const startYear = 2020;
-  const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
-  const currentIndex = 6;
+  const [userHighlight, setUserHighlight] = useState<HighlightedItem[]>([]);
 
-  const strokeWidth = 3;
-  // To prevent cutting off the edge of our lines
-  const clipOffset = strokeWidth;
+  const defaultHighlight = useMemo(
+    () => [{ dataIndex: MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX } satisfies HighlightedItem],
+    [],
+  );
+  const effectiveHighlight = useMemo(
+    () => (userHighlight.length > 0 ? userHighlight : defaultHighlight),
+    [userHighlight, defaultHighlight],
+  );
+  const alwaysHideScrubberLine = false;
+  const isUserScrubbing = userHighlight.length > 0;
+  const hideScrubberLine = alwaysHideScrubberLine || !isUserScrubbing;
+
+  const series = useMemo(
+    () => [{ id: 'price', data: MOBILE_FORECAST_EXAMPLE_CHART_DATA, color: assets.btc.color }],
+    [],
+  );
 
   const axisFormatter = useCallback(
     (dataIndex: number) => {
@@ -1831,115 +1929,27 @@ function ForecastAssetPrice() {
     [startYear],
   );
 
-  const HistoricalLineComponent = memo((props: SolidLineProps) => {
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    const historicalClipPath = useMemo(() => {
-      if (!xScale || !drawingArea) return null;
-
-      const currentX = xScale(currentIndex);
-      if (currentX === undefined) return null;
-
-      // Create clip path for historical data (left side)
-      const clip = Skia.Path.Make();
-      clip.addRect({
-        x: drawingArea.x - clipOffset,
-        y: drawingArea.y - clipOffset,
-        width: currentX + clipOffset - drawingArea.x,
-        height: drawingArea.height + clipOffset * 2,
-      });
-      return clip;
-    }, [xScale, drawingArea]);
-
-    if (!historicalClipPath) return null;
-
-    return (
-      <Group clip={historicalClipPath}>
-        <SolidLine strokeWidth={strokeWidth} {...props} />
-      </Group>
-    );
-  });
-
-  // Since the solid and dotted line have different curves,
-  // we need two separate line components. Otherwise we could
-  // have one line component with SolidLine and DottedLine inside
-  // of it and two clipPaths.
-  const ForecastLineComponent = memo((props: DottedLineProps) => {
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    const forecastClipPath = useMemo(() => {
-      if (!xScale || !drawingArea) return null;
-
-      const currentX = xScale(currentIndex);
-      if (currentX === undefined) return null;
-
-      // Create clip path for forecast data (right side)
-      const clip = Skia.Path.Make();
-      clip.addRect({
-        x: currentX,
-        y: drawingArea.y - clipOffset,
-        width: drawingArea.x + drawingArea.width - currentX + clipOffset * 2,
-        height: drawingArea.height + clipOffset * 2,
-      });
-      return clip;
-    }, [xScale, drawingArea]);
-
-    if (!forecastClipPath) return null;
-
-    return (
-      <Group clip={forecastClipPath}>
-        <DottedLine dashIntervals={[0, strokeWidth * 2]} strokeWidth={strokeWidth} {...props} />
-      </Group>
-    );
-  });
-  const CustomScrubber = memo(() => {
-    const { scrubberPosition } = useScrubberContext();
-
-    const idleScrubberOpacity = useDerivedValue(
-      () => (scrubberPosition.value === undefined ? 1 : 0),
-      [scrubberPosition],
-    );
-    const scrubberOpacity = useDerivedValue(
-      () => (scrubberPosition.value !== undefined ? 1 : 0),
-      [scrubberPosition],
-    );
-
-    // Fade in animation for the Scrubber
-    const fadeInOpacity = useSharedValue(0);
-
-    useEffect(() => {
-      fadeInOpacity.value = withDelay(350, withTiming(1, { duration: 150 }));
-    }, [fadeInOpacity]);
-
-    return (
-      <Group opacity={fadeInOpacity}>
-        <Group opacity={scrubberOpacity}>
-          <Scrubber hideOverlay />
-        </Group>
-        <Group opacity={idleScrubberOpacity}>
-          <DefaultScrubberBeacon
-            isIdle
-            dataX={currentIndex}
-            dataY={data[currentIndex]}
-            seriesId="price"
-          />
-        </Group>
-      </Group>
-    );
-  });
-
   return (
     <CartesianChart
       enableHighlighting
+      highlight={effectiveHighlight}
+      onHighlightChange={setUserHighlight}
       height={200}
-      series={[{ id: 'price', data, color: assets.btc.color }]}
+      series={series}
     >
-      <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
-      <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
+      <Line
+        LineComponent={MobileForecastAssetPriceHistoricalLine}
+        curve="linear"
+        seriesId="price"
+      />
+      <Line
+        LineComponent={MobileForecastAssetPriceFutureLine}
+        curve="monotone"
+        seriesId="price"
+        type="dotted"
+      />
       <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
-      <CustomScrubber />
+      <MobileForecastScrubberWrap hideLine={hideScrubberLine} />
     </CartesianChart>
   );
 }
