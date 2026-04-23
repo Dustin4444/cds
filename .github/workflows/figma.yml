@@ -111,6 +111,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
       - name: Check for Code Connect Files
         run: yarn tsx ./tools/ci/validators/validateFigmaCodeConnect.ts
 
