@@ -1,0 +1,58 @@
+import { Stepper } from '@coinbase/cds-web/stepper';
+import { figma } from '@figma/code-connect';
+
+const FIGMA_URL =
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-8503&m=dev';
+
+const steps = [
+  { id: 'step-1', label: 'Account' },
+  { id: 'step-2', label: 'Identity' },
+  { id: 'step-3', label: 'Review' },
+];
+
+figma.connect(Stepper, FIGMA_URL, {
+  variant: { type: 'stepper', platform: '🖥️ desktop' },
+  imports: ["import { Stepper } from '@coinbase/cds-web/stepper'"],
+  props: {
+    title: figma.string('string'),
+  },
+  example: ({ title }) => (
+    <Stepper
+      activeStepId="step-2"
+      direction="horizontal"
+      steps={steps.map((s) => ({ ...s, label: title }))}
+    />
+  ),
+});
+
+figma.connect(Stepper, FIGMA_URL, {
+  variant: { type: 'stepper', platform: '📱 mobile' },
+  imports: ["import { Stepper } from '@coinbase/cds-web/stepper'"],
+  props: {
+    title: figma.boolean('showTitle', {
+      true: figma.string('string'),
+      false: undefined,
+    }),
+  },
+  example: ({ title }) => (
+    <Stepper
+      activeStepId="step-2"
+      direction="horizontal"
+      steps={steps.map((s) => ({ ...s, label: title }))}
+    />
+  ),
+});
+
+figma.connect(Stepper, FIGMA_URL, {
+  variant: { type: 'progressor', platform: '📱 mobile' },
+  imports: ["import { Stepper } from '@coinbase/cds-web/stepper'"],
+  example: () => (
+    <Stepper
+      StepperHeaderComponent={null}
+      StepperLabelComponent={null}
+      activeStepId="step-2"
+      direction="horizontal"
+      steps={steps}
+    />
+  ),
+});
