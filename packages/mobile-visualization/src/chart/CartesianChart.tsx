@@ -209,14 +209,8 @@ export const CartesianChart = memo(
         children,
         layout = 'vertical',
         animate = true,
-        // Highlight props
-        enableHighlighting,
-        highlightScope = defaultCartesianChartHighlightScope,
-        highlight,
-        onHighlightChange,
         accessibilityMode,
         accessibilityChunkCount,
-        // Legacy scrubber props
         enableScrubbing,
         getScrubberAccessibilityLabel,
         scrubberAccessibilityLabelStep,
@@ -224,6 +218,10 @@ export const CartesianChart = memo(
         yAxis: yAxisConfigProp,
         inset,
         onScrubberPositionChange,
+        enableHighlighting = enableScrubbing,
+        highlightScope = defaultCartesianChartHighlightScope,
+        highlight,
+        onHighlightChange,
         legend,
         legendPosition = 'bottom',
         legendAccessibilityLabel,
@@ -613,13 +611,6 @@ export const CartesianChart = memo(
         return [style, styles?.root];
       }, [style, styles?.root]);
 
-      // Resolve enableHighlighting (backwards compatibility with enableScrubbing).
-      const resolvedEnableHighlighting = useMemo(() => {
-        if (enableHighlighting !== undefined) return enableHighlighting;
-        if (enableScrubbing !== undefined) return enableScrubbing;
-        return false;
-      }, [enableHighlighting, enableScrubbing]);
-
       // Wrap onHighlightChange to also call legacy onScrubberPositionChange.
       const handleHighlightChange = useCallback(
         (items: HighlightedItem[]) => {
@@ -666,7 +657,7 @@ export const CartesianChart = memo(
             accessibilityLabel={accessibilityLabel}
             accessibilityMode={accessibilityMode}
             allowOverflowGestures={allowOverflowGestures}
-            enableHighlighting={resolvedEnableHighlighting}
+            enableHighlighting={enableHighlighting}
             highlight={highlight}
             highlightScope={highlightScope}
             onHighlightChange={handleHighlightChange}

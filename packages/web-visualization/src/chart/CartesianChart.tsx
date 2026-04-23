@@ -165,17 +165,15 @@ export const CartesianChart = memo(
         children,
         layout = 'vertical',
         animate = true,
-        // Highlight props
-        enableHighlighting,
-        highlightScope = defaultCartesianChartHighlightScope,
-        highlight,
-        onHighlightChange,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
-        // Legacy scrubber props
         enableScrubbing,
         onScrubberPositionChange,
+        enableHighlighting = enableScrubbing,
+        highlightScope = defaultCartesianChartHighlightScope,
+        highlight,
+        onHighlightChange,
         legend,
         legendPosition = 'bottom',
         legendAccessibilityLabel,
@@ -511,13 +509,6 @@ export const CartesianChart = memo(
       );
       const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
 
-      // Resolve enableHighlighting (backwards compatibility with enableScrubbing).
-      const resolvedEnableHighlighting = useMemo(() => {
-        if (enableHighlighting !== undefined) return enableHighlighting;
-        if (enableScrubbing !== undefined) return enableScrubbing;
-        return false;
-      }, [enableHighlighting, enableScrubbing]);
-
       // Wrap onHighlightChange to also call legacy onScrubberPositionChange.
       const handleHighlightChange = useCallback(
         (items: HighlightedItem[]) => {
@@ -584,10 +575,10 @@ export const CartesianChart = memo(
             }
             aria-live="polite"
             as="svg"
-            className={cx(resolvedEnableHighlighting && focusStylesCss, classNames?.chart)}
+            className={cx(enableHighlighting && focusStylesCss, classNames?.chart)}
             height="100%"
             style={styles?.chart}
-            tabIndex={resolvedEnableHighlighting ? 0 : undefined}
+            tabIndex={enableHighlighting ? 0 : undefined}
             width="100%"
           >
             {children}
@@ -599,7 +590,7 @@ export const CartesianChart = memo(
         <CartesianChartProvider value={contextValue}>
           <HighlightProvider
             accessibilityLabel={accessibilityLabel}
-            enableHighlighting={resolvedEnableHighlighting}
+            enableHighlighting={enableHighlighting}
             highlight={highlight}
             highlightScope={highlightScope}
             onHighlightChange={handleHighlightChange}
