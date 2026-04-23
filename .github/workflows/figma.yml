@@ -106,13 +106,18 @@ jobs:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
         run: yarn code-connect:publish
 
+  validate-figma-code-connect:
+    name: Check for Code Connect Files
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Check for Code Connect Files
+        run: yarn tsx ./tools/ci/validators/validateFigmaCodeConnect.ts
+
   audit-figma-integrations:
     name: Audit Figma Integrations
     runs-on: ubuntu-latest
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.ref_name == 'master' && github.event_name == 'push') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name == 'workflow_dispatch' || (github.ref_name == 'master' && github.event_name == 'push')
     permissions:
       contents: read
       pages: write
@@ -130,28 +135,17 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Run Audit
-        id: audit
-        continue-on-error: true
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-        run: yarn audit-figma-integration --ci --html
+        run: yarn audit-figma-integration --html
       - name: Prepare Pages directory
-        if: github.ref_name == 'master'
         run: find temp/ -name "figma-audit-*.html" -exec cp {} temp/index.html \;
       - name: Setup Pages
-        if: github.ref_name == 'master'
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
       - name: Upload audit report
-        if: github.ref_name == 'master'
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: temp/
       - name: Deploy to GitHub Pages
-        if: github.ref_name == 'master'
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
-      - name: Check audit results
-        if: steps.audit.outcome == 'failure'
-        run: |
-          echo "::error::Figma integration audit found issues. See the job log above for details."
-          exit 1
