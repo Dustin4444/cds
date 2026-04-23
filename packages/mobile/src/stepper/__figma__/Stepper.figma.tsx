@@ -5,26 +5,16 @@ const FIGMA_URL =
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-8503&m=dev';
 
 const steps = [
-  { id: 'step-1', label: 'Account' },
-  { id: 'step-2', label: 'Identity' },
-  { id: 'step-3', label: 'Review' },
+  { id: 'step-1', label: 'Title' },
+  { id: 'step-2', label: 'Title' },
+  { id: 'step-3', label: 'Title' },
 ];
 
 figma.connect(Stepper, FIGMA_URL, {
   variant: { type: 'stepper', platform: '📱 mobile' },
   imports: ["import { Stepper } from '@coinbase/cds-mobile/stepper'"],
-  props: {
-    title: figma.boolean('showTitle', {
-      true: figma.string('string'),
-      false: undefined,
-    }),
-  },
-  example: ({ title }) => (
-    <Stepper
-      activeStepId="step-2"
-      direction="horizontal"
-      steps={steps.map((s) => ({ ...s, label: title }))}
-    />
+  example: () => (
+    <Stepper activeStepId="step-2" direction="horizontal" steps={steps.map((s) => ({ ...s }))} />
   ),
 });
 
@@ -37,7 +27,7 @@ figma.connect(Stepper, FIGMA_URL, {
       StepperLabelComponent={null}
       activeStepId="step-2"
       direction="horizontal"
-      steps={steps}
+      steps={steps.map((s) => ({ ...s }))}
     />
   ),
 });
