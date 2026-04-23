@@ -30,11 +30,13 @@ export type HighlightedItem = {
   /**
    * The data index being highlighted.
    * `null` when interacting but not over a data point.
+   * `undefined` when data index is not enabled in scope.
    */
-  dataIndex: number | null;
+  dataIndex?: number | null;
   /**
    * The series ID being highlighted.
    * `null` when series scope is disabled or not over a specific series.
+   * `undefined` when series is not enabled in scope.
    */
-  seriesId: string | null;
+  seriesId?: string | null;
 };
