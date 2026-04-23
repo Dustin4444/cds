@@ -1,4 +1,3 @@
-import React from 'react';
 import { figma } from '@figma/code-connect';
 
 import { HStack } from '../../layout';
@@ -18,9 +17,11 @@ figma.connect(
         true: figma.children('Search Input (Desktop)'),
         false: undefined,
       }),
-      spacingBottom: figma.boolean('show bottom spacing', {
-        true: undefined,
-        false: 0,
+      paddingX: figma.boolean('show padding', {
+        true: 4,
+      }),
+      paddingBottom: figma.boolean('show bottom spacing', {
+        true: 4,
       }),
       start: figma.boolean('show start', {
         true: figma.instance('↳ start'),
@@ -34,13 +35,14 @@ figma.connect(
         true: figma.string('↳ string'),
         false: undefined,
       }),
-      end: figma.boolean('show start', {
+      end: figma.boolean('show end', {
         true: figma.instance('↳ end'),
         false: undefined,
       }),
     },
     example: ({ searchNode, ...props }) => (
       <HStack>
+        {/* @ts-expect-error figma.boolean return type not compatible with Space */}
         <SectionHeader {...props} />
         {searchNode}
       </HStack>

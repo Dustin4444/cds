@@ -17,13 +17,11 @@ figma.connect(
         true: figma.children('Search Input (Desktop)'),
         false: undefined,
       }),
-      spacingTop: figma.boolean('show bottom spacing', {
-        true: undefined,
-        false: 2,
+      paddingX: figma.boolean('show padding', {
+        true: 4,
       }),
-      spacingVertical: figma.boolean('show bottom spacing', {
-        true: undefined,
-        false: 0,
+      paddingBottom: figma.boolean('show bottom spacing', {
+        true: 4,
       }),
       start: figma.boolean('show start', {
         true: figma.instance('↳ start'),
@@ -37,13 +35,14 @@ figma.connect(
         true: figma.string('↳ string'),
         false: undefined,
       }),
-      end: figma.boolean('show start', {
+      end: figma.boolean('show end', {
         true: figma.instance('↳ end'),
         false: undefined,
       }),
     },
     example: ({ searchNode, ...props }) => (
       <HStack>
+        {/* @ts-expect-error figma.boolean return type not compatible with Space */}
         <SectionHeader {...props} />
         {searchNode}
       </HStack>
