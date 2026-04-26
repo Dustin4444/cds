@@ -1,4 +1,14 @@
-import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  memo,
+  StrictMode,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
@@ -164,6 +174,55 @@ function HorizontalLine() {
         data: dataset.map((d) => d.month),
       }}
     />
+  );
+}
+
+function HorizontalLineGradientImplicitAxis() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+  const values = dataset.map((d) => d.seoul);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      height={400}
+      layout="horizontal"
+      series={[
+        {
+          id: 'seoul',
+          data: values,
+          gradient: {
+            stops: [
+              { offset: min, color: 'var(--color-accentBoldBlue)' },
+              { offset: max, color: 'var(--color-accentBoldYellow)' },
+            ],
+          },
+        },
+      ]}
+      xAxis={{ label: 'rainfall (mm)' }}
+      yAxis={{
+        data: dataset.map((d) => d.month),
+      }}
+    >
+      <Scrubber hideOverlay />
+    </LineChart>
   );
 }
 
@@ -1593,206 +1652,211 @@ function MonotoneAssetPrice() {
 
 export const All = () => {
   return (
-    <VStack gap={2}>
-      <Example title="Basic">
-        <LineChart
-          showArea
-          height={{ base: 200, tablet: 225, desktop: 250 }}
-          series={[
-            {
-              id: 'prices',
-              data: sampleData,
-            },
-          ]}
-        />
-      </Example>
-      <Example title="Multiple Lines">
-        <MultipleLine />
-      </Example>
-      <Example title="Data Format">
-        <DataFormat />
-      </Example>
-      <Example title="Live Updates">
-        <LiveUpdates />
-      </Example>
-      <Example title="Missing Data">
-        <MissingData />
-      </Example>
-      <Example title="Empty State">
-        <LineChart
-          height={{ base: 200, tablet: 225, desktop: 250 }}
-          series={[
-            {
-              id: 'line',
-              color: 'rgb(var(--gray50))',
-              data: [1, 1],
-              showArea: true,
-            },
-          ]}
-          yAxis={{ domain: { min: -1, max: 3 } }}
-        />
-      </Example>
-      <Example title="Scales">
-        <LineChart
-          showArea
-          showYAxis
-          height={{ base: 200, tablet: 225, desktop: 250 }}
-          series={[
-            {
-              id: 'prices',
-              data: sampleData,
-            },
-          ]}
-          yAxis={{
-            scaleType: 'log',
-            showGrid: true,
-            ticks: [1, 10, 100],
-          }}
-        />
-      </Example>
-      <Example title="Interaction">
-        <Interaction />
-      </Example>
-      <Example title="Points">
-        <Points />
-      </Example>
-      <Example title="Basic Accessible">
-        <BasicAccessible />
-      </Example>
-      <Example title="Accessible with Header">
-        <AccessibleWithHeader />
-      </Example>
-      <Example title="Styling Axes">
-        <LineChart
-          showArea
-          showXAxis
-          showYAxis
-          height={{ base: 200, tablet: 225, desktop: 250 }}
-          series={[
-            {
-              id: 'prices',
-              data: sampleData,
-            },
-          ]}
-          xAxis={{
-            showGrid: true,
-            showLine: true,
-            showTickMarks: true,
-            tickLabelFormatter: (dataX: number) => `Day ${dataX}`,
-          }}
-          yAxis={{
-            showGrid: true,
-            showLine: true,
-            showTickMarks: true,
-          }}
-        />
-      </Example>
-      <Example title="Gradients">
-        <Gradients />
-      </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart />
-      </Example>
-      <Example title="Styling Lines">
-        <LineChart
-          height={{ base: 200, tablet: 225, desktop: 250 }}
-          series={[
-            {
-              id: 'top',
-              data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
-            },
-            {
-              id: 'upperMiddle',
-              data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
-              color: '#ef4444',
-              type: 'dotted',
-            },
-            {
-              id: 'lowerMiddle',
-              data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
-              color: '#f59e0b',
-              curve: 'natural',
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: 0, color: '#E3D74D' },
-                  { offset: 9, color: '#F7931A' },
-                ],
+    <StrictMode>
+      <VStack gap={2}>
+        <Example title="Basic">
+          <LineChart
+            showArea
+            height={{ base: 200, tablet: 225, desktop: 250 }}
+            series={[
+              {
+                id: 'prices',
+                data: sampleData,
               },
-              strokeWidth: 6,
-            },
-            {
-              id: 'bottom',
-              data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
-              color: '#800080',
-              curve: 'step',
-              AreaComponent: DottedArea,
-              showArea: true,
-            },
-          ]}
-        />
-      </Example>
-      <Example title="Styling Reference Lines">
-        <LineChart
-          enableScrubbing
-          showArea
-          height={{ base: 200, tablet: 225, desktop: 250 }}
-          series={[
-            {
-              id: 'prices',
-              data: sampleData,
-              color: 'var(--color-fgPositive)',
-            },
-          ]}
-          xAxis={{
-            // Give space before the end of the chart for the scrubber
-            range: ({ min, max }) => ({ min, max: max - 24 }),
-          }}
-        >
-          <ReferenceLine
-            LineComponent={(props) => (
-              <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
-            )}
-            dataY={10}
-            stroke="var(--color-fg)"
+            ]}
           />
-          <Scrubber />
-        </LineChart>
-      </Example>
-      <Example title="High/Low Price">
-        <HighLowPrice />
-      </Example>
-      <Example title="Styling Scrubber">
-        <StylingScrubber />
-      </Example>
-      <Example title="Dynamic Chart Sizing">
-        <DynamicChartSizing />
-      </Example>
-      <Example title="Compact">
-        <Compact />
-      </Example>
-      <Example title="Asset Price With Dotted Area">
-        <AssetPriceWithDottedArea />
-      </Example>
-      <Example title="Monotone Asset Price">
-        <MonotoneAssetPrice />
-      </Example>
-      <Example title="Asset Price Widget">
-        <AssetPriceWidget />
-      </Example>
-      <Example title="Service Availability">
-        <ServiceAvailability />
-      </Example>
-      <Example title="Forecast Asset Price">
-        <ForecastAssetPrice />
-      </Example>
-      <Example title="In DataCard">
-        <DataCardWithLineChart />
-      </Example>
-      <Example title="Horizontal Line">
-        <HorizontalLine />
-      </Example>
-    </VStack>
+        </Example>
+        <Example title="Multiple Lines">
+          <MultipleLine />
+        </Example>
+        <Example title="Data Format">
+          <DataFormat />
+        </Example>
+        <Example title="Live Updates">
+          <LiveUpdates />
+        </Example>
+        <Example title="Missing Data">
+          <MissingData />
+        </Example>
+        <Example title="Empty State">
+          <LineChart
+            height={{ base: 200, tablet: 225, desktop: 250 }}
+            series={[
+              {
+                id: 'line',
+                color: 'rgb(var(--gray50))',
+                data: [1, 1],
+                showArea: true,
+              },
+            ]}
+            yAxis={{ domain: { min: -1, max: 3 } }}
+          />
+        </Example>
+        <Example title="Scales">
+          <LineChart
+            showArea
+            showYAxis
+            height={{ base: 200, tablet: 225, desktop: 250 }}
+            series={[
+              {
+                id: 'prices',
+                data: sampleData,
+              },
+            ]}
+            yAxis={{
+              scaleType: 'log',
+              showGrid: true,
+              ticks: [1, 10, 100],
+            }}
+          />
+        </Example>
+        <Example title="Interaction">
+          <Interaction />
+        </Example>
+        <Example title="Points">
+          <Points />
+        </Example>
+        <Example title="Basic Accessible">
+          <BasicAccessible />
+        </Example>
+        <Example title="Accessible with Header">
+          <AccessibleWithHeader />
+        </Example>
+        <Example title="Styling Axes">
+          <LineChart
+            showArea
+            showXAxis
+            showYAxis
+            height={{ base: 200, tablet: 225, desktop: 250 }}
+            series={[
+              {
+                id: 'prices',
+                data: sampleData,
+              },
+            ]}
+            xAxis={{
+              showGrid: true,
+              showLine: true,
+              showTickMarks: true,
+              tickLabelFormatter: (dataX: number) => `Day ${dataX}`,
+            }}
+            yAxis={{
+              showGrid: true,
+              showLine: true,
+              showTickMarks: true,
+            }}
+          />
+        </Example>
+        <Example title="Gradients">
+          <Gradients />
+        </Example>
+        <Example title="Gain/Loss">
+          <GainLossChart />
+        </Example>
+        <Example title="Styling Lines">
+          <LineChart
+            height={{ base: 200, tablet: 225, desktop: 250 }}
+            series={[
+              {
+                id: 'top',
+                data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
+              },
+              {
+                id: 'upperMiddle',
+                data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
+                color: '#ef4444',
+                type: 'dotted',
+              },
+              {
+                id: 'lowerMiddle',
+                data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
+                color: '#f59e0b',
+                curve: 'natural',
+                gradient: {
+                  axis: 'x',
+                  stops: [
+                    { offset: 0, color: '#E3D74D' },
+                    { offset: 9, color: '#F7931A' },
+                  ],
+                },
+                strokeWidth: 6,
+              },
+              {
+                id: 'bottom',
+                data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
+                color: '#800080',
+                curve: 'step',
+                AreaComponent: DottedArea,
+                showArea: true,
+              },
+            ]}
+          />
+        </Example>
+        <Example title="Styling Reference Lines">
+          <LineChart
+            enableScrubbing
+            showArea
+            height={{ base: 200, tablet: 225, desktop: 250 }}
+            series={[
+              {
+                id: 'prices',
+                data: sampleData,
+                color: 'var(--color-fgPositive)',
+              },
+            ]}
+            xAxis={{
+              // Give space before the end of the chart for the scrubber
+              range: ({ min, max }) => ({ min, max: max - 24 }),
+            }}
+          >
+            <ReferenceLine
+              LineComponent={(props) => (
+                <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
+              )}
+              dataY={10}
+              stroke="var(--color-fg)"
+            />
+            <Scrubber />
+          </LineChart>
+        </Example>
+        <Example title="High/Low Price">
+          <HighLowPrice />
+        </Example>
+        <Example title="Styling Scrubber">
+          <StylingScrubber />
+        </Example>
+        <Example title="Dynamic Chart Sizing">
+          <DynamicChartSizing />
+        </Example>
+        <Example title="Compact">
+          <Compact />
+        </Example>
+        <Example title="Asset Price With Dotted Area">
+          <AssetPriceWithDottedArea />
+        </Example>
+        <Example title="Monotone Asset Price">
+          <MonotoneAssetPrice />
+        </Example>
+        <Example title="Asset Price Widget">
+          <AssetPriceWidget />
+        </Example>
+        <Example title="Service Availability">
+          <ServiceAvailability />
+        </Example>
+        <Example title="Forecast Asset Price">
+          <ForecastAssetPrice />
+        </Example>
+        <Example title="In DataCard">
+          <DataCardWithLineChart />
+        </Example>
+        <Example title="Horizontal Line">
+          <HorizontalLine />
+        </Example>
+        <Example title="Horizontal line gradient (implicit axis)">
+          <HorizontalLineGradientImplicitAxis />
+        </Example>
+      </VStack>
+    </StrictMode>
   );
 };
 

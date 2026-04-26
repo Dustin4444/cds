@@ -8,6 +8,26 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.7.0 (4/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add chart baseline support. [[#502](https://github.com/coinbase/cds/pull/502)]
+
+#### 📘 Misc
+
+- Update Legend JSDocs. [[#636](https://github.com/coinbase/cds/pull/636)]
+
+## 3.6.2 (4/20/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 3.6.1 (4/16/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support strict mode on charts. [[#618](https://github.com/coinbase/cds/pull/618)]
+
 ## 3.6.0 (4/13/2026 PST)
 
 #### 🚀 Updates
