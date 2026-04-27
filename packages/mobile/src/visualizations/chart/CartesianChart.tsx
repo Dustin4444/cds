@@ -1,9 +1,8 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type StyleProp, type View, type ViewStyle } from 'react-native';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type LayoutChangeEvent, type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
-import { useLayout } from '../../hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '../../layout';
 import { Box } from '../../layout';
 
@@ -68,6 +67,35 @@ const ChartCanvas = memo(
     );
   },
 );
+
+function useChartLayout(): [Rect, (event: LayoutChangeEvent) => void] {
+  const [containerLayout, setContainerLayout] = useState<Rect>({
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  });
+  const containerLayoutRafRef = useRef<number | null>(null);
+
+  const onContainerLayout = useCallback((event: LayoutChangeEvent) => {
+    const layout = event.nativeEvent.layout;
+    if (containerLayoutRafRef.current !== null) cancelAnimationFrame(containerLayoutRafRef.current);
+    containerLayoutRafRef.current = requestAnimationFrame(() => {
+      containerLayoutRafRef.current = null;
+      setContainerLayout(layout);
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (containerLayoutRafRef.current !== null) {
+        cancelAnimationFrame(containerLayoutRafRef.current);
+      }
+    };
+  }, []);
+
+  return [containerLayout, onContainerLayout];
+}
 
 export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
   Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
@@ -202,7 +230,7 @@ export const CartesianChart = memo(
       },
       ref,
     ) => {
-      const [containerLayout, onContainerLayout] = useLayout();
+      const [containerLayout, onContainerLayout] = useChartLayout();
 
       const chartWidth = containerLayout.width;
       const chartHeight = containerLayout.height;

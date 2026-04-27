@@ -64,13 +64,29 @@ const PositionedLabel = memo<{
 
     const idleAnimatedY = useSharedValue<number | null>(null);
     useAnimatedReaction(
-      () => ({ y: targetY.value, idle: unwrapAnimatedValue(isIdle) }),
+      () => {
+        const position = positions.value[index];
+        return {
+          y: position !== null && position !== undefined ? position.y : null,
+          idle: unwrapAnimatedValue(isIdle),
+          position,
+        };
+      },
       (current, previous) => {
+        if (current.position === null || current.position === undefined) {
+          idleAnimatedY.value = null;
+          return;
+        }
+        // Do not spring from placeholder targetY (0 while no position) when the label first lays out.
+        if (previous?.position === null || previous?.position === undefined) {
+          idleAnimatedY.value = current.y!;
+          return;
+        }
         // Only animate idle-to-idle updates, immediately set the value for other changes.
-        if (previous?.idle && current.idle) {
-          idleAnimatedY.value = buildTransition(current.y, updateTransition);
+        if (previous.idle && current.idle) {
+          idleAnimatedY.value = buildTransition(current.y!, updateTransition);
         } else {
-          idleAnimatedY.value = current.y;
+          idleAnimatedY.value = current.y!;
         }
       },
       [updateTransition],
@@ -271,25 +287,34 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         return null;
       });
 
-      const maxLabelHeight = Math.max(...Object.values(labelDimensions).map((dim) => dim.height));
-
-      const maxLabelWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
+      const measuredHeights = Object.values(labelDimensions).map((dim) => dim.height);
+      const maxLabelHeight =
+        measuredHeights.length > 0 ? Math.max(...measuredHeights) : drawingArea.height;
 
       const validPositions = desiredPositions.filter((pos) => pos !== null);
 
-      // Convert to LabelDimension format expected by utility
-      const dimensions = validPositions.map((pos) => {
-        const trackedDimensions = labelDimensions[pos.seriesId];
-        return {
-          seriesId: pos.seriesId,
-          width: trackedDimensions?.width ?? maxLabelWidth,
-          height: trackedDimensions?.height ?? maxLabelHeight,
-          preferredX: pos.x,
-          preferredY: pos.desiredY,
-        };
-      });
+      // Only stack labels that have measured bounds
+      const dimensions = validPositions
+        .map((pos) => {
+          const trackedDimensions = labelDimensions[pos.seriesId];
+          if (
+            trackedDimensions == null ||
+            trackedDimensions.width <= 0 ||
+            trackedDimensions.height <= 0
+          ) {
+            return null;
+          }
+          return {
+            seriesId: pos.seriesId,
+            width: trackedDimensions.width,
+            height: trackedDimensions.height,
+            preferredX: pos.x,
+            preferredY: pos.desiredY,
+          };
+        })
+        .filter((dim): dim is NonNullable<typeof dim> => dim !== null);
 
-      // Calculate Y positions with collision resolution for valid positions only
+      // Calculate Y positions with collision resolution for measured labels only
       const yPositions = calculateLabelYPositions(
         dimensions,
         drawingArea,
@@ -297,9 +322,17 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         labelMinGap,
       );
 
-      // Return all positions (including null ones)
+      // Return all positions (including null ones). Hide a slot until that series has layout sizes.
       return desiredPositions.map((pos) => {
         if (!pos) return null;
+        const trackedDimensions = labelDimensions[pos.seriesId];
+        if (
+          trackedDimensions == null ||
+          trackedDimensions.width <= 0 ||
+          trackedDimensions.height <= 0
+        ) {
+          return null;
+        }
         return {
           seriesId: pos.seriesId,
           x: pos.x,

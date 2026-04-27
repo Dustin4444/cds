@@ -1,5 +1,5 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import { memo, useEffect, useMemo } from 'react';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AnimatedProp,
@@ -120,6 +120,7 @@ export type PathProps = PathBaseProps &
     transition?: Transition;
     /**
      * The SVG path data string.
+     * @note d only supports transitions for string values, not animated values.
      */
     d?: AnimatedProp<string | undefined>;
     /**
@@ -255,15 +256,9 @@ export const Path = memo<PathProps>((props) => {
   }, [animate, transitions?.enterOpacity]);
   const animateEnterOpacity = Boolean(enterOpacityTransition);
   const enterOpacity = useSharedValue(animateEnterOpacity ? 0 : 1);
-  const hasAnimatedEnterOpacity = useRef(false);
 
   useEffect(() => {
-    if (hasAnimatedEnterOpacity.current) {
-      return;
-    }
-
     if (!animateEnterOpacity) {
-      hasAnimatedEnterOpacity.current = true;
       enterOpacity.value = 1;
       return;
     }
@@ -274,11 +269,9 @@ export const Path = memo<PathProps>((props) => {
 
     if (enterOpacityTransition === undefined || enterOpacityTransition === null) {
       enterOpacity.value = 1;
-      hasAnimatedEnterOpacity.current = true;
       return;
     }
 
-    hasAnimatedEnterOpacity.current = true;
     enterOpacity.value = buildTransition(1, enterOpacityTransition);
   }, [animateEnterOpacity, isReady, enterOpacityTransition, enterOpacity]);
 
