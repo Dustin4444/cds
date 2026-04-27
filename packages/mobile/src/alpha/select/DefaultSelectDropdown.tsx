@@ -40,6 +40,7 @@ const DefaultSelectDropdownComponent = memo(
         compact,
         header,
         footer,
+        handleBarAccessibilityLabel = 'Close dropdown',
         label,
         end,
         selectAllLabel = 'Select all',
@@ -250,6 +251,7 @@ const DefaultSelectDropdownComponent = memo(
           ref={ref}
           disableCapturePanGestureToDismiss={true}
           footer={footer}
+          handleBarAccessibilityLabel={handleBarAccessibilityLabel}
           header={header}
           onCloseComplete={() => setOpen(false)}
           onDismiss={() => setOpen(false)}

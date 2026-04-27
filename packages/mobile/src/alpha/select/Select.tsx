@@ -75,6 +75,7 @@ const SelectBase = memo(
         emptyOptionsLabel,
         clearAllLabel,
         hideSelectAll,
+        handleBarAccessibilityLabel,
         defaultOpen,
         startNode,
         endNode,
@@ -215,6 +216,7 @@ const SelectBase = memo(
             disabled={disabled}
             emptyOptionsLabel={emptyOptionsLabel}
             end={end}
+            handleBarAccessibilityLabel={handleBarAccessibilityLabel}
             hideSelectAll={hideSelectAll}
             label={label}
             media={media}

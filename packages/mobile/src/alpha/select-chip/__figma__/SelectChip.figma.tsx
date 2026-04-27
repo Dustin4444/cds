@@ -28,7 +28,13 @@ figma.connect(
       }),
     },
     example: ({ ...props }) => (
-      <SelectChip {...props} onChange={() => {}} options={selectOptions} value="usd" />
+      <SelectChip
+        {...props}
+        handleBarAccessibilityLabel="Dismiss"
+        onChange={() => {}}
+        options={selectOptions}
+        value="usd"
+      />
     ),
   },
 );

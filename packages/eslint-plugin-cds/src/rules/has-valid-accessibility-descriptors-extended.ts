@@ -62,7 +62,7 @@ const config = {
   checkForComboboxMultiSelectionAccessibilityLabelProps: ['Combobox'],
   checkForComboboxAccessibilityHintProps: ['Combobox'],
   checkForAccessibleNameProps: ['Tray'],
-  checkForMissingHandleBarAccessibilityLabel: ['Drawer', 'SelectChip', 'Tray'],
+  checkForMissingHandleBarAccessibilityLabel: ['Drawer', 'Select', 'SelectChip', 'Tray'],
   checkForHelperTextErrorIconAccessibilityLabelProps: ['TextInput'],
   checkForCalendarOpenCloseAccessibilityLabelProps: ['DatePicker'],
   checkForCardDismissAccessibilityLabelProps: ['NudgeCard', 'UpsellCard'],
