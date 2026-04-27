@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.66.1 ((4/27/2026, 12:59 PM PST))
+
+This is an artificial version bump with no new change.
+
+#### 📘 Misc
+
+- Fix incorrect sample data for docs. [[#502](https://github.com/coinbase/cds/pull/502)]
+
 ## 8.66.0 ((4/16/2026, 01:57 PM PST))
 
 This is an artificial version bump with no new change.
