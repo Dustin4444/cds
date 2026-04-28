@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common';
 import { ThemeProvider } from '@coinbase/cds-web';
+import { Chip } from '@coinbase/cds-web/chips';
 import { SearchInput } from '@coinbase/cds-web/controls';
+import { HeroSquare } from '@coinbase/cds-web/illustrations';
 import { Box, Divider, Group, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
 import { MediaQueryProvider } from '@coinbase/cds-web/system';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { Text } from '@coinbase/cds-web/typography';
 
 import { AssetList } from './components/AssetList';
 import { CardList } from './components/CardList';
@@ -43,12 +46,82 @@ const navItems = [
   },
 ] as const;
 
+const illustrationThemes = {
+  default: {
+    lightIllustration: defaultTheme.lightIllustration,
+    darkIllustration: defaultTheme.darkIllustration,
+  },
+  blueSpectrum: {
+    lightIllustration: Object.fromEntries(
+      Object.entries(defaultTheme.lightIllustration).map(([key, value]) => [
+        key,
+        `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
+      ]),
+    ),
+    darkIllustration: Object.fromEntries(
+      Object.entries(defaultTheme.darkIllustration).map(([key, value]) => [
+        key,
+        `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
+      ]),
+    ),
+  },
+  random: {
+    lightIllustration: Object.fromEntries(
+      Object.entries(defaultTheme.lightIllustration).map(([key, value]) => [
+        key,
+        `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
+      ]),
+    ),
+    darkIllustration: Object.fromEntries(
+      Object.entries(defaultTheme.darkIllustration).map(([key, value]) => [
+        key,
+        `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
+      ]),
+    ),
+  },
+  pink: {
+    lightIllustration: {
+      primary: 'rgb(255, 100, 100)',
+      black: 'rgb(255, 100, 100)',
+      white: 'rgb(255, 100, 100)',
+      gray: 'rgb(255, 100, 100)',
+      gray2: 'rgb(255, 100, 100)',
+      gray3: 'rgb(255, 100, 100)',
+      positive: 'rgb(255, 100, 100)',
+      negative: 'rgb(255, 100, 100)',
+      accent1: 'rgb(255, 100, 100)',
+      accent2: 'rgb(255, 100, 100)',
+      accent3: 'rgb(255, 100, 100)',
+      accent4: 'rgb(255, 100, 100)',
+      invert: 'rgb(255, 100, 100)',
+      invert2: 'rgb(255, 100, 100)',
+    },
+    darkIllustration: {
+      primary: 'rgb(255, 100, 100)',
+      black: 'rgb(255, 100, 100)',
+      white: 'rgb(255, 100, 100)',
+      gray: 'rgb(255, 100, 100)',
+      gray2: 'rgb(255, 100, 100)',
+      gray3: 'rgb(255, 100, 100)',
+      positive: 'rgb(255, 100, 100)',
+      negative: 'rgb(255, 100, 100)',
+      accent1: 'rgb(255, 100, 100)',
+      accent2: 'rgb(255, 100, 100)',
+      accent3: 'rgb(255, 100, 100)',
+      accent4: 'rgb(255, 100, 100)',
+      invert: 'rgb(255, 100, 100)',
+      invert2: 'rgb(255, 100, 100)',
+    },
+  },
+};
+
 export const App = () => {
   const [activeNavIndex, setActiveNavIndex] = useState(0);
   const [search, setSearch] = useState('');
   const activeNavItem = navItems[activeNavIndex];
 
   const [activeColorScheme, setActiveColorScheme] = useState<ColorScheme>('light');
+  const [illustrationThemeKey, setIllustrationThemeKey] = useState('default');
 
   const toggleColorScheme = () => setActiveColorScheme((s) => (s === 'light' ? 'dark' : 'light'));
 
@@ -69,6 +142,53 @@ export const App = () => {
           </Sidebar>
           <VStack width="100%" zIndex={0}>
             <Navbar title={activeNavItem.title} toggleColorScheme={toggleColorScheme} />
+            <ThemeProvider activeColorScheme={activeColorScheme} theme={defaultTheme}>
+              <VStack gap={2} padding={2}>
+                <Text font="title1">Illustration theming</Text>
+                <Text font="headline">Illustration theme</Text>
+                <HStack gap={1}>
+                  {Object.keys(illustrationThemes).map((themeKey) => (
+                    <Chip
+                      key={themeKey}
+                      accessibilityLabel={`Select ${themeKey} illustration theme`}
+                      invertColorScheme={illustrationThemeKey === themeKey}
+                      onClick={() => setIllustrationThemeKey(themeKey)}
+                    >
+                      {themeKey}
+                    </Chip>
+                  ))}
+                </HStack>
+                <HStack flexWrap="wrap" gap={1}>
+                  {Object.keys(
+                    illustrationThemes[illustrationThemeKey as keyof typeof illustrationThemes][
+                      activeColorScheme === 'light' ? 'lightIllustration' : 'darkIllustration'
+                    ],
+                  ).map((color) => (
+                    <Box key={color} alignItems="center" gap={1} minWidth={200}>
+                      <Text font="label1">{color}:</Text>{' '}
+                      <Text font="body">
+                        {
+                          illustrationThemes[
+                            illustrationThemeKey as keyof typeof illustrationThemes
+                          ][
+                            activeColorScheme === 'light' ? 'lightIllustration' : 'darkIllustration'
+                          ][
+                            color as keyof (typeof illustrationThemes)['default']['lightIllustration']
+                          ]
+                        }
+                      </Text>
+                    </Box>
+                  ))}
+                </HStack>
+                <Text font="headline">Sample illustrations</Text>
+                <HStack gap={1}>
+                  <HeroSquare name="accessToAdvancedCharts" />
+                  <HeroSquare name="accessToAdvancedCharts" />
+                  <HeroSquare name="accessToAdvancedCharts" />
+                </HStack>
+              </VStack>
+              <Divider />
+            </ThemeProvider>
             <Group
               direction="horizontal"
               divider={() => <Divider direction="vertical" />}
