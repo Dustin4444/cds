@@ -2085,6 +2085,7 @@ __metadata:
     "@types/inquirer": "npm:^9.0.7"
     "@types/jscodeshift": "npm:^0.11.10"
     commander: "npm:^11.1.0"
+    fast-glob: "npm:^3.2.11"
     jscodeshift: "npm:^0.15.1"
   bin:
     cds-migrate: ./cjs/cli.js
