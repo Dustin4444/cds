@@ -815,6 +815,12 @@ export const routes = [
       require('@coinbase/cds-mobile/typography/__stories__/TextTitle4.stories').default,
   },
   {
+    key: 'ThemeableIllustrations',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/illustrations/themeable/__stories__/ThemeableIllustrations.stories')
+        .default,
+  },
+  {
     key: 'ThemeProvider',
     getComponent: () =>
       require('@coinbase/cds-mobile/system/__stories__/ThemeProvider.stories').default,
