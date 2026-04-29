@@ -8,3 +8,4 @@ export * from './types';
 export * from './utils/getWidthInEm';
 export * from './utils/illustrationCssVarUtils';
 export * from './utils/join';
+export * from './utils/prefixSvgIds';

@@ -6,6 +6,9 @@ import { createThemeableIllustration } from '../createThemeableIllustration';
 const MOCK_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 96 96"><path fill="var(--illustration-primary)" d="M0 0h96v96H0z"/></svg>';
 
+const MOCK_SVG_WITH_IDS =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><g clip-path="url(#a)"><path d="M0 0h96v96H0z"/></g><defs><clipPath id="a"><path d="M0 0h96v96H0z"/></clipPath></defs></svg>';
+
 const mockVersionMap = {
   testIllustration: 1,
   anotherIllustration: 2,
@@ -76,7 +79,7 @@ describe('createThemeableIllustration', () => {
     await waitFor(() => {
       const el = screen.getByTestId('test-illo');
       expect(el.tagName).toBe('SPAN');
-      expect(el.innerHTML).toBe(MOCK_SVG);
+      expect(el.innerHTML).toContain('<svg');
     });
   });
 
@@ -227,5 +230,30 @@ describe('createThemeableIllustration', () => {
       'src',
       'https://static-assets.coinbase.com/ui-infra/illustration/v1/spotSquare/svg/dark/testIllustration-1.svg',
     );
+  });
+
+  it('prefixes SVG IDs with illustration name to prevent collisions', async () => {
+    const Component = createThemeableIllustration(
+      'spotSquare',
+      mockVersionMap,
+      createMockImportMapLoader(MOCK_SVG_WITH_IDS),
+    );
+
+    render(
+      <DefaultThemeProvider activeColorScheme="light">
+        <Component name={'testIllustration' as never} testID="test-illo" />
+      </DefaultThemeProvider>,
+    );
+
+    await waitFor(() => {
+      const el = screen.getByTestId('test-illo');
+      expect(el.tagName).toBe('SPAN');
+    });
+
+    const el = screen.getByTestId('test-illo');
+    expect(el.innerHTML).toContain('id="testIllustration_a"');
+    expect(el.innerHTML).toContain('url(#testIllustration_a)');
+    expect(el.innerHTML).not.toContain('id="a"');
+    expect(el.innerHTML).not.toContain('url(#a)');
   });
 });

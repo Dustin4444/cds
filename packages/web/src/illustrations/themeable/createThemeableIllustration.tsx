@@ -4,6 +4,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { convertDimensionToSize } from '@coinbase/cds-common/utils/convertDimensionToSize';
 import { convertSizeWithMultiplier } from '@coinbase/cds-common/utils/convertSizeWithMultiplier';
 import { getDefaultSizeObjectForIllustration } from '@coinbase/cds-common/utils/getDefaultSizeObjectForIllustration';
+import { prefixSvgIds } from '@coinbase/cds-common/utils/prefixSvgIds';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useTheme } from '../../hooks/useTheme';
@@ -68,7 +69,7 @@ function loadSvgContent(
       return loader();
     })
     .then((svgModule) => {
-      const content = svgModule.content;
+      const content = prefixSvgIds(svgModule.content, name);
       resolved.set(cacheKey, content);
       inFlight.delete(cacheKey);
       return content;
@@ -152,11 +153,10 @@ export function createThemeableIllustration<Variant extends IllustrationVariant>
     if (svgContent) {
       return (
         <span
+          dangerouslySetInnerHTML={{ __html: svgContent }}
           aria-hidden={!alt}
           aria-label={alt || undefined}
           data-testid={testID}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: svgContent }}
           role="img"
           style={{ display: 'inline-block', width, height, lineHeight: 0 }}
         />
