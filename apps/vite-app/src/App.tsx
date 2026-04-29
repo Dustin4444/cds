@@ -198,30 +198,26 @@ export const App = () => {
                     </Chip>
                   ))}
                 </HStack>
-                <HStack flexWrap="wrap" gap={1}>
-                  {Object.keys(
+                <HStack flexWrap="wrap" gap={1} maxWidth={400}>
+                  {Object.entries(
                     illustrationThemes[illustrationThemeKey as keyof typeof illustrationThemes][
                       activeColorScheme === 'light'
                         ? 'lightIllustrationColor'
                         : 'darkIllustrationColor'
                     ],
-                  ).map((color) => (
-                    <Box key={color} alignItems="center" gap={1} minWidth={200}>
-                      <Text font="label1">{color}:</Text>{' '}
-                      <Text font="body">
-                        {
-                          illustrationThemes[
-                            illustrationThemeKey as keyof typeof illustrationThemes
-                          ][
-                            activeColorScheme === 'light'
-                              ? 'lightIllustrationColor'
-                              : 'darkIllustrationColor'
-                          ][
-                            color as keyof (typeof illustrationThemes)['default']['lightIllustrationColor']
-                          ]
-                        }
-                      </Text>
-                    </Box>
+                  ).map(([name, value]) => (
+                    <HStack key={name} alignItems="center" gap={0.5}>
+                      <Box
+                        borderRadius={1000}
+                        style={{
+                          width: 12,
+                          height: 12,
+                          backgroundColor: value as string,
+                          border: '1px solid rgba(0,0,0,0.1)',
+                        }}
+                      />
+                      <Text font="label2">{name}</Text>
+                    </HStack>
                   ))}
                 </HStack>
                 <Text font="title2">HeroSquare</Text>
