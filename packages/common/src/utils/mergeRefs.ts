@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import type React from 'react';
 
 type OptionalRef<T> = React.Ref<T> | undefined;
@@ -55,9 +56,29 @@ export const mergeReactElementRef = <T = unknown>(
 };
 
 /**
- * @deprecated This is an unnecessary hook (it doesn't call hooks). Prefer `mergeRefs` function instead. This will be removed in a future major release.
+ * @deprecated Prefer `mergeRefs` function instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export const useMergeRefs = <T = unknown>(...refs: OptionalRef<T>[]): React.RefCallback<T> => {
-  return mergeRefs(...refs);
+  /**
+   * Merges multiple refs into a single ref callback. Supports both callback refs
+   * and object refs. `null`/`undefined` refs are ignored.
+   *
+   * The returned callback is referentially stable across renders as long as the
+   * underlying refs themselves are stable. This is critical under React 19,
+   * which schedules a detach (`oldRef(null)`) followed by an attach
+   * (`newRef(node)`) every time a ref-callback's identity changes. Without
+   * `useCallback` here, every render would create a new merged callback,
+   * triggering React 19's detach/attach lifecycle and — when one of the merged
+   * refs synchronously sets state during attach/detach — an infinite update
+   * loop ending in `Maximum update depth exceeded`.
+   */
+  return useCallback(
+    (value) => {
+      mergeRefs(...refs)(value);
+    },
+    // The deps are the individual refs, not the rest-parameter array.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    refs,
+  );
 };
