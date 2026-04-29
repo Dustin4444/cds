@@ -3,7 +3,7 @@ import type { ColorScheme } from '@coinbase/cds-common';
 import { ThemeProvider } from '@coinbase/cds-web';
 import { Chip } from '@coinbase/cds-web/chips';
 import { SearchInput } from '@coinbase/cds-web/controls';
-import { HeroSquare } from '@coinbase/cds-web/illustrations';
+import { HeroSquare } from '@coinbase/cds-web/illustrations/themeable';
 import { Box, Divider, Group, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
 import { MediaQueryProvider } from '@coinbase/cds-web/system';
@@ -48,39 +48,39 @@ const navItems = [
 
 const illustrationThemes = {
   default: {
-    lightIllustration: defaultTheme.lightIllustration,
-    darkIllustration: defaultTheme.darkIllustration,
+    lightIllustrationColor: defaultTheme.lightIllustrationColor,
+    darkIllustrationColor: defaultTheme.darkIllustrationColor,
   },
   blueSpectrum: {
-    lightIllustration: Object.fromEntries(
-      Object.entries(defaultTheme.lightIllustration).map(([key, value]) => [
+    lightIllustrationColor: Object.fromEntries(
+      Object.entries(defaultTheme.lightIllustrationColor!).map(([key, value]) => [
         key,
         `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
       ]),
     ),
-    darkIllustration: Object.fromEntries(
-      Object.entries(defaultTheme.darkIllustration).map(([key, value]) => [
+    darkIllustrationColor: Object.fromEntries(
+      Object.entries(defaultTheme.darkIllustrationColor!).map(([key, value]) => [
         key,
         `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
       ]),
     ),
   },
   random: {
-    lightIllustration: Object.fromEntries(
-      Object.entries(defaultTheme.lightIllustration).map(([key, value]) => [
+    lightIllustrationColor: Object.fromEntries(
+      Object.entries(defaultTheme.lightIllustrationColor!).map(([key, value]) => [
         key,
         `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
       ]),
     ),
-    darkIllustration: Object.fromEntries(
-      Object.entries(defaultTheme.darkIllustration).map(([key, value]) => [
+    darkIllustrationColor: Object.fromEntries(
+      Object.entries(defaultTheme.darkIllustrationColor!).map(([key, value]) => [
         key,
         `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
       ]),
     ),
   },
   pink: {
-    lightIllustration: {
+    lightIllustrationColor: {
       primary: 'rgb(255, 100, 100)',
       black: 'rgb(255, 100, 100)',
       white: 'rgb(255, 100, 100)',
@@ -96,7 +96,7 @@ const illustrationThemes = {
       invert: 'rgb(255, 100, 100)',
       invert2: 'rgb(255, 100, 100)',
     },
-    darkIllustration: {
+    darkIllustrationColor: {
       primary: 'rgb(255, 100, 100)',
       black: 'rgb(255, 100, 100)',
       white: 'rgb(255, 100, 100)',
@@ -161,7 +161,9 @@ export const App = () => {
                 <HStack flexWrap="wrap" gap={1}>
                   {Object.keys(
                     illustrationThemes[illustrationThemeKey as keyof typeof illustrationThemes][
-                      activeColorScheme === 'light' ? 'lightIllustration' : 'darkIllustration'
+                      activeColorScheme === 'light'
+                        ? 'lightIllustrationColor'
+                        : 'darkIllustrationColor'
                     ],
                   ).map((color) => (
                     <Box key={color} alignItems="center" gap={1} minWidth={200}>
@@ -171,9 +173,11 @@ export const App = () => {
                           illustrationThemes[
                             illustrationThemeKey as keyof typeof illustrationThemes
                           ][
-                            activeColorScheme === 'light' ? 'lightIllustration' : 'darkIllustration'
+                            activeColorScheme === 'light'
+                              ? 'lightIllustrationColor'
+                              : 'darkIllustrationColor'
                           ][
-                            color as keyof (typeof illustrationThemes)['default']['lightIllustration']
+                            color as keyof (typeof illustrationThemes)['default']['lightIllustrationColor']
                           ]
                         }
                       </Text>

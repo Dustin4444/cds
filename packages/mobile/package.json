@@ -97,6 +97,10 @@
       "types": "./dts/illustrations/index.d.ts",
       "default": "./esm/illustrations/index.js"
     },
+    "./illustrations/themeable": {
+      "types": "./dts/illustrations/themeable/index.d.ts",
+      "default": "./esm/illustrations/themeable/index.js"
+    },
     "./layout": {
       "types": "./dts/layout/index.d.ts",
       "default": "./esm/layout/index.js"

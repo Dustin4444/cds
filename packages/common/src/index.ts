@@ -6,4 +6,5 @@ export * from './lottie/statusToAccessibilityLabel';
 export * from './lottie/useStatusAnimationPoller';
 export * from './types';
 export * from './utils/getWidthInEm';
+export * from './utils/illustrationCssVarUtils';
 export * from './utils/join';

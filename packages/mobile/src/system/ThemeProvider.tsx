@@ -44,11 +44,17 @@ export const ThemeProvider = ({ theme, activeColorScheme, children }: ThemeProvi
         `ThemeProvider theme has ${inverseColorKey} colors defined but no ${inverseSpectrumKey} values are defined for the theme. See the docs at https://cds.coinbase.com/getting-started/theming/#creating-a-theme`,
       );
 
+    const activeIllustrationKey =
+      activeColorScheme === 'dark' ? 'darkIllustrationColor' : 'lightIllustrationColor';
+
     return {
       ...theme,
       activeColorScheme: activeColorScheme,
       spectrum: theme[activeSpectrumKey],
       color: theme[activeColorKey],
+      ...(theme[activeIllustrationKey] && {
+        illustrationColor: theme[activeIllustrationKey],
+      }),
     };
   }, [theme, activeColorScheme]);
 

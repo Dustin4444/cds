@@ -1,3 +1,5 @@
+import { illustrationThemeKeyToCssVarName } from '@coinbase/cds-common/utils/illustrationCssVarUtils';
+
 import { styleVarPrefixes, type Theme } from './theme';
 
 const periodsRegex = /\./g;
@@ -20,6 +22,7 @@ export const createThemeCssVars = (theme: Partial<Theme>) => {
 
     const prefix = styleVarPrefixes[key as keyof typeof styleVarPrefixes];
     const cssVarPrefix = prefix ? `--${prefix}-` : '--';
+    const isIllustrationColor = key === 'illustrationColor';
     const varNames = Object.keys(themeVars);
 
     // Process each var in the themeVars
@@ -27,8 +30,10 @@ export const createThemeCssVars = (theme: Partial<Theme>) => {
       const value = themeVars[varName as keyof typeof themeVars];
       if (value === undefined) continue;
 
-      // Create CSS variable name, replacing periods with underscores
-      const cssVarName = `${cssVarPrefix}${varName}`.replace(periodsRegex, '_');
+      // Illustration color keys need hyphenation to match generated SVG CSS vars
+      const cssVarName = isIllustrationColor
+        ? illustrationThemeKeyToCssVarName(varName)
+        : `${cssVarPrefix}${varName}`.replace(periodsRegex, '_');
 
       // Format value (add px to numbers)
       themeCss[cssVarName] = typeof value !== 'number' ? value : value + 'px';

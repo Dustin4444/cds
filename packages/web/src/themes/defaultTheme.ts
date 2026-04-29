@@ -400,7 +400,7 @@ export const defaultTheme = {
     // Transparent
     transparent: `rgba(${darkSpectrum.gray0},0)`,
   },
-  lightIllustration: {
+  lightIllustrationColor: {
     primary: `rgb(${lightSpectrum.blue60})`,
     black: `rgb(${lightSpectrum.gray100})`,
     white: `rgb(${lightSpectrum.gray0})`,
@@ -416,7 +416,7 @@ export const defaultTheme = {
     invert: `rgb(10, 11, 14)`,
     invert2: `rgb(255, 255, 254)`,
   },
-  darkIllustration: {
+  darkIllustrationColor: {
     primary: `rgb(${darkSpectrum.blue70})`,
     black: `rgb(${darkSpectrum.gray0})`,
     white: `rgb(${darkSpectrum.gray100})`,

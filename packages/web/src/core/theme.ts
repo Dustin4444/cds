@@ -13,9 +13,9 @@ export type ThemeConfig = {
   /** The dark color palette. */
   darkColor?: { [key in ThemeVars.Color]: Property.Color };
   /** The light illustration color palette. */
-  lightIllustration?: { [key in ThemeVars.IllustrationColor]: Property.Color };
+  lightIllustrationColor?: { [key in ThemeVars.IllustrationColor]: Property.Color };
   /** The dark illustration color palette. */
-  darkIllustration?: { [key in ThemeVars.IllustrationColor]: Property.Color };
+  darkIllustrationColor?: { [key in ThemeVars.IllustrationColor]: Property.Color };
   /** The space values, used for margin and padding. */
   space: { [key in ThemeVars.Space]: number };
   /** The icon size values. */
@@ -51,6 +51,8 @@ export type Theme = ThemeConfig & {
   spectrum: { [key in ThemeVars.SpectrumColor]: string };
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: Property.Color };
+  /** The light or dark illustration color palette, as appropriate based on the activeColorScheme. */
+  illustrationColor?: { [key in ThemeVars.IllustrationColor]: Property.Color };
 };
 
 /** Maps our StyleVars to their CSS variable prefixes. For example, the names of CSS vars generated from `iconSize` vars will be prefixed with `--iconSize-`. */
@@ -59,8 +61,9 @@ export const styleVarPrefixes = {
   darkSpectrum: 'dark',
   lightColor: 'lightColor',
   darkColor: 'darkColor',
-  lightIllustration: 'lightIllustration',
-  darkIllustration: 'darkIllustration',
+  lightIllustrationColor: 'lightIllustrationColor',
+  darkIllustrationColor: 'darkIllustrationColor',
+  illustrationColor: 'illustration',
   spectrum: '',
   color: 'color',
   space: 'space',
