@@ -1,9 +1,23 @@
 import { useState } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common';
+import type { ThemeConfig } from '@coinbase/cds-web';
 import { ThemeProvider } from '@coinbase/cds-web';
 import { Chip } from '@coinbase/cds-web/chips';
 import { SearchInput } from '@coinbase/cds-web/controls';
-import { HeroSquare } from '@coinbase/cds-web/illustrations/themeable';
+import {
+  HeroSquare,
+  Pictogram,
+  SpotIcon,
+  SpotRectangle,
+  SpotSquare,
+} from '@coinbase/cds-web/illustrations';
+import {
+  HeroSquare as HeroSquareThemeable,
+  Pictogram as PictogramThemeable,
+  SpotIcon as SpotIconThemeable,
+  SpotRectangle as SpotRectangleThemeable,
+  SpotSquare as SpotSquareThemeable,
+} from '@coinbase/cds-web/illustrations/themeable';
 import { Box, Divider, Group, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
 import { MediaQueryProvider } from '@coinbase/cds-web/system';
@@ -52,65 +66,85 @@ const illustrationThemes = {
     darkIllustrationColor: defaultTheme.darkIllustrationColor,
   },
   blueSpectrum: {
-    lightIllustrationColor: Object.fromEntries(
-      Object.entries(defaultTheme.lightIllustrationColor!).map(([key, value]) => [
-        key,
-        `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
-      ]),
-    ),
-    darkIllustrationColor: Object.fromEntries(
-      Object.entries(defaultTheme.darkIllustrationColor!).map(([key, value]) => [
-        key,
-        `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
-      ]),
-    ),
+    lightIllustrationColor: {
+      primary: `rgb(${defaultTheme.lightSpectrum.blue20})`,
+      black: `rgb(${defaultTheme.lightSpectrum.blue100})`,
+      white: `rgb(${defaultTheme.lightSpectrum.blue0})`,
+      gray: `rgb(${defaultTheme.lightSpectrum.blue5})`,
+      gray2: `rgb(${defaultTheme.lightSpectrum.blue10})`,
+      gray3: `rgb(${defaultTheme.lightSpectrum.blue15})`,
+      positive: `rgb(${defaultTheme.lightSpectrum.blue20})`,
+      negative: `rgb(${defaultTheme.lightSpectrum.blue30})`,
+      accent1: `rgb(${defaultTheme.lightSpectrum.blue40})`,
+      accent2: `rgb(${defaultTheme.lightSpectrum.blue50})`,
+      accent3: `rgb(${defaultTheme.lightSpectrum.blue60})`,
+      accent4: `rgb(${defaultTheme.lightSpectrum.blue70})`,
+      invert: `rgb(${defaultTheme.lightSpectrum.blue80})`,
+      invert2: `rgb(${defaultTheme.lightSpectrum.blue90})`,
+    },
+    darkIllustrationColor: {
+      primary: `rgb(${defaultTheme.darkSpectrum.blue20})`,
+      black: `rgb(${defaultTheme.darkSpectrum.blue100})`,
+      white: `rgb(${defaultTheme.darkSpectrum.blue0})`,
+      gray: `rgb(${defaultTheme.darkSpectrum.blue5})`,
+      gray2: `rgb(${defaultTheme.darkSpectrum.blue10})`,
+      gray3: `rgb(${defaultTheme.darkSpectrum.blue15})`,
+      positive: `rgb(${defaultTheme.darkSpectrum.blue20})`,
+      negative: `rgb(${defaultTheme.darkSpectrum.blue30})`,
+      accent1: `rgb(${defaultTheme.darkSpectrum.blue40})`,
+      accent2: `rgb(${defaultTheme.darkSpectrum.blue50})`,
+      accent3: `rgb(${defaultTheme.darkSpectrum.blue60})`,
+      accent4: `rgb(${defaultTheme.darkSpectrum.blue70})`,
+      invert: `rgb(${defaultTheme.darkSpectrum.blue80})`,
+      invert2: `rgb(${defaultTheme.darkSpectrum.blue90})`,
+    },
   },
   random: {
     lightIllustrationColor: Object.fromEntries(
-      Object.entries(defaultTheme.lightIllustrationColor!).map(([key, value]) => [
+      Object.entries(defaultTheme.lightIllustrationColor!).map(([key]) => [
         key,
         `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
       ]),
-    ),
+    ) as NonNullable<ThemeConfig['lightIllustrationColor']>,
     darkIllustrationColor: Object.fromEntries(
-      Object.entries(defaultTheme.darkIllustrationColor!).map(([key, value]) => [
+      Object.entries(defaultTheme.darkIllustrationColor!).map(([key]) => [
         key,
         `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`,
       ]),
-    ),
+    ) as NonNullable<ThemeConfig['darkIllustrationColor']>,
   },
   pink: {
     lightIllustrationColor: {
-      primary: 'rgb(255, 100, 100)',
-      black: 'rgb(255, 100, 100)',
-      white: 'rgb(255, 100, 100)',
-      gray: 'rgb(255, 100, 100)',
-      gray2: 'rgb(255, 100, 100)',
-      gray3: 'rgb(255, 100, 100)',
-      positive: 'rgb(255, 100, 100)',
-      negative: 'rgb(255, 100, 100)',
-      accent1: 'rgb(255, 100, 100)',
-      accent2: 'rgb(255, 100, 100)',
-      accent3: 'rgb(255, 100, 100)',
-      accent4: 'rgb(255, 100, 100)',
-      invert: 'rgb(255, 100, 100)',
-      invert2: 'rgb(255, 100, 100)',
+      primary: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      black: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      white: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      gray: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      gray2: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      gray3: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      positive: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      negative: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent1: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent2: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent3: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent4: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      invert: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      invert2: `rgb(${defaultTheme.lightSpectrum.pink60})`,
     },
     darkIllustrationColor: {
-      primary: 'rgb(255, 100, 100)',
-      black: 'rgb(255, 100, 100)',
-      white: 'rgb(255, 100, 100)',
-      gray: 'rgb(255, 100, 100)',
-      gray2: 'rgb(255, 100, 100)',
-      gray3: 'rgb(255, 100, 100)',
-      positive: 'rgb(255, 100, 100)',
-      negative: 'rgb(255, 100, 100)',
-      accent1: 'rgb(255, 100, 100)',
-      accent2: 'rgb(255, 100, 100)',
-      accent3: 'rgb(255, 100, 100)',
-      accent4: 'rgb(255, 100, 100)',
-      invert: 'rgb(255, 100, 100)',
-      invert2: 'rgb(255, 100, 100)',
+      primary: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      black: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      white: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      gray: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      gray2: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      gray3: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      positive: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      negative: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent1: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent2: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent3: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      accent4: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      invert: `rgb(${defaultTheme.lightSpectrum.pink60})`,
+      invert2: `rgb(${defaultTheme.lightSpectrum.pink60})`,
     },
   },
 };
@@ -142,7 +176,13 @@ export const App = () => {
           </Sidebar>
           <VStack width="100%" zIndex={0}>
             <Navbar title={activeNavItem.title} toggleColorScheme={toggleColorScheme} />
-            <ThemeProvider activeColorScheme={activeColorScheme} theme={defaultTheme}>
+            <ThemeProvider
+              activeColorScheme={activeColorScheme}
+              theme={{
+                ...defaultTheme,
+                ...illustrationThemes[illustrationThemeKey as keyof typeof illustrationThemes],
+              }}
+            >
               <VStack gap={2} padding={2}>
                 <Text font="title1">Illustration theming</Text>
                 <Text font="headline">Illustration theme</Text>
@@ -184,11 +224,98 @@ export const App = () => {
                     </Box>
                   ))}
                 </HStack>
-                <Text font="headline">Sample illustrations</Text>
+                <Text font="title2">HeroSquare</Text>
+                <Text font="headline">Themed</Text>
                 <HStack gap={1}>
-                  <HeroSquare name="accessToAdvancedCharts" />
-                  <HeroSquare name="accessToAdvancedCharts" />
-                  <HeroSquare name="accessToAdvancedCharts" />
+                  <HeroSquareThemeable name="errorRefreshWeb" scaleMultiplier={0.75} />
+                  <HeroSquareThemeable name="defiHow" scaleMultiplier={0.75} />
+                  <HeroSquareThemeable name="coinbaseOneZeroPortal" scaleMultiplier={0.75} />
+                  <HeroSquareThemeable name="accessToAdvancedCharts" scaleMultiplier={0.75} />
+                  <HeroSquareThemeable name="advancedTrading" scaleMultiplier={0.75} />
+                  <HeroSquareThemeable name="airdrop" scaleMultiplier={0.75} />
+                </HStack>
+                <Text font="headline">Regular</Text>
+                <HStack gap={1}>
+                  <HeroSquare name="errorRefreshWeb" scaleMultiplier={0.75} />
+                  <HeroSquare name="defiHow" scaleMultiplier={0.75} />
+                  <HeroSquare name="coinbaseOneZeroPortal" scaleMultiplier={0.75} />
+                  <HeroSquare name="accessToAdvancedCharts" scaleMultiplier={0.75} />
+                  <HeroSquare name="advancedTrading" scaleMultiplier={0.75} />
+                  <HeroSquare name="airdrop" scaleMultiplier={0.75} />
+                </HStack>
+
+                <Text font="title2">SpotSquare</Text>
+                <Text font="headline">Themed</Text>
+                <HStack gap={1}>
+                  <SpotSquareThemeable name="encryptedEverything" />
+                  <SpotSquareThemeable name="mining" />
+                  <SpotSquareThemeable name="holdCrypto" />
+                  <SpotSquareThemeable name="holdingCrypto" />
+                  <SpotSquareThemeable name="tradeImmediately" />
+                  <SpotSquareThemeable name="earnInterest" />
+                </HStack>
+                <Text font="headline">Regular</Text>
+                <HStack gap={1}>
+                  <SpotSquare name="encryptedEverything" />
+                  <SpotSquare name="mining" />
+                  <SpotSquare name="holdCrypto" />
+                  <SpotSquare name="holdingCrypto" />
+                  <SpotSquare name="tradeImmediately" />
+                  <SpotSquare name="earnInterest" />
+                </HStack>
+
+                <Text font="title2">Pictogram</Text>
+                <Text font="headline">Themed</Text>
+                <HStack gap={1}>
+                  <PictogramThemeable name="avatarHg" />
+                  <PictogramThemeable name="authenticator" />
+                  <PictogramThemeable name="exchangeNavigation" />
+                  <PictogramThemeable name="baseComet" />
+                  <PictogramThemeable name="genericCountryIDCard" />
+                  <PictogramThemeable name="advancedTradingRebates" />
+                </HStack>
+                <Text font="headline">Regular</Text>
+                <HStack gap={1}>
+                  <Pictogram name="avatarHg" />
+                  <Pictogram name="authenticator" />
+                  <Pictogram name="exchangeNavigation" />
+                  <Pictogram name="baseComet" />
+                  <Pictogram name="genericCountryIDCard" />
+                  <Pictogram name="advancedTradingRebates" />
+                </HStack>
+
+                <Text font="title2">SpotRectangle</Text>
+                <Text font="headline">Themed</Text>
+                <HStack gap={1}>
+                  <SpotRectangleThemeable name="appUpdate" />
+                  <SpotRectangleThemeable name="scanCode" />
+                  <SpotRectangleThemeable name="faceId" />
+                </HStack>
+                <Text font="headline">Regular</Text>
+                <HStack gap={1}>
+                  <SpotRectangle name="appUpdate" />
+                  <SpotRectangle name="scanCode" />
+                  <SpotRectangle name="faceId" />
+                </HStack>
+
+                <Text font="title2">SpotIcon</Text>
+                <Text font="headline">Themed</Text>
+                <HStack gap={1}>
+                  <SpotIconThemeable name="2fa" />
+                  <SpotIconThemeable name="fast" />
+                  <SpotIconThemeable name="warning" />
+                  <SpotIconThemeable name="outage" />
+                  <SpotIconThemeable name="idVerification" />
+                  <SpotIconThemeable name="coinbaseOneEarn" />
+                </HStack>
+                <Text font="headline">Regular</Text>
+                <HStack gap={1}>
+                  <SpotIcon name="2fa" />
+                  <SpotIcon name="fast" />
+                  <SpotIcon name="warning" />
+                  <SpotIcon name="outage" />
+                  <SpotIcon name="idVerification" />
+                  <SpotIcon name="coinbaseOneEarn" />
                 </HStack>
               </VStack>
               <Divider />
