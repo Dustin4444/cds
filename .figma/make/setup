@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+
+# Install Node 22 via nvm if not already available
+if command -v nvm &>/dev/null; then
+  nvm install 22
+elif [ -s "$HOME/.nvm/nvm.sh" ]; then
+  . "$HOME/.nvm/nvm.sh"
+  nvm install 22
+else
+  echo "nvm not found — checking node version directly"
+  node_major=$(node -v 2>/dev/null | sed 's/v\([0-9]*\).*/\1/')
+  if [ "$node_major" != "22" ]; then
+    echo "Error: Node 22 is required but node $node_major is installed"
+    exit 1
+  fi
+fi
+
+# Ensure corepack is enabled for Yarn 4
+corepack enable 2>/dev/null || true
+
+echo "Setup complete"

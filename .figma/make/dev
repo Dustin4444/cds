@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+
+# Load nvm if available
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+  . "$HOME/.nvm/nvm.sh"
+  nvm use 22 2>/dev/null || true
+fi
+
+yarn nx run storybook:dev

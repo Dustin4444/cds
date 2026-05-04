@@ -1,0 +1,19 @@
+#!/bin/bash
+set -euo pipefail
+
+timeout=120
+elapsed=0
+
+echo "Waiting for Storybook on http://localhost:6006 ..."
+
+while [ $elapsed -lt $timeout ]; do
+  if curl -sf http://localhost:6006 > /dev/null 2>&1; then
+    echo "Storybook is up"
+    exit 0
+  fi
+  sleep 2
+  elapsed=$((elapsed + 2))
+done
+
+echo "Timed out after ${timeout}s waiting for Storybook"
+exit 1
