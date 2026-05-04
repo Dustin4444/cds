@@ -1,5 +1,5 @@
 import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { CartesianChart } from '../../CartesianChart';
 import { Line } from '../../line/Line';
@@ -160,9 +160,7 @@ describe('Scrubber', () => {
       renderChartWithScrubber({ testID: 'scrubber' });
       const chartRoot = screen.getByTestId('test-chart');
       const svgEl = chartRoot.querySelector('svg')!;
-      act(() => {
-        fireEvent.focus(svgEl);
-      });
+      fireEvent.focus(svgEl);
       const group = chartRoot.querySelector('[data-component="scrubber-group"]');
       expect(group).toHaveAttribute('aria-live', 'polite');
     });
@@ -171,12 +169,8 @@ describe('Scrubber', () => {
       renderChartWithScrubber({ testID: 'scrubber' });
       const chartRoot = screen.getByTestId('test-chart');
       const svgEl = chartRoot.querySelector('svg')!;
-      act(() => {
-        fireEvent.focus(svgEl);
-      });
-      act(() => {
-        fireEvent.blur(svgEl);
-      });
+      fireEvent.focus(svgEl);
+      fireEvent.blur(svgEl);
       const group = chartRoot.querySelector('[data-component="scrubber-group"]');
       expect(group).toHaveAttribute('aria-live', 'off');
     });

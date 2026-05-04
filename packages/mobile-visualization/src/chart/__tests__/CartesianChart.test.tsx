@@ -1,6 +1,6 @@
+import React from 'react';
 import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
 import { render, screen } from '@testing-library/react-native';
-import React from 'react';
 
 import { CartesianChart } from '../CartesianChart';
 
