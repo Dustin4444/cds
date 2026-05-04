@@ -50,7 +50,7 @@ const ChartCanvas = memo(
     style,
     accessible = true,
     accessibilityLabel,
-    accessibilityLiveRegion = 'polite',
+    accessibilityLiveRegion = 'none',
   }: ChartCanvasProps) => {
     const ContextBridge = useChartContextBridge();
     const isAccessible = accessible && accessibilityLabel !== null;
@@ -196,7 +196,7 @@ export const CartesianChart = memo(
         collapsable = false,
         accessible = true,
         accessibilityLabel,
-        accessibilityLiveRegion = 'polite',
+        accessibilityLiveRegion = 'none',
         ...props
       },
       ref,

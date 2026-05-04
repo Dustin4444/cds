@@ -527,7 +527,6 @@ export const CartesianChart = memo(
               }
             }}
             accessibilityLabel={accessibilityLabel}
-            aria-live="polite"
             as="svg"
             className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
             height="100%"

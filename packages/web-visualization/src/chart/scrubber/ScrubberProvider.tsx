@@ -36,6 +36,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
   const { layout, getXScale, getYScale, getXAxis, getYAxis, series } = chartContext;
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>(undefined);
+  const [isChartFocused, setIsChartFocused] = useState(false);
 
   const getDataIndexFromPosition = useCallback(
     (mousePosition: number): number => {
@@ -248,7 +249,12 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     ],
   );
 
+  const handleFocus = useCallback(() => {
+    setIsChartFocused(true);
+  }, []);
+
   const handleBlur = useCallback(() => {
+    setIsChartFocused(false);
     if (!enableScrubbing || scrubberPosition === undefined) return;
     setScrubberPosition(undefined);
     onScrubberPositionChange?.(undefined);
@@ -268,6 +274,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     svg.addEventListener('touchend', handleTouchEnd);
     svg.addEventListener('touchcancel', handleTouchEnd);
     svg.addEventListener('keydown', handleKeyDown);
+    svg.addEventListener('focus', handleFocus);
     svg.addEventListener('blur', handleBlur);
 
     return () => {
@@ -278,6 +285,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       svg.removeEventListener('touchend', handleTouchEnd);
       svg.removeEventListener('touchcancel', handleTouchEnd);
       svg.removeEventListener('keydown', handleKeyDown);
+      svg.removeEventListener('focus', handleFocus);
       svg.removeEventListener('blur', handleBlur);
     };
   }, [
@@ -289,6 +297,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     handleTouchMove,
     handleTouchEnd,
     handleKeyDown,
+    handleFocus,
     handleBlur,
   ]);
 
@@ -297,8 +306,9 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       enableScrubbing: !!enableScrubbing,
       scrubberPosition,
       onScrubberPositionChange: setScrubberPosition,
+      isChartFocused,
     }),
-    [enableScrubbing, scrubberPosition],
+    [enableScrubbing, scrubberPosition, isChartFocused],
   );
 
   return <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>;

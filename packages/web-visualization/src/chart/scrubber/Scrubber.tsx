@@ -327,7 +327,7 @@ export const Scrubber = memo(
     ) => {
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
-      const { scrubberPosition } = useScrubberContext();
+      const { scrubberPosition, isChartFocused } = useScrubberContext();
       const {
         layout,
         getXScale,
@@ -425,7 +425,7 @@ export const Scrubber = memo(
         <motion.g
           aria-atomic="true"
           aria-label={resolvedAccessibilityLabel}
-          aria-live="polite"
+          aria-live={isChartFocused ? 'polite' : 'off'}
           data-component="scrubber-group"
           data-testid={testID}
           role="status"

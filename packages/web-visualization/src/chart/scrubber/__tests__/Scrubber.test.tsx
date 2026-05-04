@@ -1,5 +1,5 @@
 import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
-import { render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import { CartesianChart } from '../../CartesianChart';
 import { Line } from '../../line/Line';
@@ -145,6 +145,40 @@ describe('Scrubber', () => {
       const svg = screen.getByTestId('test-chart');
       const scrubberGroup = svg.querySelector('[data-testid="scrubber"]');
       expect(scrubberGroup).toBeInTheDocument();
+    });
+  });
+
+  describe('aria-live focus gating', () => {
+    it('has aria-live="off" when the chart is not focused', () => {
+      renderChartWithScrubber({ testID: 'scrubber' });
+      const chartRoot = screen.getByTestId('test-chart');
+      const group = chartRoot.querySelector('[data-component="scrubber-group"]');
+      expect(group).toHaveAttribute('aria-live', 'off');
+    });
+
+    it('has aria-live="polite" when the chart SVG receives focus', () => {
+      renderChartWithScrubber({ testID: 'scrubber' });
+      const chartRoot = screen.getByTestId('test-chart');
+      const svgEl = chartRoot.querySelector('svg')!;
+      act(() => {
+        fireEvent.focus(svgEl);
+      });
+      const group = chartRoot.querySelector('[data-component="scrubber-group"]');
+      expect(group).toHaveAttribute('aria-live', 'polite');
+    });
+
+    it('returns to aria-live="off" when the chart SVG loses focus', () => {
+      renderChartWithScrubber({ testID: 'scrubber' });
+      const chartRoot = screen.getByTestId('test-chart');
+      const svgEl = chartRoot.querySelector('svg')!;
+      act(() => {
+        fireEvent.focus(svgEl);
+      });
+      act(() => {
+        fireEvent.blur(svgEl);
+      });
+      const group = chartRoot.querySelector('[data-component="scrubber-group"]');
+      expect(group).toHaveAttribute('aria-live', 'off');
     });
   });
 

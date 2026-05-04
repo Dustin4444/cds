@@ -534,6 +534,14 @@ describe('CartesianChart', () => {
       expect(svg).toBeInTheDocument();
       expect(svg?.getAttribute('tabindex')).toBeNull();
     });
+
+    it('does not set aria-live on the chart SVG', () => {
+      const root = renderCartesianChart({
+        testID: 'cartesian-no-aria-live',
+        chartProps: { enableScrubbing: true },
+      });
+      expect(root.querySelector('svg')).not.toHaveAttribute('aria-live');
+    });
   });
 
   describe('compositions', () => {

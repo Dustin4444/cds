@@ -116,6 +116,12 @@ export type ScrubberContextValue = {
    * Receives the dataIndex of the scrubber or undefined when not scrubbing.
    */
   onScrubberPositionChange: (index: number | undefined) => void;
+  /**
+   * True while the chart SVG has DOM focus. Used to gate aria-live announcements
+   * so the screen reader only announces value changes while the user is navigating
+   * the chart, not when focus is elsewhere on the page.
+   */
+  isChartFocused: boolean;
 };
 
 export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);
