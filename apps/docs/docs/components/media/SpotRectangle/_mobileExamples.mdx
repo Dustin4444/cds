@@ -21,3 +21,52 @@ If `dimension` and `scaleMultiplier` are both provided the component will scale 
 ```jsx
 <SpotRectangle name="creditCardExcitement" dimension="240x120" scaleMultiplier={1.5} />
 ```
+
+### Themed illustration
+
+Import the themeable variant from `@coinbase/cds-mobile/illustrations/themeable` to render illustrations that respond to custom theme colors.
+
+```jsx
+import { SpotRectangle } from '@coinbase/cds-mobile/illustrations/themeable';
+
+<ThemeProvider
+  activeColorScheme="light"
+  theme={{
+    ...defaultTheme,
+    lightIllustrationColor: {
+      primary: 'rgb(140, 60, 200)',
+      black: 'rgb(30, 0, 50)',
+      white: 'rgb(255, 250, 255)',
+      gray: 'rgb(200, 180, 220)',
+      gray2: 'rgb(80, 40, 100)',
+      gray3: 'rgb(220, 200, 240)',
+      positive: 'rgb(100, 180, 80)',
+      negative: 'rgb(200, 50, 80)',
+      accent1: 'rgb(240, 180, 60)',
+      accent2: 'rgb(80, 200, 220)',
+      accent3: 'rgb(220, 100, 60)',
+      accent4: 'rgb(160, 140, 240)',
+      invert: 'rgb(20, 0, 40)',
+      invert2: 'rgb(250, 245, 255)',
+    },
+    darkIllustrationColor: {
+      primary: 'rgb(180, 120, 240)',
+      black: 'rgb(15, 0, 30)',
+      white: 'rgb(255, 250, 255)',
+      gray: 'rgb(100, 80, 130)',
+      gray2: 'rgb(100, 80, 130)',
+      gray3: 'rgb(255, 250, 255)',
+      positive: 'rgb(140, 220, 120)',
+      negative: 'rgb(240, 100, 120)',
+      accent1: 'rgb(250, 200, 100)',
+      accent2: 'rgb(120, 220, 240)',
+      accent3: 'rgb(240, 140, 100)',
+      accent4: 'rgb(190, 170, 250)',
+      invert: 'rgb(255, 250, 255)',
+      invert2: 'rgb(30, 10, 50)',
+    },
+  }}
+>
+  <SpotRectangle name="appUpdate" />
+</ThemeProvider>;
+```

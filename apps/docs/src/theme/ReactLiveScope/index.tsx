@@ -66,6 +66,13 @@ import { useScrollBlocker } from '@coinbase/cds-web/hooks/useScrollBlocker';
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import * as CDSIcons from '@coinbase/cds-web/icons';
 import * as CDSIllustrations from '@coinbase/cds-web/illustrations';
+import {
+  HeroSquare as ThemeableHeroSquare,
+  Pictogram as ThemeablePictogram,
+  SpotIcon as ThemeableSpotIcon,
+  SpotRectangle as ThemeableSpotRectangle,
+  SpotSquare as ThemeableSpotSquare,
+} from '@coinbase/cds-web/illustrations/themeable';
 import * as CDSLayout from '@coinbase/cds-web/layout';
 import * as CDSLoaders from '@coinbase/cds-web/loaders';
 import * as CDSMedia from '@coinbase/cds-web/media';
@@ -185,6 +192,33 @@ const explicitRegistrations: Record<string, ExplicitEntry> = {
   // Alpha components from specific subpaths
   Combobox: { value: Combobox, source: '@coinbase/cds-web/alpha/combobox/Combobox' },
   DataCard: { value: DataCard, source: '@coinbase/cds-web/alpha/data-card' },
+
+  // Themeable illustration components
+  ThemeableHeroSquare: {
+    value: ThemeableHeroSquare,
+    source: '@coinbase/cds-web/illustrations/themeable',
+    exportedAs: 'HeroSquare',
+  },
+  ThemeablePictogram: {
+    value: ThemeablePictogram,
+    source: '@coinbase/cds-web/illustrations/themeable',
+    exportedAs: 'Pictogram',
+  },
+  ThemeableSpotIcon: {
+    value: ThemeableSpotIcon,
+    source: '@coinbase/cds-web/illustrations/themeable',
+    exportedAs: 'SpotIcon',
+  },
+  ThemeableSpotRectangle: {
+    value: ThemeableSpotRectangle,
+    source: '@coinbase/cds-web/illustrations/themeable',
+    exportedAs: 'SpotRectangle',
+  },
+  ThemeableSpotSquare: {
+    value: ThemeableSpotSquare,
+    source: '@coinbase/cds-web/illustrations/themeable',
+    exportedAs: 'SpotSquare',
+  },
 
   // Components not exported from their barrel
   InputLabel: { value: InputLabel, source: '@coinbase/cds-web/controls/InputLabel' },
