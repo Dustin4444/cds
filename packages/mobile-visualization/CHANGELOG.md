@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.7.1 (5/3/2026 PST)
+
+#### 🐞 Fixes
+
+- Gate `aria-live` announcements on chart focus. [[#663](https://github.com/coinbase/cds/pull/663)]
+
 ## 3.7.0 (4/20/2026 PST)
 
 #### 🚀 Updates
