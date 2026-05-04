@@ -46,54 +46,58 @@ jobs:
         with:
           ref: gh-pages
           path: gh-pages-checkout
+          fetch-depth: 1
 
-      # Pull latest so concurrent cleanups/deploys don't overwrite each other
-      - name: Pull latest gh-pages
+      # Remove PR directory, update manifest, and push using an orphan commit so
+      # the branch history stays at depth 1 and doesn't accumulate binary blobs.
+      - name: Remove preview and push to gh-pages
         working-directory: gh-pages-checkout
-        run: git pull origin gh-pages
-
-      # Remove PR directory
-      - name: Remove preview directory
+        env:
+          PR_NUMBER: ${{ steps.pr-number.outputs.pr_number }}
         run: |
-          PR_DIR="gh-pages-checkout/pr-${{ steps.pr-number.outputs.pr_number }}"
+          set -e
 
-          if [ -d "$PR_DIR" ]; then
-            echo "Removing preview directory: $PR_DIR"
-            rm -rf "$PR_DIR"
-            echo "✅ Directory removed"
-          else
-            echo "⚠️  Directory does not exist: $PR_DIR"
-          fi
-
-      # Update manifest
-      - name: Update manifest
-        working-directory: gh-pages-checkout
-        run: |
-          node ../.github/scripts/remove-from-manifest.mjs "${{ steps.pr-number.outputs.pr_number }}"
-
-      # Commit and push to gh-pages (retry on race with concurrent deploy/cleanup)
-      - name: Commit changes
-        working-directory: gh-pages-checkout
-        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add .
+          apply_changes() {
+            PR_DIR="pr-${PR_NUMBER}"
+            if [ -d "$PR_DIR" ]; then
+              rm -rf "$PR_DIR"
+              echo "✅ Directory removed"
+            else
+              echo "⚠️  Directory does not exist: $PR_DIR"
+            fi
+            node ../.github/scripts/remove-from-manifest.mjs "$PR_NUMBER"
+          }
+
+          git fetch origin gh-pages
+          git reset --hard origin/gh-pages
+
+          apply_changes
+          git add -A
+
           if git diff --staged --quiet; then
             echo "No changes to commit"
-          else
-            git commit -m "Remove preview for PR #${{ steps.pr-number.outputs.pr_number }}"
-            for i in 1 2 3; do
-              if git push origin gh-pages; then
-                echo "✅ Changes pushed to gh-pages"
-                exit 0
-              fi
-              echo "Push failed (concurrent update?), pulling and retrying ($i/3)..."
-              git pull origin gh-pages --rebase
-            done
-            echo "❌ Failed to push after retries"
-            exit 1
+            exit 0
           fi
+
+          for i in 1 2 3; do
+            SQUASHED=$(git commit-tree HEAD^{tree} -m "Remove preview for PR #${PR_NUMBER}")
+            if git push --force-with-lease origin "${SQUASHED}:refs/heads/gh-pages"; then
+              echo "✅ Changes pushed to gh-pages"
+              exit 0
+            fi
+            echo "Push failed (concurrent update?), re-merging and retrying ($i/3)..."
+            sleep $((RANDOM % 10 + 1))
+            git fetch origin gh-pages
+            git reset --hard origin/gh-pages
+            apply_changes
+            git add -A
+          done
+
+          echo "❌ Failed to push after 3 retries"
+          exit 1
 
       # Comment on PR
       - name: Comment on PR
