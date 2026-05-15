@@ -255,7 +255,12 @@ const main = async () => {
 
   const statsMessageDiff = diffLines(baselineStatsMessage, exportStatsMessage);
 
-  console.log('\n🐝 Export runtime costs:\n');
+  // https://buildkite.com/docs/pipelines/managing-log-output
+  const BUILDKITE_EXPAND_PREFIX = '+++';
+
+  console.log(
+    `${process.env.CI === 'true' ? `${BUILDKITE_EXPAND_PREFIX} ` : '\n'}🐝 Export runtime costs:\n`,
+  );
 
   statsMessageDiff.forEach(({ value, added, removed }, index) => {
     const nextDiff = statsMessageDiff[index + 1];

@@ -13,7 +13,7 @@ const reactNative = [
 
 const esModules = ['@coinbase', ...reactNative, ...d3];
 
-const isCI = process.env.CI === 'true';
+const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
 
 /** @type {import('jest').Config} */
 const config = {

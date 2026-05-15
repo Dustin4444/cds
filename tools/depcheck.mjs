@@ -88,7 +88,11 @@ const baselineResultsMessage = isDiffReport
 
 const resultsMessageDiff = diffLines(baselineResultsMessage, message);
 
-console.log('\n🦍 Depcheck results:\n');
+const BUILDKITE_EXPAND_PREFIX = '+++';
+
+console.log(
+  `${process.env.CI === 'true' ? `${BUILDKITE_EXPAND_PREFIX} ` : '\n'}🦍 Depcheck results:\n`,
+);
 
 resultsMessageDiff.forEach(({ value, added, removed }, index) => {
   const nextDiff = resultsMessageDiff[index + 1];
