@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.0.0 (5/20/2026 PST)
+
+CDS 9 is here!!
+
+For more details and to help upgrading from CDS 8 using our automated migration tool, see our official [upgrade guide](https://cds.coinbase.com/guides/v9-upgrade-guide)!
+
+#### 💥 Breaking
+
+- Peer dependency range updated: React 19 & React Native 0.81.5 (Expo SDK 54)
+- Removed remaining instances of fixed height/width values across all components which may cause subtle layout shifts in your app.
+- Some component props’ types have narrowed in response to React 19 upgrade.
+- Read our upgrade guilde for more details!
+
+#### 🚀 Updates
+
+- Migrated full set of components from mobile-visualization package to new `visualizations/chart` and `visualizations/sparkline` sub-paths.
+- Read our upgrade guilde for more details!
+
 ## 8.75.2 ((5/19/2026, 01:13 PM PST))
 
 This is an artificial version bump with no new change.

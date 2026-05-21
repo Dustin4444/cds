@@ -129,7 +129,7 @@ export const trayClassNames = {
   closeButton: 'cds-Tray-closeButton',
 } as const;
 
-export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
+export type TrayRenderChildren = (args: { handleClose: () => void }) => React.ReactElement;
 
 export type TrayBaseProps = Pick<
   FocusTrapProps,

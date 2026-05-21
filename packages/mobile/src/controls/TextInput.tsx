@@ -11,9 +11,8 @@ import React, {
 import { Pressable } from 'react-native';
 import type { ForwardedRef } from 'react';
 import type {
-  NativeSyntheticEvent,
+  DimensionValue,
   TextInput as RNTextInput,
-  TextInputFocusEventData,
   TextInputProps as RNTextInputProps,
   ViewStyle,
 } from 'react-native';
@@ -26,7 +25,6 @@ import type {
   SharedProps,
   TextAlignProps,
 } from '@coinbase/cds-common/types';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -177,13 +175,13 @@ export const TextInput = memo(
       focusedBorderWidth,
     );
 
-    const editableInputAddonProps = {
+    const editableInputAddonProps: TextInputProps = {
       ...editableInputProps,
-      onFocus: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      onFocus: (e) => {
         editableInputProps?.onFocus?.(e);
         setFocused(true);
       },
-      onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      onBlur: (e) => {
         editableInputProps?.onBlur?.(e);
         setFocused(false);
       },
@@ -204,7 +202,7 @@ export const TextInput = memo(
         ...(labelVariant === 'inside' &&
           hasLabel &&
           !compact && {
-            paddingBottom: 0,
+            paddingBottom: theme.space[1],
             paddingTop: 0,
           }),
       }),
@@ -224,7 +222,8 @@ export const TextInput = memo(
     const inaccessibleStart = useMemo(() => {
       if (isValidElement(start) && start.type === InputIconButton) {
         return cloneElement(start, {
-          ...start.props,
+          // ReactElement default props is unknown, so we need to cast to the correct type
+          ...(start.props as InputIconButtonProps),
           accessibilityLabel: undefined,
           accessibilityHint: undefined,
           accessibilityElementsHidden: true,

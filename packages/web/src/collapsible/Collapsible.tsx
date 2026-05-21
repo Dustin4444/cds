@@ -102,16 +102,19 @@ export const Collapsible = memo(
     }, [motionStyle, isDisplayNone]);
 
     return (
+      // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
       <motion.div
-        {...motionProps}
-        ref={forwardedRef}
-        aria-labelledby={accessibilityLabelledBy}
-        className={COMPONENT_STATIC_CLASSNAME}
-        data-testid={testID}
-        id={id}
-        onAnimationComplete={handleAnimationComplete}
-        role={role}
-        style={style}
+        {...({
+          ...motionProps,
+          ref: forwardedRef,
+          'aria-labelledby': accessibilityLabelledBy,
+          className: COMPONENT_STATIC_CLASSNAME,
+          'data-testid': testID,
+          id: id,
+          onAnimationComplete: handleAnimationComplete,
+          role: role,
+          style: style,
+        } as React.ComponentProps<typeof motion.div>)}
       >
         <Box display="block" paddingTop={paddingTop}>
           <Box

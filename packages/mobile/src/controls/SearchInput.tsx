@@ -1,10 +1,10 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
 import type { ForwardedRef } from 'react';
 import type {
+  BlurEvent,
+  FocusEvent,
   GestureResponderEvent,
-  NativeSyntheticEvent,
   TextInput as RNTextInput,
-  TextInputFocusEventData,
 } from 'react-native';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import type { IconName } from '@coinbase/cds-common/types';
@@ -118,7 +118,7 @@ export const SearchInput = memo(
     const refs = useMergeRefs(ref, internalRef);
 
     const handleOnFocus = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: FocusEvent) => {
         onFocus?.(e);
 
         if (!disableBackArrow && startIcon === undefined) {
@@ -129,7 +129,7 @@ export const SearchInput = memo(
     );
 
     const handleOnBlur = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: BlurEvent) => {
         onBlur?.(e);
 
         if (startIcon === undefined) {

@@ -8,13 +8,16 @@ module.exports = {
     ['@babel/preset-env', { modules: isTestEnv ? 'commonjs' : false, loose: true }],
     ['@babel/preset-react', { runtime: 'automatic' }],
     '@babel/preset-typescript',
-    ...(isTestEnv || isDetoxEnv ? ['module:metro-react-native-babel-preset'] : []),
+    // Use babel-preset-expo for test/detox environments. This preset wraps @react-native/babel-preset
+    // which includes babel-plugin-syntax-hermes-parser for parsing Flow files with 'as' syntax.
+    // See: https://docs.expo.dev/versions/latest/config/babel/
+    ...(isTestEnv || isDetoxEnv ? ['babel-preset-expo'] : []),
   ],
-  plugins: isTestEnv || isDetoxEnv ? ['react-native-reanimated/plugin'] : [],
+  plugins: isTestEnv || isDetoxEnv ? ['react-native-worklets/plugin'] : [],
   ignore:
     isTestEnv || isDetoxEnv
       ? []
-      : // TO DO: The mobile-app release builds break if we ignore stories
+      : // TO DO: The expo-app release builds break if we ignore stories
         [
           // '**/__stories__/**',
           '**/__tests__/**',

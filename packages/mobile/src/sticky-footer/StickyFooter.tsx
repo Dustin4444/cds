@@ -1,13 +1,12 @@
 import React, { forwardRef, memo } from 'react';
 import { View } from 'react-native';
 
-import { useSafeBottomPadding } from '../hooks/useSafeBottomPadding';
 import { Box, type BoxProps } from '../layout';
 
 export type StickyFooterProps = BoxProps & {
   /**
    * Whether to apply a box shadow to the StickyFooter element.
-   * @deprecated Use elevation instead. This will be removed in a future major release.
+   * @deprecated Use `elevation` instead. This will be removed in a future major release.
    * @deprecationExpectedRemoval v8
    */
   elevated?: boolean;

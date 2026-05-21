@@ -37,14 +37,11 @@ const dotCountContentCss = css`
   align-items: center;
   justify-content: center;
   display: flex;
-  border-width: 1px;
-  min-width: ${dotCountSize}px;
-  height: ${dotCountSize}px;
-  border-radius: 16px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-inline-start: 6px;
-  padding-inline-end: 6px;
+  border-style: solid;
+  border-width: var(--borderWidth-100);
+  border-radius: var(--borderRadius-400);
+  padding-inline-start: var(--space-0_75);
+  padding-inline-end: var(--space-0_75);
 `;
 
 const variantColorMap: Record<DotCountVariants, ThemeVars.Color> = {
@@ -76,6 +73,18 @@ export type DotCountBaseProps = SharedProps &
     children?: React.ReactNode;
     /** Indicates what shape Dot is overlapping */
     overlap?: DotOverlap;
+    /**
+     * An optional fixed height of the DotCount component.
+     * Width grows based on content length.
+     * @default 24
+     * */
+    height?: number;
+    /**
+     * An optional fixed width of the DotCount component.
+     * By default, width grows based on content length.
+     * @default auto
+     * */
+    width?: number;
   };
 
 export type DotCountProps = DotCountBaseProps & {
@@ -109,6 +118,8 @@ export const DotCount = memo((_props: DotCountProps) => {
     variant = 'negative',
     count,
     max,
+    height = dotCountSize,
+    width,
     testID,
     accessibilityLabel,
     overlap,
@@ -124,12 +135,15 @@ export const DotCount = memo((_props: DotCountProps) => {
   const containerStyles = useMemo(() => {
     const variantColor = variantColorMap[variant];
     return {
+      height,
+      minWidth: height,
+      width,
       backgroundColor: color[variantColor],
       borderColor: color.bgSecondary,
       ...pinStyles,
       ...styles?.container,
     };
-  }, [color, pinStyles, styles?.container, variant]);
+  }, [height, width, color, pinStyles, styles?.container, variant]);
 
   const motionProps = useMotionProps({
     enterConfigs: [dotOpacityEnterConfig, dotScaleEnterConfig],
@@ -156,11 +170,14 @@ export const DotCount = memo((_props: DotCountProps) => {
       {children}
       <NewAnimatePresence>
         {count > 0 && (
+          // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
           <motion.div
-            {...motionProps}
-            className={cx(dotCountContentCss, classNames?.container)}
-            data-testid="dotcount-container"
-            style={containerStyles}
+            {...({
+              ...motionProps,
+              className: cx(dotCountContentCss, classNames?.container),
+              'data-testid': 'dotcount-container',
+              style: containerStyles,
+            } as React.ComponentProps<typeof motion.div>)}
           >
             <Text
               as="p"

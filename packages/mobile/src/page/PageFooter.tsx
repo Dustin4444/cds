@@ -2,11 +2,12 @@ import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';
+import type { PositionStyles } from '../styles/styleProps';
 import { Text } from '../typography/Text';
 
 export type PageFooterBaseProps = SharedProps &

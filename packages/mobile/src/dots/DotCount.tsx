@@ -56,8 +56,6 @@ const [opacityEnter, opacityExit, scaleEnter, scaleExit] = convertMotionConfigs(
   dotScaleExitConfig,
 ]);
 
-const dotTextPaddingHorizontal = 6;
-
 const variantColorMap: Record<DotCountVariants, ThemeVars.Color> = {
   negative: 'bgNegative',
 };
@@ -87,6 +85,18 @@ export type DotCountBaseProps = SharedProps &
     children?: React.ReactNode;
     /** Indicates what shape Dot is overlapping */
     overlap?: DotOverlap;
+    /**
+     * An optional fixed height of the DotCount component.
+     * Width grows based on content length.
+     * @default 24
+     * */
+    height?: number;
+    /**
+     * An optional fixed width of the DotCount component.
+     * By default, width grows based on content length.
+     * @default auto
+     * */
+    width?: number;
   };
 
 export type DotCountProps = DotCountBaseProps & {
@@ -110,6 +120,8 @@ export const DotCount = memo((_props: DotCountProps) => {
     variant = 'negative',
     count,
     max,
+    height = dotCountSize,
+    width,
     overlap,
     style,
     styles,
@@ -119,7 +131,7 @@ export const DotCount = memo((_props: DotCountProps) => {
   const [childrenSize, onChildrenLayout] = useDotsLayout();
   const transforms = useDotPinStyles(
     childrenSize,
-    { width: dotCountSize + dotTextPaddingHorizontal, height: dotCountSize } as LayoutRectangle,
+    { width: width ?? height, height } as LayoutRectangle,
     overlap,
   );
 
@@ -145,11 +157,17 @@ export const DotCount = memo((_props: DotCountProps) => {
     return [
       styleSheet.container,
       {
+        height,
+        minWidth: height,
+        width,
+        paddingHorizontal: theme.space[0.75],
+        borderWidth: theme.borderWidth[100],
+        borderRadius: theme.borderRadius[400],
         borderColor: theme.color.bgSecondary,
         backgroundColor: theme.color[variantColorMap[variant]],
       },
     ];
-  }, [theme.color, variant]);
+  }, [height, width, theme.space, theme.borderWidth, theme.borderRadius, theme.color, variant]);
 
   // avoid displaying 0 during animations and preserve exit animation
   useEffect(() => {
@@ -191,11 +209,6 @@ export const DotCount = memo((_props: DotCountProps) => {
     [containerStyles, animatedStyles, styles?.container],
   );
 
-  const textStyles = useMemo(
-    () => [{ paddingHorizontal: dotTextPaddingHorizontal }, styles?.text],
-    [styles?.text],
-  );
-
   const rootStyles = useMemo(() => [style, styles?.root], [styles?.root, style]);
 
   // only check childrenSize when children is defined
@@ -209,7 +222,7 @@ export const DotCount = memo((_props: DotCountProps) => {
       {!shouldUnmount && shouldShow && (
         <View style={pinStyles}>
           <Animated.View style={dotCountContainerStyle} testID="dotcount-container">
-            <Text color="fgInverse" font="caption" style={textStyles}>
+            <Text color="fgInverse" font="caption" style={styles?.text}>
               {parseDotCountMaxOverflow(countInternal, max)}
             </Text>
           </Animated.View>
@@ -224,9 +237,5 @@ const styleSheet = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     display: 'flex',
-    borderWidth: 1,
-    minWidth: dotCountSize,
-    height: dotCountSize,
-    borderRadius: 16,
   },
 });

@@ -7,6 +7,7 @@ import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
 import { cx } from '../../cx';
+import { useTheme } from '../../hooks/useTheme';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
@@ -20,12 +21,6 @@ import {
   type SelectOption,
   type SelectType,
 } from './Select';
-
-// The height is smaller for the inside label variant since the label takes
-// up space above the input.
-const LABEL_VARIANT_INSIDE_HEIGHT = 32;
-const COMPACT_HEIGHT = 40;
-const DEFAULT_HEIGHT = 56;
 
 const noFocusOutlineCss = css`
   &:focus,
@@ -105,7 +100,10 @@ const DefaultSelectControlComponent = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
+      const theme = useTheme();
       const isMultiSelect = type === 'multi';
+      // horizontal/inline label is used for compact selesct exepct for multi-selects
+      // multi-selects render their label outside of the control unless labelVariant is set to 'inside'
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       // Map of options to their values
@@ -242,13 +240,12 @@ const DefaultSelectControlComponent = memo(
 
       const labelNode = useMemo(
         () =>
-          labelVariant === 'inside' ? (
+          // labelVariant has no effect when compact is true
+          labelVariant === 'inside' && !compact ? (
             <Pressable noScaleOnPress onClick={() => setOpen((s) => !s)} tabIndex={-1}>
               <InputLabel
                 className={classNames?.controlLabelNode}
                 color="fg"
-                paddingBottom={0}
-                paddingStart={2}
                 style={styles?.controlLabelNode}
               >
                 {label}
@@ -258,6 +255,8 @@ const DefaultSelectControlComponent = memo(
             <InputLabel
               className={classNames?.controlLabelNode}
               color="fg"
+              // remove default vertical padding when label is the compact/inline version
+              paddingY={shouldShowCompactLabel ? 0 : 0.5}
               style={styles?.controlLabelNode}
             >
               {label}
@@ -265,7 +264,15 @@ const DefaultSelectControlComponent = memo(
           ) : (
             label
           ),
-        [labelVariant, classNames?.controlLabelNode, styles?.controlLabelNode, label, setOpen],
+        [
+          labelVariant,
+          compact,
+          classNames?.controlLabelNode,
+          styles?.controlLabelNode,
+          label,
+          shouldShowCompactLabel,
+          setOpen,
+        ],
       );
 
       const valueNode = useMemo(() => {
@@ -360,17 +367,9 @@ const DefaultSelectControlComponent = memo(
             flexGrow={1}
             flexShrink={1}
             focusable={false}
-            minHeight={
-              labelVariant === 'inside'
-                ? LABEL_VARIANT_INSIDE_HEIGHT
-                : compact
-                  ? COMPACT_HEIGHT
-                  : DEFAULT_HEIGHT
-            }
             minWidth={0}
             onClick={() => setOpen((s) => !s)}
             onKeyDown={onKeyDown}
-            paddingStart={1}
             role={role}
             style={styles?.controlInputNode}
             tabIndex={tabIndex}
@@ -382,14 +381,14 @@ const DefaultSelectControlComponent = memo(
                 height="100%"
                 justifyContent="center"
                 minWidth={0}
-                paddingX={1}
+                paddingEnd={2}
                 style={styles?.controlStartNode}
               >
                 {startNode}
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" paddingX={1}>
+              <HStack alignItems="center" paddingEnd={1}>
                 {labelNode}
               </HStack>
             ) : null}
@@ -413,8 +412,6 @@ const DefaultSelectControlComponent = memo(
                 justifyContent="flex-start"
                 minWidth={0}
                 overflow="hidden"
-                paddingX={1}
-                paddingY={labelVariant === 'inside' && !isMultiSelect ? 0 : compact ? 1 : 1.5}
                 style={styles?.controlValueNode}
               >
                 {valueNode}
@@ -433,8 +430,6 @@ const DefaultSelectControlComponent = memo(
           classNames?.controlStartNode,
           classNames?.controlValueNode,
           disabled,
-          labelVariant,
-          compact,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
@@ -444,7 +439,6 @@ const DefaultSelectControlComponent = memo(
           shouldShowCompactLabel,
           labelNode,
           align,
-          isMultiSelect,
           valueNode,
           contentNode,
           setOpen,
@@ -460,8 +454,7 @@ const DefaultSelectControlComponent = memo(
               flexGrow={1}
               height="100%"
               justifyContent={labelVariant === 'inside' ? 'flex-end' : undefined}
-              paddingX={2}
-              paddingY={compact ? 1 : 1.5}
+              paddingStart={2}
               style={styles?.controlEndNode}
             >
               {customEndNode ? (
@@ -478,13 +471,24 @@ const DefaultSelectControlComponent = memo(
         [
           classNames?.controlEndNode,
           labelVariant,
-          compact,
           styles?.controlEndNode,
           customEndNode,
           open,
           variant,
           setOpen,
         ],
+      );
+
+      const inputStackStyles: Record<string, React.CSSProperties> = useMemo(
+        () => ({
+          input: {
+            paddingTop: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
+            paddingBottom: compact ? theme.space[1] : theme.space[2],
+            paddingLeft: theme.space[2],
+            paddingRight: theme.space[2],
+          },
+        }),
+        [compact, theme.space, labelVariant],
       );
 
       return (
@@ -499,6 +503,7 @@ const DefaultSelectControlComponent = memo(
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
           labelVariant={labelVariant}
+          styles={inputStackStyles}
           variant={variant}
           {...props}
         />

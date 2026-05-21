@@ -6,7 +6,6 @@ secure:
   branches:
     - master
     - release-8.x
-    - cds-v9-master
   auto_assign_reviewers: true
   # Marks
   upstream_repository: coinbase/cds
@@ -124,11 +123,11 @@ build:
         expire_tmp_tags_after_days: 1
         expire_all_after_days: 2
     - BaldurNode:
-        name: package-ui-mobile-playground
-        path: ./packages/ui-mobile-playground/publish.Dockerfile
+        name: package-ui-scorecard
+        path: ./packages/ui-scorecard/publish.Dockerfile
         architecture: amd64
         autobuild_files:
-          - packages/ui-mobile-playground/package.json
+          - packages/ui-scorecard/package.json
         expire_keep_tags_after_days: 1
         expire_tmp_tags_after_days: 1
         expire_all_after_days: 2

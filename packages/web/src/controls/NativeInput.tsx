@@ -81,6 +81,10 @@ const compactContainerPaddingCss = css`
 `;
 
 export type NativeInputBaseProps = BoxBaseProps & {
+  /**
+   * Decreases the padding within the input element
+   * @default false
+   */
   compact?: boolean;
   /** Custom container spacing if needed. This will add to the existing spacing */
   containerSpacing?: string;
