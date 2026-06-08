@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common';
+import type { SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { CellAccessoryProps } from '../../cells/CellAccessory';
@@ -393,8 +394,9 @@ export type SelectControlProps<
   Omit<BoxProps<BoxDefaultElement>, 'borderWidth' | 'onChange'> &
   Pick<
     InputStackBaseProps,
-    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
+    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode' | 'borderRadius'
   > &
+  Pick<SharedInputProps, 'labelColor' | 'labelFont' | 'readOnly'> &
   SelectState<Type, SelectOptionValue> & {
     /**
      * Alignment of the value node.
@@ -414,9 +416,14 @@ export type SelectControlProps<
     borderWidth?: InputStackBaseProps['borderWidth'];
     /**
      * Additional border width when focused.
-     * @default 200 when bordered is false, undefined otherwise
+     * @default 200 when bordered is false, otherwise equals borderWidth
      */
     focusedBorderWidth?: InputStackBaseProps['focusedBorderWidth'];
+    /**
+     * Background of the input.
+     * @default 'bgSecondary' when readOnly and not disabled, 'bg' otherwise
+     */
+    inputBackground?: InputStackBaseProps['inputBackground'];
     /** Array of options to display in the select dropdown. Can be individual options or groups with `label` and `options` */
     options: SelectOptionList<Type, SelectOptionValue>;
     /** Label displayed above the control */
@@ -510,6 +517,13 @@ export type SelectBaseProps<
     | 'align'
     | 'font'
     | 'bordered'
+    | 'borderWidth'
+    | 'focusedBorderWidth'
+    | 'inputBackground'
+    | 'labelColor'
+    | 'labelFont'
+    | 'readOnly'
+    | 'borderRadius'
   > &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> &
   Pick<
