@@ -8,6 +8,45 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.42.0 (6/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-06-11. [[#755](https://github.com/coinbase/cds/pull/755)]
+
+##### ⭐️ Updated (19)
+
+###### Pictogram (10)
+
+- instoAccount
+- instoAdvancedTradingRebates
+- instoAuthenticatorProgress
+- instoEasyToUse
+- instoDecentralizedExchange
+- instoSecuredAssets
+- instoBorrowingLending
+- instoPasswordWalletLocked
+- instoEarnGraph
+- instoGem
+
+###### HeroSquare (4)
+
+- ship
+- graduationCap
+- filter
+- mcLoad
+
+###### SpotRectangle (1)
+
+- instoRefreshKey
+
+###### SpotSquare (4)
+
+- instoWaiting
+- instoEthStakingRewards
+- instoAuthenticatorProgress
+- instoProgressCircle
+
 ## 4.41.0 (6/9/2026 PST)
 
 #### 🚀 Updates
