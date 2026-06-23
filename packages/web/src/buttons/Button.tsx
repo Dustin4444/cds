@@ -28,7 +28,6 @@ const defaultProgressCircleSize = 24;
 const baseCss = css`
   text-decoration: none;
   display: inline-flex;
-  height: fit-content;
   text-align: center;
   vertical-align: middle;
   align-items: center;
@@ -195,6 +194,7 @@ export const Button: ButtonComponent = memo(
         fontFamily,
         fontSize,
         fontWeight,
+        height = 'fit-content',
         lineHeight,
         background,
         color,
@@ -261,6 +261,7 @@ export const Button: ButtonComponent = memo(
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
+          height={height}
           loading={loading}
           margin={margin}
           minWidth={minWidth}
