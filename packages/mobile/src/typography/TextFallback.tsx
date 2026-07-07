@@ -34,11 +34,10 @@ export const TextFallback = memo(function TextFallback({
     };
   }, [font, fontScale, theme]);
 
-  return (
-    <Fallback
-      height={height}
-      style={[{ paddingTop: paddingVertical, paddingBottom: paddingVertical }, style]}
-      {...props}
-    />
+  const fallbackStyle = useMemo(
+    () => [{ paddingTop: paddingVertical, paddingBottom: paddingVertical }, style],
+    [paddingVertical, style],
   );
+
+  return <Fallback height={height} style={fallbackStyle} {...props} />;
 });
