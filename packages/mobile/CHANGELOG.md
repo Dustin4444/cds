@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.5 (7/13/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore(CDS-2463): Support non-token color customizations in RollingNumber. [[#787](https://github.com/coinbase/cds/pull/787)]
+
 ## 9.6.4 (7/13/2026 PST)
 
 #### 🐞 Fixes
