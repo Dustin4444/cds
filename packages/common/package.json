@@ -41,7 +41,7 @@
     "@coinbase/cds-illustrations": "workspace:^",
     "@coinbase/cds-mcp-server": "workspace:^",
     "@coinbase/cds-utils": "workspace:^",
-    "@modelcontextprotocol/sdk": "^1.13.1",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "d3-array": "^3.2.4",
     "d3-color": "^3.1.0",
     "d3-interpolate": "^3.0.1",
