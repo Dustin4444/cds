@@ -48,7 +48,7 @@ export const Examples = () => {
     <VStack gap={8}>
       <VStack>
         <Note>DatePicker</Note>
-        <DatePicker helperText="" {...exampleProps} {...props} />
+        <DatePicker {...exampleProps} {...props} />
       </VStack>
       <VStack>
         <Note>DatePicker ES-es locale</Note>
@@ -124,6 +124,35 @@ export const Examples = () => {
 };
 
 Examples.parameters = { a11y: { disable: true } };
+
+export const Sizes = () => {
+  const [date, setDate] = useState<Date | null>(null);
+  const [error, setError] = useState<DateInputValidationError | null>(null);
+  const props = { date, onChangeDate: setDate, error, onErrorDate: setError };
+  return (
+    <VStack gap={8}>
+      <VStack>
+        <Note>{'size="s"'}</Note>
+        <DatePicker size="s" {...exampleProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>{'size="m"'}</Note>
+        <DatePicker size="m" {...exampleProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>{'size="l" (default)'}</Note>
+        <DatePicker size="l" {...exampleProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>{'compact (deprecated, renders as size="s")'}</Note>
+        <DatePicker compact {...exampleProps} {...props} />
+      </VStack>
+      <Box height={100} />
+    </VStack>
+  );
+};
+
+Sizes.parameters = { a11y: { disable: true } };
 
 export const AccessibilityLabels = () => {
   const [date, setDate] = useState<Date | null>(null);

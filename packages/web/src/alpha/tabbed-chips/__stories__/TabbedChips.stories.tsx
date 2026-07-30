@@ -50,12 +50,14 @@ const compactTabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
 const Demo = ({
   tabs = defaultTabs,
   compact = false,
+  size,
   styles,
   autoScrollOffset,
 }: {
   tabs?: TabbedChipProps[];
   styles?: TabbedChipsProps['styles'];
   compact?: boolean;
+  size?: TabbedChipsProps['size'];
   autoScrollOffset?: number;
 }) => {
   const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
@@ -65,6 +67,7 @@ const Demo = ({
       autoScrollOffset={autoScrollOffset}
       compact={compact}
       onChange={setActiveTab}
+      size={size}
       styles={styles}
       tabs={tabs}
     />
@@ -118,6 +121,21 @@ export const Default = () => {
         Compact with start
       </Text>
       <Demo compact tabs={compactTabsWithStart} />
+      <Text as="p" display="block" font="headline">
+        Sizes
+      </Text>
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'size="s" (default)'}
+      </Text>
+      <Demo size="s" />
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'size="xs"'}
+      </Text>
+      <Demo size="xs" />
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'compact (deprecated, renders as size="xs")'}
+      </Text>
+      <Demo compact />
       <Text as="p" display="block" font="headline">
         With auto scroll offset
       </Text>
