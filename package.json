@@ -196,7 +196,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jest-extended": "^4.0.2",
     "node-fetch": "^2.6.7",
-    "nx": "20.8.2",
+    "nx": "22.7.2",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
     "postcss-sort-media-queries": "^4.2.1",
