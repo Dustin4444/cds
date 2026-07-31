@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-07-28T18:25:03.059Z",
+  "lastUpdated": "2026-07-31T20:27:00.190Z",
   "colors": {
     "light": [
       {
@@ -33755,6 +33755,27 @@
         "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/playButton-0.js",
         "pngLight": "./spotSquare/png/light/playButton-0.png",
         "pngDark": "./spotSquare/png/dark/playButton-0.png"
+      },
+      "version": 0
+    },
+    "31087:8": {
+      "type": "pictogram",
+      "name": "options",
+      "hash": "l2lf4/iDDMEH99SnOwt1Dsh3DUo9W0cQximM+GxExC4=",
+      "width": 40,
+      "height": 40,
+      "description": "product, icon, options, hourglass, hour, glass, time, crypto, coin, contract, expire, expiration, target, date",
+      "createdAt": "2026-07-29T15:57:33.077Z",
+      "lastUpdated": "2026-07-29T15:57:33.077Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/options-0.svg",
+        "svgDark": "./pictogram/svg/dark/options-0.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/options-0.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/options-0.js",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/options-0.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/options-0.js",
+        "pngLight": "./pictogram/png/light/options-0.png",
+        "pngDark": "./pictogram/png/dark/options-0.png"
       },
       "version": 0
     }
