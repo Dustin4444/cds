@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.12.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support text in component config. [[#831](https://github.com/coinbase/cds/pull/831)]
+
 ## 9.11.0 (8/7/2026 PST)
 
 #### 🚀 Updates
