@@ -37,7 +37,7 @@
     "vscode-languageserver-textdocument": "^1.0.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.0",
+    "@babel/core": "^7.29.6",
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-typescript": "^7.27.1",
     "@rollup/plugin-babel": "^6.0.4",
