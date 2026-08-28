@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.23.0 (8/27/2026 PST)
+
+#### 🚀 Updates
+
+- Add uncontrolled initialPage prop to Carousel. [[#864](https://github.com/coinbase/cds/pull/864)]
+
 ## 9.22.1 (8/25/2026 PST)
 
 #### 🐞 Fixes

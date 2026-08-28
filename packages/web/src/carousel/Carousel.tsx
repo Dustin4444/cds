@@ -29,6 +29,7 @@ import {
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useIsoEffect } from '../hooks/useIsoEffect';
 import { type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -226,6 +227,12 @@ export type CarouselBaseProps = SharedProps &
      * @default 'page'
      */
     snapMode?: 'item' | 'page';
+    /**
+     * Zero-based page index to show on first layout, with no animation. Uncontrolled —
+     * updating it later does not move the carousel. Out-of-range values are clamped.
+     * @default 0
+     */
+    initialPage?: number;
     /**
      * Hides the navigation arrows (previous/next buttons and autoplay control).
      *
@@ -719,6 +726,7 @@ export const Carousel = memo(
         paginationVariant,
         drag = 'snap',
         snapMode = 'page',
+        initialPage,
         NavigationComponent = DefaultCarouselNavigation,
         PaginationComponent = DefaultCarouselPagination,
         className,
@@ -742,8 +750,9 @@ export const Carousel = memo(
       const animationApi = useAnimation();
       const carouselScrollX = useMotionValue(0);
       const dragControls = useDragControls();
+      const hasAppliedInitialPageRef = useRef(false);
 
-      const [activePageIndex, setActivePageIndex] = useState(0);
+      const [activePageIndex, setActivePageIndex] = useState(() => Math.max(0, initialPage ?? 0));
       const containerRef = useRef<HTMLDivElement>(null);
       const [containerWidth, setContainerWidth] = useState(0);
       const carouselItemRefMap = useRefMap<HTMLElement>();
@@ -1041,7 +1050,7 @@ export const Carousel = memo(
       });
 
       const goToPage = useCallback(
-        (page: number) => {
+        (page: number, { animate: shouldAnimate = true }: { animate?: boolean } = {}) => {
           const newPage = Math.max(0, Math.min(totalPages - 1, page));
           updateActivePageIndex(newPage);
           updateVisibleCarouselItems(pageOffsets[newPage]);
@@ -1051,7 +1060,11 @@ export const Carousel = memo(
                 .offset
             : pageOffsets[newPage];
 
-          animate(carouselScrollX, -targetOffset, animationConfig);
+          if (shouldAnimate) {
+            animate(carouselScrollX, -targetOffset, animationConfig);
+          } else {
+            carouselScrollX.set(-targetOffset);
+          }
           reset();
         },
         [
@@ -1065,6 +1078,16 @@ export const Carousel = memo(
           reset,
         ],
       );
+
+      useIsoEffect(() => {
+        if (hasAppliedInitialPageRef.current || totalPages === 0) return;
+        hasAppliedInitialPageRef.current = true;
+
+        const targetPage = initialPage ?? 0;
+        if (targetPage > 0) {
+          goToPage(targetPage, { animate: false });
+        }
+      }, [totalPages, initialPage, goToPage]);
 
       useImperativeHandle(
         ref,

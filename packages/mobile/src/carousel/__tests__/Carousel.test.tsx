@@ -5,7 +5,12 @@ import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
-import { Carousel, type CarouselImperativeHandle, useCarouselContext } from '../Carousel';
+import {
+  Carousel,
+  type CarouselImperativeHandle,
+  type CarouselPaginationComponentProps,
+  useCarouselContext,
+} from '../Carousel';
 import { CarouselItem } from '../CarouselItem';
 
 // Mock react-native-gesture-handler with gesture simulation capabilities
@@ -1527,6 +1532,156 @@ describe('Carousel', () => {
       });
 
       expect(onChangePage).toHaveBeenCalledWith(0);
+    });
+  });
+
+  describe('Initial Page', () => {
+    // 8 items at width 200 in a 400px container, snapMode="item" => 7 pages (indices 0-6).
+    const itemCount = 8;
+
+    // Custom pagination that surfaces the active page index for assertions.
+    const ActivePagePagination = ({
+      activePageIndex,
+      totalPages,
+    }: CarouselPaginationComponentProps) => (
+      <Text testID="active-page-index">{`${activePageIndex}/${totalPages}`}</Text>
+    );
+
+    beforeEach(() => {
+      mockGestureHandlers.onStart = undefined;
+      mockGestureHandlers.onUpdate = undefined;
+      mockGestureHandlers.onEnd = undefined;
+      jest.clearAllMocks();
+    });
+
+    it('opens on the provided initialPage without firing onChangePage on mount', async () => {
+      const onChangePage = jest.fn();
+
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={ActivePagePagination}
+          initialPage={3}
+          itemCount={itemCount}
+          onChangePage={onChangePage}
+          snapMode="item"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('3/7');
+      });
+
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('defaults to the first page when initialPage is omitted', async () => {
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={ActivePagePagination}
+          itemCount={itemCount}
+          snapMode="item"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('0/7');
+      });
+    });
+
+    it.each`
+      initialPage | expectedIndex | description
+      ${99}       | ${6}          | ${'clamps an initialPage above the last page to the last page'}
+      ${-5}       | ${0}          | ${'clamps a negative initialPage to the first page'}
+    `('$description', async ({ initialPage, expectedIndex }) => {
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={ActivePagePagination}
+          initialPage={initialPage}
+          itemCount={itemCount}
+          snapMode="item"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent(`${expectedIndex}/7`);
+      });
+    });
+
+    it('lets a later imperative goToPage override the initial page', async () => {
+      const onChangePage = jest.fn();
+
+      const TestComponent = () => {
+        const carouselRef = useRef<CarouselImperativeHandle>(null);
+
+        return (
+          <DefaultThemeProvider>
+            <VStack>
+              <Text onPress={() => carouselRef.current?.goToPage(1)} testID="go-to-page-1">
+                Go to Page 1
+              </Text>
+              <Carousel
+                ref={carouselRef}
+                PaginationComponent={ActivePagePagination}
+                initialPage={3}
+                onChangePage={onChangePage}
+                snapMode="item"
+              >
+                {Array.from({ length: itemCount }, (_, index) => {
+                  const itemId = `item-${index}`;
+                  return (
+                    <MockCarouselItem key={itemId} id={itemId} itemIndex={index} width={200}>
+                      <Box height={100} testID={`carousel-item-${itemId}`} width={200}>
+                        <Text>Item {index + 1}</Text>
+                      </Box>
+                    </MockCarouselItem>
+                  );
+                })}
+              </Carousel>
+            </VStack>
+          </DefaultThemeProvider>
+        );
+      };
+
+      render(<TestComponent />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('3/7');
+      });
+
+      fireEvent.press(screen.getByTestId('go-to-page-1'));
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('1/7');
+      });
+      expect(onChangePage).toHaveBeenCalledWith(1);
+    });
+
+    it('lets a later drag override the initial page', async () => {
+      const onChangePage = jest.fn();
+
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={ActivePagePagination}
+          initialPage={3}
+          itemCount={itemCount}
+          onChangePage={onChangePage}
+          snapMode="item"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('3/7');
+      });
+
+      onChangePage.mockClear();
+
+      // Drag toward earlier pages from the seeded page 3.
+      simulateDragGesture(200, 0);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('2/7');
+      });
+      expect(onChangePage).toHaveBeenCalledWith(2);
     });
   });
 });

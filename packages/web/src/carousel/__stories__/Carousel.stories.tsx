@@ -658,6 +658,21 @@ const LoopingExamples = () => (
   </VStack>
 );
 
+const InitialPageExample = () => (
+  <Carousel
+    initialPage={2}
+    snapMode="page"
+    styles={gapOnlyStyles}
+    title="Initial Page (opens on page 3)"
+  >
+    {sampleItems.slice(0, 5).map((item, index) => (
+      <CarouselItem key={`initial-page-${index}`} id={`initial-page-${index}`} width="100%">
+        {item}
+      </CarouselItem>
+    ))}
+  </Carousel>
+);
+
 export const All = () => (
   <VStack gap={2}>
     <BasicExamples />
@@ -666,5 +681,6 @@ export const All = () => (
     <AnimatedPaginationExample />
     <LoopingExamples />
     <AutoplayExample />
+    <InitialPageExample />
   </VStack>
 );

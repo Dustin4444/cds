@@ -7,7 +7,7 @@ import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/test';
-import type { CarouselImperativeHandle } from '../Carousel';
+import type { CarouselImperativeHandle, CarouselPaginationComponentProps } from '../Carousel';
 import { Carousel } from '../Carousel';
 import { CarouselItem } from '../CarouselItem';
 
@@ -1654,6 +1654,119 @@ describe('Carousel', () => {
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('Initial Page', () => {
+    // 8 items at width 200 in an 800px container, snapMode="item" => 5 pages (indices 0-4).
+    const itemCount = 8;
+
+    // Custom pagination that surfaces the active page index for assertions.
+    const ActivePagePagination = ({
+      activePageIndex,
+      totalPages,
+    }: CarouselPaginationComponentProps) => (
+      <Text data-testid="active-page-index">{`${activePageIndex}/${totalPages}`}</Text>
+    );
+
+    it('opens on the provided initialPage without firing onChangePage on mount', async () => {
+      const onChangePage = jest.fn();
+
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={ActivePagePagination}
+          initialPage={3}
+          itemCount={itemCount}
+          onChangePage={onChangePage}
+          snapMode="item"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('3/5');
+      });
+
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('defaults to the first page when initialPage is omitted', async () => {
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={ActivePagePagination}
+          itemCount={itemCount}
+          snapMode="item"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('0/5');
+      });
+    });
+
+    it.each`
+      initialPage | expectedIndex | description
+      ${99}       | ${4}          | ${'clamps an initialPage above the last page to the last page'}
+      ${-5}       | ${0}          | ${'clamps a negative initialPage to the first page'}
+    `('$description', async ({ initialPage, expectedIndex }) => {
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={ActivePagePagination}
+          initialPage={initialPage}
+          itemCount={itemCount}
+          snapMode="item"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent(`${expectedIndex}/5`);
+      });
+    });
+
+    it('lets a later imperative goToPage override the initial page', async () => {
+      const onChangePage = jest.fn();
+
+      const TestComponent = () => {
+        const carouselRef = useRef<CarouselImperativeHandle>(null);
+
+        return (
+          <DefaultThemeProvider>
+            <VStack>
+              <button data-testid="go-to-page-1" onClick={() => carouselRef.current?.goToPage(1)}>
+                Go to Page 1
+              </button>
+              <Carousel
+                ref={carouselRef}
+                PaginationComponent={ActivePagePagination}
+                initialPage={3}
+                onChangePage={onChangePage}
+                snapMode="item"
+              >
+                {Array.from({ length: itemCount }, (_, index) => (
+                  <CarouselItem key={`item-${index}`} id={`item-${index}`} width={200}>
+                    <Box height={100} width={200}>
+                      <Text>Item {index + 1}</Text>
+                    </Box>
+                  </CarouselItem>
+                ))}
+              </Carousel>
+            </VStack>
+          </DefaultThemeProvider>
+        );
+      };
+
+      const user = userEvent.setup();
+      render(<TestComponent />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('3/5');
+      });
+
+      await user.click(screen.getByTestId('go-to-page-1'));
+
+      await waitFor(() => {
+        expect(screen.getByTestId('active-page-index')).toHaveTextContent('1/5');
+      });
+      expect(onChangePage).toHaveBeenCalledWith(1);
     });
   });
 });

@@ -605,6 +605,30 @@ const ImperativeApiExample = () => {
   );
 };
 
+const InitialPageExample = () => {
+  const theme = useTheme();
+
+  return (
+    <Example paddingX={0}>
+      <Carousel
+        initialPage={2}
+        snapMode="page"
+        styles={{
+          root: { paddingHorizontal: theme.space[2] },
+          carousel: { gap: theme.space[2] },
+        }}
+        title="Initial Page (opens on page 3)"
+      >
+        {sampleItems.slice(0, 5).map((item, index) => (
+          <CarouselItem key={`initial-page-${index}`} id={`initial-page-${index}`} width="100%">
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Example>
+  );
+};
+
 const LoopingExamples = () => {
   const theme = useTheme();
 
@@ -833,6 +857,7 @@ export default function CarouselScreen() {
       <AnimatedPaginationExample />
       <LoopingExamples />
       <AutoplayExample />
+      <InitialPageExample />
     </ExampleScreen>
   );
 }

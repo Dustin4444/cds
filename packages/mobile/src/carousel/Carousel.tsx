@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -188,6 +189,12 @@ export type CarouselBaseProps = SharedProps &
      * @default 'page'
      */
     snapMode?: 'item' | 'page';
+    /**
+     * Zero-based page index to show on first layout, with no animation. Uncontrolled —
+     * updating it later does not move the carousel. Out-of-range values are clamped.
+     * @default 0
+     */
+    initialPage?: number;
     /**
      * Hides the navigation arrows (previous/next buttons).
      */
@@ -563,6 +570,7 @@ export const Carousel = memo(
       paginationVariant,
       drag = 'snap',
       snapMode = 'page',
+      initialPage,
       NavigationComponent = DefaultCarouselNavigation,
       PaginationComponent = DefaultCarouselPagination,
       style,
@@ -581,13 +589,14 @@ export const Carousel = memo(
       ...props
     } = mergedProps;
     const carouselScrollX = useRef(0);
+    const hasAppliedInitialPageRef = useRef(false);
 
     const animationApi = useSpring({
       x: carouselScrollX.current,
       config: animationConfig,
     });
 
-    const [activePageIndex, setActivePageIndex] = useState(0);
+    const [activePageIndex, setActivePageIndex] = useState(() => Math.max(0, initialPage ?? 0));
     const [containerSize, onLayout] = useLayout();
     const [carouselItemRects, setCarouselItemRects] = useState<{
       [itemId: string]: Rect;
@@ -766,7 +775,7 @@ export const Carousel = memo(
     });
 
     const goToPage = useCallback(
-      (page: number) => {
+      (page: number, { animate: shouldAnimate = true }: { animate?: boolean } = {}) => {
         const newPage = Math.max(0, Math.min(totalPages - 1, page));
         updateActivePageIndex(newPage);
         updateVisibleCarouselItems(pageOffsets[newPage]);
@@ -777,7 +786,11 @@ export const Carousel = memo(
           : pageOffsets[newPage];
 
         carouselScrollX.current = targetOffset;
-        animationApi.x.start({ to: targetOffset, config: animationConfig });
+        if (shouldAnimate) {
+          animationApi.x.start({ to: targetOffset, config: animationConfig });
+        } else {
+          animationApi.x.set(targetOffset);
+        }
         reset();
       },
       [
@@ -791,6 +804,16 @@ export const Carousel = memo(
         reset,
       ],
     );
+
+    useLayoutEffect(() => {
+      if (hasAppliedInitialPageRef.current || totalPages === 0) return;
+      hasAppliedInitialPageRef.current = true;
+
+      const targetPage = initialPage ?? 0;
+      if (targetPage > 0) {
+        goToPage(targetPage, { animate: false });
+      }
+    }, [totalPages, initialPage, goToPage]);
 
     useImperativeHandle(
       ref,
