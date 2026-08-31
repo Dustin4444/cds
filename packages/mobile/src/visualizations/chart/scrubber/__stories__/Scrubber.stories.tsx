@@ -771,6 +771,65 @@ const HideOverlay = () => {
   );
 };
 
+const CustomOverlay = () => {
+  const theme = useTheme();
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: sampleData,
+        },
+      ]}
+    >
+      <Scrubber styles={{ overlay: { color: theme.color.bgAlternate, opacity: 0.6 } }} />
+    </LineChart>
+  );
+};
+
+const CustomStyles = () => {
+  const theme = useTheme();
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
+      inset={{ top: 40 }}
+      series={[
+        {
+          id: 'prices',
+          data: sampleData,
+          label: 'Price',
+        },
+      ]}
+      yAxis={{ showGrid: true }}
+    >
+      <Scrubber
+        hideBeaconLabels={false}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+        labelElevated
+        styles={{
+          overlay: { color: theme.color.bgAlternate, opacity: 0.6 },
+          beacon: { blendMode: 'multiply' },
+          line: { stroke: theme.color.fgPrimary, strokeWidth: 2 },
+          label: { color: theme.color.fgInverse, background: theme.color.fgPrimary },
+          beaconLabel: { color: theme.color.fgInverse, background: theme.color.fgPrimary },
+        }}
+      />
+    </LineChart>
+  );
+};
+
 const matchupBlueData = [
   47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
   64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
@@ -992,6 +1051,14 @@ const ExampleNavigator = () => {
       {
         title: 'Hide Overlay',
         component: <HideOverlay />,
+      },
+      {
+        title: 'Custom Overlay',
+        component: <CustomOverlay />,
+      },
+      {
+        title: 'Custom Styles',
+        component: <CustomStyles />,
       },
       {
         title: 'Matchup Beacon Labels',

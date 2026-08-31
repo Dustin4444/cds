@@ -16,7 +16,7 @@ import { getPointOnSerializableScale } from '../utils/point';
 
 import { DefaultReferenceLineLabel } from './DefaultReferenceLineLabel';
 import { DottedLine } from './DottedLine';
-import type { LineComponent } from './Line';
+import type { LineComponent, LineComponentProps } from './Line';
 
 export type ReferenceLineLabelComponentProps = Pick<
   ChartTextProps,
@@ -49,6 +49,33 @@ export type ReferenceLineLabelComponentProps = Pick<
 };
 
 export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
+
+/**
+ * Cosmetic style props for a chart text label (reference line or scrubber label).
+ * Positioning, sizing, and animated opacity remain owned by the component; only
+ * visual styling is exposed.
+ */
+export type ChartLabelStyle = Pick<
+  ReferenceLineLabelComponentProps,
+  | 'color'
+  | 'background'
+  | 'borderRadius'
+  | 'fontWeight'
+  | 'fontFamilies'
+  | 'inset'
+  | 'paragraphAlignment'
+>;
+
+/** Custom styles for the individual elements of a reference line. */
+export type ReferenceLineStyles = {
+  /**
+   * Style props applied to the line, forwarded to its `LineComponent`.
+   * @note `d` and the animated `strokeOpacity` remain owned by the component.
+   */
+  line?: Omit<LineComponentProps, 'd' | 'animate' | 'strokeOpacity' | 'xAxisId' | 'yAxisId'>;
+  /** Style props applied to the label, forwarded to its `LabelComponent`. */
+  label?: ChartLabelStyle;
+};
 
 export type ReferenceLineBaseProps = {
   /**
@@ -121,6 +148,8 @@ export type ReferenceLineBaseProps = {
    * @default 1
    */
   opacity?: AnimatedProp<number>;
+  /** Custom styles for the individual elements of the reference line. */
+  styles?: ReferenceLineStyles;
 };
 
 type HorizontalReferenceLineProps = ReferenceLineBaseProps & {
@@ -177,6 +206,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     stroke,
     strokeWidth,
     opacity = 1,
+    styles,
   }) => {
     const theme = useTheme();
     const { getXSerializableScale, getYSerializableScale, drawingArea } =
@@ -239,10 +269,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <>
           <LineComponent
             animate={false}
-            d={horizontalLine}
             stroke={effectiveLineStroke}
-            strokeOpacity={opacity}
             strokeWidth={strokeWidth}
+            d={horizontalLine}
+            strokeOpacity={opacity}
+            {...styles?.line}
           />
           {label && (
             <LabelComponent
@@ -256,6 +287,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               verticalAlignment={labelVerticalAlignment ?? (isHorizontal ? 'middle' : undefined)}
               x={labelX}
               y={labelYPixel}
+              {...styles?.label}
             >
               {label}
             </LabelComponent>
@@ -279,10 +311,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <>
           <LineComponent
             animate={false}
-            d={verticalLine}
             stroke={effectiveLineStroke}
-            strokeOpacity={opacity}
             strokeWidth={strokeWidth}
+            d={verticalLine}
+            strokeOpacity={opacity}
+            {...styles?.line}
           />
           {label && (
             <LabelComponent
@@ -298,6 +331,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               verticalAlignment={labelVerticalAlignment}
               x={labelXPixel}
               y={labelY}
+              {...styles?.label}
             >
               {label}
             </LabelComponent>
