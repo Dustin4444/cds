@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react-native';
 import { View } from 'react-native';
+import { render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
-import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Text } from '../../typography/Text';
+import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Control } from '../Control';
 
 const MockControlIcon = () => <View testID="control-icon" />;
@@ -34,6 +34,34 @@ describe('Control', () => {
     expect(screen.getByTestId('test-controlLabel')).toHaveStyle({
       fontSize: defaultTheme.fontSize.label2,
       fontWeight: defaultTheme.fontWeight.label2,
+    });
+  });
+
+  it('applies textTransform prop to string labels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control label="test label" testID="test-control" textTransform="uppercase">
+          {MockControlIcon}
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-controlLabel')).toHaveStyle({
+      textTransform: 'uppercase',
+    });
+  });
+
+  it('uses lineHeight prop for icon wrapper height', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control font="body" label="test label" lineHeight="label2" testID="test-control">
+          {MockControlIcon}
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-controlIconWrapper')).toHaveStyle({
+      height: defaultTheme.lineHeight.label2,
     });
   });
 
