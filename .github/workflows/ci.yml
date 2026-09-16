@@ -48,20 +48,24 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node tools/ci/classifyToolchains.mjs
 
+  # Always call so required checks report; jobs skip when unaffected.
   node:
     name: Node
     needs: changes
-    if: needs.changes.outputs.node == 'true'
     uses: ./.github/workflows/node.yml
+    with:
+      affected: ${{ needs.changes.outputs.node == 'true' }}
 
   android:
     name: Android
     needs: changes
-    if: needs.changes.outputs.gradle == 'true'
     uses: ./.github/workflows/android.yml
+    with:
+      affected: ${{ needs.changes.outputs.gradle == 'true' }}
 
   ios:
     name: iOS
     needs: changes
-    if: needs.changes.outputs.xcode == 'true'
     uses: ./.github/workflows/ios.yml
+    with:
+      affected: ${{ needs.changes.outputs.xcode == 'true' }}
