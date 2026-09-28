@@ -1,13 +1,13 @@
 import SwiftUI
 
-/// Visual/semantic variant — the five in the current Figma Button spec.
+/// Visual/semantic variant of a CDS button.
 enum ButtonVariant { case primary, secondary, tertiary, positive, negative }
 
-/// Size tier — the four sizes (`xs`/`s`/`m`/`l`) in the Figma Button spec.
+/// Size tier of a CDS button.
 enum ButtonSize { case xs, s, m, l }
 
-/// Resolved container/content colors for a ``ButtonVariant``. Transparent variants use a true
-/// `.clear` container so the button reads correctly on any surface.
+/// Resolved container/content colors for a ``ButtonVariant``. Transparent variants use a `.clear`
+/// container.
 struct ButtonColors {
     let container: Color
     let content: Color
@@ -33,13 +33,14 @@ func buttonColors(_ variant: ButtonVariant, transparent: Bool, theme: CDSTheme) 
     }
 }
 
-/// Resolved size-derived metrics for a ``ButtonSize``. There is no `height` field: height falls
-/// out of `paddingY` plus the font's line height.
-struct ButtonMetrics {
+/// Resolved size-derived metrics for a ``ButtonSize``. Height comes from `paddingY` plus the
+/// font's line height.
+struct ButtonMetrics: Sendable, Equatable {
     let paddingX: CGFloat
     let paddingY: CGFloat
     let radius: CGFloat
     let iconSize: CGFloat
+    let labelSpacing: CGFloat
     let font: CDSTextStyle
 }
 
@@ -47,10 +48,11 @@ func buttonMetrics(_ size: ButtonSize, theme: CDSTheme) -> ButtonMetrics {
     let space = theme.space
     let radius = theme.borderRadius
     let icon = theme.iconSize
+    let labelSpacing = space.x1
     switch size {
-    case .xs: return ButtonMetrics(paddingX: space.x2, paddingY: space.x0_75, radius: radius.radius700, iconSize: icon.s, font: .label1)
-    case .s: return ButtonMetrics(paddingX: space.x2, paddingY: space.x1, radius: radius.radius700, iconSize: icon.s, font: .headline)
-    case .m: return ButtonMetrics(paddingX: space.x3, paddingY: space.x1_5, radius: radius.radius900, iconSize: icon.m, font: .headline)
-    case .l: return ButtonMetrics(paddingX: space.x4, paddingY: space.x2, radius: radius.radius900, iconSize: icon.m, font: .headline)
+    case .xs: return ButtonMetrics(paddingX: space.x2, paddingY: space.x0_75, radius: radius.radius700, iconSize: icon.s, labelSpacing: labelSpacing, font: .label1)
+    case .s: return ButtonMetrics(paddingX: space.x2, paddingY: space.x1, radius: radius.radius700, iconSize: icon.s, labelSpacing: labelSpacing, font: .headline)
+    case .m: return ButtonMetrics(paddingX: space.x3, paddingY: space.x1_5, radius: radius.radius900, iconSize: icon.m, labelSpacing: labelSpacing, font: .headline)
+    case .l: return ButtonMetrics(paddingX: space.x4, paddingY: space.x2, radius: radius.radius900, iconSize: icon.m, labelSpacing: labelSpacing, font: .headline)
     }
 }

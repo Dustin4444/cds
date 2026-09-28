@@ -2,8 +2,7 @@ import SwiftUI
 import XCTest
 @testable import CDSDesignSystem
 
-/// Covers the pure style-mapping functions behind ``Button`` and ``SlideButton``: given a
-/// resolved theme they must map each variant/size to the expected theme tokens.
+/// Checks that component variants and sizes map to the expected theme tokens.
 final class ComponentStyleTests: XCTestCase {
     private let theme = CDSTheme.resolve(.light)
 
@@ -34,7 +33,6 @@ final class ComponentStyleTests: XCTestCase {
         ]
         for (variant, content) in expected {
             let colors = buttonColors(variant, transparent: true, theme: theme)
-            // Transparent variants read correctly on any surface via a true `.clear` container.
             XCTAssertEqual(colors.container, .clear)
             XCTAssertEqual(colors.content, content)
         }
@@ -50,6 +48,7 @@ final class ComponentStyleTests: XCTestCase {
         XCTAssertEqual(xs.paddingY, space.x0_75)
         XCTAssertEqual(xs.radius, radius.radius700)
         XCTAssertEqual(xs.iconSize, icon.s)
+        XCTAssertEqual(xs.labelSpacing, space.x1)
         XCTAssertEqual(xs.font, .label1)
 
         let s = buttonMetrics(.s, theme: theme)
@@ -57,6 +56,7 @@ final class ComponentStyleTests: XCTestCase {
         XCTAssertEqual(s.paddingY, space.x1)
         XCTAssertEqual(s.radius, radius.radius700)
         XCTAssertEqual(s.iconSize, icon.s)
+        XCTAssertEqual(s.labelSpacing, space.x1)
         XCTAssertEqual(s.font, .headline)
 
         let m = buttonMetrics(.m, theme: theme)
@@ -64,6 +64,7 @@ final class ComponentStyleTests: XCTestCase {
         XCTAssertEqual(m.paddingY, space.x1_5)
         XCTAssertEqual(m.radius, radius.radius900)
         XCTAssertEqual(m.iconSize, icon.m)
+        XCTAssertEqual(m.labelSpacing, space.x1)
         XCTAssertEqual(m.font, .headline)
 
         let l = buttonMetrics(.l, theme: theme)
@@ -71,6 +72,7 @@ final class ComponentStyleTests: XCTestCase {
         XCTAssertEqual(l.paddingY, space.x2)
         XCTAssertEqual(l.radius, radius.radius900)
         XCTAssertEqual(l.iconSize, icon.m)
+        XCTAssertEqual(l.labelSpacing, space.x1)
         XCTAssertEqual(l.font, .headline)
     }
 
@@ -120,5 +122,21 @@ final class ComponentStyleTests: XCTestCase {
         XCTAssertEqual(l.radius, radius.radius900)
         XCTAssertEqual(l.iconSize, icon.m)
         XCTAssertEqual(l.font, .headline)
+    }
+
+    func testToggleTrackColors() {
+        let c = theme.colors
+        XCTAssertEqual(toggleTrackColor(.primary, isOn: false, theme: theme), c.bgTertiary)
+        XCTAssertEqual(toggleTrackColor(.positive, isOn: false, theme: theme), c.bgTertiary)
+        XCTAssertEqual(toggleTrackColor(.negative, isOn: false, theme: theme), c.bgTertiary)
+        XCTAssertEqual(toggleTrackColor(.primary, isOn: true, theme: theme), c.bgPrimary)
+        XCTAssertEqual(toggleTrackColor(.positive, isOn: true, theme: theme), c.bgPositive)
+        XCTAssertEqual(toggleTrackColor(.negative, isOn: true, theme: theme), c.bgNegative)
+    }
+
+    func testToggleThumbColorByScheme() {
+        XCTAssertEqual(toggleThumbColor(theme: theme), theme.colors.fgInverse)
+        let dark = CDSTheme.resolve(.dark)
+        XCTAssertEqual(toggleThumbColor(theme: dark), dark.colors.fg)
     }
 }
